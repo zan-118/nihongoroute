@@ -42,6 +42,8 @@ const CATEGORY_META = {
   },
 } as const;
 
+import type { EcosystemCourseMetadataItem } from "@/lib/learning/learning-ecosystem";
+
 /** Props for NextActionPanel. */
 interface NextActionPanelProps {
   /** Show fewer items if true. */
@@ -51,7 +53,7 @@ interface NextActionPanelProps {
   /** Text for empty state. */
   emptyTitle?: string;
   /** Course structure metadata */
-  courseMetadata?: any[];
+  courseMetadata?: EcosystemCourseMetadataItem[];
 }
 
 /**

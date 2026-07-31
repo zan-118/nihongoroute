@@ -23,7 +23,9 @@ function createIcon(iconName: string): IconType {
           width={size}
           height={size}
           className={className}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ref={ref as any}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           {...(props as any)}
         />
       );

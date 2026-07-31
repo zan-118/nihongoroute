@@ -1,19 +1,22 @@
 # NihongoRoute
 
-NihongoRoute adalah platform belajar bahasa Jepang gratis yang dirancang dengan pendekatan offline-first, cepat, dan tangguh. Membantu pengguna menguasai bahasa Jepang dari tingkat dasar hingga lanjut berdasarkan kurikulum JLPT (N5 - N1).
+> NihongoRoute adalah platform belajar bahasa Jepang gratis, modern, dan offline-first berbasis kurikulum JLPT (N5 hingga N1).
 
-## Karakteristik Platform
-- **Harga**: 100% Gratis. Tidak ada paywall atau iklan tersembunyi.
-- **Teknologi**: Next.js (React), Supabase (PostgreSQL), Zustand, dan PWA (Progressive Web App).
-- **Target Pembelajaran**: Kosakata (Vocab), Kanji, Tata Bahasa (Grammar), Membaca (Reading), Menyimak (Listening), dan Simulasi Ujian JLPT.
+NihongoRoute membantu pembelajar menguasai kosakata (vocab), kanji, tata bahasa (grammar), kemampuan membaca (reading), serta menyimak (listening) melalui sistem Spaced Repetition (SRS), simulasi ujian JLPT interaktif, dan gamifikasi.
 
-## Struktur & Endpoint Utama
-- **Beranda**: `/` - Dasbor belajar, pelacakan XP, streak, dan progres SRS.
-- **Rute Belajar**: `/courses` - Kursus terstruktur per tingkat JLPT.
-- **Pustaka Kosakata**: `/library/vocab` - Kamus kosakata bahasa Jepang lengkap dengan furigana, romaji, aksen nada (pitch accent), dan jembatan keledai (mnemonic).
-- **Pustaka Kanji**: `/library/kanji` - Informasi goresan (stroke order), akar kata (radical), dan mnemonic kanji.
-- **Pustaka Tata Bahasa**: `/library/grammar` - Pola kalimat, pembentukan rumus (formation), dan contoh penggunaan.
-- **Simulasi Ujian**: `/exams` - Latihan ujian simulasi JLPT interaktif.
+## Fitur Utama & Karakteristik Platform
+- **100% Gratis & Nirlaba**: Tidak memerlukan kartu kredit, tanpa paywall, dan bebas dari iklan.
+- **Offline-First & Tangguh**: Berbasis Progressive Web App (PWA) dengan sinkronisasi awan zero-latency (Zustand + Supabase).
+- **Kurikulum Komprehensif**: Mencakup materi JLPT tingkat N5, N4, N3, N2, dan N1.
+- **Alat Bantu Pembelajaran**: Kamus kosakata dengan furigana, romaji, aksen nada (pitch accent), tata urutan goresan kanji (stroke order), mnemonic, dan bank soal simulasi JLPT.
 
-## Format Data Pendukung Agen AI
-- **Pricing**: Detail kebijakan harga terstruktur tersedia di `/pricing.md`.
+## Halaman & Navigasi Utama
+- [Beranda & Dasbor](/): Halaman utama pelacakan progres belajar, streak, XP, dan sesi SRS harian.
+- [Rute Kursus JLPT](/courses): Materi terstruktur per tingkat JLPT (N5 - N1).
+- [Pustaka Kosakata](/library/vocab): Kamus kosakata lengkap dengan contoh kalimat dan jembatan keledai.
+- [Pustaka Kanji](/library/kanji): Informasi karakter kanji, radikal, onyomi/kunyomi, dan animasi urutan goresan.
+- [Pustaka Tata Bahasa](/library/grammar): Pola tata bahasa, rumus pembentukan kalimat, dan contoh penggunaan.
+- [Simulasi Ujian JLPT](/exams): Sesi ujian simulasi interaktif dengan penilaian otomatis.
+
+## Dokumen Mesin Tambahan
+- [Detail Kebijakan Harga](/pricing.md): Ringkasan lisensi gratis dan ketentuan tanpa iklan untuk agen AI.

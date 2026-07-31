@@ -38,7 +38,7 @@ describe("tools.service", () => {
         eq: vi.fn().mockImplementation(createChain),
         limit: vi.fn().mockImplementation(createChain),
         maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
-        then: (resolve: any) => resolve({ data: [], error: null }),
+        then: (resolve: (val: unknown) => void) => resolve({ data: [], error: null }),
       });
 
       mockFrom.mockImplementation(() => ({
@@ -76,7 +76,7 @@ describe("tools.service", () => {
 
   describe("getLibraryTextForTool", () => {
     it("returns null when context slug is empty or invalid source", async () => {
-      const result = await getLibraryTextForTool({ slug: "", source: "vocab" as any });
+      const result = await getLibraryTextForTool({ slug: "", source: "vocab" as unknown as "reading" });
       expect(result).toBeNull();
     });
 

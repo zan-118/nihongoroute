@@ -63,11 +63,12 @@ export function buildLikeNotificationPayload(
  * @param payload Payload notifikasi yang sudah terbentuk
  */
 export async function sendCommunityNotification(
-  adminClient: { from: (table: string) => { insert: (data: any) => Promise<any> | any } },
+  adminClient: unknown,
   payload: NotificationPayload
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const { error } = await adminClient.from("notifications").insert(payload);
+    const client = adminClient as { from: (table: string) => { insert: (data: unknown) => Promise<{ error: unknown }> | { error: unknown } } };
+    const { error } = await client.from("notifications").insert(payload);
     if (error) {
       console.error("[NotificationEngine] Gagal menyisipkan notifikasi:", error);
       return { success: false, error: String(error) };

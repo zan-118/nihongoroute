@@ -41,7 +41,7 @@ describe('Anti-Cheat Integration (useCloudMutation)', () => {
       error: null,
     });
 
-    const session = { user: { id: 'test-user' } } as any;
+    const session = { user: { id: 'test-user' } } as unknown as Parameters<typeof useCloudMutation>[0];
     const { result } = renderHook(() => useCloudMutation(session), { wrapper });
 
     const progressData = {
@@ -52,7 +52,7 @@ describe('Anti-Cheat Integration (useCloudMutation)', () => {
       lastStudyDate: null,
       studyDays: {},
       inventory: { streakFreeze: 0, freezeActive: false },
-      settings: {} as any
+      settings: { theme: 'dark', dailyGoal: 10, soundEnabled: true, ttsVoice: 'ja-JP-NanamiNeural', fontSize: 'md' } as const
     };
 
     result.current.mutate({
@@ -78,10 +78,10 @@ describe('Anti-Cheat Integration (useCloudMutation)', () => {
       error: new Error('Negative XP delta is not allowed. Client out of sync.'),
     });
 
-    const session = { user: { id: 'test-user' } } as any;
+    const session = { user: { id: 'test-user' } } as unknown as Parameters<typeof useCloudMutation>[0];
     const { result } = renderHook(() => useCloudMutation(session), { wrapper });
 
-    let errorCaught: any = null;
+    let errorCaught: Error | null = null;
     vi.useFakeTimers();
     result.current.mutate({
       progress: {
@@ -92,20 +92,20 @@ describe('Anti-Cheat Integration (useCloudMutation)', () => {
         lastStudyDate: null,
         studyDays: {},
         inventory: { streakFreeze: 0, freezeActive: false },
-        settings: {} as any
+        settings: { theme: 'dark', dailyGoal: 10, soundEnabled: true, ttsVoice: 'ja-JP-NanamiNeural', fontSize: 'md' } as const
       },
       dirtySrs: new Set(),
       dirtyLessons: new Set(),
     }, {
       onError: (error) => {
-        errorCaught = error;
+        errorCaught = error as Error;
       }
     });
 
     await vi.runAllTimersAsync();
 
     expect(errorCaught).toBeTruthy();
-    expect(errorCaught.message).toContain('Negative XP delta');
+    expect(errorCaught?.message).toContain('Negative XP delta');
 
     vi.useRealTimers();
 
@@ -131,7 +131,7 @@ describe('Anti-Cheat Integration (useCloudMutation)', () => {
       });
     });
 
-    const session = { user: { id: 'test-user' } } as any;
+    const session = { user: { id: 'test-user' } } as unknown as Parameters<typeof useCloudMutation>[0];
     const { result } = renderHook(() => useCloudMutation(session), { wrapper });
 
     const progressData = {
@@ -142,10 +142,10 @@ describe('Anti-Cheat Integration (useCloudMutation)', () => {
       lastStudyDate: null,
       studyDays: {},
       inventory: { streakFreeze: 0, freezeActive: false },
-      settings: {} as any
+      settings: { theme: 'dark', dailyGoal: 10, soundEnabled: true, ttsVoice: 'ja-JP-NanamiNeural', fontSize: 'md' } as const
     };
 
-    useSRSStore.setState({ items: { word1: { status: 'learning', interval: 1, ease_factor: 2.5, repetition: 0 } as any } });
+    useSRSStore.setState({ items: { word1: { status: 'learning', interval: 1, ease_factor: 2.5, repetition: 0 } as never } });
 
     vi.useFakeTimers();
 

@@ -216,13 +216,10 @@ export function useSettingsActions() {
     }
   }, [
     isAuthenticated,
-    supabase.auth,
+    supabase,
     clearDirtySrs,
-    id,
-    isGuest,
     name,
     xp,
-    level,
     streak,
     todayReviewCount,
     lastStudyDate,
@@ -230,7 +227,6 @@ export function useSettingsActions() {
     inventory,
     completedLessons,
     srs,
-    notifications,
     settings,
   ]);
 

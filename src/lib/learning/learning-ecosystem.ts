@@ -478,7 +478,7 @@ interface EcosystemLessonItem {
   summary?: string;
 }
 
-interface EcosystemCourseMetadataItem {
+export interface EcosystemCourseMetadataItem {
   id?: string;
   _id?: string;
   title: string;
@@ -571,7 +571,7 @@ export function buildEcosystemRecommendations({
         activeCategorySlug = active.slug;
         activeCategoryTitle = active.title || 'JLPT';
         
-        const completedCount = Object.values(safeCompletedLessons).filter((l: any) => l.completedAt).length;
+        const completedCount = Object.values(safeCompletedLessons).filter((l) => (l as { completedAt?: unknown })?.completedAt).length;
         isNew = completedCount === 0;
       }
     } else {

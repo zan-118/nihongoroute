@@ -20,10 +20,15 @@ import { Loader2, Info } from "@/components/ui/icons";
 import { useKanjiProgressQuery } from "./useKanjiProgressQuery";
 import { useAddToSRSInternal } from "@/features/srs/actions/AddToSRSButton";
 
-// ==========================================
-// GRID ITEM KANJI INDIVIDUAL
-// ==========================================
-function KanjiGridItem({ item }: { item: any }) {
+interface KanjiGridItemData {
+  _id: string;
+  kanji: string;
+  meaning: string;
+  isLearning?: boolean;
+  isMastered?: boolean;
+}
+
+function KanjiGridItem({ item }: { item: KanjiGridItemData }) {
   const { isAdded, handleAdd } = useAddToSRSInternal(item._id);
   const activeIsAdded = item.isLearning || item.isMastered || isAdded;
 

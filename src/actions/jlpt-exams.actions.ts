@@ -18,7 +18,7 @@ export async function getSupabaseExamTemplatesList(input?: { categoryId?: string
   return serviceGetSupabaseExamTemplatesList(input);
 }
 
-export async function startJlptMockSession(input: { templateSlug?: string; jlptLevel?: any; }) {
+export async function startJlptMockSession(input: { templateSlug?: string; jlptLevel?: "N5" | "N4" | "N3" | "N2" | "N1"; }) {
   return serviceStartJlptMockSession(input);
 }
 

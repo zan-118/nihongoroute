@@ -82,25 +82,25 @@ export function classifyFlashcardIds(ids: string[]): IdClassification {
 /**
  * Format raw vocab rows dari Supabase ke FormattedCard array.
  */
-export function formatVocabCards(rows: any[]): FormattedCard[] {
+export function formatVocabCards(rows: Record<string, unknown>[]): FormattedCard[] {
   return rows.map((v) => ({
-    _id: v.id,
-    id: v.id,
-    word: v.word,
-    meaning: v.meaning,
-    romaji: v.romaji,
-    furigana: v.furigana,
-    jlptLevel: v.jlpt_level,
+    _id: String(v.id || ""),
+    id: String(v.id || ""),
+    word: String(v.word || ""),
+    meaning: String(v.meaning || ""),
+    romaji: v.romaji as string | undefined,
+    furigana: v.furigana as string | undefined,
+    jlptLevel: v.jlpt_level as string | undefined,
     examples: Array.isArray(v.examples)
-      ? (v.examples as any[]).map((ex) => ({
-          japanese: ex?.japanese || ex?.jp || "",
-          indonesian: ex?.indonesian || ex?.meaning || ex?.id || ""
+      ? (v.examples as Record<string, unknown>[]).map((ex) => ({
+          japanese: String(ex?.japanese || ex?.jp || ""),
+          indonesian: String(ex?.indonesian || ex?.meaning || ex?.id || "")
         }))
       : [],
-    mnemonic: v.mnemonic,
-    usageNotes: v.usage_notes,
-    pitchAccent: v.pitch_accent,
-    hinshi: v.hinshi,
+    mnemonic: v.mnemonic as string | undefined,
+    usageNotes: v.usage_notes as string | undefined,
+    pitchAccent: v.pitch_accent as string | undefined,
+    hinshi: v.hinshi as string | undefined,
     category: "vocab",
     docType: "vocab",
   }));
@@ -109,11 +109,12 @@ export function formatVocabCards(rows: any[]): FormattedCard[] {
 /**
  * Format raw vocab rows hasil kueri romaji untuk dicocokkan dengan ID legacy.
  */
-export function formatRomajiVocabs(rows: any[], requestedIds: string[]): FormattedCard[] {
+export function formatRomajiVocabs(rows: Record<string, unknown>[], requestedIds: string[]): FormattedCard[] {
   const formatted: FormattedCard[] = [];
   if (!rows || rows.length === 0) return formatted;
 
   rows.forEach((v) => {
+    const romajiStr = typeof v.romaji === "string" ? v.romaji : "";
     const matchingLegacyIds = requestedIds.filter((id) => {
       if (!id.startsWith("n5-") && !id.startsWith("n4-")) return false;
       const cleanId = id.slice(3);
@@ -124,28 +125,28 @@ export function formatRomajiVocabs(rows: any[], requestedIds: string[]): Formatt
           break;
         }
       }
-      return romajiFound.toLowerCase() === v.romaji?.toLowerCase();
+      return romajiFound.toLowerCase() === romajiStr.toLowerCase();
     });
 
     matchingLegacyIds.forEach((legacyId) => {
       formatted.push({
         _id: legacyId,
         id: legacyId,
-        word: v.word,
-        meaning: v.meaning,
-        romaji: v.romaji,
-        furigana: v.furigana,
-        jlptLevel: v.jlpt_level,
+        word: String(v.word || ""),
+        meaning: String(v.meaning || ""),
+        romaji: v.romaji as string | undefined,
+        furigana: v.furigana as string | undefined,
+        jlptLevel: v.jlpt_level as string | undefined,
         examples: Array.isArray(v.examples)
-          ? (v.examples as any[]).map((ex) => ({
-              japanese: ex?.japanese || ex?.jp || "",
-              indonesian: ex?.indonesian || ex?.meaning || ex?.id || ""
+          ? (v.examples as Record<string, unknown>[]).map((ex) => ({
+              japanese: String(ex?.japanese || ex?.jp || ""),
+              indonesian: String(ex?.indonesian || ex?.meaning || ex?.id || "")
             }))
           : [],
-        mnemonic: v.mnemonic,
-        usageNotes: v.usage_notes,
-        pitchAccent: v.pitch_accent,
-        hinshi: v.hinshi,
+        mnemonic: v.mnemonic as string | undefined,
+        usageNotes: v.usage_notes as string | undefined,
+        pitchAccent: v.pitch_accent as string | undefined,
+        hinshi: v.hinshi as string | undefined,
         category: "vocab",
         docType: "vocab",
       });
@@ -158,7 +159,7 @@ export function formatRomajiVocabs(rows: any[], requestedIds: string[]): Formatt
 /**
  * Format raw kanji rows dari Supabase ke FormattedCard array.
  */
-export function formatKanjiCards(rows: any[]): FormattedCard[] {
+export function formatKanjiCards(rows: Record<string, unknown>[]): FormattedCard[] {
   return rows.map((k) => {
     let formattedMnemonic = "";
     if (Array.isArray(k.mnemonics)) {
@@ -168,27 +169,27 @@ export function formatKanjiCards(rows: any[]): FormattedCard[] {
     }
 
     const formattedExamples = Array.isArray(k.examples)
-      ? (k.examples as any[]).map((ex) => ({
-          japanese: ex?.japanese || ex?.jp || "",
-          indonesian: ex?.indonesian || ex?.meaning || ex?.id || ""
+      ? (k.examples as Record<string, unknown>[]).map((ex) => ({
+          japanese: String(ex?.japanese || ex?.jp || ""),
+          indonesian: String(ex?.indonesian || ex?.meaning || ex?.id || "")
         }))
       : [];
 
     return {
-      _id: k.id,
-      id: k.id,
-      word: k.character,
-      meaning: k.meaning,
+      _id: String(k.id || ""),
+      id: String(k.id || ""),
+      word: String(k.character || ""),
+      meaning: String(k.meaning || ""),
       romaji: null,
-      furigana: k.kunyomi || k.onyomi || null,
-      jlptLevel: k.jlpt_level,
+      furigana: (k.kunyomi || k.onyomi || null) as FormattedCard['furigana'],
+      jlptLevel: k.jlpt_level as string | undefined,
       examples: formattedExamples,
       mnemonic: formattedMnemonic || null,
       category: "kanji",
       docType: "kanji",
       kanjiDetails: {
-        onyomi: k.onyomi,
-        kunyomi: k.kunyomi,
+        onyomi: k.onyomi as string | null | undefined,
+        kunyomi: k.kunyomi as string | null | undefined,
       }
     };
   });

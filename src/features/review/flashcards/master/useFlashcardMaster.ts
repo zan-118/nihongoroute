@@ -183,7 +183,7 @@ export function useFlashcardMaster({
       }
       isProcessing.current = false;
     }, 200);
-  }, [currentCards, currentIndex, srs, updateProgress, combo]);
+  }, [currentCards, currentIndex, srs, updateProgress]);
 
   /**
    * Validates user text input against target word in challenge mode.

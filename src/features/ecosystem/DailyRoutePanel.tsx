@@ -61,6 +61,8 @@ const CATEGORY_META: Record<
   },
 };
 
+import type { EcosystemCourseMetadataItem } from "@/lib/learning/learning-ecosystem";
+
 /**
  * Props for DailyRoutePanel component.
  */
@@ -70,7 +72,7 @@ interface DailyRoutePanelProps {
   /** Additional CSS classes. */
   className?: string;
   /** Course structure metadata */
-  courseMetadata?: any[];
+  courseMetadata?: EcosystemCourseMetadataItem[];
   /** Due count for SRS */
   dueCount?: number;
 }

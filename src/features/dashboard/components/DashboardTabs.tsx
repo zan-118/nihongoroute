@@ -27,7 +27,7 @@ interface Tab {
   /** Display label text. */
   label: string;
   /** Icon component type. */
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ className?: string; size?: number }>;
 }
 
 /**
@@ -56,7 +56,7 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
         role="tablist" 
         aria-label="Dashboard Navigation" 
         data-tour="dashboard-tabs"
-        className="bg-muted/50 dark:bg-background/[0.03] p-1.5 rounded-full border border-border/50 flex gap-1 shadow-sm max-w-full overflow-x-auto scrollbar-none"
+        className="bg-muted/50 dark:bg-background/3 p-1.5 rounded-full border border-border/50 flex gap-1 shadow-sm max-w-full overflow-x-auto scrollbar-none"
       >
         {tabs.map((tab) => {
           // Determine if the current tab is active
@@ -72,7 +72,7 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
               // Scale down slightly on tap for tactile feedback
               whileTap={{ scale: 0.95 }}
               onClick={() => onTabChange(tab.id)}
-              className={`relative px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-colors duration-300 flex items-center gap-2 outline-none select-none min-h-[44px] ${
+              className={`relative px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-colors duration-300 flex items-center gap-2 outline-none select-none min-h-11 ${
                 isActive
                   ? "text-primary-foreground font-black"
                   : "text-muted-foreground hover:text-foreground hover:bg-background/5"

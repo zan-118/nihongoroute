@@ -97,7 +97,7 @@ describe("Content Repository Unit Tests", () => {
     it("harus melakukan fallback pencarian karakter kanji jika slug tidak cocok", async () => {
       mockSingleData = { id: "kanji-1", character: "日", meaning: "sun" };
 
-      const result = await getContentBySlugOrId<any>("kanji", "日");
+      const result = await getContentBySlugOrId<Record<string, unknown>>("kanji", "日");
 
       expect(result).not.toBeNull();
       expect(result?.character).toBe("日");
@@ -105,7 +105,7 @@ describe("Content Repository Unit Tests", () => {
 
     it("harus mengembalikan null jika data tidak ditemukan dan terjadi error", async () => {
       mockError = new Error("Not found");
-      const result = await getContentBySlugOrId<any>("vocab", "non-existent");
+      const result = await getContentBySlugOrId<Record<string, unknown>>("vocab", "non-existent");
       expect(result).toBeNull();
     });
   });

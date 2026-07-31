@@ -94,7 +94,8 @@ export async function getCommunityPosts(category?: string): Promise<CommunityPos
       (profilesData || []).map(p => [p.id, { full_name: p.full_name, avatar_url: p.avatar_url, level: p.level || 1 }])
     );
 
-    return postsData.map((post: any) => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (postsData as any[]).map((post: any) => ({
       id: post.id,
       user_id: post.user_id,
       content: post.content,

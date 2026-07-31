@@ -21,7 +21,7 @@ describe('Exam Generators Core Utils', () => {
   describe('buildRandomTemplateQuestionRows', () => {
     it('harus merakit baris template acak sesuai kuota', () => {
       const quotaRequests: JlptQuotaRequest[] = [{ section: 'vocabulary', total: 2 }];
-      const questionsBySection: any = {
+      const questionsBySection: Record<string, unknown[]> = {
         vocabulary: [
           { id: 'v1', session_type: 'vocabulary' },
           { id: 'v2', session_type: 'vocabulary' },
@@ -31,7 +31,7 @@ describe('Exam Generators Core Utils', () => {
       
       const rows = buildRandomTemplateQuestionRows({
         quotaRequests,
-        questionsBySection,
+        questionsBySection: questionsBySection as unknown as Parameters<typeof buildRandomTemplateQuestionRows>[0]['questionsBySection'],
         shuffleQuestions: (arr) => arr, // Disable shuffle untuk mempermudah tes
       });
 
@@ -44,9 +44,12 @@ describe('Exam Generators Core Utils', () => {
 
     it('harus melemparkan error jika stok soal tidak cukup untuk memenuhi kuota', () => {
       const quotaRequests: JlptQuotaRequest[] = [{ section: 'vocabulary', total: 10 }];
-      const questionsBySection: any = { vocabulary: [{ id: 'v1' }] };
+      const questionsBySection = { vocabulary: [{ id: 'v1' }] };
       
-      expect(() => buildRandomTemplateQuestionRows({ quotaRequests, questionsBySection })).toThrow(/tersedia/);
+      expect(() => buildRandomTemplateQuestionRows({
+        quotaRequests,
+        questionsBySection: questionsBySection as unknown as Parameters<typeof buildRandomTemplateQuestionRows>[0]['questionsBySection']
+      })).toThrow(/tersedia/);
     });
   });
 });

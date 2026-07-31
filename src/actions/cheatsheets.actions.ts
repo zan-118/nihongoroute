@@ -13,6 +13,7 @@ import {
   getContentBySlugOrId
 } from "@/lib/services/content-repository";
 import { CheatsheetTable } from "@/types/database";
+import type { SheetItem } from "@/features/library/cheatsheet/CheatsheetView";
 
 // ======================
 // SERVER ACTIONS
@@ -23,7 +24,7 @@ import { CheatsheetTable } from "@/types/database";
  * Results are sorted by category and title in ascending order.
  * Maps database fields to application domain model.
  *
- * @returns {Promise<Array<{ _id: string; slug: string; title: string; category: string; items: any[]; linkedVocab: any[] }>>} Array of cheatsheets.
+ * @returns {Promise<Array<{ _id: string; slug: string; title: string; category: string; items: SheetItem[]; linkedVocab: SheetItem[] }>>} Array of cheatsheets.
  */
 export async function getCheatsheets() {
   try {
@@ -36,7 +37,7 @@ export async function getCheatsheets() {
       title: s.title,
       category: s.category || "",
       // Fallback to empty array if items column is null
-      items: (s.items || []) as any[],
+      items: (s.items || []) as unknown as SheetItem[],
       // Compatibility field for vocabulary relations
       linkedVocab: []
     }));
@@ -52,7 +53,7 @@ export async function getCheatsheets() {
  * Automatically detects input type to query the correct column.
  *
  * @param {string} idOrSlug - The UUID or unique slug string of the cheatsheet.
- * @returns {Promise<{ _id: string; slug: string; title: string; category: string; items: any[]; linkedVocab: any[] } | null>} The cheatsheet object, or null if not found.
+ * @returns {Promise<{ _id: string; slug: string; title: string; category: string; items: SheetItem[]; linkedVocab: SheetItem[] } | null>} The cheatsheet object, or null if not found.
  */
 export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
   try {
@@ -67,7 +68,7 @@ export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
       title: sheet.title,
       category: sheet.category || "",
       // Fallback to empty array if items column is null
-      items: (sheet.items || []) as any[],
+      items: (sheet.items || []) as unknown as SheetItem[],
       // Compatibility field for vocabulary relations
       linkedVocab: []
     };

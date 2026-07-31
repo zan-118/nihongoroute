@@ -16,16 +16,16 @@ vi.mock('idb-keyval', () => {
 // Mock BroadcastChannel
 class MockBroadcastChannel {
   name: string;
-  onmessage: ((ev: MessageEvent) => any) | null = null;
+  onmessage: ((ev: MessageEvent) => void) | null = null;
   constructor(name: string) {
     this.name = name;
   }
-  postMessage(message: any) {}
+  postMessage(_message: unknown) {}
   close() {}
   addEventListener() {}
   removeEventListener() {}
 }
-global.BroadcastChannel = MockBroadcastChannel as any;
+global.BroadcastChannel = MockBroadcastChannel as unknown as typeof BroadcastChannel;
 
 // Mock window.speechSynthesis
 if (typeof window !== 'undefined') {
