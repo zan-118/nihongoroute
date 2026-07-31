@@ -159,10 +159,11 @@ export async function queryLexicalDomain<T>(
       }
 
       // Apply hinshi filtering for vocab categories
-      if (hinshi && (type === "vocab" || type === "verb" || type === "adjective" || type === "phrase")) {
+      const isAllHinshi = !hinshi || ["all", "semua", "all-types", "semua tipe"].includes(hinshi.toLowerCase().trim());
+      if (!isAllHinshi && (type === "vocab" || type === "verb" || type === "adjective" || type === "phrase")) {
         const matchingCategories = getHinshiFilterValues(hinshi);
         if (matchingCategories.length === 1) {
-          query = query.cs("hinshi", JSON.stringify([matchingCategories[0]]));
+          query = query.contains("hinshi", JSON.stringify([matchingCategories[0]]));
         } else if (matchingCategories.length > 1) {
           const orFilter = matchingCategories
             .map((cat) => `hinshi.cs.${JSON.stringify([cat])}`)
@@ -179,7 +180,7 @@ export async function queryLexicalDomain<T>(
       } else if (type === "adjective") {
         query = query.or('hinshi.cs.["I-Adjective"],hinshi.cs.["Na-Adjective"]');
       } else if (type === "phrase") {
-        query = query.cs("hinshi", JSON.stringify(["Expression"]));
+        query = query.contains("hinshi", JSON.stringify(["Expression"]));
       }
 
       return query;

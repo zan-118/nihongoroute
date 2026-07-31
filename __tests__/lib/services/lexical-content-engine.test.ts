@@ -16,6 +16,7 @@ vi.mock("@/lib/supabase/server", () => {
           eq: vi.fn().mockReturnThis(),
           in: vi.fn().mockReturnThis(),
           cs: vi.fn().mockReturnThis(),
+          contains: vi.fn().mockReturnThis(),
           neq: vi.fn().mockReturnThis(),
           not: vi.fn().mockReturnThis(),
           order: vi.fn().mockReturnThis(),
@@ -96,5 +97,35 @@ describe("LexicalContentEngine Unit Tests", () => {
 
     expect(item).not.toBeNull();
     expect(item).toHaveProperty("word", "日本語");
+  });
+
+  it("harus query data vocab dengan filter hinshi tanpa throwing error query.cs", async () => {
+    mockData = [
+      { id: "v1", word: "食べる", meaning_id: "makan", hinshi: ["Verb"] },
+    ];
+    mockCount = 1;
+
+    const result = await queryLexicalDomain({
+      type: "vocab",
+      filters: { hinshi: "noun" },
+      pagination: { page: 1, limit: 10 },
+    });
+
+    expect(result.data).toHaveLength(1);
+  });
+
+  it("harus mengabaikan filter hinshi ketika dikirim nilai 'all', 'semua', atau 'all-types'", async () => {
+    mockData = [
+      { id: "v1", word: "本", meaning_id: "buku", hinshi: ["Noun"] },
+    ];
+    mockCount = 1;
+
+    const result = await queryLexicalDomain({
+      type: "vocab",
+      filters: { hinshi: "all" },
+      pagination: { page: 1, limit: 10 },
+    });
+
+    expect(result.data).toHaveLength(1);
   });
 });
