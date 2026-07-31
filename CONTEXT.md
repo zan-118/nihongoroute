@@ -15,3 +15,9 @@ Dokumen ini mendefinisikan istilah domain utama yang digunakan dalam sistem Niho
 - **PracticeSessionEngine**: Modul dalam yang menyatukan penyusunan dek latihan (*deck assembly*), pemilihan opsi distraksi adaptif (*adaptive distractors*), dan kalkulasi akurasi serta skor sesi latihan.
 - **assemblePracticeDeck**: Antarmuka penyusun dek materi latihan terstruktur dengan pengacakan otomatis.
 - **generateAdaptiveDistractors**: Algoritma pemilih opsi jawaban pengacau tanpa duplikasi dengan jawaban benar.
+
+## Lesson Hydration Domain (Domain Hidrasi Pelajaran)
+- **LessonHydrationEngine**: Modul dalam yang mengapsulasi parsing Markdown ke blok konten, normalisasi field camelCase, dan hidrasi relasi paralel (vocab, kanji, grammar, listening, reading) tanpa ketergantungan I/O langsung.
+- **hydrateLessonDetail**: Antarmuka terpadu (*seam*) untuk menghidrasi raw DB row menjadi `LibraryItem` siap render. Menerima `RawLessonRow` + `LessonRelationFetcher` (kontrak abstrak), mengembalikan `LibraryItem`.
+- **LessonRelationFetcher**: Interface kontrak untuk mengambil data relasi dari sumber data eksternal. Implementasi konkret (Supabase-backed) hidup di `lesson.service.ts`.
+

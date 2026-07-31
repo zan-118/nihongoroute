@@ -1,10 +1,14 @@
-﻿"use server";
+"use server";
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/core/routes";
+import {
+  buildCommentNotificationPayload,
+  sendCommunityNotification,
+} from "@/lib/notifications/notification-engine";
 /**
  * Author profile details for posts and comments.
  */
@@ -314,18 +318,15 @@ export async function addCommunityComment(postId: string, content: string): Prom
         .select("full_name")
         .eq("id", user.id)
         .single();
-      const senderName = profile?.full_name || "Seseorang";
 
+      const payload = buildCommentNotificationPayload(
+        post.user_id,
+        user.id,
+        profile?.full_name,
+        postId
+      );
       const adminSupabase = createAdminClient();
-      await adminSupabase.from("notifications").insert({
-        user_id: post.user_id,
-        sender_id: user.id,
-        type: "comment",
-        title: "Komentar Baru",
-        message: `${senderName} mengomentari postingan Anda.`,
-        post_id: postId,
-        read: false
-      });
+      await sendCommunityNotification(adminSupabase, payload);
     }
 
     // Refresh social feed path

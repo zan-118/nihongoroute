@@ -94,26 +94,16 @@ export async function getFlashcardsByMode(
   }
 }
 
-interface FormattedCard {
-  _id: string;
-  id: string;
-  word: string;
-  meaning: string;
-  romaji?: string | null;
-  furigana?: string | null;
-  jlptLevel?: string | null;
-  examples?: Array<{ japanese: string; indonesian: string }> | null;
-  mnemonic?: string | null;
-  usageNotes?: string | null;
-  pitchAccent?: string | null;
-  hinshi?: string | null;
-  category: "vocab" | "kanji";
-  docType: "vocab" | "kanji";
-  kanjiDetails?: {
-    onyomi?: string | null;
-    kunyomi?: string | null;
-  } | null;
-}
+import {
+  classifyFlashcardIds,
+  formatVocabCards,
+  formatRomajiVocabs,
+  formatKanjiCards,
+  sortCardsByRequestedOrder,
+  type FormattedCard,
+} from "@/lib/learning/flashcard-resolver";
+
+export type { FormattedCard };
 
 /**
  * Fetch specific flashcards by list of IDs.
@@ -125,43 +115,7 @@ interface FormattedCard {
 export async function getFlashcardsByIds(ids: string[]): Promise<FormattedCard[]> {
   if (!ids || ids.length === 0) return [];
 
-  const uuids: string[] = [];
-  const slugs: string[] = [];
-  const romajis: string[] = [];
-  const kanjiChars: string[] = [];
-  const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-  const posPrefixes = [
-    "pre-noun-adjectival-",
-    "adverbial-noun-",
-    "temporal-noun-",
-    "noun-",
-    "pronoun-",
-    "numeric-",
-    "expression-",
-    "conjunction-",
-    "verb-"
-  ];
-
-  for (const id of ids) {
-    if (UUID_REGEX.test(id)) {
-      uuids.push(id);
-    } else if (id.startsWith("n5-") || id.startsWith("n4-")) {
-      const cleanId = id.slice(3);
-      let romajiFound = cleanId;
-      for (const prefix of posPrefixes) {
-        if (cleanId.startsWith(prefix)) {
-          romajiFound = cleanId.slice(prefix.length);
-          break;
-        }
-      }
-      romajis.push(romajiFound);
-    } else if (id.length === 1) {
-      kanjiChars.push(id);
-    } else {
-      slugs.push(id);
-    }
-  }
+  const { uuids, slugs, romajis, kanjiChars } = classifyFlashcardIds(ids);
 
   try {
     const supabase = await createClient();
@@ -211,97 +165,9 @@ export async function getFlashcardsByIds(ids: string[]): Promise<FormattedCard[]
     const uniqueKanjisMap = new Map<string, typeof rawKanjis[number]>();
     rawKanjis.forEach(k => uniqueKanjisMap.set(k.id, k));
 
-    const formattedVocabs = Array.from(uniqueVocabsMap.values()).map((v) => ({
-      _id: v.id,
-      id: v.id,
-      word: v.word,
-      meaning: v.meaning,
-      romaji: v.romaji,
-      furigana: v.furigana,
-      jlptLevel: v.jlpt_level,
-      examples: Array.isArray(v.examples) ? (v.examples as Array<{ japanese?: string; jp?: string; indonesian?: string; meaning?: string; id?: string }>).map((ex) => ({
-        japanese: ex?.japanese || ex?.jp || "",
-        indonesian: ex?.indonesian || ex?.meaning || ex?.id || ""
-      })) : [],
-      mnemonic: v.mnemonic,
-      usageNotes: v.usage_notes,
-      pitchAccent: v.pitch_accent,
-      hinshi: v.hinshi,
-      category: "vocab" as const,
-      docType: "vocab" as const,
-    }));
-
-    const formattedRomajiVocabs: FormattedCard[] = [];
-    if (vocabByRomajiRes.data) {
-      vocabByRomajiRes.data.forEach((v) => {
-        const matchingLegacyIds = ids.filter((id) => {
-          if (!id.startsWith("n5-") && !id.startsWith("n4-")) return false;
-          const cleanId = id.slice(3);
-          let romajiFound = cleanId;
-          for (const prefix of posPrefixes) {
-            if (cleanId.startsWith(prefix)) {
-              romajiFound = cleanId.slice(prefix.length);
-              break;
-            }
-          }
-          return romajiFound.toLowerCase() === v.romaji?.toLowerCase();
-        });
-
-        matchingLegacyIds.forEach((legacyId) => {
-          formattedRomajiVocabs.push({
-            _id: legacyId,
-            id: legacyId,
-            word: v.word,
-            meaning: v.meaning,
-            romaji: v.romaji,
-            furigana: v.furigana,
-            jlptLevel: v.jlpt_level,
-            examples: Array.isArray(v.examples) ? (v.examples as Array<{ japanese?: string; jp?: string; indonesian?: string; meaning?: string; id?: string }>).map((ex) => ({
-              japanese: ex?.japanese || ex?.jp || "",
-              indonesian: ex?.indonesian || ex?.meaning || ex?.id || ""
-            })) : [],
-            mnemonic: v.mnemonic,
-            usageNotes: v.usage_notes,
-            pitchAccent: v.pitch_accent,
-            hinshi: v.hinshi,
-            category: "vocab" as const,
-            docType: "vocab" as const,
-          });
-        });
-      });
-    }
-
-    const formattedKanjis = Array.from(uniqueKanjisMap.values()).map((k) => {
-      let formattedMnemonic = "";
-      if (Array.isArray(k.mnemonics)) {
-        formattedMnemonic = k.mnemonics.join("\n");
-      } else if (typeof k.mnemonics === "string") {
-        formattedMnemonic = k.mnemonics;
-      }
-
-      const formattedExamples = Array.isArray(k.examples) ? (k.examples as Array<{ japanese?: string; jp?: string; indonesian?: string; meaning?: string; id?: string }>).map((ex) => ({
-        japanese: ex?.japanese || ex?.jp || "",
-        indonesian: ex?.indonesian || ex?.meaning || ex?.id || ""
-      })) : [];
-
-      return {
-        _id: k.id,
-        id: k.id,
-        word: k.character,
-        meaning: k.meaning,
-        romaji: null,
-        furigana: k.kunyomi || k.onyomi || null,
-        jlptLevel: k.jlpt_level,
-        examples: formattedExamples,
-        mnemonic: formattedMnemonic || null,
-        category: "kanji" as const,
-        docType: "kanji" as const,
-        kanjiDetails: {
-          onyomi: k.onyomi,
-          kunyomi: k.kunyomi,
-        }
-      };
-    });
+    const formattedVocabs = formatVocabCards(Array.from(uniqueVocabsMap.values()));
+    const formattedRomajiVocabs = formatRomajiVocabs(vocabByRomajiRes.data || [], ids);
+    const formattedKanjis = formatKanjiCards(Array.from(uniqueKanjisMap.values()));
 
     const uniqueFinalCardsMap = new Map<string, FormattedCard>();
     formattedVocabs.forEach(c => uniqueFinalCardsMap.set(c.id, c));
@@ -309,36 +175,7 @@ export async function getFlashcardsByIds(ids: string[]): Promise<FormattedCard[]
     formattedKanjis.forEach(c => uniqueFinalCardsMap.set(c.id, c));
 
     const allCards = Array.from(uniqueFinalCardsMap.values());
-
-    const requestedOrderMap = new Map<string, number>();
-    ids.forEach((id, index) => {
-      requestedOrderMap.set(id.toLowerCase(), index);
-    });
-
-    allCards.sort((a, b) => {
-      const aKeys = [a.id.toLowerCase(), a.word.toLowerCase()];
-      const bKeys = [b.id.toLowerCase(), b.word.toLowerCase()];
-      
-      let aIdx = 9999;
-      let bIdx = 9999;
-      
-      for (const k of aKeys) {
-        if (requestedOrderMap.has(k)) {
-          aIdx = requestedOrderMap.get(k)!;
-          break;
-        }
-      }
-      for (const k of bKeys) {
-        if (requestedOrderMap.has(k)) {
-          bIdx = requestedOrderMap.get(k)!;
-          break;
-        }
-      }
-      
-      return aIdx - bIdx;
-    });
-
-    return allCards;
+    return sortCardsByRequestedOrder(allCards, ids);
   } catch (error) {
     console.error("[getFlashcardsByIds] Gagal mengambil data kartu:", error);
     return [];

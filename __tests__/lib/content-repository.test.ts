@@ -18,7 +18,9 @@ vi.mock("@/lib/supabase/server", () => {
           neq: vi.fn().mockReturnThis(),
           not: vi.fn().mockReturnThis(),
           order: vi.fn().mockReturnThis(),
-          limit: vi.fn().mockReturnThis(),
+          limit: vi.fn().mockImplementation(() => {
+            return Promise.resolve({ data: mockData, error: mockError });
+          }),
           range: vi.fn().mockImplementation(() => {
             return Promise.resolve({ data: mockData, count: mockCount, error: mockError });
           }),
@@ -89,7 +91,22 @@ describe("Content Repository Unit Tests", () => {
       const result = await getContentBySlugOrId<VocabTable>("vocab", "f57f436a-80ad-46b3-841d-40cdcf9473d6");
 
       expect(result).not.toBeNull();
-      expect(result.id).toBe("f57f436a-80ad-46b3-841d-40cdcf9473d6");
+      expect(result?.id).toBe("f57f436a-80ad-46b3-841d-40cdcf9473d6");
+    });
+
+    it("harus melakukan fallback pencarian karakter kanji jika slug tidak cocok", async () => {
+      mockSingleData = { id: "kanji-1", character: "日", meaning: "sun" };
+
+      const result = await getContentBySlugOrId<any>("kanji", "日");
+
+      expect(result).not.toBeNull();
+      expect(result?.character).toBe("日");
+    });
+
+    it("harus mengembalikan null jika data tidak ditemukan dan terjadi error", async () => {
+      mockError = new Error("Not found");
+      const result = await getContentBySlugOrId<any>("vocab", "non-existent");
+      expect(result).toBeNull();
     });
   });
 
@@ -100,6 +117,7 @@ describe("Content Repository Unit Tests", () => {
 
       const slugs = await getStaticSlugs("vocab", { limit: 10 });
       expect(slugs).toBeDefined();
+      expect(slugs).toHaveLength(2);
     });
   });
 });
