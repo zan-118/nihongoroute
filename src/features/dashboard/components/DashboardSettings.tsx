@@ -17,7 +17,7 @@ import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Save, Upload, Trash2, LogOut } from "@/components/ui/icons";
-import NotificationManager from "@/components/features/notifications/NotificationManager";
+import NotificationManager from "@/features/notifications/NotificationManager";
 
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)

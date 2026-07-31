@@ -80,8 +80,8 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
   if (!examData) {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
-        <div className="absolute top-0 right-1/4 size-[300px] bg-destructive/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
-        <Card className="p-10 md:p-14 border-destructive/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-[2rem] bg-card">
+        <div className="absolute top-0 right-1/4 size-75 bg-destructive/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
+        <Card className="p-10 md:p-14 border-destructive/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-4xl bg-card">
           <div className="size-20 mx-auto neo-inset text-destructive flex items-center justify-center rounded-full mb-8 shadow-inner bg-destructive/10">
             <ShieldAlert size={36} className="text-destructive" />
           </div>
@@ -109,8 +109,8 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
   if (!examData.questions || examData.questions.length === 0) {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
-        <div className="absolute top-0 left-1/4 size-[300px] bg-warning/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
-        <Card className="p-10 md:p-14 border-warning/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-[2rem] bg-card">
+        <div className="absolute top-0 left-1/4 size-75 bg-warning/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
+        <Card className="p-10 md:p-14 border-warning/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-4xl bg-card">
           <div className="size-20 mx-auto neo-inset text-warning flex items-center justify-center rounded-full mb-8 shadow-inner bg-warning/10">
             <Wrench size={36} className="text-warning" />
           </div>

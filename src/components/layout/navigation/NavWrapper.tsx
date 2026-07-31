@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { getBreadcrumbItems } from "@/lib/routes";
 import AppBreadcrumbs from "./AppBreadcrumbs";
 
-const FloatingActions = dynamic(() => import("@/components/features/global/FloatingActions"), { ssr: false });
+const FloatingActions = dynamic(() => import("@/components/global/FloatingActions"), { ssr: false });
 const AchievementToast = dynamic(() => import("../AchievementToast"), { ssr: false });
 
 interface NavWrapperProps {

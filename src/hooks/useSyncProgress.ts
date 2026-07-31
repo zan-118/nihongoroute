@@ -14,7 +14,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 import { useEffect, useRef, useMemo, useCallback } from "react";
-import { dispatchSyncEvent } from "@/lib/core/sync-pipeline-engine";
+import { ProgressSyncEngine } from "@/lib/core/sync-pipeline-engine";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import { useCloudData } from "./useCloudData";
 import { useCloudMutation } from "./useCloudMutation";
@@ -94,18 +94,22 @@ export function useSyncProgress(initialSession?: Session | null) {
   // Prepare cloud mutation.
   const syncMutation = useCloudMutation(session);
 
-  // Listen to broadcast channel for multi-tab sync.
-  useEffect(() => {
-    if (typeof window === "undefined" || !("BroadcastChannel" in window)) return;
-
-    const channel = new BroadcastChannel("nihongoroute_sync");
-    channel.onmessage = (event) => {
-      if (event.data === "SYNC_COMPLETE") {
-        queryClient.invalidateQueries({ queryKey: ["user-progress"] });
-      }
-    };
-    return () => channel.close();
+  // Instantiate ProgressSyncEngine deep module.
+  const syncEngine = useMemo(() => {
+    return new ProgressSyncEngine({
+      onSyncComplete: (message) => {
+        if (message === "SYNC_COMPLETE") {
+          queryClient.invalidateQueries({ queryKey: ["user-progress"] });
+        }
+      },
+    });
   }, [queryClient]);
+
+  useEffect(() => {
+    return () => {
+      syncEngine.dispose();
+    };
+  }, [syncEngine]);
 
   // Track sync state and mutation ref.
   const lastSyncedProgress = useRef<string>("");
@@ -141,7 +145,7 @@ export function useSyncProgress(initialSession?: Session | null) {
     }
   }, [cloudProfileKey]);
 
-  // Debounce auto-sync by 2000ms on local changes.
+  // Debounce auto-sync by 2000ms on local changes via ProgressSyncEngine.
   useEffect(() => {
     if (isFetching || isPending || !session?.user || isGuest || !userHydrated || !srsHydrated) return;
 
@@ -149,38 +153,35 @@ export function useSyncProgress(initialSession?: Session | null) {
 
     if (!isProfileChanged && dirtySrsSize === 0 && dirtyLessonsSize === 0) return;
 
-    return dispatchSyncEvent({
-      triggerSync: () => {
-        const userState = useUserStore.getState();
-        const srsState = useSRSStore.getState();
-        const uiState = useUIStore.getState();
-        const currentSrs = srsState.srs;
-        const currentCompletedLessons = userState.completedLessons;
-        const currentDirtySrs = srsState.dirtySrs;
-        const currentDirtyLessons = userState.dirtyLessons;
+    return syncEngine.scheduleSync(() => {
+      const userState = useUserStore.getState();
+      const srsState = useSRSStore.getState();
+      const uiState = useUIStore.getState();
+      const currentSrs = srsState.srs;
+      const currentCompletedLessons = userState.completedLessons;
+      const currentDirtySrs = srsState.dirtySrs;
+      const currentDirtyLessons = userState.dirtyLessons;
 
-        const currentProgress = {
-          name: userState.name, 
-          xp: userState.xp, 
-          streak: userState.streak, 
-          todayReviewCount: userState.todayReviewCount, 
-          lastStudyDate: userState.lastStudyDate, 
-          studyDays: userState.studyDays,
-          inventory: userState.inventory, 
-          settings: uiState.settings, 
-          srs: currentSrs, 
-          completedLessons: currentCompletedLessons
-        };
-        syncMutateRef.current({
-          progress: currentProgress,
-          dirtySrs: currentDirtySrs,
-          dirtyLessons: currentDirtyLessons
-        });
-        lastSyncedProgress.current = profileKey;
-      },
-      debounceMs: 2000,
+      const currentProgress = {
+        name: userState.name, 
+        xp: userState.xp, 
+        streak: userState.streak, 
+        todayReviewCount: userState.todayReviewCount, 
+        lastStudyDate: userState.lastStudyDate, 
+        studyDays: userState.studyDays,
+        inventory: userState.inventory, 
+        settings: uiState.settings, 
+        srs: currentSrs, 
+        completedLessons: currentCompletedLessons
+      };
+      syncMutateRef.current({
+        progress: currentProgress,
+        dirtySrs: currentDirtySrs,
+        dirtyLessons: currentDirtyLessons
+      });
+      lastSyncedProgress.current = profileKey;
     });
-  }, [profileKey, dirtySrsSize, dirtyLessonsSize, session?.user, isFetching, isPending, isGuest, userHydrated, srsHydrated]);
+  }, [profileKey, dirtySrsSize, dirtyLessonsSize, session?.user, isFetching, isPending, isGuest, userHydrated, srsHydrated, syncEngine]);
 
   // Trigger manual sync immediately.
   const syncNow = useCallback(() => {

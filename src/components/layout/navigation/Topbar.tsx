@@ -16,9 +16,9 @@ import { useNavbar } from "./useNavbar";
 import { useSyncNotifications } from "@/hooks/useSyncNotifications";
 import dynamic from "next/dynamic";
 
-const NotificationPopover = dynamic(() => import("@/components/features/user/NotificationPopover"), { ssr: false });
-const SearchModal = dynamic(() => import("@/components/features/tools/search/SearchModal"), { ssr: false });
-import UserNav from "@/components/features/user/UserNav";
+const NotificationPopover = dynamic(() => import("@/features/user/NotificationPopover"), { ssr: false });
+const SearchModal = dynamic(() => import("@/features/tools/search/SearchModal"), { ssr: false });
+import UserNav from "@/features/user/UserNav";
 import { ThemeToggle } from "./ThemeToggle";
 import { getBreadcrumbItems, getCurrentRouteLabel, getParentRouteLabel } from "@/lib/routes";
 

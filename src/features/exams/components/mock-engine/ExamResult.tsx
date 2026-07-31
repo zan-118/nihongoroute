@@ -25,7 +25,7 @@ import { SECTION_LABELS } from "./constants";
  * Dynamic import for PdfGenerator component.
  * Disable SSR to prevent canvas/document reference errors.
  */
-const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerator"), {
+const PdfGenerator = dynamic(() => import("@/features/pdf/PdfGenerator"), {
   ssr: false,
   loading: () => <Loader2 className="animate-spin text-primary" size={20} />
 });

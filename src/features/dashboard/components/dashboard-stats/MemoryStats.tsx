@@ -64,7 +64,7 @@ export default function MemoryStats() {
   return (
     <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-2xl md:rounded-3xl border-border relative overflow-hidden h-full flex flex-col neo-card shadow-none">
       {/* Pola Kisi Latar Belakang */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.02)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--primary-rgb)/0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-50" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.02)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--primary-rgb)/0.02)_1px,transparent_1px)] bg-size-[20px_20px] pointer-events-none opacity-50" />
 
       {/* Bagian Header */}
       <header className="flex items-center justify-between mb-8 md:mb-10 relative z-10">

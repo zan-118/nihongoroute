@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getIntegratedShadowingPresets } from "@/actions/tools-integration.actions";
-import ShadowingRecorderClient from "@/components/features/tools/shadowing-recorder/ShadowingRecorderClient";
+import ShadowingRecorderClient from "@/features/tools/shadowing-recorder/ShadowingRecorderClient";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";

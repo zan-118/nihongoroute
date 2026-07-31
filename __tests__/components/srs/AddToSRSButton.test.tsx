@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import React from "react";
-import { AddToSRSButton } from "@/components/features/srs/actions/AddToSRSButton";
+import { AddToSRSButton } from "@/features/srs/actions/AddToSRSButton";
 import { useSRSStore } from "@/store/useSRSStore";
 
 // Mock icons

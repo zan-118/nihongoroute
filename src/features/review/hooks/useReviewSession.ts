@@ -11,7 +11,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { MasterCardData } from "@/components/features/flashcards/master/types";
+import { MasterCardData } from "@/features/review/flashcards/master/types";
 import { useSRSStore } from "@/store/useSRSStore";
 import { summarizeSrs } from "@/lib/srs-summary";
 

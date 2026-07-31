@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
  * Disable SSR. Tour needs browser DOM.
  */
 const OnboardingTour = dynamic(
-  () => import("@/components/features/onboarding/OnboardingTour"),
+  () => import("@/features/auth/onboarding/OnboardingTour"),
   // Disable SSR. Tour library requires window/document access.
   { ssr: false }
 );

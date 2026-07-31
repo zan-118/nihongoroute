@@ -155,7 +155,7 @@ export default function KanjiStrokePlayer({
         <div className="absolute inset-0 rounded-2xl md:rounded-3xl ring-1 ring-border group-hover:ring-primary/30 transition-all duration-500" />
         
         {/* Latar Belakang Pola Grid */}
-        <div className="absolute inset-0 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] [background-size:20px_20px] opacity-50" />
+        <div className="absolute inset-0 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] bg-size-[20px_20px] opacity-50" />
 
         <svg
           key={resetKey}

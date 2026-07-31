@@ -18,10 +18,10 @@ import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/useUIStore";
 
 // Komponen Pendukung
-import { GrammarCard } from "@/components/features/grammar/GrammarCard";
-import { GrammarSearch } from "@/components/features/grammar/GrammarSearch";
-import { GrammarEmptyState } from "@/components/features/grammar/GrammarEmptyState";
-import { GrammarHeader } from "@/components/features/grammar/GrammarHeader";
+import { GrammarCard } from "@/features/library/grammar/components/GrammarCard";
+import { GrammarSearch } from "@/features/library/grammar/components/GrammarSearch";
+import { GrammarEmptyState } from "@/features/library/grammar/components/GrammarEmptyState";
+import { GrammarHeader } from "@/features/library/grammar/components/GrammarHeader";
 
 // ======================
 // KONFIGURASI / KONSTANTA

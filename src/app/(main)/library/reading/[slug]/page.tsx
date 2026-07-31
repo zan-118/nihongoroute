@@ -126,7 +126,7 @@ export default async function ReadingPage({ params }: { params: Promise<{ slug: 
           }),
         ]}
       />
-      <ReadingPageClient data={data as unknown as import("@/components/features/reading/types").ReadingData} />
+      <ReadingPageClient data={data as unknown as import("@/features/library/reading/types").ReadingData} />
     </>
   );
 }

@@ -102,7 +102,7 @@ graph TD
 ```
 [Komponen UI (DialogueSection / ListeningWorkspace / TTSReader)]
       │
-      ├─► Memanggil shared hook useLineTTS (src/components/features/media/hooks/useLineTTS.ts)
+      ├─► Memanggil shared hook useLineTTS (src/features/media/hooks/useLineTTS.ts)
       │
       ├─► GET /api/tts?text=...&voice=...&rate=...
       │

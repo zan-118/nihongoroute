@@ -8,7 +8,7 @@
 // ==========================================
 import { Card } from "@/components/ui/card";
 import { Sparkles } from "@/components/ui/icons";
-import { MnemonicEditor } from "@/components/features/srs/mnemonic/MnemonicEditor";
+import { MnemonicEditor } from "@/features/srs/mnemonic/MnemonicEditor";
 
 // ==========================================
 // TIPE DATA / INTERFACE

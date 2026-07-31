@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import KanjiSimilarityClient from "@/components/features/tools/kanji-similarity/KanjiSimilarityClient";
+import KanjiSimilarityClient from "@/features/tools/kanji-similarity/KanjiSimilarityClient";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";

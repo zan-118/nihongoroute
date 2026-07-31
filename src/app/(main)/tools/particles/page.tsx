@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ParticleTrainerClient from "@/components/features/tools/particle-trainer/ParticleTrainerClient";
+import ParticleTrainerClient from "@/features/tools/particle-trainer/ParticleTrainerClient";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";

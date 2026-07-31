@@ -11,8 +11,8 @@ import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 import { get, set as idbSet, del } from "idb-keyval";
 import { Notification, Settings } from "./types";
 
-import { ReadingState } from "@/components/features/reading/types";
-import { ListeningState } from "@/components/features/listening/types";
+import { ReadingState } from "@/features/library/reading/types";
+import { ListeningState } from "@/features/library/listening/types";
 import {
   createLearningEvent,
   type LearningEvent,

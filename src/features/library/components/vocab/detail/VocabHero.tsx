@@ -7,8 +7,8 @@
  */
 
 import { SmartJapanese } from "@/components/ui/japanese";
-import { TTSReader } from "@/components/features/media";
-import { AddToSRSButton } from "@/components/features/srs/actions/AddToSRSButton";
+import { TTSReader } from "@/features/media";
+import { AddToSRSButton } from "@/features/srs/actions/AddToSRSButton";
 
 interface VocabHeroProps {
   /** The target Japanese word (kanji or kana). */

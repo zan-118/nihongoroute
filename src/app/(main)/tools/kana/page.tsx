@@ -10,12 +10,12 @@
 // ======================
 import React, { Suspense } from "react";
 
-import { useKanaQuiz } from "@/components/features/tools/kana/useKanaQuiz";
-import { KanaHeader } from "@/components/features/tools/kana/KanaHeader";
-import { KanaControls } from "@/components/features/tools/kana/KanaControls";
-import { KanaMatrix } from "@/components/features/tools/kana/KanaMatrix";
-import { KanaWritingDialog } from "@/components/features/tools/kana/KanaWritingDialog";
-import { KanaQuizDialog } from "@/components/features/tools/kana/KanaQuizDialog";
+import { useKanaQuiz } from "@/features/tools/kana/useKanaQuiz";
+import { KanaHeader } from "@/features/tools/kana/KanaHeader";
+import { KanaControls } from "@/features/tools/kana/KanaControls";
+import { KanaMatrix } from "@/features/tools/kana/KanaMatrix";
+import { KanaWritingDialog } from "@/features/tools/kana/KanaWritingDialog";
+import { KanaQuizDialog } from "@/features/tools/kana/KanaQuizDialog";
 
 /**
  * Kana content component.

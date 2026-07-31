@@ -98,7 +98,7 @@ const OptionButton = memo(({
       </div>
       {choice?.type === "image" ? (
         <span className="flex min-w-0 flex-1 flex-col gap-3">
-          <span className="relative block aspect-[16/9] w-full overflow-hidden rounded-xl border border-border bg-muted/40">
+          <span className="relative block aspect-video w-full overflow-hidden rounded-xl border border-border bg-muted/40">
             <Image
               src={choice.value}
               alt={choice.alt || text}
@@ -144,7 +144,7 @@ function ExamPassageBlock({ passage }: { passage?: ExamPassage | null }) {
             width={900}
             height={500}
             sizes="(max-width: 1024px) 100vw, 900px"
-            className="max-h-[420px] w-full object-contain"
+            className="max-h-105 w-full object-contain"
           />
         </div>
       )}

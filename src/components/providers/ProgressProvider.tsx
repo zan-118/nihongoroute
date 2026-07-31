@@ -22,7 +22,7 @@ import dynamic from "next/dynamic";
  * ReminderSystem component.
  * Loaded dynamically. Client-side only.
  */
-const ReminderSystem = dynamic(() => import("@/components/features/notifications/ReminderSystem"), { ssr: false });
+const ReminderSystem = dynamic(() => import("@/features/notifications/ReminderSystem"), { ssr: false });
 
 // ======================
 // EKSEKUSI UTAMA

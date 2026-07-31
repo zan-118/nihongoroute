@@ -15,7 +15,7 @@
 // ==========================================
 import dynamic from "next/dynamic";
 import DashboardStats from "../DashboardStats";
-import LearningTimelinePanel from "@/components/features/ecosystem/LearningTimelinePanel";
+import LearningTimelinePanel from "@/features/ecosystem/LearningTimelinePanel";
 import { Variants } from "framer-motion";
 import type { ReadinessCourseCategory } from "@/lib/readiness";
 

@@ -13,7 +13,7 @@ import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { getGrammarStaticSlugs } from "@/actions/grammar.actions";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
-import GrammarDetailClient from "@/components/features/grammar/GrammarDetailClient";
+import GrammarDetailClient from "@/features/library/grammar/components/GrammarDetailClient";
 import {
   articleJsonLd,
   breadcrumbJsonLd,

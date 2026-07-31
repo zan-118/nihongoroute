@@ -23,7 +23,7 @@ import DailyQuests from "./quests/DailyQuests";
 import MemoryStats from "./dashboard-stats/MemoryStats";
 import SRSAnalytics from "@/features/dashboard/components/srs/analytics/SRSAnalytics";
 import Heatmap from "./heatmap/Heatmap";
-import StreakFreezeCard from "@/components/features/gamification/StreakFreezeCard";
+import StreakFreezeCard from "@/features/gamification/StreakFreezeCard";
 import { useUserStore } from "@/store/useUserStore";
 
 // ==========================================
@@ -97,13 +97,13 @@ export default function DashboardStats({
       {/* SEKSI 1: LEVEL & XP CARD (SPAN 8) */}
       <m.div variants={itemVariants} className="md:col-span-8">
         {loading ? (
-          <Skeleton className="h-[250px] w-full rounded-2xl" />
+          <Skeleton className="h-62.5 w-full rounded-2xl" />
         ) : (
           <div className="relative group h-full">
             {/* Tombou Register Mark */}
-            <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-              <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-success/20 group-hover:bg-success transition-colors duration-500" />
-              <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-success/20 group-hover:bg-success transition-colors duration-500" />
+            <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
+              <div className="absolute top-0 right-0 w-3.5 h-px bg-success/20 group-hover:bg-success transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-px h-3.5 bg-success/20 group-hover:bg-success transition-colors duration-500" />
             </div>
 
             <Card className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-6 md:p-8 flex flex-col justify-center relative overflow-hidden group shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-success/45 transition-colors duration-500">
@@ -137,7 +137,7 @@ export default function DashboardStats({
                 <Progress
                   value={xpProgress}
                   className="h-3 bg-muted border border-border relative overflow-hidden"
-                  indicatorClassName="bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)))] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
+                  indicatorClassName="bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)))] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-linear-to-r before:from-transparent before:via-white/25 before:to-transparent"
                 />
                 <p className="mt-4 text-xs text-muted-foreground uppercase font-bold tracking-widest font-mono text-center md:text-right">
                   Kumpulkan <span className="text-foreground">{xpNeeded} XP</span> lagi untuk naik level!
@@ -152,16 +152,16 @@ export default function DashboardStats({
       <m.div variants={itemVariants} className="md:col-span-4 flex flex-col gap-6">
         {loading ? (
           <>
-            <Skeleton className="h-[110px] w-full rounded-2xl" />
-            <Skeleton className="h-[110px] w-full rounded-2xl" />
+            <Skeleton className="h-27.5 w-full rounded-2xl" />
+            <Skeleton className="h-27.5 w-full rounded-2xl" />
           </>
         ) : (
           <>
-            <div className="relative group h-[140px]">
+            <div className="relative group h-35">
               {/* Tombou Register Mark */}
-              <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-                <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-warning/20 group-hover:bg-warning transition-colors duration-500" />
-                <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-warning/20 group-hover:bg-warning transition-colors duration-500" />
+              <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
+                <div className="absolute top-0 right-0 w-3.5 h-px bg-warning/20 group-hover:bg-warning transition-colors duration-500" />
+                <div className="absolute top-0 right-0 w-px h-3.5 bg-warning/20 group-hover:bg-warning transition-colors duration-500" />
               </div>
 
               <Card className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-5 flex flex-col justify-between group overflow-hidden relative shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-warning/45 transition-colors duration-500">
@@ -210,9 +210,9 @@ export default function DashboardStats({
              return (
                <div key={cat._id} className="relative group">
                  {/* Tombou Register Mark */}
-                 <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-                   <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
-                   <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+                 <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
+                   <div className="absolute top-0 right-0 w-3.5 h-px bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+                   <div className="absolute top-0 right-0 w-px h-3.5 bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
                  </div>
 
                  <Card className="bg-card border border-border/50 dark:border-white/10 p-5 rounded-2xl group shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-primary/45 transition-colors duration-500">
@@ -237,7 +237,7 @@ export default function DashboardStats({
                         whileInView={{ width: `${percentage}%` }}
                         transition={{ duration: 1, ease: "easeOut" }}
                         viewport={{ once: true }}
-                        className={`h-full rounded-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent ${
+                        className={`h-full rounded-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-linear-to-r before:from-transparent before:via-white/20 before:to-transparent ${
                           percentage === 100 
                             ? 'bg-success shadow-[0_0_10px_rgb(var(--success-rgb)/0.5)]' 
                             : 'bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)))] shadow-[0_0_10px_rgb(var(--brand-cyan-rgb)/0.4)]'
@@ -253,20 +253,20 @@ export default function DashboardStats({
 
       {/* SEKSI 4: MISI HARIAN, STATS MEMORI, DAN ANALISIS SRS */}
       <m.div variants={itemVariants} className="md:col-span-4">
-        {loading ? <Skeleton className="h-[400px] w-full rounded-2xl" /> : <DailyQuests />}
+        {loading ? <Skeleton className="h-100 w-full rounded-2xl" /> : <DailyQuests />}
       </m.div>
       
       <m.div variants={itemVariants} className="md:col-span-4">
-        {loading ? <Skeleton className="h-[400px] w-full rounded-2xl" /> : <MemoryStats />}
+        {loading ? <Skeleton className="h-100 w-full rounded-2xl" /> : <MemoryStats />}
       </m.div>
 
       <m.div variants={itemVariants} className="md:col-span-4">
-        {loading ? <Skeleton className="h-[400px] w-full rounded-2xl" /> : <SRSAnalytics />}
+        {loading ? <Skeleton className="h-100 w-full rounded-2xl" /> : <SRSAnalytics />}
       </m.div>
 
       {/* SEKSI 5: PETA KONTRIBUSI BELAJAR (HEATMAP) */}
       <m.div variants={itemVariants} className="md:col-span-12">
-        {loading ? <Skeleton className="h-[220px] w-full rounded-2xl" /> : <Heatmap studyDays={progress.studyDays} />}
+        {loading ? <Skeleton className="h-55 w-full rounded-2xl" /> : <Heatmap studyDays={progress.studyDays} />}
       </m.div>
     </div>
   );

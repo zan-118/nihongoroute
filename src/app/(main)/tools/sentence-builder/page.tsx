@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import SentenceBuilderClient from "@/components/features/tools/sentence-builder/SentenceBuilderClient";
+import SentenceBuilderClient from "@/features/tools/sentence-builder/SentenceBuilderClient";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";

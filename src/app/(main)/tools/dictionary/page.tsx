@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import DictionaryPageClient from "@/components/features/tools/dictionary/DictionaryPageClient";
+import DictionaryPageClient from "@/features/tools/dictionary/DictionaryPageClient";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";

@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { useUserStore } from "@/store/useUserStore";
-import ProfileEditor from "@/components/features/user/ProfileEditor";
+import ProfileEditor from "@/features/user/ProfileEditor";
 import { Trophy, Flame, Star, ArrowRight } from "@/components/ui/icons";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { getLevelProgressPercent } from "@/lib/level";
@@ -135,7 +135,7 @@ export default function DashboardHero({
   const xpProgress = Math.round(getLevelProgressPercent(xp, level));
 
   return (
-    <m.div variants={itemVariants} className="flex flex-col gap-[34px] items-start w-full">
+    <m.div variants={itemVariants} className="flex flex-col gap-8.5 items-start w-full">
       
       {/* AREA SAPAAN PENGGUNA */}
       {/* Render loading skeleton or user badge */}
@@ -143,7 +143,7 @@ export default function DashboardHero({
         {loading ? (
           <Skeleton className="h-6 w-32 rounded-full mb-6" />
         ) : (
-          <div className="flex flex-col items-center lg:items-start gap-[13px] mb-[34px]">
+          <div className="flex flex-col items-center lg:items-start gap-3.25 mb-8.5">
             <Badge 
               variant="outline" 
               className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] flex items-center gap-2 w-fit border-border  transition-all ${
@@ -175,21 +175,21 @@ export default function DashboardHero({
       {/* Render review card. Change style based on due count */}
       <div className="w-full relative group">
         {/* Tombou Register Mark (L-shape offset 6px outside rounded-2xl) */}
-        <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+        <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
           <div 
-            className="absolute top-0 right-0 w-[14px] h-[1px] transition-colors duration-500" 
+            className="absolute top-0 right-0 w-3.5 h-px transition-colors duration-500" 
             style={{ backgroundColor: dueCount > 0 ? "var(--primary)" : "var(--success)" }}
           />
           <div 
-            className="absolute top-0 right-0 w-[1px] h-[14px] transition-colors duration-500" 
+            className="absolute top-0 right-0 w-px h-3.5 transition-colors duration-500" 
             style={{ backgroundColor: dueCount > 0 ? "var(--primary)" : "var(--success)" }}
           />
         </div>
 
         {loading ? (
-          <Skeleton className="h-[320px] w-full rounded-2xl" />
+          <Skeleton className="h-80 w-full rounded-2xl" />
         ) : (
-          <Card className="p-[34px] md:p-[50px] bg-card border border-border/50 dark:border-white/10 rounded-2xl shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
+          <Card className="p-8.5 md:p-12.5 bg-card border border-border/50 dark:border-white/10 rounded-2xl shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
             <div className="relative z-10 flex flex-col items-center text-center">
               
               {/* Ikon Berdenyut Interaktif (Pulsing Icon) */}
@@ -200,7 +200,7 @@ export default function DashboardHero({
                   scale: [1, 1.03, 1]
                 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className={`w-[80px] h-[80px] rounded-lg flex items-center justify-center mb-[34px] border transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                className={`w-20 h-20 rounded-lg flex items-center justify-center mb-8.5 border transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                   dueCount > 0 
                     ? 'bg-primary/10 border-primary/25 text-primary' 
                     : 'bg-success/10 border-success/25 text-success'
@@ -213,17 +213,17 @@ export default function DashboardHero({
                 )}
               </m.div>
               
-              <h3 className={`text-3xl md:text-5xl font-bold tracking-tight mb-[13px] text-balance transition-colors ${dueCount > 0 ? 'text-foreground' : 'text-success'}`}>
+              <h3 className={`text-3xl md:text-5xl font-bold tracking-tight mb-3.25 text-balance transition-colors ${dueCount > 0 ? 'text-foreground' : 'text-success'}`}>
                 {dueCount > 0 ? `Yuk review lagi, ${name || 'Pelajar'}!` : `Mantap, ${name || 'Pelajar'}! Hafalanmu masih aman.`}
               </h3>
-              <p className="text-muted-foreground text-sm md:text-base mb-[34px] font-semibold max-w-md leading-relaxed text-balance">
+              <p className="text-muted-foreground text-sm md:text-base mb-8.5 font-semibold max-w-md leading-relaxed text-balance">
                 {dueCount > 0 
                   ? `Ada ${dueCount} kata yang nunggu kamu review. Semangat!` 
                   : "Semua masih fresh di ingatanmu. Mau lanjut ke materi baru?"}
               </p>
    
               {/* RINGKASAN STATUS DI DALAM HERO (Mobile-Optimized) */}
-              <div className="grid grid-cols-3 gap-2 md:gap-[21px] mb-[34px] md:mb-[55px] w-full max-w-sm">
+              <div className="grid grid-cols-3 gap-2 md:gap-5.25 mb-8.5 md:mb-13.75 w-full max-w-sm">
                 <div className="flex flex-col items-center gap-1 md:gap-2">
                   <div className="flex items-center gap-1 md:gap-1.5 text-warning transition-transform hover:scale-105">
                     <Flame size={14} className="fill-current md:w-4 md:h-4" />
@@ -250,10 +250,10 @@ export default function DashboardHero({
               </div>
    
               {/* Render action buttons with Asymmetric Calligraphic Cut */}
-              <div className="flex flex-col sm:flex-row gap-[13px] w-full max-w-md">
+              <div className="flex flex-col sm:flex-row gap-3.25 w-full max-w-md">
                 {dueCount > 0 ? (
                   <>
-                    <Button asChild className="flex-1 h-[50px] bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-[0.15em] rounded-lg rounded-br-none text-[10px] pl-6 pr-4 transition-all active:scale-[0.97] group">
+                    <Button asChild className="flex-1 h-12.5 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-[0.15em] rounded-lg rounded-br-none text-[10px] pl-6 pr-4 transition-all active:scale-[0.97] group">
                       <Link href={ROUTES.REVIEW} className="flex items-center justify-between w-full">
                         <span>Asah Ingatan</span>
                         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 dark:bg-white/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1">
@@ -261,7 +261,7 @@ export default function DashboardHero({
                         </span>
                       </Link>
                     </Button>
-                    <Button asChild variant="outline" className="flex-1 h-[50px] bg-background border border-border/80 hover:border-primary/50 rounded-lg rounded-br-none text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 active:scale-[0.97] group">
+                    <Button asChild variant="outline" className="flex-1 h-12.5 bg-background border border-border/80 hover:border-primary/50 rounded-lg rounded-br-none text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 active:scale-[0.97] group">
                       <Link href="/review?mode=quick" className="flex items-center justify-center gap-2">
                         <Zap size={14} className="text-primary" />
                         <span>Kuis Kilat</span>
@@ -270,7 +270,7 @@ export default function DashboardHero({
                   </>
                 ) : (
                   <>
-                    <Button asChild className="flex-1 h-[50px] bg-foreground text-background hover:bg-foreground/90 font-black uppercase tracking-[0.15em] rounded-lg rounded-br-none text-[10px] pl-6 pr-4 transition-all active:scale-[0.97] group">
+                    <Button asChild className="flex-1 h-12.5 bg-foreground text-background hover:bg-foreground/90 font-black uppercase tracking-[0.15em] rounded-lg rounded-br-none text-[10px] pl-6 pr-4 transition-all active:scale-[0.97] group">
                       <Link href={activeData ? `/courses/${activeData.courseSlug}/${activeData.lessonSlug}` : "/courses"} className="flex items-center justify-between w-full">
                         <span>{activeData ? `Lanjut: ${activeData.lessonTitle}` : "Mulai Pelajaran"}</span>
                         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-background/10 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1">
@@ -278,7 +278,7 @@ export default function DashboardHero({
                         </span>
                       </Link>
                     </Button>
-                    <Button asChild variant="outline" className="flex-1 h-[50px] bg-background border border-border/80 hover:border-primary/50 rounded-lg rounded-br-none text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 active:scale-[0.97] group">
+                    <Button asChild variant="outline" className="flex-1 h-12.5 bg-background border border-border/80 hover:border-primary/50 rounded-lg rounded-br-none text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 active:scale-[0.97] group">
                       <Link href="/review?mode=quick" className="flex items-center justify-center gap-2">
                         <Zap size={14} className="text-primary" />
                         <span>Kuis Kilat</span>
@@ -298,10 +298,10 @@ export default function DashboardHero({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1 }}
-            className="mt-[34px] w-full"
+            className="mt-8.5 w-full"
           >
-            <div className="p-5 rounded-lg bg-card border border-border/50 dark:border-white/10 flex gap-[21px] items-center group shadow-[0_2px_12px_rgba(0,0,0,0.01)]">
-              <div className="shrink-0 size-[34px] rounded-lg bg-primary/10 flex items-center justify-center text-primary transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+            <div className="p-5 rounded-lg bg-card border border-border/50 dark:border-white/10 flex gap-5.25 items-center group shadow-[0_2px_12px_rgba(0,0,0,0.01)]">
+              <div className="shrink-0 size-8.5 rounded-lg bg-primary/10 flex items-center justify-center text-primary transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
                 <Sparkles size={16} />
               </div>
               <div>

@@ -29,7 +29,7 @@ import { VocabFilterPanel } from "@/features/library/components/vocab/VocabFilte
 import { VocabPagination } from "@/features/library/components/vocab/VocabPagination";
 import { useUIStore } from "@/store/useUIStore";
 import { SmartJapanese } from "@/components/ui/japanese";
-import { TTSReader } from "@/components/features/media";
+import { TTSReader } from "@/features/media";
 import type { VocabItem } from "@/features/library/components/vocab/types";
 
 // ======================

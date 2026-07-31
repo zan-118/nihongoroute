@@ -22,7 +22,7 @@ export function ExamPlaying() {
   if (!activeQuestion) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-background text-foreground overflow-y-auto pb-32 font-sans selection:bg-destructive/30">
+    <div className="fixed inset-0 z-100 bg-background text-foreground overflow-y-auto pb-32 font-sans selection:bg-destructive/30">
       <audio aria-label="Audio" ref={audioRef} className="hidden" />
 
       <div className="max-w-7xl mx-auto px-4 md:px-6">

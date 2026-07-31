@@ -21,8 +21,8 @@ import {
   Play,
   Gamepad2
 } from "@/components/ui/icons";
-import SurvivalMode from "@/components/features/games/SurvivalMode";
-import { useSurvivalSetup } from "@/components/features/games/survival/useSurvivalSetup";
+import SurvivalMode from "@/features/games/SurvivalMode";
+import { useSurvivalSetup } from "@/features/games/survival/useSurvivalSetup";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 

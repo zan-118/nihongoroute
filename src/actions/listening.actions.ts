@@ -119,7 +119,7 @@ export async function getLibraryListeningDetail(slug: string): Promise<LibraryIt
     } as Record<string, unknown>;
 
     // Parser yang kuat untuk Teks Dialog Mentah (Transcript)
-    let dialogue: import("@/components/features/listening/types").TranscriptLine[] = [];
+    let dialogue: import("@/features/library/listening/types").TranscriptLine[] = [];
     if (typeof data.body === "string") {
       const lines = data.body.split("\n").filter((line: string) => line.trim());
       const translations = typeof data.translation === "string" ? data.translation.split("\n").filter((line: string) => line.trim()) : [];
@@ -179,7 +179,7 @@ export async function getLibraryListeningDetail(slug: string): Promise<LibraryIt
         };
       });
     } else if (Array.isArray(data.body)) {
-      dialogue = data.body as import("@/components/features/listening/types").TranscriptLine[];
+      dialogue = data.body as import("@/features/library/listening/types").TranscriptLine[];
     }
     data.transcript = dialogue;
 

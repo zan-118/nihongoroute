@@ -15,17 +15,17 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { FileText, Book, Edit, MessageSquare, BookOpen, Lightbulb, GraduationCap } from "@/components/ui/icons";
 
 import QuizEngine from "@/features/exams/components/quiz-engine/QuizEngine";
-import ContentBlockRenderer from "@/components/features/lessons/ContentBlockRenderer";
+import ContentBlockRenderer from "@/features/courses/lessons/ContentBlockRenderer";
 
 // Komponen Modular
-import { LessonHeader } from "@/components/features/lessons/LessonHeader";
+import { LessonHeader } from "@/features/courses/lessons/LessonHeader";
 import { IllustrationGallery } from "@/components/ui/IllustrationGallery";
-import { VocabSection } from "@/components/features/lessons/VocabSection";
-import { KanjiSection } from "@/components/features/lessons/KanjiSection";
-import { DialogueSection } from "@/components/features/lessons/DialogueSection";
-import { PracticeSection } from "@/components/features/lessons/PracticeSection";
-import { LessonNavigation } from "@/components/features/lessons/LessonNavigation";
-import { MarkCompleteButton } from "@/components/features/lessons/MarkCompleteButton";
+import { VocabSection } from "@/features/courses/lessons/VocabSection";
+import { KanjiSection } from "@/features/courses/lessons/KanjiSection";
+import { DialogueSection } from "@/features/courses/lessons/DialogueSection";
+import { PracticeSection } from "@/features/courses/lessons/PracticeSection";
+import { LessonNavigation } from "@/features/courses/lessons/LessonNavigation";
+import { MarkCompleteButton } from "@/features/courses/lessons/MarkCompleteButton";
 
 // Integrasi Database & Utilitas
 import { getLessonData, getLessonStaticParams } from "@/actions/lessons.actions";
@@ -161,8 +161,8 @@ export default async function LessonPage({ params }: Props) {
     />
     <div className="w-full text-foreground px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 transition-colors duration-300">
       {/* Dekorasi Ambient Latar Belakang */}
-      <div className="absolute top-0 right-0 size-[360px] bg-primary/5 blur-[65px] rounded-full pointer-events-none ambient-glow will-change-transform" />
-      <div className="absolute bottom-0 left-0 size-[300px] bg-secondary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
+      <div className="absolute top-0 right-0 size-90 bg-primary/5 blur-[65px] rounded-full pointer-events-none ambient-glow will-change-transform" />
+      <div className="absolute bottom-0 left-0 size-75 bg-secondary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col flex-1">
         <article className="flex-1 min-w-0">
@@ -170,7 +170,7 @@ export default async function LessonPage({ params }: Props) {
             title={lesson.title || ""}
             summary={lesson.summary || ""}
             isSideQuest={isSideQuest}
-            lesson={lesson as import("@/components/features/lessons/DownloadOfflineButton").LessonData}
+            lesson={lesson as import("@/features/courses/lessons/DownloadOfflineButton").LessonData}
           />
 
           {/* Ilustrasi Pelajaran */}
@@ -218,15 +218,15 @@ export default async function LessonPage({ params }: Props) {
               <section id="article-content" className="prose-custom">
                 <ContentBlockRenderer
                   blocks={lesson.articles as import("@/types/database").ContentBlock[]}
-                  vocabList={(lesson.vocabList || lesson.vocab_list || []) as import("@/components/features/lessons/VocabSection").VocabLessonItem[]}
-                  kanjiList={(lesson.kanjiList || lesson.kanji_list || []) as import("@/components/features/lessons/KanjiSection").KanjiLessonItem[]}
+                  vocabList={(lesson.vocabList || lesson.vocab_list || []) as import("@/features/courses/lessons/VocabSection").VocabLessonItem[]}
+                  kanjiList={(lesson.kanjiList || lesson.kanji_list || []) as import("@/features/courses/lessons/KanjiSection").KanjiLessonItem[]}
                 />
               </section>
             )}
 
-            <DialogueSection listeningList={(lesson.listeningList || lesson.listening_list || []) as import("@/components/features/lessons/DialogueSection").DialogueItem[]} />
+            <DialogueSection listeningList={(lesson.listeningList || lesson.listening_list || []) as import("@/features/courses/lessons/DialogueSection").DialogueItem[]} />
 
-            <PracticeSection lesson={lesson as import("@/components/features/lessons/PracticeSection").LessonPracticeData} />
+            <PracticeSection lesson={lesson as import("@/features/courses/lessons/PracticeSection").LessonPracticeData} />
 
             {/* Render quiz engine if questions exist, otherwise show completion button. */}
             {formattedQuizzes.length > 0 ? (
@@ -235,7 +235,7 @@ export default async function LessonPage({ params }: Props) {
                   <h2 className="text-xl uppercase tracking-tight text-foreground flex items-center gap-3">
                     <span className="text-2xl">答え</span> Uji Pemahaman
                   </h2>
-                  <div className="h-[1px] flex-1 bg-border" />
+                  <div className="h-px flex-1 bg-border" />
                 </div>
                 <QuizEngine questions={formattedQuizzes} lessonId={lesson._id || lesson.id || ""} />
               </section>

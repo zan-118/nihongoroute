@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import DictationClient from "@/components/features/tools/dictation/DictationClient";
+import DictationClient from "@/features/tools/dictation/DictationClient";
 import { Metadata } from "next";
 
 /**

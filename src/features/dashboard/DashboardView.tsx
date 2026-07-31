@@ -15,7 +15,7 @@ import { useUIStore } from "@/store/useUIStore";
 import { m, Variants } from "framer-motion";
 import dynamic from "next/dynamic";
 import DashboardSettings from "@/features/dashboard/components/DashboardSettings";
-import LevelUpOverlay from "@/components/features/gamification/LevelUpOverlay";
+import LevelUpOverlay from "@/features/gamification/LevelUpOverlay";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import { toast } from "sonner";
 import { summarizeSrs } from "@/lib/srs-summary";
@@ -28,7 +28,7 @@ import { HomePanel } from "@/features/dashboard/components/panels/HomePanel";
 import { ProgressPanel } from "@/features/dashboard/components/panels/ProgressPanel";
 
 /** Dynamic import for achievements grid to optimize initial load. */
-const AchievementsGrid = dynamic(() => import("@/components/features/gamification/AchievementsGrid"), { 
+const AchievementsGrid = dynamic(() => import("@/features/gamification/AchievementsGrid"), { 
   ssr: false,
   loading: () => <div className="h-50 w-full animate-pulse bg-muted rounded-lg" />
 });

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import React from "react";
-import { OfflineAudio, TTSReader } from "@/components/features/media";
+import { OfflineAudio, TTSReader } from "@/features/media";
 
 // Mock useCachedAudio
 vi.mock("@/hooks/useCachedAudio", () => ({

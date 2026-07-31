@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ConjugationTrainerClient from "@/components/features/tools/conjugation-trainer/ConjugationTrainerClient";
+import ConjugationTrainerClient from "@/features/tools/conjugation-trainer/ConjugationTrainerClient";
 import type { VerbFormId, VerbGroup } from "@/lib/verb-conjugation";
 import { createPageMetadata } from "@/lib/seo";
 

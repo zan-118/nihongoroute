@@ -8,14 +8,14 @@ import {
 } from "@/lib/seo";
 
 // Server Components (rendered purely statically to HTML for zero JS overhead on initial render)
-import { Hero } from "@/components/features/landing/Hero";
-import { FeatureGrid } from "@/components/features/landing/FeatureGrid";
-import { TrustBanner } from "@/components/features/landing/TrustBanner";
-import { LandingFooter } from "@/components/features/landing/LandingFooter";
+import { Hero } from "@/features/landing/Hero";
+import { FeatureGrid } from "@/features/landing/FeatureGrid";
+import { TrustBanner } from "@/features/landing/TrustBanner";
+import { LandingFooter } from "@/features/landing/LandingFooter";
 
 // Lazy-loaded interactive client playground
 const InteractivePlayground = dynamic(
-  () => import("@/components/features/landing/InteractivePlayground").then((m) => m.InteractivePlayground),
+  () => import("@/features/landing/InteractivePlayground").then((m) => m.InteractivePlayground),
   { loading: () => <div className="w-full h-[450px] rounded-2xl bg-card/20 animate-pulse mb-[120px]" /> }
 );
 

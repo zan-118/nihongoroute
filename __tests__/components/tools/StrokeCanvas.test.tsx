@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, renderHook } from "@testing-library/react";
 import React from "react";
-import { WritingCanvas, AnimatedKanji, useWritingCanvas, useAnimatedKanji } from "@/components/features/tools/stroke-canvas";
+import { WritingCanvas, AnimatedKanji, useWritingCanvas, useAnimatedKanji } from "@/features/tools/stroke-canvas";
 
 // Mock user store
 vi.mock("@/store/useUserStore", () => ({

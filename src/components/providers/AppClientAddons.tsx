@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
  * Load dynamically. Disable SSR to prevent hydration mismatch.
  */
 const FeedbackWidget = dynamic(
-  () => import("@/components/features/feedback/FeedbackWidget"),
+  () => import("@/features/support/feedback/FeedbackWidget"),
   { ssr: false } // Disable SSR. Component need browser APIs.
 );
 
@@ -16,7 +16,7 @@ const FeedbackWidget = dynamic(
  * Load dynamically. Disable SSR to prevent hydration mismatch.
  */
 const DictionaryPopup = dynamic(
-  () => import("@/components/features/tools/dictionary/DictionaryPopup"),
+  () => import("@/features/tools/dictionary/DictionaryPopup"),
   { ssr: false } // Disable SSR. Component need browser APIs.
 );
 

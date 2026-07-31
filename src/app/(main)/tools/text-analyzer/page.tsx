@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getLibraryTextForTool } from "@/actions/tools-integration.actions";
-import TextAnalyzerClient from "@/components/features/tools/text-analyzer/TextAnalyzerClient";
+import TextAnalyzerClient from "@/features/tools/text-analyzer/TextAnalyzerClient";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";

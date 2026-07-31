@@ -13,21 +13,21 @@ import React, { useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import Link from "next/link";
 import { BookmarkCheck, Clock, Gauge, Languages, MapPin, Mic, Minimize2, ScanText, Sparkles, Type, Zap, BarChart } from "@/components/ui/icons";
-import { ReadingProvider } from "@/components/features/reading/components/ReadingContext";
+import { ReadingProvider } from "@/features/library/reading/components/ReadingContext";
 import { cn } from "@/lib/utils";
-import { useReadingLogic } from "@/components/features/reading/hooks/useReadingLogic";
-import { ReadingData } from "@/components/features/reading/types";
+import { useReadingLogic } from "@/features/library/reading/hooks/useReadingLogic";
+import { ReadingData } from "@/features/library/reading/types";
 import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/store/useUserStore";
 import { useUIStore } from "@/store/useUIStore";
 import { formatQuizzes } from "@/lib/utils/lesson-utils";
 import QuizEngine from "@/features/exams/components/quiz-engine/QuizEngine";
-import AudioController from "@/components/features/reading/components/AudioController";
+import AudioController from "@/features/library/reading/components/AudioController";
 
 // Komponen Pendukung
 import { IllustrationGallery } from "@/components/ui/IllustrationGallery";
-import ReadingWorkspace from "@/components/features/reading/components/ReadingWorkspace";
-import { ReadingVocabularyCollector } from "@/components/features/reading/components/ReadingVocabularyCollector";
+import ReadingWorkspace from "@/features/library/reading/components/ReadingWorkspace";
+import { ReadingVocabularyCollector } from "@/features/library/reading/components/ReadingVocabularyCollector";
 
 /**
  * Snapshot structure for tracking reading progress.
@@ -305,7 +305,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-20%] left-[-10%] size-[60%] bg-primary/5 blur-[150px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-20%] right-[-10%] size-[60%] bg-success/5 blur-[150px] rounded-full animate-pulse delay-1000" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none opacity-20" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-size-[100px_100px] pointer-events-none opacity-20" />
       </div>
 
       {/* Style Override untuk Zen Mode */}
@@ -327,7 +327,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
-            className="fixed top-8 right-8 z-[100]"
+            className="fixed top-8 right-8 z-100"
           >
             <Button
               size="lg"
@@ -408,7 +408,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
 
         {/* Panel Kontrol Layar Lengket (Sticky Bottom Control Bar) */}
         {!isZenMode && (
-          <div className="fixed bottom-0 left-0 right-0 md:bottom-6 md:left-[calc(18rem+1.5rem)] md:right-6 z-50 rounded-t-xl rounded-b-none md:rounded-xl border-t border-x-0 border-b-0 md:border border-border bg-card p-3 pb-safe md:p-4 shadow-lg flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 md:gap-4 animate-in slide-in-from-bottom duration-500 pointer-events-auto">
+          <div className="fixed bottom-0 left-0 right-0 md:bottom-6 md:left-78 md:right-6 z-50 rounded-t-xl rounded-b-none md:rounded-xl border-t border-x-0 border-b-0 md:border border-border bg-card p-3 pb-safe md:p-4 shadow-lg flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 md:gap-4 animate-in slide-in-from-bottom duration-500 pointer-events-auto">
             {/* Sisi Kiri: Audio & Playback Controller */}
             <div className="flex-1 w-full lg:max-w-xs">
               {!!(data.audioUrl || (!data.isTTSDisabled && typeof data.body === "string" ? data.body : undefined)) && (
@@ -545,7 +545,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
                 animate={{ opacity: 0.5 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setIsVocabOpen(false)}
-                className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[100] cursor-pointer"
+                className="fixed inset-0 bg-background/80 backdrop-blur-sm z-100 cursor-pointer"
               />
               {/* Panel Drawer */}
               <m.div
@@ -553,7 +553,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="fixed top-0 right-0 bottom-0 w-full sm:w-[420px] bg-background/95  border-l border-border z-[101] shadow-2xl p-6 overflow-y-auto glass flex flex-col"
+                className="fixed top-0 right-0 bottom-0 w-full sm:w-105 bg-background/95  border-l border-border z-101 shadow-2xl p-6 overflow-y-auto glass flex flex-col"
               >
                 <div className="flex items-center justify-between border-b border-border/40 pb-4 mb-4">
                   <div className="flex items-center gap-2">
@@ -586,11 +586,11 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
         {hasQuiz && !isZenMode && (
           <div className="mt-16">
             <div className="flex items-center gap-4 mb-10">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+              <div className="flex-1 h-px bg-linear-to-r from-transparent via-border to-transparent" />
               <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 shrink-0">
                 Kuis Pemahaman
               </span>
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+              <div className="flex-1 h-px bg-linear-to-r from-transparent via-border to-transparent" />
             </div>
             <div className="rounded-[2.5rem] border border-border/60 bg-card/30  p-6 shadow-2xl">
               <QuizEngine questions={formattedQuizzes} lessonId={lessonId} />

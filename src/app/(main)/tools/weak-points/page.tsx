@@ -4,7 +4,7 @@
  */
 
 import type { Metadata } from "next";
-import WeakPointTrainerClient from "@/components/features/tools/weak-points/WeakPointTrainerClient";
+import WeakPointTrainerClient from "@/features/tools/weak-points/WeakPointTrainerClient";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";

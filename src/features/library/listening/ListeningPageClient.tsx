@@ -12,9 +12,9 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { Mic, ScanText } from "@/components/ui/icons";
-import { ListeningTaskData } from "@/components/features/listening/types";
-import ListeningWorkspace from "@/components/features/listening/components/ListeningWorkspace";
-import { useListeningSync } from "@/components/features/listening/hooks/useListeningSync";
+import { ListeningTaskData } from "@/features/library/listening/types";
+import ListeningWorkspace from "@/features/library/listening/components/ListeningWorkspace";
+import { useListeningSync } from "@/features/library/listening/hooks/useListeningSync";
 import { useUserStore } from "@/store/useUserStore";
 import { useUIStore } from "@/store/useUIStore";
 

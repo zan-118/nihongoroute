@@ -16,7 +16,7 @@ import ConfirmModal from "@/components/ui/ConfirmModal";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { useSettingsActions } from "@/components/features/user/useSettingsActions";
+import { useSettingsActions } from "@/features/user/useSettingsActions";
 import ProfileSection from "./components/ProfileSection";
 import PreferencesSection from "./components/PreferencesSection";
 import DataManagementSection from "./components/DataManagementSection";

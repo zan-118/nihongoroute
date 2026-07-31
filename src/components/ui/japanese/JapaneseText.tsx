@@ -9,7 +9,7 @@ import React, { useMemo } from "react";
 import { isJapanese, toRomaji, isKanji } from "wanakana";
 import { splitFurigana } from "./splitFurigana";
 import { useUIStore } from "@/store/useUIStore";
-import WordPopover from "@/components/features/reading/components/WordPopover";
+import WordPopover from "@/features/library/reading/components/WordPopover";
 
 export interface JapaneseTextProps {
   /** Teks asli bahasa Jepang (kanji/kana) */

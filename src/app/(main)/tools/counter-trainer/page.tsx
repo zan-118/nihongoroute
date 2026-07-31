@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getIntegratedCounterQuestions } from "@/actions/tools-integration.actions";
-import CounterTrainerClient from "@/components/features/tools/counter-trainer/CounterTrainerClient";
+import CounterTrainerClient from "@/features/tools/counter-trainer/CounterTrainerClient";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";

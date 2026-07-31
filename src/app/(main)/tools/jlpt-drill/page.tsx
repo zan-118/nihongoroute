@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getIntegratedMiniDrillQuestions } from "@/actions/tools-integration.actions";
-import JlptMiniDrillClient from "@/components/features/tools/jlpt-mini-drill/JlptMiniDrillClient";
+import JlptMiniDrillClient from "@/features/tools/jlpt-mini-drill/JlptMiniDrillClient";
 import type { DrillKind, DrillLevel } from "@/lib/jlpt-mini-drill";
 import { createPageMetadata } from "@/lib/seo";
 

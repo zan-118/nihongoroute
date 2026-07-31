@@ -11,7 +11,7 @@
 import React, { Suspense } from "react";
 import { User, LogIn, ChevronRight, Sparkles, Mail, Lock, ArrowLeft } from "@/components/ui/icons";
 import Link from "next/link";
-import { useAuth } from "@/components/features/user/useAuth";
+import { useAuth } from "@/features/user/useAuth";
 import { Card } from "@/components/ui/card";
 
 // ======================

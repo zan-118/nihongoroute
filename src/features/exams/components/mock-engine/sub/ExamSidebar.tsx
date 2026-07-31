@@ -50,7 +50,7 @@ export function ExamSidebar() {
           </span>
         </div>
 
-        <div className="grid grid-cols-5 gap-2 max-h-[320px] overflow-y-auto p-1 custom-scrollbar">
+        <div className="grid grid-cols-5 gap-2 max-h-80 overflow-y-auto p-1 custom-scrollbar">
           {exam.questions.map((q, idx) => {
             const isAnswered = answers[q._key] !== undefined;
             const isFlagged = flaggedQuestions[q._key];

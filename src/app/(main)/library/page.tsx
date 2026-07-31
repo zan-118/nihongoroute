@@ -85,8 +85,8 @@ export default async function LibraryPage() {
       />
 
       {/* Ambient Mesh Gradient Glows */}
-      <div className="absolute top-[5%] -left-[10%] size-[50%] bg-primary/10 blur-[120px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
-      <div className="absolute bottom-[15%] -right-[10%] size-[45%] bg-secondary/10 blur-[120px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
+      <div className="absolute top-[5%] left-[-10%] size-[50%] bg-primary/10 blur-[120px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
+      <div className="absolute bottom-[15%] right-[-10%] size-[45%] bg-secondary/10 blur-[120px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
       <div className="grid-overlay opacity-30" />
 
       <div className="max-w-7xl mx-auto relative z-10 space-y-16 md:space-y-24">
@@ -115,7 +115,7 @@ export default async function LibraryPage() {
             <div className="lg:col-span-8 space-y-6">
               <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-foreground leading-[0.92] drop-shadow-sm font-sans">
                 PUSTAKA<br />
-                <span className="bg-gradient-to-r from-primary via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-primary via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
                   MATERI
                 </span>
               </h1>
@@ -140,7 +140,7 @@ export default async function LibraryPage() {
                 className="relative group p-5 sm:p-6 rounded-2xl bg-card/60 dark:bg-card/30 border border-border/60 dark:border-white/10 backdrop-blur-md shadow-sm transition-all duration-300 flex flex-col items-center justify-center text-center gap-1.5 overflow-hidden"
               >
                 <div 
-                  className="absolute top-0 inset-x-0 h-[2px] opacity-60"
+                  className="absolute top-0 inset-x-0 h-0.5 opacity-60"
                   style={{ backgroundColor: `rgb(${stat.accentRgb})` }}
                 />
 

@@ -20,13 +20,13 @@ import {
   Mic,
   BookOpen
 } from "@/components/ui/icons";
-import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMaster";
+import FlashcardMaster from "@/features/review/flashcards/master/FlashcardMaster";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 // Hook & Komponen Modular
-import { useFlashcardSession } from "@/components/features/flashcards/useFlashcardSession";
-import { FlashcardSetup } from "@/components/features/flashcards/FlashcardSetup";
+import { useFlashcardSession } from "@/features/review/flashcards/useFlashcardSession";
+import { FlashcardSetup } from "@/features/review/flashcards/FlashcardSetup";
 
 /**
  * Flashcard session content manager.

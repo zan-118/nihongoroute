@@ -124,7 +124,7 @@ export default async function ListeningPage({ params }: { params: Promise<{ slug
           }),
         ]}
       />
-      <ListeningPageClient data={data as unknown as import("@/components/features/listening/types").ListeningTaskData} />
+      <ListeningPageClient data={data as unknown as import("@/features/library/listening/types").ListeningTaskData} />
     </>
   );
 }

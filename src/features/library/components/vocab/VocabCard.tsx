@@ -11,7 +11,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUpRight } from "@/components/ui/icons";
 import { ROUTES } from "@/lib/routes";
-import { TTSReader } from "@/components/features/media";
+import { TTSReader } from "@/features/media";
 import { SmartJapanese } from "@/components/ui/japanese";
 import { VocabItem } from "./types";
 
