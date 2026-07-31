@@ -18,7 +18,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Trophy, TrendingUp, Flame, Sprout, BookOpen, PenTool, Database } from "@/components/ui/icons";
-import { useMemoryStats } from "@/components/features/srs/stats/useMemoryStats";
+import { useMemoryStats } from "@/features/dashboard/components/srs/stats/useMemoryStats";
 
 /**
  * Dashboard widget for SRS memory progress.

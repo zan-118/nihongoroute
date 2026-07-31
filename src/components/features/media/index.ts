@@ -10,3 +10,5 @@ export { TTSReader } from "./TTSReader";
 export type { TTSReaderProps } from "./TTSReader";
 
 export { useTTSReader } from "./useTTSReader";
+export { useLineTTS } from "./hooks/useLineTTS";
+export type { TTSRate, TTSLineItem } from "./hooks/useLineTTS";

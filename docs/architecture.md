@@ -100,7 +100,9 @@ graph TD
 ### B. Alur Text-to-Speech (TTS)
 
 ```
-[Komponen UI]
+[Komponen UI (DialogueSection / ListeningWorkspace / TTSReader)]
+      │
+      ├─► Memanggil shared hook useLineTTS (src/components/features/media/hooks/useLineTTS.ts)
       │
       ├─► GET /api/tts?text=...&voice=...&rate=...
       │
@@ -184,7 +186,7 @@ Untuk menjaga konsistensi codebase dan mempermudah kontribusi baru, struktur lay
 - **Pure Route Wrappers (`src/app/`)**:
   Folder rute `src/app/` secara ketat HANYA diperuntukkan bagi file routing bawaan Next.js (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`). Dilarang menyimpan komponen tampilan klien (`*Client.tsx`) atau helper privat di dalam folder `src/app/`. Seluruh komponen antarmuka dan logika tampilan fitur wajib ditempatkan di `src/features/<feature-name>/`.
 - **Co-located Feature UI Components (`src/features/<feature-name>/components/`)**:
-  Komponen UI yang spesifik untuk domain fitur (seperti komponen dashboard, simulasi ujian CBT, kartu pustaka, dan visualisasi progress) WAJIB ditempatkan di dalam `src/features/<feature-name>/components/`. Folder `src/components/ui/` dipesan secara ketat HANYA untuk atomic UI primitives generik tanpa domain (seperti `Button`, `Card`, `Badge`, `Progress`).
+  Komponen UI yang spesifik untuk domain fitur (seperti komponen dashboard, statistik daya ingat SRS, simulasi ujian CBT, kartu & detail kanji pustaka, dan visualisasi progress) WAJIB ditempatkan di dalam `src/features/<feature-name>/components/`. Folder `src/components/ui/` dipesan secara ketat HANYA untuk atomic UI primitives generik tanpa domain (seperti `Button`, `Card`, `Badge`, `Progress`).
 - **Server Actions (`src/actions/*.actions.ts`)**:
   Layer tipis yang berfungsi sebagai entry point bagi antarmuka klien. Hanya bertanggung jawab melakukan validasi input/parameter dasar, dan mendelegasikan pemrosesan ke `src/lib/services/`. Tidak diperkenankan melakukan query Supabase secara langsung ke database.
 - **Domain Services & Repository (`src/lib/services/`)**:

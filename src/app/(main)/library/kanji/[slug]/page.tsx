@@ -24,12 +24,12 @@ import {
 import { Button } from "@/components/ui/button";
 
 // Komponen Pendukung
-import { KanjiStrokeHero } from "@/components/features/kanji/detail/KanjiStrokeHero";
-import { KanjiReadings } from "@/components/features/kanji/detail/KanjiReadings";
-import { KanjiRadicals } from "@/components/features/kanji/detail/KanjiRadicals";
-import { KanjiMnemonic } from "@/components/features/kanji/detail/KanjiMnemonic";
-import { KanjiRelatedVocab } from "@/components/features/kanji/detail/KanjiRelatedVocab";
-import { KanjiSentences } from "@/components/features/kanji/detail/KanjiSentences";
+import { KanjiStrokeHero } from "@/features/library/kanji/components/detail/KanjiStrokeHero";
+import { KanjiReadings } from "@/features/library/kanji/components/detail/KanjiReadings";
+import { KanjiRadicals } from "@/features/library/kanji/components/detail/KanjiRadicals";
+import { KanjiMnemonic } from "@/features/library/kanji/components/detail/KanjiMnemonic";
+import { KanjiRelatedVocab } from "@/features/library/kanji/components/detail/KanjiRelatedVocab";
+import { KanjiSentences } from "@/features/library/kanji/components/detail/KanjiSentences";
 import {
   breadcrumbJsonLd,
   createPageMetadata,

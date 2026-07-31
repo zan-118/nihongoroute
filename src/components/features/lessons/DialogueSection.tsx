@@ -14,7 +14,7 @@ import { SmartJapanese } from "@/components/ui/japanese";
 import { TTSReader, OfflineAudio } from "@/components/features/media";
 import MediaAsset from "@/components/ui/MediaAsset";
 import { Button } from "@/components/ui/button";
-import { useLineTTS } from "@/components/features/listening/hooks/useLineTTS";
+import { useLineTTS } from "@/components/features/media";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 

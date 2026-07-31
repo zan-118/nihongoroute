@@ -21,7 +21,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Flame, BookOpen, CheckCircle2 } from "@/components/ui/icons";
 import DailyQuests from "./quests/DailyQuests";
 import MemoryStats from "./dashboard-stats/MemoryStats";
-import SRSAnalytics from "@/components/features/srs/analytics/SRSAnalytics";
+import SRSAnalytics from "@/features/dashboard/components/srs/analytics/SRSAnalytics";
 import Heatmap from "./heatmap/Heatmap";
 import StreakFreezeCard from "@/components/features/gamification/StreakFreezeCard";
 import { useUserStore } from "@/store/useUserStore";

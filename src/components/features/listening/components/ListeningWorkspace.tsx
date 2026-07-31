@@ -37,7 +37,7 @@ import { StickerScene } from "@/components/ui/StickerScene";
 import { IllustrationGallery } from "@/components/ui/IllustrationGallery";
 import { SmartJapanese } from "@/components/ui/japanese";
 import AudioController from "@/components/features/reading/components/AudioController";
-import { useLineTTS } from "../hooks/useLineTTS";
+import { useLineTTS } from "@/components/features/media";
 import { evaluateDictation, extractDictationText } from "@/lib/dictation";
 import { TranscriptLine, QuizItem } from "../types";
 

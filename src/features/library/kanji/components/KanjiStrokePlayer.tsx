@@ -20,8 +20,8 @@ import {
   Hash 
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
-import { useKanjiSvg } from "../hooks/useKanjiSvg";
-import { PlaybackStatus } from "../types";
+import { useKanjiSvg } from "./hooks/useKanjiSvg";
+import { PlaybackStatus, StrokeData } from "./types";
 
 // ==========================================
 // TIPE DATA / INTERFACE
@@ -164,7 +164,7 @@ export default function KanjiStrokePlayer({
         >
 
           {/* Goresan Latar Belakang Statis (Abu-abu Terang) */}
-          {data.strokes.map((stroke) => (
+          {data.strokes.map((stroke: StrokeData) => (
             <path
               key={`bg-${stroke.index}`}
               d={stroke.path}
@@ -174,13 +174,11 @@ export default function KanjiStrokePlayer({
               strokeLinecap="round"
               strokeLinejoin="round"
               className="text-foreground/10"
-
-
             />
           ))}
 
           {/* Goresan Teranimasi */}
-          {data.strokes.map((stroke) => {
+          {data.strokes.map((stroke: StrokeData) => {
             const isVisible = stroke.index <= currentStroke;
             const isAnimating = stroke.index === currentStroke && status === "playing";
 
@@ -189,12 +187,9 @@ export default function KanjiStrokePlayer({
                 // Unique key force re-render on active stroke change.
                 key={`anim-${stroke.index}-${stroke.index === currentStroke && status === "playing" ? `active-${strokeTrigger}` : 'static'}`}
                 d={stroke.path}
-
-
                 fill="none"
                 stroke={strokeColor}
                 strokeWidth="5"
-
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 initial={
@@ -208,8 +203,6 @@ export default function KanjiStrokePlayer({
                   pathLength: isVisible ? 1 : 0,
                   opacity: isVisible ? 1 : 0
                 }}
-
-
                 transition={{
                   duration: BASE_STROKE_DURATION / speed,
                   ease: "easeInOut",
@@ -228,7 +221,7 @@ export default function KanjiStrokePlayer({
 
           {/* Angka Goresan */}
           <AnimatePresence>
-            {showNumbers && data.numbers.map((num, i) => (
+            {showNumbers && data.numbers.map((num: { x: string; y: string; value?: string }, i: number) => (
               (currentStroke === -1 || i <= currentStroke) && (
                 <m.text
                   key={`num-${i}`}
