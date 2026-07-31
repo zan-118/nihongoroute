@@ -8,7 +8,7 @@
 
 import React from "react";
 import { m } from "framer-motion";
-import { GeneralCategoryCard } from "@/components/features/course/GeneralCategoryCard";
+import { GeneralCategoryCard } from "@/features/courses/components/GeneralCategoryCard";
 import { useUserStore } from "@/store/useUserStore";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";

@@ -1,4 +1,4 @@
-import type { ExamData } from "@/components/features/exams/mock-engine/types";
+import type { ExamData } from "@/features/exams/components/mock-engine/types";
 import {
   toLegacyExamData,
   type SupabaseExamChoice,

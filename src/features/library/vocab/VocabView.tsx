@@ -22,15 +22,15 @@ import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getPaginatedVocab, PaginatedVocabResponse } from "@/actions/library.actions";
 
 // Komponen Pendukung
-import { VocabCard } from "@/components/features/library/vocab/VocabCard";
-import { VocabFlashcardView } from "@/components/features/library/vocab/VocabFlashcardView";
-import { VocabHeader } from "@/components/features/library/vocab/VocabHeader";
-import { VocabFilterPanel } from "@/components/features/library/vocab/VocabFilterPanel";
-import { VocabPagination } from "@/components/features/library/vocab/VocabPagination";
+import { VocabCard } from "@/features/library/components/vocab/VocabCard";
+import { VocabFlashcardView } from "@/features/library/components/vocab/VocabFlashcardView";
+import { VocabHeader } from "@/features/library/components/vocab/VocabHeader";
+import { VocabFilterPanel } from "@/features/library/components/vocab/VocabFilterPanel";
+import { VocabPagination } from "@/features/library/components/vocab/VocabPagination";
 import { useUIStore } from "@/store/useUIStore";
 import { SmartJapanese } from "@/components/ui/japanese";
 import { TTSReader } from "@/components/features/media";
-import type { VocabItem } from "@/components/features/library/vocab/types";
+import type { VocabItem } from "@/features/library/components/vocab/types";
 
 // ======================
 // EKSEKUSI UTAMA

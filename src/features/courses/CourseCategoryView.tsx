@@ -15,10 +15,10 @@ import { useUserStore } from "@/store/useUserStore";
 import { useCallback, useMemo, useState } from "react";
 
 // Feature Components
-import { CategoryHero } from "@/components/features/course/CategoryHero";
-import { TrainingGround } from "@/components/features/course/TrainingGround";
+import { CategoryHero } from "@/features/courses/components/CategoryHero";
+import { TrainingGround } from "@/features/courses/components/TrainingGround";
 
-import { LessonGrid } from "@/components/features/course/LessonGrid";
+import { LessonGrid } from "@/features/courses/components/LessonGrid";
 
 // ======================
 // KONSTANTA ANIMASI

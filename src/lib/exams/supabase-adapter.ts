@@ -1,7 +1,7 @@
 import type {
   ExamData,
   ExamQuestion,
-} from "@/components/features/exams/mock-engine/types";
+} from "@/features/exams/components/mock-engine/types";
 
 /**
  * Exam section types.

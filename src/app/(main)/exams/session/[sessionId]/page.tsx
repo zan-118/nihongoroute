@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getExamSessionPackage } from "@/actions/jlpt-exams.actions";
-import MockExamEngine from "@/components/features/exams/mock-engine/MockExamEngine";
+import MockExamEngine from "@/features/exams/components/mock-engine/MockExamEngine";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { createPageMetadata, encodeRouteSegment } from "@/lib/seo";

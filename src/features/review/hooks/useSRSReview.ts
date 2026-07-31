@@ -4,26 +4,20 @@
  * Mengatur urutan kartu, status balik kartu (flip), penanganan jawaban pengguna,
  * kalkulasi perolehan XP, efek audio, serta pintasan papan ketik (keyboard shortcuts).
  *
- * @package components/features/srs/review
+ * @package features/review/hooks
  * @project NihongoRoute
  */
 
-// ==========================================
-// IMPOR
-// ==========================================
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 import { updateCardState, createNewCardState } from "@/lib/srs";
-import { FlashcardType } from "./types";
+import { FlashcardType } from "../types/srs-review";
 import { shuffleArray } from "@/lib/utils";
 import { sounds } from "@/lib/audio";
 
-// ==========================================
-// HOOK UTAMA
-// ==========================================
 /**
  * Manage SRS review session state and logic.
  * Handles card order, flip state, user answers, XP calculation, audio, and keyboard shortcuts.
@@ -64,9 +58,6 @@ export function useSRSReview(cards: FlashcardType[]) {
 
   const currentCard = shuffledCards[currentIndex];
 
-  // ==========================================
-  // FUNGSI NAVIGASI & PENANGANAN
-  // ==========================================
   /**
    * Advance to next card or finish session.
    */
@@ -81,7 +72,6 @@ export function useSRSReview(cards: FlashcardType[]) {
     }
   }, [currentIndex, shuffledCards.length]);
 
-  // Prevent double submission during animation.
   const isProcessing = useRef(false);
 
   /**
@@ -133,13 +123,8 @@ export function useSRSReview(cards: FlashcardType[]) {
     setIsFlipped((prev) => !prev);
   }, []);
 
-  // ==========================================
-  // PINTASAN PAPAN KETIK (KEYBOARD SHORTCUTS)
-  // ==========================================
-  // Bind keyboard shortcuts for fast review navigation.
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Abaikan jika pengguna sedang fokus pada input atau textarea
       if (
         document.activeElement?.tagName === "INPUT" ||
         document.activeElement?.tagName === "TEXTAREA"
@@ -147,13 +132,11 @@ export function useSRSReview(cards: FlashcardType[]) {
         return;
 
       if (!isFlipped) {
-        // Tekan Spasi atau Enter untuk membalik kartu
         if (e.key === " " || e.key === "Enter") {
           e.preventDefault();
           toggleFlip();
         }
       } else {
-        // Tekan 1 atau Panah Kiri untuk Salah, Tekan 2 atau Panah Kanan untuk Benar
         if (e.key === "1" || e.key === "ArrowLeft") {
           e.preventDefault();
           handleAnswer(0);

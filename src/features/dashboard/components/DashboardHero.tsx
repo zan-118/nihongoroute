@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { useUserStore } from "@/store/useUserStore";
-import ProfileEditor from "../user/ProfileEditor";
+import ProfileEditor from "@/components/features/user/ProfileEditor";
 import { Trophy, Flame, Star, ArrowRight } from "@/components/ui/icons";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { getLevelProgressPercent } from "@/lib/level";

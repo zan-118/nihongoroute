@@ -1,6 +1,6 @@
 import { calculateJlptExamSubmission } from "./jlpt-session";
 import type { SupabaseExamPackage } from "./supabase-adapter";
-import type { ExamQuestion } from "@/components/features/exams/mock-engine/types";
+import type { ExamQuestion } from "@/features/exams/components/mock-engine/types";
 
 /**
  * @file mock-exam-engine.ts

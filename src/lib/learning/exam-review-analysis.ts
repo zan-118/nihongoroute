@@ -3,7 +3,7 @@
  * @description Pure helpers for post-exam mistake review and remediation guidance.
  */
 
-import type { ExamData, ExamQuestion } from "@/components/features/exams/mock-engine/types";
+import type { ExamData, ExamQuestion } from "@/features/exams/components/mock-engine/types";
 
 import { ROUTES } from "@/lib/core/routes";
 /**

@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/store/useUserStore";
 import { useUIStore } from "@/store/useUIStore";
 import { formatQuizzes } from "@/lib/utils/lesson-utils";
-import QuizEngine from "@/components/features/exams/quiz-engine/QuizEngine";
+import QuizEngine from "@/features/exams/components/quiz-engine/QuizEngine";
 import AudioController from "@/components/features/reading/components/AudioController";
 
 // Komponen Pendukung

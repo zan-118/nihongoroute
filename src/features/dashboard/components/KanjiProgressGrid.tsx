@@ -18,7 +18,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Info } from "@/components/ui/icons";
 import { useKanjiProgressQuery } from "./useKanjiProgressQuery";
-import { useAddToSRSInternal } from "../srs/actions/AddToSRSButton";
+import { useAddToSRSInternal } from "@/components/features/srs/actions/AddToSRSButton";
 
 // ==========================================
 // GRID ITEM KANJI INDIVIDUAL

@@ -25,12 +25,12 @@ import {
 import { Button } from "@/components/ui/button";
 
 // Komponen Pendukung
-import { VocabHero } from "@/components/features/library/vocab/detail/VocabHero";
-import { VocabDetails } from "@/components/features/library/vocab/detail/VocabDetails";
-import { VocabNotes } from "@/components/features/library/vocab/detail/VocabNotes";
-import { VocabConjugation } from "@/components/features/library/vocab/detail/VocabConjugation";
-import { VocabExamples } from "@/components/features/library/vocab/detail/VocabExamples";
-import { VocabRelated } from "@/components/features/library/vocab/detail/VocabRelated";
+import { VocabHero } from "@/features/library/components/vocab/detail/VocabHero";
+import { VocabDetails } from "@/features/library/components/vocab/detail/VocabDetails";
+import { VocabNotes } from "@/features/library/components/vocab/detail/VocabNotes";
+import { VocabConjugation } from "@/features/library/components/vocab/detail/VocabConjugation";
+import { VocabExamples } from "@/features/library/components/vocab/detail/VocabExamples";
+import { VocabRelated } from "@/features/library/components/vocab/detail/VocabRelated";
 import {
   breadcrumbJsonLd,
   createPageMetadata,

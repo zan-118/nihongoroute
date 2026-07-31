@@ -1,7 +1,7 @@
 
 import { randomUUID } from "crypto";
 import type { PostgrestError } from "@supabase/supabase-js";
-import type { ExamData } from "@/components/features/exams/mock-engine/types";
+import type { ExamData } from "@/features/exams/components/mock-engine/types";
 import {
   EXAM_ASSETS_BUCKET,
   buildJlptSrsUpsertRows,

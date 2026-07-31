@@ -19,8 +19,8 @@ import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/useUIStore";
 
 // Komponen Pendukung
-import { KanjiHeader } from "@/components/features/library/kanji/KanjiHeader";
-import { KanjiGrid } from "@/components/features/library/kanji/KanjiGrid";
+import { KanjiHeader } from "@/features/library/components/kanji/KanjiHeader";
+import { KanjiGrid } from "@/features/library/components/kanji/KanjiGrid";
 import { Pagination } from "@/components/ui/Pagination";
 
 // ======================

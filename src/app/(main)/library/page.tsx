@@ -13,8 +13,8 @@ import { Library, Sparkles } from "@/components/ui/icons";
 import { buildLibraryCategories, buildLibraryStats } from "@/lib/constants/library";
 
 // Komponen Pendukung
-import { LibraryCategoryCard } from "@/components/features/library/LibraryCategoryCard";
-import { LibraryServerStatus } from "@/components/features/library/LibraryServerStatus";
+import { LibraryCategoryCard } from "@/features/library/components/LibraryCategoryCard";
+import { LibraryServerStatus } from "@/features/library/components/LibraryServerStatus";
 import { getLibraryCounts } from "@/actions/library-counts.actions";
 import {
   breadcrumbJsonLd,

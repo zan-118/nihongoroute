@@ -8,7 +8,7 @@
 // ======================
 // IMPOR
 // ======================
-import MockExamEngine from "@/components/features/exams/mock-engine/MockExamEngine";
+import MockExamEngine from "@/features/exams/components/mock-engine/MockExamEngine";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

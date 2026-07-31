@@ -17,7 +17,7 @@ import {
 } from "./jlpt-exams.actions";
 import type {
   ExamData,
-} from "@/components/features/exams/mock-engine/types";
+} from "@/features/exams/components/mock-engine/types";
 
 // ======================
 // SERVER ACTIONS

@@ -14,7 +14,7 @@ import { useUIStore } from "@/store/useUIStore";
 
 import { m, Variants } from "framer-motion";
 import dynamic from "next/dynamic";
-import DashboardSettings from "@/components/features/dashboard/DashboardSettings";
+import DashboardSettings from "@/features/dashboard/components/DashboardSettings";
 import LevelUpOverlay from "@/components/features/gamification/LevelUpOverlay";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import { toast } from "sonner";
@@ -23,11 +23,9 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { type RandomExpression } from "@/actions/expressions.actions";
 import { buildProgressSummary, formatUserIdentifier } from "@/features/dashboard/dashboard-stats-engine";
-
-// Domain Components
-import { DashboardTabs } from "@/components/features/dashboard/DashboardTabs";
-import { HomePanel } from "@/components/features/dashboard/panels/HomePanel";
-import { ProgressPanel } from "@/components/features/dashboard/panels/ProgressPanel";
+import { DashboardTabs } from "@/features/dashboard/components/DashboardTabs";
+import { HomePanel } from "@/features/dashboard/components/panels/HomePanel";
+import { ProgressPanel } from "@/features/dashboard/components/panels/ProgressPanel";
 
 /** Dynamic import for achievements grid to optimize initial load. */
 const AchievementsGrid = dynamic(() => import("@/components/features/gamification/AchievementsGrid"), { 
