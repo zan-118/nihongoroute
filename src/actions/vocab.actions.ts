@@ -17,8 +17,7 @@ import {
   getContentBySlugOrId,
   getStaticSlugs,
   getRelatedKanjis,
-  getRelatedVocabByWords,
-  getSentencesContainingWord
+  getRelatedVocabByWords
 } from "@/lib/services/content-repository";
 
 // ======================
@@ -130,22 +129,6 @@ export async function getLibraryVocabDetail(slugOrId: string): Promise<LibraryIt
       }
     }
     data.examples = Array.isArray(data.examples) ? data.examples : [];
-
-    // Ambil kalimat contoh dinamis dari tabel public.sentences
-    try {
-      const dbSentences = await getSentencesContainingWord(data.word as string, 3);
-
-      if (dbSentences && dbSentences.length > 0) {
-        const dynamicExamples = dbSentences.map((s) => ({
-          jp: s.japanese,
-          meaning: s.indonesia || s.english || "",
-          romaji: ""
-        }));
-        data.examples = [...(data.examples as Array<{ jp: string; meaning: string; romaji?: string }>), ...dynamicExamples];
-      }
-    } catch (sentenceErr) {
-      console.error(`[getLibraryVocabDetail] gagal mengambil data kalimat dinamis untuk "${data.word}":`, sentenceErr);
-    }
 
     // Tangani konjugasi kata
     let conj = typeof data.conjugations === "object" && data.conjugations !== null ? data.conjugations : {};

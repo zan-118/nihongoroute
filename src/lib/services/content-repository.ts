@@ -307,7 +307,7 @@ export async function getRandomGrammarPool(level: string, limit: number) {
   const { data, error } = await supabase
     .from("grammar")
     .select("id, title, slug, jlpt_level")
-    .eq("jlpt_level", level)
+    .eq("jlpt_level", level.toUpperCase())
     .limit(limit);
   if (error) {
     console.error("[getRandomGrammarPool] Error:", error);

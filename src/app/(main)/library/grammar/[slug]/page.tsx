@@ -111,17 +111,6 @@ export default async function GrammarDetailPage({
   // Trigger 404 if article missing.
   if (!article) notFound();
 
-  // Map examples from grammar data directly instead of querying public.sentences
-  const formattedSentences = ((article.examples as import("@/types/database").ExampleSentence[]) || []).map((ex, index) => ({
-    id: ex.id || `grammar-ex-${index}`,
-    japanese: ex.japanese || ex.jp || "",
-    english: ex.english || null,
-    indonesia: ex.indonesian || null,
-    jlpt_level: String(article.jlptLevel || article.jlpt_level || "") || null,
-    furigana: ex.furigana || null,
-  }));
-
-
   // ======================
   // RENDER UTAMA
   // ======================
@@ -169,7 +158,7 @@ export default async function GrammarDetailPage({
 
       <div className="max-w-4xl mx-auto w-full relative z-10 pt-8 md:pt-16">
         {/* Client Side Detail & TTS Interactions */}
-        <GrammarDetailClient article={article} dynamicSentences={formattedSentences} />
+        <GrammarDetailClient article={article} />
       </div>
     </main>
   );

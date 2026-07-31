@@ -68,7 +68,7 @@ export async function searchToolDictionaryAction(
     const [vocabRes, grammarRes, kanjiRes] = await Promise.all([
       supabase
         .from("vocab")
-        .select("id, word, meaning:meaning_id, furigana, romaji, hinshi, jlpt_level, slug, is_common")
+        .select("id, word, meaning_id, furigana, romaji, hinshi, jlpt_level, slug, is_common")
         .or(
           `word.ilike."${searchTerm}",meaning_id.ilike."${searchTerm}",romaji.ilike."${searchTerm}",furigana.ilike."${searchTerm}",word.ilike."${kanaTerm}",furigana.ilike."${kanaTerm}"`
         )
@@ -95,7 +95,7 @@ export async function searchToolDictionaryAction(
       vocab: (vocabRes.data || []).map((item) => ({
         id: item.id,
         title: item.word || "",
-        description: item.meaning || "Kosakata",
+        description: item.meaning_id || "Kosakata",
         href: `/library/vocab/${item.slug || item.id}`,
         category: "vocab" as const,
         jlptLevel: item.jlpt_level,

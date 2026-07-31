@@ -60,6 +60,22 @@ describe("LexicalContentEngine Unit Tests", () => {
     expect(result.data[0]).toHaveProperty("word", "日本語");
   });
 
+  it("harus query data vocab dengan level umum (jlpt_level string kosong)", async () => {
+    mockData = [
+      { id: "u1", word: "信託", meaning_id: "kepercayaan", jlpt_level: "" },
+    ];
+    mockCount = 1;
+
+    const result = await queryLexicalDomain({
+      type: "vocab",
+      filters: { level: "Umum" },
+      pagination: { page: 1, limit: 10 },
+    });
+
+    expect(result.data).toHaveLength(1);
+    expect(result.data[0]).toHaveProperty("word", "信託");
+  });
+
   it("harus query data kanji dengan filter level JLPT", async () => {
     mockData = [
       { id: "k1", character: "日", meaning: "hari, matahari", onyomi: "NICHI", kunyomi: "hi", jlpt_level: "N5" },
@@ -101,17 +117,18 @@ describe("LexicalContentEngine Unit Tests", () => {
 
   it("harus query data vocab dengan filter hinshi tanpa throwing error query.cs", async () => {
     mockData = [
-      { id: "v1", word: "食べる", meaning_id: "makan", hinshi: ["Verb"] },
+      { id: "v1", word: "食べる", meaning_id: "makan", hinshi: ["verb-ru"] },
     ];
     mockCount = 1;
 
     const result = await queryLexicalDomain({
       type: "vocab",
-      filters: { hinshi: "noun" },
+      filters: { level: "N5", hinshi: "verb" },
       pagination: { page: 1, limit: 10 },
     });
 
     expect(result.data).toHaveLength(1);
+    expect(result.data[0]).toHaveProperty("word", "食べる");
   });
 
   it("harus mengabaikan filter hinshi ketika dikirim nilai 'all', 'semua', atau 'all-types'", async () => {

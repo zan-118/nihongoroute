@@ -129,13 +129,13 @@ export async function getFlashcardsByIds(ids: string[]): Promise<FormattedCard[]
       kanjiByCharRes
     ] = await Promise.all([
       uuids.length > 0 
-        ? supabase.from("vocab").select("id, word, meaning:meaning_id, romaji, furigana, jlpt_level, examples, mnemonic, usage_notes, pitch_accent, hinshi").in("id", uuids) 
+        ? supabase.from("vocab").select("id, word, meaning_id, romaji, furigana, jlpt_level, examples, mnemonic, usage_notes, pitch_accent, hinshi").in("id", uuids) 
         : Promise.resolve({ data: null, error: null }),
       slugs.length > 0 
-        ? supabase.from("vocab").select("id, word, meaning:meaning_id, romaji, furigana, jlpt_level, examples, mnemonic, usage_notes, pitch_accent, hinshi").in("slug", slugs) 
+        ? supabase.from("vocab").select("id, word, meaning_id, romaji, furigana, jlpt_level, examples, mnemonic, usage_notes, pitch_accent, hinshi").in("slug", slugs) 
         : Promise.resolve({ data: null, error: null }),
       romajis.length > 0 
-        ? supabase.from("vocab").select("id, word, meaning:meaning_id, romaji, furigana, jlpt_level, examples, mnemonic, usage_notes, pitch_accent, hinshi").in("romaji", romajis) 
+        ? supabase.from("vocab").select("id, word, meaning_id, romaji, furigana, jlpt_level, examples, mnemonic, usage_notes, pitch_accent, hinshi").in("romaji", romajis) 
         : Promise.resolve({ data: null, error: null }),
       uuids.length > 0 
         ? supabase.from("kanji").select("id, character, meaning, onyomi, kunyomi, jlpt_level, stroke_order_svg, mnemonics, examples").in("id", uuids) 

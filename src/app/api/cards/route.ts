@@ -127,13 +127,13 @@ export async function GET(request: NextRequest) {
       kanjiByCharRes
     ] = await Promise.all([
       uuids.length > 0 
-        ? supabase.from("vocab").select("id, word, meaning:meaning_id, romaji, furigana, jlpt_level, examples, mnemonic, usage_notes, pitch_accent, hinshi").in("id", uuids) 
+        ? supabase.from("vocab").select("id, word, meaning_id, romaji, furigana, jlpt_level, examples, mnemonic, usage_notes, pitch_accent, hinshi").in("id", uuids) 
         : Promise.resolve({ data: null, error: null }),
       slugs.length > 0 
-        ? supabase.from("vocab").select("id, word, meaning:meaning_id, romaji, furigana, jlpt_level, examples, mnemonic, usage_notes, pitch_accent, hinshi").in("slug", slugs) 
+        ? supabase.from("vocab").select("id, word, meaning_id, romaji, furigana, jlpt_level, examples, mnemonic, usage_notes, pitch_accent, hinshi").in("slug", slugs) 
         : Promise.resolve({ data: null, error: null }),
       romajis.length > 0 
-        ? supabase.from("vocab").select("id, word, meaning:meaning_id, romaji, furigana, jlpt_level, examples, mnemonic, usage_notes, pitch_accent, hinshi").in("romaji", romajis) 
+        ? supabase.from("vocab").select("id, word, meaning_id, romaji, furigana, jlpt_level, examples, mnemonic, usage_notes, pitch_accent, hinshi").in("romaji", romajis) 
         : Promise.resolve({ data: null, error: null }),
       uuids.length > 0 
         ? supabase.from("kanji").select("id, character, meaning, onyomi, kunyomi, jlpt_level, stroke_order_svg, mnemonics, examples").in("id", uuids) 
@@ -171,7 +171,7 @@ export async function GET(request: NextRequest) {
       _id: v.id,
       id: v.id,
       word: v.word,
-      meaning: v.meaning,
+      meaning: v.meaning_id,
       romaji: v.romaji,
       furigana: v.furigana,
       jlptLevel: v.jlpt_level,
@@ -209,7 +209,7 @@ export async function GET(request: NextRequest) {
             _id: legacyId,
             id: legacyId, // Keep legacy ID for client Zustand store compatibility
             word: v.word,
-            meaning: v.meaning,
+            meaning: v.meaning_id,
             romaji: v.romaji,
             furigana: v.furigana,
             jlptLevel: v.jlpt_level,

@@ -35,27 +35,28 @@ import {
  */
 export async function getLessonDetail(slug: string) {
   const supabase = createStaticClient();
-  const { data, error } = await supabase
+  const { data: rawData, error } = await supabase
     .from("lessons")
-    .select("*, category:course_categories(*)")
+    .select("*, course_categories(*)")
     .eq("slug", slug)
     .maybeSingle();
 
-  if (!data || error) {
+  if (!rawData || error) {
     // Fallback ke tabel articles jika data pelajaran tidak ditemukan
     const { data: artData } = await supabase
       .from("articles")
-      .select("*, category:course_categories(*)")
+      .select("*, course_categories(*)")
       .eq("slug", slug)
       .maybeSingle();
-    if (artData) return artData;
+    if (artData) return { ...artData, category: artData.course_categories };
 
     if (error) {
       console.error("Gagal mengambil detail pelajaran:", error);
     }
     return null;
   }
-  return data;
+
+  return { ...rawData, category: rawData.course_categories };
 }
 
 // ======================
@@ -237,7 +238,7 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
     // 1. Coba ambil dari tabel lessons
     const query = supabase
       .from("lessons")
-      .select("*, category:course_categories(*)");
+      .select("*, course_categories(*)");
 
     if (isUUID(slugOrId)) {
       query.eq("id", slugOrId);
@@ -253,17 +254,17 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
     let rawRow: RawLessonRow | null = null;
 
     if (dbLesson) {
-      rawRow = { ...dbLesson, _sourceTable: "lessons" as const };
+      rawRow = { ...dbLesson, category: dbLesson.course_categories || dbLesson.category, _sourceTable: "lessons" as const };
     } else {
       // 2. Fallback ke tabel articles
       const { data: dbArticle } = await supabase
         .from("articles")
-        .select("*, category:course_categories(*)")
+        .select("*, course_categories(*)")
         .eq(isUUID(slugOrId) ? "id" : "slug", slugOrId)
         .maybeSingle();
 
       if (dbArticle) {
-        rawRow = { ...dbArticle, _sourceTable: "articles" as const };
+        rawRow = { ...dbArticle, category: dbArticle.course_categories || dbArticle.category, _sourceTable: "articles" as const };
       }
     }
 
