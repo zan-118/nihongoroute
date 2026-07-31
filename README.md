@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Next.js-16.2.2-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
-  <img src="https://img.shields.io/badge/React-19.2.2-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/Next.js-16.2.12-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React-19.2.8-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
   <img src="https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
   <img src="https://img.shields.io/badge/TypeScript-5.3-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Quality_Gate-Passed-4EAA25?style=for-the-badge&logo=githubactions&logoColor=white" alt="Quality Gate" />
@@ -102,7 +102,7 @@ Dokumentasi detail arsitektur sistem dan model data tersimpan secara terstruktur
 * 📦 **[Panduan Memulai & Setup](file:///c:/nihongoroute/docs/getting-started.md)**
 * ⚙️ **[Konfigurasi Variabel Lingkungan](file:///c:/nihongoroute/docs/configuration.md)**
 * 🔌 **[Referensi API & Endpoint Rute](file:///c:/nihongoroute/docs/api-reference.md)**
-* 💾 **[Model Data & Skema Database (26 Tabel)](file:///c:/nihongoroute/docs/data-model.md)**
+* 💾 **[Model Data & Skema Database (28 Tabel)](file:///c:/nihongoroute/docs/data-model.md)**
 * 🚢 **[Deployment & Alur CI/CD](file:///c:/nihongoroute/docs/deployment.md)**
 * 🔒 **[Keamanan, RLS, & Enkapsulasi Token](file:///c:/nihongoroute/docs/security.md)**
 * 🛠️ **[Troubleshooting & FAQ Operasional](file:///c:/nihongoroute/docs/troubleshooting.md)**
@@ -111,5 +111,5 @@ Dokumentasi detail arsitektur sistem dan model data tersimpan secara terstruktur
 ---
 
 <p align="center">
-  <sub>Dikelola oleh tim pengembang NihongoRoute • Rilis terakhir diperbarui pada 17 Juli 2026.</sub>
+  <sub>Dikelola oleh tim pengembang NihongoRoute • Rilis terakhir diperbarui pada 31 Juli 2026.</sub>
 </p>

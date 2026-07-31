@@ -1,6 +1,6 @@
 # Deployment & CI/CD
 
-> Terakhir diperbarui: 24 Juli 2026
+> Terakhir diperbarui: 31 Juli 2026
 
 ---
 

@@ -1,6 +1,6 @@
 # Keamanan
 
-> Terakhir diperbarui: 24 Juli 2026
+> Terakhir diperbarui: 31 Juli 2026
 
 ---
 
@@ -57,7 +57,7 @@ Webhook donasi memverifikasi keaslian pengirim menggunakan `safeEqual()` (timing
 
 ## 4. Row Level Security (RLS)
 
-Seluruh **27 tabel** database PostgreSQL mengaktifkan RLS. Kebijakan per kategori:
+Seluruh **28 tabel** database PostgreSQL mengaktifkan RLS. Kebijakan per kategori:
 
 ### Data Publik (SELECT `USING (true)`)
 

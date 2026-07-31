@@ -28,7 +28,7 @@ graph TD
 
     subgraph Supabase ["Supabase / PostgreSQL"]
         Auth["Supabase Auth<br/>auth.users"]
-        DB[("PostgreSQL<br/>27 Tabel")]
+        DB[("PostgreSQL<br/>28 Tabel")]
         RPC["RPC sync_user_progress"]
         Buckets[("Storage Buckets<br/>asset, exam-assets, tts-cache")]
     end
@@ -175,7 +175,7 @@ Status pengguna (XP, SRS, lesson progress) diproses di sisi klien via Zustand + 
 - **Separasi konten library vs progres pengguna**: Konten library menggunakan ISR + revalidate. Progres pengguna menggunakan client-side sync via RPC.
 - **Legacy exam adapter**: Komponen `MockExamEngine` membaca format data lama. Adapter `src/lib/exams/supabase-adapter.ts` (`toLegacyExamData`) memetakan data relasional baru ke format lama.
 - **Optimasi bundle**: `optimizePackageImports` di `next.config.ts` untuk Radix UI, Iconify, Framer Motion, Date-fns, Sonner, Wanakana. Pemisahan bundle via `next/dynamic` untuk komponen besar.
-- **Tabel `articles`**: Tabel ini ada di database produksi (50 rows, RLS aktif) dan diquery oleh server actions, namun belum masuk file skema konsolidasi `initial_schema.sql`. Tabel ini digunakan sebagai fallback konten pelajaran di `lessons.actions.ts`.
+- **Tabel `articles`**: Tabel ini ada di database produksi (50 rows, RLS aktif) dan telah terlebur resmi ke dalam file skema konsolidasi `initial_schema.sql` (tabel #7). Tabel ini digunakan sebagai fallback konten pelajaran di `lessons.actions.ts`.
 
 ---
 

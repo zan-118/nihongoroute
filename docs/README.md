@@ -1,6 +1,6 @@
 # Dokumentasi Teknis NihongoRoute
 
-> Terakhir diperbarui: 24 Juli 2026 — Sinkronisasi penuh dengan codebase aktual.
+> Terakhir diperbarui: 31 Juli 2026 — Sinkronisasi penuh dengan codebase aktual.
 
 ---
 
@@ -13,7 +13,7 @@
 | 3 | [Panduan Memulai](getting-started.md) | Prasyarat, instalasi, konfigurasi environment, dan menjalankan server pengembangan. |
 | 4 | [Konfigurasi Sistem](configuration.md) | Daftar lengkap environment variables dan file konfigurasi proyek. |
 | 5 | [Referensi API](api-reference.md) | Spesifikasi 7 API Route Handlers aktif: method, parameter, payload, dan respons. |
-| 6 | [Model Data & Database](data-model.md) | Spesifikasi seluruh 27 tabel PostgreSQL, diagram ERD, triggers, RPC functions, dan storage buckets. |
+| 6 | [Model Data & Database](data-model.md) | Spesifikasi seluruh 28 tabel PostgreSQL, diagram ERD, triggers, RPC functions, dan storage buckets. |
 | 7 | [Deployment & CI/CD](deployment.md) | Pipeline GitHub Actions, release checklist, dan strategi cache/revalidasi. |
 | 8 | [Keamanan](security.md) | Kebijakan kredensial, proteksi admin API, verifikasi webhook, RLS, dan anti-cheat XP. |
 | 9 | [Troubleshooting](troubleshooting.md) | Panduan penanganan masalah umum: Kuroshiro, Edge TTS, sinkronisasi offline, dan health check. |

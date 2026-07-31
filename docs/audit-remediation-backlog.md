@@ -1,8 +1,8 @@
-﻿# NihongoRoute Audit Remediation Backlog
+# NihongoRoute Audit Remediation Backlog
 
 > **Deployment gate:** rilis berikutnya sebaiknya dianggap **NO-GO** sampai seluruh item P0 selesai dan memiliki test otomatis.
 >
-> Catatan: seluruh 27 tabel sudah mengaktifkan RLS. Risiko utamanya berasal dari policy yang terlalu permisif dan jalur penulisan data yang melewati validasi anti-cheat.
+> Catatan: seluruh 28 tabel sudah mengaktifkan RLS. Risiko utamanya berasal dari policy yang terlalu permisif dan jalur penulisan data yang melewati validasi anti-cheat.
 
 ## Top 20 Masalah Paling Kritis
 
@@ -98,7 +98,7 @@ Roadmap testing perlu mencakup unit, Route Handler contract tests, Supabase inte
 
 ### RLS dan Data Exposure
 
-Walaupun semua 27 tabel sudah RLS ON, perlu audit berdasarkan data classification:
+Walaupun semua 28 tabel sudah RLS ON, perlu audit berdasarkan data classification:
 
 - Public content.
 - Published-only content.

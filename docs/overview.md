@@ -1,6 +1,6 @@
 # Overview Proyek
 
-> Terakhir diperbarui: 24 Juli 2026
+> Terakhir diperbarui: 31 Juli 2026
 
 ---
 
@@ -24,16 +24,16 @@
 
 ## 2. Tech Stack
 
-Diekstrak langsung dari `package.json` pada 24 Juli 2026.
+Diekstrak langsung dari `package.json` pada 31 Juli 2026.
 
 ### Core Framework & Runtime
 
 | Paket | Versi | Peran |
 |-------|-------|-------|
 | Node.js | 22.x (CI) | Runtime |
-| Next.js | `16.2.2` | Framework (App Router, Server Actions, Route Handlers) |
-| React | `19.2.2` | Library UI |
-| React DOM | `19.2.2` | Rendering DOM |
+| Next.js | `16.2.12` | Framework (App Router, Server Actions, Route Handlers) |
+| React | `19.2.8` | Library UI |
+| React DOM | `19.2.8` | Rendering DOM |
 
 ### Database & Backend Service
 
@@ -91,7 +91,7 @@ Diekstrak langsung dari `package.json` pada 24 Juli 2026.
 | `date-fns` | `^4.1.0` | Manipulasi tanggal |
 | `@react-pdf/renderer` | `^4.5.1` | Render PDF (sertifikat/laporan) |
 | `@google/generative-ai` | `^0.24.1` | Gemini API (generasi konten admin) |
-| `@next/third-parties` | `^16.2.10` | Integrasi third-party scripts |
+| `@next/third-parties` | `16.2.12` | Integrasi third-party scripts |
 | `@vercel/analytics` | `^2.0.1` | Analitik |
 | `@vercel/speed-insights` | `^2.0.0` | Core Web Vitals monitoring |
 
@@ -104,7 +104,7 @@ Diekstrak langsung dari `package.json` pada 24 Juli 2026.
 | `@testing-library/jest-dom` | `^6.9.1` | DOM matchers |
 | `@playwright/test` | `^1.59.1` | E2E testing |
 | `eslint` | `^9.16.0` | Linter |
-| `eslint-config-next` | `16.2.2` | Next.js lint rules |
+| `eslint-config-next` | `16.2.12` | Next.js lint rules |
 | `husky` | `^9.1.7` | Git hooks |
 | `lint-staged` | `^16.4.0` | Pre-commit lint |
 
@@ -112,7 +112,7 @@ Diekstrak langsung dari `package.json` pada 24 Juli 2026.
 
 | Paket | Versi | Peran |
 |-------|-------|-------|
-| `@next/bundle-analyzer` | `^16.2.10` | Analisis ukuran bundle |
+| `@next/bundle-analyzer` | `16.2.12` | Analisis ukuran bundle |
 | `sharp` | `^0.35.3` | Optimasi image (Next.js) |
 | `lighthouse` | `^13.4.0` | Performance audit |
 | `dotenv` | `^17.4.2` | Environment variable loader (scripts) |

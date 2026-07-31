@@ -1,14 +1,14 @@
 # Model Data & Database
 
-> Terakhir diperbarui: 24 Juli 2026 — Diverifikasi langsung dari database produksi via Supabase MCP.
+> Terakhir diperbarui: 31 Juli 2026 — Diverifikasi langsung dari database produksi via Supabase MCP.
 
 ---
 
-NihongoRoute menggunakan **PostgreSQL** di **Supabase** dengan **27 tabel**, 2 ekstensi (`uuid-ossp`, `pg_trgm`), 3 storage buckets, dan 1 RPC utama. Seluruh tabel mengaktifkan RLS.
+NihongoRoute menggunakan **PostgreSQL** di **Supabase** dengan **28 tabel**, 2 ekstensi (`uuid-ossp`, `pg_trgm`), 3 storage buckets, dan 1 RPC utama. Seluruh tabel mengaktifkan RLS.
 
 ---
 
-## 1. Spesifikasi 27 Tabel
+## 1. Spesifikasi 28 Tabel
 
 ### A. Pengguna & Progres
 
@@ -65,7 +65,7 @@ Status SRS (Spaced Repetition) per kartu per pengguna.
 
 **PK**: `(user_id, lesson_id)`.
 
-#### 3b. `user_xp_ledger` (0 rows)
+#### 4. `user_xp_ledger` (0 rows)
 
 Tabel idempotensi untuk mencegah duplikasi poin XP akibat race condition atau replay.
 
@@ -80,7 +80,7 @@ Tabel idempotensi untuk mencegah duplikasi poin XP akibat race condition atau re
 
 **Constraint**: `UNIQUE(user_id, event_type, reference_id)`.
 
-#### 4. `user_feedback` (2 rows)
+#### 5. `user_feedback` (2 rows)
 
 | Kolom | Tipe | Null | Default |
 |-------|------|------|---------|
@@ -99,7 +99,7 @@ Tabel idempotensi untuk mencegah duplikasi poin XP akibat race condition atau re
 
 ### B. Pustaka Konten
 
-#### 5. `course_categories` (6 rows)
+#### 6. `course_categories` (6 rows)
 
 | Kolom | Tipe | Null | Default |
 |-------|------|------|---------|
@@ -110,7 +110,7 @@ Tabel idempotensi untuk mencegah duplikasi poin XP akibat race condition atau re
 | `type` / `description` | text | YES | |
 | `created_at` | timestamptz | NO | `now()` |
 
-#### 6. `lessons` (193 rows)
+#### 7. `lessons` (193 rows)
 
 | Kolom | Tipe | Null | Default |
 |-------|------|------|---------|
@@ -127,7 +127,7 @@ Tabel idempotensi untuk mencegah duplikasi poin XP akibat race condition atau re
 | `warnings`, `confidence`, `audit_log`, `generation_context` | jsonb | YES | |
 | `created_at` | timestamptz | NO | |
 
-#### 7. `articles` (50 rows)
+#### 8. `articles` (50 rows)
 
 Konten artikel/pelajaran tambahan. Digunakan sebagai fallback oleh `lessons.actions.ts`.
 
@@ -148,10 +148,7 @@ Konten artikel/pelajaran tambahan. Digunakan sebagai fallback oleh `lessons.acti
 | `image_url` | text | YES | |
 | `created_at` | timestamptz | YES | `now()` |
 
-> [!NOTE]
-> Tabel `articles` ada di database produksi dan aktif diquery, namun belum masuk file skema konsolidasi `20260620130000_initial_schema.sql`.
-
-#### 8. `kanji` (13.108 rows)
+#### 9. `kanji` (13.108 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -167,7 +164,7 @@ Konten artikel/pelajaran tambahan. Digunakan sebagai fallback oleh `lessons.acti
 | `slug` | text | YES |
 | `created_at` | timestamptz | NO |
 
-#### 9. `vocab` (22.000 rows)
+#### 10. `vocab` (22.000 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -182,7 +179,7 @@ Konten artikel/pelajaran tambahan. Digunakan sebagai fallback oleh `lessons.acti
 | `show_in_flashcard` | boolean | YES |
 | `created_at` | timestamptz | NO |
 
-#### 10. `grammar` (697 rows)
+#### 11. `grammar` (697 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -195,7 +192,7 @@ Konten artikel/pelajaran tambahan. Digunakan sebagai fallback oleh `lessons.acti
 | `related_grammar` | text[] | YES |
 | `created_at` | timestamptz | NO |
 
-#### 11. `radicals` (253 rows)
+#### 12. `radicals` (253 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -206,7 +203,7 @@ Konten artikel/pelajaran tambahan. Digunakan sebagai fallback oleh `lessons.acti
 | `kanji_list` | jsonb | YES |
 | `created_at` | timestamptz | YES |
 
-#### 12. `sentences` (25.980 rows)
+#### 13. `sentences` (25.980 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -215,7 +212,7 @@ Konten artikel/pelajaran tambahan. Digunakan sebagai fallback oleh `lessons.acti
 | `english`, `indonesia`, `jlpt_level`, `furigana` | text | YES |
 | `created_at` | timestamptz | YES |
 
-#### 13. `expressions` (13.220 rows)
+#### 14. `expressions` (13.220 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -226,7 +223,7 @@ Konten artikel/pelajaran tambahan. Digunakan sebagai fallback oleh `lessons.acti
 | `jlpt_level` | text | YES |
 | `created_at` | timestamptz | YES |
 
-#### 14. `cheatsheets` (50 rows)
+#### 15. `cheatsheets` (50 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -237,7 +234,7 @@ Konten artikel/pelajaran tambahan. Digunakan sebagai fallback oleh `lessons.acti
 | `items` | jsonb | YES |
 | `created_at` / `updated_at` | timestamptz | YES |
 
-#### 15. `listening` (50 rows)
+#### 16. `listening` (50 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -251,7 +248,7 @@ Konten artikel/pelajaran tambahan. Digunakan sebagai fallback oleh `lessons.acti
 | `estimated_minutes` | integer | YES |
 | `created_at` | timestamptz | NO |
 
-#### 16. `reading` (50 rows)
+#### 17. `reading` (50 rows)
 
 Struktur identik dengan tabel `listening`.
 
@@ -259,7 +256,7 @@ Struktur identik dengan tabel `listening`.
 
 ### C. Simulasi Ujian JLPT
 
-#### 17. `jlpt_exam_templates` (123 rows)
+#### 18. `jlpt_exam_templates` (123 rows)
 
 | Kolom | Tipe | Null | Default |
 |-------|------|------|---------|
@@ -277,7 +274,7 @@ Struktur identik dengan tabel `listening`.
 | `legacy_sanity_id` | text | YES | |
 | `created_at` / `updated_at` | timestamptz | YES | |
 
-#### 18. `jlpt_passages` (592 rows)
+#### 19. `jlpt_passages` (592 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -289,7 +286,7 @@ Struktur identik dengan tabel `listening`.
 | `is_published` | boolean | YES |
 | `created_at` / `updated_at` | timestamptz | YES |
 
-#### 19. `jlpt_questions` (3.466 rows)
+#### 20. `jlpt_questions` (3.466 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -308,7 +305,7 @@ Struktur identik dengan tabel `listening`.
 | `is_published` | boolean | YES |
 | `created_at` / `updated_at` | timestamptz | YES |
 
-#### 20. `jlpt_exam_template_questions` (3.477 rows)
+#### 21. `jlpt_exam_template_questions` (3.477 rows)
 
 Junction table penugasan soal ke template.
 
@@ -321,7 +318,7 @@ Junction table penugasan soal ke template.
 
 **PK**: `(template_id, question_id)`. **UNIQUE**: `(template_id, position)`.
 
-#### 21. `user_exam_sessions` (3 rows)
+#### 22. `user_exam_sessions` (3 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -337,7 +334,7 @@ Junction table penugasan soal ke template.
 | `started_at` | timestamptz | YES |
 | `completed_at` / `updated_at` | timestamptz | YES |
 
-#### 22. `user_exam_answers` (102 rows)
+#### 23. `user_exam_answers` (102 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -354,7 +351,7 @@ Junction table penugasan soal ke template.
 
 ### D. Komunitas & Utilitas
 
-#### 23. `community_posts` (2 rows)
+#### 24. `community_posts` (2 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -368,7 +365,7 @@ Junction table penugasan soal ke template.
 
 **Triggers**: `update_post_comments_count_trigger` (INSERT/DELETE on `community_comments`) → `update_community_post_comments_count()`.
 
-#### 24. `community_comments` (2 rows)
+#### 25. `community_comments` (2 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -378,7 +375,7 @@ Junction table penugasan soal ke template.
 | `content` | text | NO |
 | `created_at` | timestamptz | YES |
 
-#### 25. `notifications` (2 rows)
+#### 26. `notifications` (2 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -391,7 +388,7 @@ Junction table penugasan soal ke template.
 | `read` | boolean | YES — Default `false` |
 | `created_at` | timestamptz | NO |
 
-#### 26. `tts_cache` (1.174 rows)
+#### 27. `tts_cache` (1.174 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
@@ -402,7 +399,7 @@ Junction table penugasan soal ke template.
 | `model_used` | text | YES |
 | `created_at` | timestamptz | NO |
 
-#### 27. `supporters` (2 rows)
+#### 28. `supporters` (2 rows)
 
 | Kolom | Tipe | Null |
 |-------|------|------|
