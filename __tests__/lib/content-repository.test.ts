@@ -92,4 +92,15 @@ describe("Content Repository Unit Tests", () => {
       expect(result.id).toBe("f57f436a-80ad-46b3-841d-40cdcf9473d6");
     });
   });
+
+  describe("getStaticSlugs", () => {
+    it("harus mengembalikan daftar slug statis", async () => {
+      const { getStaticSlugs } = await import("@/lib/services/content-repository");
+      mockData = [{ slug: "taber-1" }, { slug: "nom-2" }];
+
+      const slugs = await getStaticSlugs("vocab", { limit: 10 });
+      expect(slugs).toBeDefined();
+    });
+  });
 });
+

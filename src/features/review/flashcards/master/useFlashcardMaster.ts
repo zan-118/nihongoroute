@@ -11,9 +11,12 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
-import { updateCardState } from "@/lib/srs";
+import { updateCardState } from "@/lib/learning/srs";
+import { FlashcardSessionEngine } from "@/lib/srs/flashcard-session-engine";
 import { sounds } from "@/lib/audio";
 import { MasterCardData, StudyMode } from "./types";
+
+
 
 // ==========================================
 // CUSTOM HOOK UTAMA
@@ -104,11 +107,6 @@ export function useFlashcardMaster({
     const card = currentCards[currentIndex];
     const cardId = card.id || "unknown";
     
-    // XP Scaling based on Grade (0: 5, 1: 10, 2: 15, 3: 20)
-    const xpRewards = [5, 10, 15, 20];
-    const xpReward = xpRewards[grade] || 15;
-    const isCorrect = grade >= 2;
-
     // Trigger device haptic feedback if supported
     if (typeof window !== "undefined" && window.navigator.vibrate) {
       if (grade === 0) window.navigator.vibrate([100, 50, 100]);
@@ -117,48 +115,43 @@ export function useFlashcardMaster({
       else window.navigator.vibrate([50, 30, 50]);
     }
 
-    // Update session statistics
-    setSessionStats((prev) => ({
-      ...prev,
-      known: prev.known + (isCorrect ? 1 : 0),
-      learning: prev.learning + (isCorrect ? 0 : 1),
-      xpGained: prev.xpGained + xpReward,
-    }));
-
     // Retrieve existing SRS state or fallback to default
     const currentState = srs[cardId] || {
       interval: 1,
       repetition: 0,
       easeFactor: 2.5,
       nextReview: Date.now(),
+      updatedAt: Date.now(),
     };
+
+    // Instantiate session engine seam for current session
+    const engine = new FlashcardSessionEngine(currentCards, currentIndex);
+    const { isCorrect, xpReward, newState, stats: updatedStats } = engine.processGrade(grade, currentState);
+
+
+    // Update session statistics via engine
+    setSessionStats((prev) => ({
+      ...prev,
+      known: updatedStats.known,
+      learning: updatedStats.learning,
+      xpGained: prev.xpGained + xpReward,
+      maxCombo: Math.max(prev.maxCombo, updatedStats.maxCombo),
+    }));
 
     if (isCorrect) {
       sounds?.playSuccess();
       setShowXP(true);
       setTimeout(() => setShowXP(false), 800);
+      setCombo((prev) => prev + 1);
     } else {
       sounds?.playError();
       setIsShaking(true);
       setMistakeIndices((prev) => [...new Set([...prev, currentIndex])]);
       setTimeout(() => setIsShaking(false), 200);
+      setCombo(0);
     }
 
     setDirection(isCorrect ? 1 : -1);
-    
-    const newState = updateCardState(currentState, grade);
-
-    // Combo Logic
-    if (isCorrect) {
-      const nextCombo = combo + 1;
-      setCombo(nextCombo);
-      setSessionStats((stats) => ({
-        ...stats,
-        maxCombo: Math.max(stats.maxCombo, nextCombo),
-      }));
-    } else {
-      setCombo(0);
-    }
 
     // Always read xp fresh from store to prevent stale snapshot across multi-card sessions
     const currentXp = useUserStore.getState().xp;
@@ -170,6 +163,7 @@ export function useFlashcardMaster({
     setUserInput("");
     setIsAnswerChecked(false);
     setInputResult(null);
+
 
     // Transition to next card or finish session
     setTimeout(() => {

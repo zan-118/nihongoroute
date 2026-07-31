@@ -17,6 +17,7 @@ describe("TTS Pipeline Seam", () => {
     it("harus fallback ke zundamon jika voice tidak dikenal", () => {
       expect(resolveTtsVoice("unknown_voice_123")).toBe(TTS_VOICES.ZUNDAMON);
       expect(resolveTtsVoice("")).toBe(TTS_VOICES.ZUNDAMON);
+      expect(resolveTtsVoice(undefined)).toBe(TTS_VOICES.ZUNDAMON);
     });
   });
 
@@ -29,6 +30,13 @@ describe("TTS Pipeline Seam", () => {
       expect(key1).toBe(key2);
       expect(key1).not.toBe(key3);
       expect(key1).toMatch(/^[a-f0-9]{32}$/);
+    });
+
+    it("harus membedakan hash jika rate atau text berbeda", () => {
+      const keyDefault = generateTtsCacheKey("ありがとう", TTS_VOICES.ZUNDAMON);
+      const keyFast = generateTtsCacheKey("ありがとう", TTS_VOICES.ZUNDAMON, "fast");
+
+      expect(keyDefault).not.toBe(keyFast);
     });
   });
 

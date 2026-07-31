@@ -1,13 +1,15 @@
 import { createStaticClient } from "@/lib/supabase/server";
 
-export interface PaginatedOptions {
+export interface PaginatedOptions<TFilter = any> { // eslint-disable-line @typescript-eslint/no-explicit-any
   page: number;
   limit: number;
-  filters?: (query: any) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  filters?: (query: TFilter) => TFilter;
   searchColumns?: string[];
   search?: string;
   orderBy?: { column: string; ascending?: boolean; nullsFirst?: boolean }[];
 }
+
+
 
 export interface PaginatedResponse<T> {
   data: T[];
@@ -152,14 +154,14 @@ export async function getContentBySlugOrId<T>(
 /**
  * Generic function to fetch static slugs for static build generation (ISR).
  */
-export async function getStaticSlugs(
+export async function getStaticSlugs<T = Record<string, unknown>>(
   table: string,
   options: {
     limit: number;
     orderBy?: { column: string; ascending?: boolean };
     select?: string;
   }
-): Promise<any[]> { // eslint-disable-line @typescript-eslint/no-explicit-any
+): Promise<T[]> {
   const supabase = createStaticClient();
   let query = supabase.from(table).select(options.select || "slug");
 
@@ -176,8 +178,9 @@ export async function getStaticSlugs(
     console.error(`[getStaticSlugs] Gagal mengambil slugs dari ${table}:`, error);
     return [];
   }
-  return data || [];
+  return (data || []) as T[];
 }
+
 
 /**
  * Fetch detailed related kanji items by character array.

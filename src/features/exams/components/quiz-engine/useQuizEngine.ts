@@ -8,73 +8,74 @@
 // ======================
 // IMPOR
 // ======================
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { sounds } from "@/lib/audio";
 import { QuizQuestion } from "./types";
+import { ConsolidatedExamSessionEngine } from "@/lib/exams/exam-session-engine";
+import type { ExamQuestion } from "@/features/exams/components/mock-engine/types";
 
 // ======================
 // HOOK UTAMA
 // ======================
 /**
- * Manage quiz state, scoring, and XP updates.
+ * Manage quiz state, scoring, and XP updates via ConsolidatedExamSessionEngine seam.
  * @param questions Quiz questions.
  * @param lessonId Lesson ID.
  */
 export function useQuizEngine(questions: QuizQuestion[], lessonId?: string) {
-  // Track current question index.
+  // Map QuizQuestion list to ExamQuestion domain format for the engine seam
+  const examQuestions = useMemo<ExamQuestion[]>(() => {
+    return (questions || []).map((q, idx) => ({
+      _key: `quiz-q-${idx}`,
+      title: q.question,
+      options: q.options,
+      correctAnswer: Math.max(0, q.options.indexOf(q.answer)),
+      section: "vocabulary",
+      explanation: q.explanation,
+    }));
+  }, [questions]);
+
+  // Instantiate the deep engine seam
+  const engine = useMemo(
+    () => new ConsolidatedExamSessionEngine({ questions: examQuestions }),
+    [examQuestions]
+  );
+
   const [currentIndex, setCurrentIndex] = useState(0);
-  // Track selected answer option.
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  // Flag if current question answered.
   const [isAnswered, setIsAnswered] = useState(false);
-  // Count correct answers.
   const [score, setScore] = useState(0);
-  // Flag if quiz completed.
   const [isFinished, setIsFinished] = useState(false);
-  // Control XP animation visibility.
   const [showXP, setShowXP] = useState(false);
-  // Total XP earned in session.
   const [xpGained, setXpGained] = useState(0);
 
   const updateProgress = useSRSStore((state) => state.updateProgress);
   const completeLesson = useUserStore((state) => state.completeLesson);
 
-  /**
-   * Process quiz end. Calculate XP. Update user progress.
-   * @param finalScore Correct answer count.
-   */
   const handleFinish = useCallback((finalScore: number) => {
     setIsFinished(true);
-    // 25 XP per correct answer.
-    const baseXP = finalScore * 25;
-    // 50 XP bonus for perfect score.
-    const bonusXP = finalScore === questions.length ? 50 : 0;
-    const totalXP = baseXP + bonusXP;
+    const { totalXP } = engine.calculateQuizXP(finalScore, questions.length);
 
     if (totalXP > 0) {
       setXpGained(totalXP);
       setShowXP(true);
-      // Get fresh XP from store to avoid stale state.
       const currentXp = useUserStore.getState().xp;
       updateProgress(currentXp + totalXP, {});
       
-      // Mark lesson complete if score >= 70%.
-      if (lessonId && finalScore / questions.length >= 0.7) {
+      if (lessonId && questions.length > 0 && finalScore / questions.length >= 0.7) {
         completeLesson(lessonId);
       }
 
       setTimeout(() => setShowXP(false), 2000);
     }
-  }, [questions.length, updateProgress, completeLesson, lessonId]);
+  }, [engine, questions.length, updateProgress, completeLesson, lessonId]);
 
-  /**
-   * Go to next question. Finish quiz if last question.
-   */
   const nextQuestion = useCallback(() => {
     if (currentIndex < questions.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
+      const nextIdx = currentIndex + 1;
+      setCurrentIndex(nextIdx);
       setSelectedOption(null);
       setIsAnswered(false);
     } else {
@@ -82,12 +83,7 @@ export function useQuizEngine(questions: QuizQuestion[], lessonId?: string) {
     }
   }, [currentIndex, questions.length, score, handleFinish]);
 
-  /**
-   * Process selected answer. Play sound. Update score.
-   * @param option Selected answer.
-   */
   const handleSelect = useCallback((option: string) => {
-    // Prevent double answering or empty question errors.
     if (isAnswered || !questions || questions.length === 0) return;
 
     const currentQ = questions[currentIndex];
@@ -106,10 +102,6 @@ export function useQuizEngine(questions: QuizQuestion[], lessonId?: string) {
     }
   }, [isAnswered, currentIndex, questions]); 
 
-
-  /**
-   * Reset quiz state.
-   */
   const resetQuiz = useCallback(() => {
     setCurrentIndex(0);
     setScore(0);
@@ -119,7 +111,6 @@ export function useQuizEngine(questions: QuizQuestion[], lessonId?: string) {
     setShowXP(false);
   }, []);
 
-  // Get current active question.
   const currentQ = questions && questions.length > 0 ? questions[currentIndex] : null;
 
   return {

@@ -76,6 +76,21 @@ describe("Sync Pipeline Engine Seam", () => {
       engine.dispose();
     });
 
+    it("harus mengeksekusi sync secara langsung dengan executeSync dan menyiarkan sinyal", async () => {
+      const engine = new ProgressSyncEngine();
+      const task = vi.fn().mockResolvedValue(undefined);
+
+      expect(engine.isSyncing()).toBe(false);
+      const promise = engine.executeSync(task);
+      expect(engine.isSyncing()).toBe(true);
+
+      await promise;
+      expect(engine.isSyncing()).toBe(false);
+      expect(engine.getLastSyncedAt()).toBeGreaterThan(0);
+
+      engine.dispose();
+    });
+
     it("harus mengabstraksikan rekonsiliasi XP anti-cheat", () => {
       const engine = new ProgressSyncEngine();
       const mockUpdate = vi.fn();
@@ -85,6 +100,16 @@ describe("Sync Pipeline Engine Seam", () => {
 
       engine.dispose();
     });
+
+    it("harus membersihkan timer saat dispose dipanggil", () => {
+      const engine = new ProgressSyncEngine({ debounceMs: 1000 });
+      const task = vi.fn();
+
+      engine.scheduleSync(task);
+      engine.dispose();
+
+      vi.advanceTimersByTime(1000);
+      expect(task).not.toHaveBeenCalled();
+    });
   });
 });
-
