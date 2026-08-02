@@ -6,7 +6,7 @@
 
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { SupporterTable } from "@/types/database";
 
 export interface FormattedSupporter {
@@ -26,7 +26,7 @@ export interface FormattedSupporter {
  */
 export async function getSupporters(): Promise<FormattedSupporter[]> {
  try {
- const supabase = await createClient();
+ const supabase = createAdminClient();
  const { data, error } = await supabase
  .from("supporters")
  .select("*")
