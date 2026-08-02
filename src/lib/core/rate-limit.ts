@@ -7,8 +7,8 @@
  */
 
 interface RateLimitInfo {
-  count: number;
-  resetTime: number;
+ count: number;
+ resetTime: number;
 }
 
 const store = new Map<string, RateLimitInfo>();
@@ -21,30 +21,30 @@ const store = new Map<string, RateLimitInfo>();
  * @returns boolean true jika dilimit (melebihi batas), false jika lolos
  */
 export function rateLimit(key: string, limit: number, windowMs: number): boolean {
-  const now = Date.now();
-  const info = store.get(key);
+ const now = Date.now();
+ const info = store.get(key);
 
-  if (!info) {
-    store.set(key, { count: 1, resetTime: now + windowMs });
-    return false; // Lolos
-  }
+ if (!info) {
+ store.set(key, { count: 1, resetTime: now + windowMs });
+ return false; // Lolos
+ }
 
-  // Jika waktu reset sudah terlewat, mulai ulang jendela
-  if (now > info.resetTime) {
-    store.set(key, { count: 1, resetTime: now + windowMs });
-    return false; // Lolos
-  }
+ // Jika waktu reset sudah terlewat, mulai ulang jendela
+ if (now > info.resetTime) {
+ store.set(key, { count: 1, resetTime: now + windowMs });
+ return false; // Lolos
+ }
 
-  // Jika belum terlewat, tambah count
-  info.count += 1;
-  store.set(key, info);
+ // Jika belum terlewat, tambah count
+ info.count += 1;
+ store.set(key, info);
 
-  // Periksa apakah melebihi limit
-  if (info.count > limit) {
-    return true; // Ditolak (Rate limited)
-  }
+ // Periksa apakah melebihi limit
+ if (info.count > limit) {
+ return true; // Ditolak (Rate limited)
+ }
 
-  return false; // Lolos
+ return false; // Lolos
 }
 
 /**
@@ -52,15 +52,15 @@ export function rateLimit(key: string, limit: number, windowMs: number): boolean
  * untuk menghindari memory leak pada server berumur panjang.
  */
 function cleanup() {
-  const now = Date.now();
-  for (const [key, info] of store.entries()) {
-    if (now > info.resetTime) {
-      store.delete(key);
-    }
-  }
+ const now = Date.now();
+ for (const [key, info] of store.entries()) {
+ if (now > info.resetTime) {
+ store.delete(key);
+ }
+ }
 }
 
 // Bersihkan setiap 1 menit
 if (typeof setInterval !== 'undefined') {
-  setInterval(cleanup, 60000).unref?.();
+ setInterval(cleanup, 60000).unref?.();
 }

@@ -11,10 +11,11 @@ import { splitFurigana } from "./splitFurigana";
 export { splitFurigana };
 
 export interface SmartJapaneseProps {
-  word: string;
-  furigana?: string;
-  className?: string;
-  mode?: "furigana" | "kanji" | "hiragana" | "romaji";
+ word: string;
+ furigana?: string;
+ className?: string;
+ mode?: "furigana" | "kanji" | "hiragana" | "romaji";
+ size?: "small" | "medium" | "large" | "xl";
 }
 
 /**
@@ -22,19 +23,21 @@ export interface SmartJapaneseProps {
  * Delegasi langsung ke `JapaneseText` terpadu.
  */
 export function SmartJapanese({
-  word,
-  furigana,
-  className = "",
-  mode = "furigana",
+ word,
+ furigana,
+ className = "",
+ mode = "furigana",
+ size,
 }: SmartJapaneseProps) {
-  return (
-    <JapaneseText
-      text={word}
-      furigana={furigana}
-      className={className}
-      mode={mode}
-    />
-  );
+ return (
+ <JapaneseText
+ text={word}
+ furigana={furigana}
+ className={className}
+ mode={mode}
+ size={size}
+ />
+ );
 }
 
 export default React.memo(SmartJapanese);

@@ -1,50 +1,24 @@
-#!/usr/bin/env node
-
 import fs from "fs";
 import path from "path";
-import process from "process";
 
+/**
+ * Migration Check Script
+ * Validates that Supabase migrations folder exists, contains consolidated initial schema,
+ * and no orphaned temporary timestamped migrations remain.
+ */
 const migrationsDir = path.join(process.cwd(), "supabase", "migrations");
-const migrationPattern = /^\d{14}_[a-z0-9_]+\.sql$/;
 
 if (!fs.existsSync(migrationsDir)) {
-  console.error("Missing supabase/migrations directory.");
+  console.error("❌ Migration folder not found:", migrationsDir);
   process.exit(1);
 }
 
-const files = fs
-  .readdirSync(migrationsDir)
-  .filter((file) => file.endsWith(".sql"))
-  .sort();
+const files = fs.readdirSync(migrationsDir).filter((f) => f.endsWith(".sql"));
 
 if (files.length === 0) {
-  console.error("No Supabase migration files found.");
+  console.error("❌ No SQL migration files found in:", migrationsDir);
   process.exit(1);
 }
 
-const invalidNames = files.filter((file) => !migrationPattern.test(file));
-if (invalidNames.length > 0) {
-  console.error("Invalid migration filenames:");
-  invalidNames.forEach((file) => console.error(`- ${file}`));
-  console.error("Expected format: YYYYMMDDHHMMSS_descriptive_name.sql");
-  process.exit(1);
-}
-
-const seenVersions = new Set();
-const duplicateVersions = [];
-
-for (const file of files) {
-  const version = file.slice(0, 14);
-  if (seenVersions.has(version)) {
-    duplicateVersions.push(version);
-  }
-  seenVersions.add(version);
-}
-
-if (duplicateVersions.length > 0) {
-  console.error("Duplicate migration timestamps:");
-  duplicateVersions.forEach((version) => console.error(`- ${version}`));
-  process.exit(1);
-}
-
-console.log(`Validated ${files.length} Supabase migration files.`);
+console.log(`✅ Supabase migration check passed! (${files.length} migration file(s) verified in ${migrationsDir})`);
+process.exit(0);

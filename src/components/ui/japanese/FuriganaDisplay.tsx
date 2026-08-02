@@ -16,7 +16,7 @@ export interface FuriganaDisplayProps extends JapaneseTextProps {}
  * Delegasi langsung ke `JapaneseText` terpadu.
  */
 function FuriganaDisplay(props: FuriganaDisplayProps) {
-  return <JapaneseText {...props} />;
+ return <JapaneseText {...props} />;
 }
 
 export default React.memo(FuriganaDisplay);

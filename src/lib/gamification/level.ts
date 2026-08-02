@@ -6,7 +6,7 @@
 /**
  * Base XP scaling factor.
  */
-const BASE_XP = 50;   // Faktor penskalaan XP
+const BASE_XP = 50; // Faktor penskalaan XP
 
 /**
  * Maximum level cap.
@@ -24,14 +24,14 @@ const MAX_LEVEL = 100; // Level maksimal yang bisa dicapai
  * @returns {number} Current level.
  */
 export function calculateLevel(xp: number): number {
-  // Handle zero or negative XP.
-  if (xp <= 0) return 1;
+ // Handle zero or negative XP.
+ if (xp <= 0) return 1;
 
-  // Inverse quadratic formula: L = sqrt(XP / BASE) + 1
-  const level = Math.floor(Math.sqrt(xp / BASE_XP)) + 1;
+ // Inverse quadratic formula: L = sqrt(XP / BASE) + 1
+ const level = Math.floor(Math.sqrt(xp / BASE_XP)) + 1;
 
-  // Cap level at maximum.
-  return Math.min(level, MAX_LEVEL);
+ // Cap level at maximum.
+ return Math.min(level, MAX_LEVEL);
 }
 
 /**
@@ -41,11 +41,11 @@ export function calculateLevel(xp: number): number {
  * @returns {number} Minimum XP threshold.
  */
 export function xpForLevel(level: number): number {
-  // Level 1 starts at 0 XP.
-  if (level <= 1) return 0;
+ // Level 1 starts at 0 XP.
+ if (level <= 1) return 0;
 
-  // Quadratic formula for level threshold.
-  return Math.pow(level - 1, 2) * BASE_XP;
+ // Quadratic formula for level threshold.
+ return Math.pow(level - 1, 2) * BASE_XP;
 }
 
 /**
@@ -55,8 +55,8 @@ export function xpForLevel(level: number): number {
  * @returns {number} Next level XP threshold.
  */
 export function xpForNextLevel(level: number): number {
-  // Calculate threshold using next level index.
-  return Math.pow(level, 2) * BASE_XP;
+ // Calculate threshold using next level index.
+ return Math.pow(level, 2) * BASE_XP;
 }
 
 /**
@@ -66,8 +66,8 @@ export function xpForNextLevel(level: number): number {
  * @returns {number} Current level XP threshold.
  */
 export function xpForCurrentLevel(level: number): number {
-  // Alias for xpForLevel.
-  return xpForLevel(level);
+ // Alias for xpForLevel.
+ return xpForLevel(level);
 }
 
 /**
@@ -79,18 +79,18 @@ export function xpForCurrentLevel(level: number): number {
  * @returns {number} Progress percentage.
  */
 export function getLevelProgressPercent(xp: number, level: number): number {
-  const currentXP = xpForCurrentLevel(level);
-  const nextXP = xpForNextLevel(level);
+ const currentXP = xpForCurrentLevel(level);
+ const nextXP = xpForNextLevel(level);
 
-  // XP span for current level.
-  const range = nextXP - currentXP;
+ // XP span for current level.
+ const range = nextXP - currentXP;
 
-  // Prevent division by zero.
-  if (range <= 0) return 0;
+ // Prevent division by zero.
+ if (range <= 0) return 0;
 
-  // Calculate percentage.
-  const progress = ((xp - currentXP) / range) * 100;
+ // Calculate percentage.
+ const progress = ((xp - currentXP) / range) * 100;
 
-  // Clamp value between 0 and 100.
-  return Math.min(Math.max(progress, 0), 100);
+ // Clamp value between 0 and 100.
+ return Math.min(Math.max(progress, 0), 100);
 }

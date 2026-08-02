@@ -19,12 +19,12 @@ import { ROUTES } from "@/lib/core/routes";
  * Disable search indexing via noIndex.
  */
 export const metadata: Metadata = {
-  ...createPageMetadata({
-    title: "Berbagi Progres | NihongoRoute",
-    description: "Lihat dan bagikan pencapaian serta progres belajar bahasa Jepangmu di NihongoRoute.",
-    path:ROUTES.SHARE,
-    noIndex: true,
-  }),
+ ...createPageMetadata({
+ title: "Berbagi Progres | NihongoRoute",
+ description: "Lihat dan bagikan pencapaian serta progres belajar bahasa Jepangmu di NihongoRoute.",
+ path:ROUTES.SHARE,
+ noIndex: true,
+ }),
 };
 
 // ======================
@@ -35,5 +35,5 @@ export const metadata: Metadata = {
  * Render ShareClient component.
  */
 export default function SharePage() {
-  return <ShareView />;
+ return <ShareView />;
 }

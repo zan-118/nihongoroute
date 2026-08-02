@@ -12,56 +12,57 @@ import { cn } from "@/lib/utils"
  * Tailwind class generator for button styles. Define variants and sizes.
  */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-bold ring-offset-background transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
-        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-        outline: "border border-border/80 bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "h-auto rounded-lg px-0 text-primary underline-offset-4 shadow-none hover:text-primary/80 hover:underline",
-      },
-      size: {
-        default: "h-11 px-5 py-2.5",
-        sm: "h-9 rounded-lg px-3 text-xs tracking-[0.08em]",
-        lg: "h-12 rounded-xl px-8",
-        icon: "size-10 p-0",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  }
+ "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[14px] text-[15px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 active:scale-[0.98] [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+ {
+ variants: {
+ variant: {
+ default: "bg-primary text-primary-foreground hover:bg-primary/92",
+ destructive: "bg-destructive text-background hover:bg-destructive/92",
+ outline: "border border-border bg-background hover:bg-muted text-foreground",
+ secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+ ghost: "hover:bg-muted text-foreground",
+ link: "h-auto px-0 text-primary underline-offset-4 hover:underline",
+ accent: "bg-accent text-accent-foreground hover:bg-accent/92",
+ },
+ size: {
+ default: "h-[44px] px-[20px] py-[10px]",
+ sm: "h-[36px] px-3",
+ lg: "h-[48px] px-8",
+ icon: "size-[44px] p-0",
+ },
+ },
+ defaultVariants: {
+ variant: "default",
+ size: "default",
+ },
+ }
 )
 
 /**
  * Props for Button component. Combine HTML button attributes with style variants.
  */
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  /** Change element to child component. Keep styles. */
-  asChild?: boolean
+ extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+ VariantProps<typeof buttonVariants> {
+ /** Change element to child component. Keep styles. */
+ asChild?: boolean
 }
 
 /**
  * Button component. Render interactive button or custom child element.
  */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    // Use Radix Slot if asChild true. Allow custom element rendering.
-    const Comp = asChild ? Slot : "button"
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
-    )
-  }
+ ({ className, variant, size, asChild = false, ...props }, ref) => {
+ // Use Radix Slot if asChild true. Allow custom element rendering.
+ const Comp = asChild ? Slot : "button"
+ return (
+ <Comp
+ className={cn(buttonVariants({ variant, size, className }))}
+ ref={ref}
+ {...props}
+ />
+ )
+ }
 )
 Button.displayName = "Button"
 

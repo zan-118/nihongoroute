@@ -19,22 +19,22 @@ import { Button } from "@/components/ui/button";
  * Props for ConfirmModal component.
  */
 interface ConfirmModalProps {
-  /** Control modal visibility. */
-  isOpen: boolean;
-  /** Callback when modal closes. */
-  onClose: () => void;
-  /** Callback when action confirmed. */
-  onConfirm: () => void;
-  /** Modal title text. */
-  title: string;
-  /** Modal description text. */
-  description: string;
-  /** Text for confirm button. */
-  confirmText?: string;
-  /** Text for cancel button. */
-  cancelText?: string;
-  /** Use destructive styling if true. */
-  isDestructive?: boolean;
+ /** Control modal visibility. */
+ isOpen: boolean;
+ /** Callback when modal closes. */
+ onClose: () => void;
+ /** Callback when action confirmed. */
+ onConfirm: () => void;
+ /** Modal title text. */
+ title: string;
+ /** Modal description text. */
+ description: string;
+ /** Text for confirm button. */
+ confirmText?: string;
+ /** Text for cancel button. */
+ cancelText?: string;
+ /** Use destructive styling if true. */
+ isDestructive?: boolean;
 }
 
 // ======================
@@ -45,71 +45,68 @@ interface ConfirmModalProps {
  * Used for critical or destructive actions.
  */
 export default function ConfirmModal({
-  isOpen,
-  onClose,
-  onConfirm,
-  title,
-  description,
-  confirmText = "Konfirmasi",
-  cancelText = "Batal",
-  isDestructive = false,
+ isOpen,
+ onClose,
+ onConfirm,
+ title,
+ description,
+ confirmText = "Konfirmasi",
+ cancelText = "Batal",
+ isDestructive = false,
 }: ConfirmModalProps) {
-  return (
-    /* Close modal when open state changes to false */
-    <DialogPrimitive.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogPrimitive.Portal>
-        {/* Lapisan overlay latar belakang dengan z-[200] agar berada di atas seluruh kanvas permainan */}
-        <DialogPrimitive.Overlay className="fixed inset-0 z-[200] bg-background/72  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        
-        {/* Kontainer Modal dengan perangkap fokus dan transisi ease-out kustom yang terinspirasi pegas */}
-        <DialogPrimitive.Content className="surface-elevated-ambient fixed left-[50%] top-[50%] z-[200] w-[calc(100%-2rem)] max-w-md translate-x-[-50%] translate-y-[-50%] p-5 md:p-8 rounded-xl shadow-2xl overflow-hidden focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
-          {/* Batang batas atas aksen */}
-          {/* Dynamic accent bar color based on action severity */}
-          <div className={`absolute top-0 left-0 w-full h-1 ${isDestructive ? 'bg-destructive' : 'bg-primary'} shadow-sm`} />
-          
-          <div className="flex flex-col items-center text-center pt-2">
-            {/* Dynamic icon container styling */}
-            <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 border ${
-              isDestructive 
-                ? 'bg-destructive/10 border-destructive/30 text-destructive shadow-lg shadow-destructive/10' 
-                : 'bg-primary/10 border-primary/30 text-primary shadow-lg shadow-primary/10'
-            }`}>
-              <AlertTriangle size={32} aria-hidden="true" />
-            </div>
-            
-            <DialogPrimitive.Title className="text-xl md:text-2xl font-black text-foreground uppercase tracking-tight mb-3">
-              {title}
-            </DialogPrimitive.Title>
-            <DialogPrimitive.Description className="text-muted-foreground text-sm mb-8 font-medium leading-relaxed">
-              {description}
-            </DialogPrimitive.Description>
-            
-            <div className="flex flex-col-reverse sm:flex-row w-full gap-3">
-              <Button
-                variant="outline"
-                onClick={onClose}
-                className="flex-1 h-12 rounded-xl font-black uppercase tracking-widest text-xs"
-              >
-                {cancelText}
-              </Button>
-              <Button
-                onClick={() => {
-                  /* Execute confirmation callback then close modal */
-                  onConfirm();
-                  onClose();
-                }}
-                className={`flex-1 h-12 rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg border-none ${
-                  isDestructive
-                    ? 'button-danger-premium hover:opacity-90 transition-all'
-                    : 'btn-accent-glow transition-all'
-                }`}
-              >
-                {confirmText}
-              </Button>
-            </div>
-          </div>
-        </DialogPrimitive.Content>
-      </DialogPrimitive.Portal>
-    </DialogPrimitive.Root>
-  );
+ return (
+ /* Close modal when open state changes to false */
+ <DialogPrimitive.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
+ <DialogPrimitive.Portal>
+ {/* Lapisan overlay latar belakang dengan z-[200] agar berada di atas seluruh kanvas permainan */}
+ <DialogPrimitive.Overlay className="fixed inset-0 z-[200] bg-background/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+ 
+ {/* Kontainer Modal dengan perangkap fokus dan transisi ease-out kustom yang terinspirasi pegas */}
+ <DialogPrimitive.Content className="bg-card border border-border fixed left-[50%] top-[50%] z-[200] w-[calc(100%-2rem)] max-w-md translate-x-[-50%] translate-y-[-50%] p-5 md:p-8 rounded-[14px] shadow-[0_12px_32px_rgba(0,0,0,0.12)] overflow-hidden focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
+ {/* Batang batas atas aksen */}
+ {/* Dynamic accent bar color based on action severity */}
+ <div className={`absolute top-0 left-0 w-full h-[2px] ${isDestructive ? 'bg-destructive' : 'bg-primary'}`} />
+ 
+ <div className="flex flex-col items-center text-center pt-2">
+ {/* Dynamic icon container styling */}
+ <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 border ${
+ isDestructive 
+ ? 'bg-destructive/10 border-destructive/30 text-destructive shadow-lg shadow-destructive/10' 
+ : 'bg-primary/10 border-primary/30 text-primary shadow-lg shadow-primary/10'
+ }`}>
+ <AlertTriangle size={32} aria-hidden="true" />
+ </div>
+ 
+ <DialogPrimitive.Title className="text-[18px] font-semibold text-foreground tracking-normal mb-3">
+ {title}
+ </DialogPrimitive.Title>
+ <DialogPrimitive.Description className="text-muted-foreground text-sm mb-8 font-medium leading-relaxed">
+ {description}
+ </DialogPrimitive.Description>
+ 
+ <div className="flex flex-col-reverse sm:flex-row w-full gap-3">
+ <Button
+ variant="outline"
+ onClick={onClose}
+ className="flex-1"
+ >
+ {cancelText}
+ </Button>
+ <Button
+ variant={isDestructive ? "destructive" : "accent"}
+ onClick={() => {
+ /* Execute confirmation callback then close modal */
+ onConfirm();
+ onClose();
+ }}
+ className="flex-1"
+ >
+ {confirmText}
+ </Button>
+ </div>
+ </div>
+ </DialogPrimitive.Content>
+ </DialogPrimitive.Portal>
+ </DialogPrimitive.Root>
+ );
 }

@@ -1,20 +1,18 @@
 /**
  * @file useMemoryStats.ts
- * @description Hook kustom untuk menghitung statistik ingatan Spaced Repetition System (SRS) pengguna.
- * Mengelompokkan item SRS aktif berdasarkan tingkat penguasaan (Master, Intermediate, Learning, New).
- *
- * @package components/features/srs/stats
- * @project NihongoRoute
+ * @description Custom hook for calculating Spaced Repetition System (SRS) memory retention statistics.
+ * Groups active SRS items by mastery level (Master, Intermediate, Learning, New).
+ * @module features/dashboard/components/srs/stats
  */
 
 // ==========================================
-// IMPOR
+// Import & Dependencies
 // ==========================================
 import { useSRSStore } from "@/store/useSRSStore";
 import { summarizeSrs } from "@/lib/srs-summary";
 
 // ==========================================
-// HOOK UTAMA
+// Main Custom Hook
 // ==========================================
 /**
  * Custom hook to calculate SRS memory retention statistics.
@@ -23,26 +21,26 @@ import { summarizeSrs } from "@/lib/srs-summary";
  * @returns Object containing active count, grouped stats, and total count.
  */
 export function useMemoryStats() {
-  // Fetch SRS items from Zustand store
-  const srs = useSRSStore(s => s.srs);
-  
-  // Summarize SRS items into mastery levels
-  const summary = summarizeSrs(srs);
+ // Fetch SRS items from Zustand store
+ const srs = useSRSStore(s => s.srs);
+ 
+ // Summarize SRS items into mastery levels
+ const summary = summarizeSrs(srs);
 
-  // Mengelompokkan entri SRS berdasarkan kriteria interval hari dan repetisi
-  const stats = {
-    // Mahir (Master): interval >= 30 hari
-    master: summary.master,
-    // Menengah (Intermediate): interval 7 s.d 29 hari dan sudah diulang > 1 kali
-    intermediate: summary.intermediate,
-    // Sedang Dipelajari (Learning): interval < 7 hari dan sudah diulang > 1 kali
-    learning: summary.learning,
-    // Baru (New): baru diulang <= 1 kali
-    new: summary.new,
-  };
+ // Group SRS entries by interval days and repetition thresholds
+ const stats = {
+ // Master: interval >= 30 days
+ master: summary.master,
+ // Intermediate: interval 7..29 days and repetitions > 1
+ intermediate: summary.intermediate,
+ // Learning: interval < 7 days and repetitions > 1
+ learning: summary.learning,
+ // New: repetitions <= 1
+ new: summary.new,
+ };
 
-  // Fallback to 1 to prevent division by zero in UI calculations
-  const total = summary.active || 1;
+ // Fallback to 1 to prevent division by zero in UI calculations
+ const total = summary.active || 1;
 
-  return { activeCount: summary.active, stats, total };
+ return { activeCount: summary.active, stats, total };
 }

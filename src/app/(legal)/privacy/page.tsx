@@ -1,11 +1,11 @@
 /**
  * @file privacy/page.tsx
- * @description Halaman statis yang memuat Kebijakan Privasi platform NihongoRoute.
+ * @description Privacy Policy page route component for the NihongoRoute platform.
  */
 
-// ======================
-// IMPOR
-// ======================
+// ==========================================
+// Import & Dependencies
+// ==========================================
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -14,211 +14,211 @@ import AppBreadcrumbs from "@/components/layout/AppBreadcrumbs";
 import { createPageMetadata } from "@/lib/seo";
 import { getBreadcrumbItems } from "@/lib/routes";
 
-// ======================
-// KONFIGURASI METADATA
-// ======================
+// ==========================================
+// Metadata Configuration
+// ==========================================
 /**
  * Metadata configuration for Privacy Policy page.
  */
 export const metadata = {
-  ...createPageMetadata({
-    title: "Kebijakan Privasi | NihongoRoute",
-    description:
-      "Kebijakan Privasi NihongoRoute: cara platform mengumpulkan, menggunakan, dan melindungi data pengguna.",
-    path: "/privacy",
-  }),
+ ...createPageMetadata({
+ title: "Kebijakan Privasi | NihongoRoute",
+ description:
+ "Kebijakan Privasi NihongoRoute: cara platform mengumpulkan, menggunakan, dan melindungi data pengguna.",
+ path: "/privacy",
+ }),
 };
 
 /**
  * PrivacyPage component. Renders privacy policy document.
  */
 export default function PrivacyPage() {
-  return (
-    <main className="min-h-screen shell-ambient text-foreground py-24 px-4 sm:px-6 md:px-12 relative overflow-hidden flex flex-col items-center justify-start transition-colors duration-300">
-      {/* Hamparan Neural Latar Belakang */}
-      {/* Background decorative elements */}
-      <div className="grid-overlay" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--primary-rgb)/0.07)_0%,transparent_70%)] pointer-events-none z-0" />
-      <div className="absolute top-1/4 right-0 size-75 bg-[rgb(var(--primary-rgb)/0.03)] rounded-full blur-[60px] pointer-events-none z-0 ambient-glow will-change-transform" />
-      <div className="absolute bottom-1/4 left-0 size-62.5 bg-[rgb(var(--destructive-rgb)/0.02)] rounded-full blur-[80px] pointer-events-none z-0 ambient-glow will-change-transform" />
+ return (
+ <main className="min-h-screen bg-background text-foreground py-24 px-4 sm:px-6 md:px-12 relative overflow-hidden flex flex-col items-center justify-start transition-colors duration-300">
+ {/* Hamparan Neural Latar Belakang */}
+ {/* Background decorative elements */}
+ <div className="grid-overlay" />
+ <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.07)_0%,transparent_70%)] pointer-events-none z-0" />
+ <div className="absolute top-1/4 right-0 size-75 bg-[hsl(var(--primary)/0.03)] rounded-full blur-[60px] pointer-events-none z-0 ambient-glow will-change-transform" />
+ <div className="absolute bottom-1/4 left-0 size-62.5 bg-[hsl(var(--destructive)/0.02)] rounded-full blur-[80px] pointer-events-none z-0 ambient-glow will-change-transform" />
 
-      <div className="max-w-4xl w-full relative z-10 flex flex-col">
-        {/* Breadcrumb / Navigasi Atas */}
-        {/* Navigation breadcrumbs */}
-        <div className="mb-8 animate-fade-in">
-          <AppBreadcrumbs
-            items={getBreadcrumbItems("/privacy")}
-            className="w-fit max-w-full"
-          />
-        </div>
+ <div className="max-w-4xl w-full relative z-10 flex flex-col">
+ {/* Breadcrumb / Navigasi Atas */}
+ {/* Navigation breadcrumbs */}
+ <div className="mb-8 animate-fade-in">
+ <AppBreadcrumbs
+ items={getBreadcrumbItems("/privacy")}
+ className="w-fit max-w-full"
+ />
+ </div>
 
-        {/* Kartu Cyber-glass Premium Luar */}
-        {/* Main content container with glassmorphism */}
-        <div className="glass border border-border/60 rounded-xl p-6 sm:p-10 md:p-14 shadow-[0_0_50px_rgb(var(--primary-rgb)/0.05)] relative overflow-hidden">
-          {/* Aksen Sudut Halus */}
-          {/* Decorative corner borders */}
-          <div className="absolute top-0 left-0 w-8 h-0.5 bg-linear-to-r from-primary to-transparent" />
-          <div className="absolute top-0 left-0 w-0.5 h-8 bg-linear-to-b from-primary to-transparent" />
-          <div className="absolute bottom-0 right-0 w-8 h-0.5 bg-linear-to-l from-primary to-transparent" />
-          <div className="absolute bottom-0 right-0 w-0.5 h-8 bg-linear-to-t from-primary to-transparent" />
+ {/* Kartu Cyber-glass Premium Luar */}
+ {/* Main content container with glassmorphism */}
+ <div className="glass border border-border/60 rounded-xl p-6 sm:p-10 md:p-14 shadow-[0_0_50px_hsl(var(--primary)/0.05)] relative overflow-hidden">
+ {/* Aksen Sudut Halus */}
+ {/* Decorative corner borders */}
+ <div className="absolute top-0 left-0 w-8 h-0.5 bg-linear- " />
+ <div className="absolute top-0 left-0 w-0.5 h-8 bg-linear- " />
+ <div className="absolute bottom-0 right-0 w-8 h-0.5 bg-linear- " />
+ <div className="absolute bottom-0 right-0 w-0.5 h-8 bg-linear- " />
 
-          {/* Header Jepang */}
-          {/* Page header with Japanese title */}
-          <header className="mb-12 border-b border-border/60 pb-8 relative">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-[0_0_15px_rgb(var(--primary-rgb)/0.2)]">
-                <Shield size={20} />
-              </div>
-              <span className="text-xs font-black tracking-widest text-primary uppercase bg-primary/5 border border-primary/10 px-3 py-1 rounded-full">
-                Guaranteed Privacy
-              </span>
-            </div>
-            
-            <h1 className="text-4xl md:text-5xl font-black text-foreground font-japanese tracking-tight mb-3 select-none">
-              プライバシーポリシー
-            </h1>
-            <p className="text-sm md:text-base font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              Privacy Policy <span className="text-primary/60">•</span> Kebijakan Privasi
-            </p>
-          </header>
+ {/* Header Jepang */}
+ {/* Page header with Japanese title */}
+ <header className="mb-12 border-b border-border/60 pb-8 relative">
+ <div className="flex items-center gap-3 mb-4">
+ <div className="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-[0_0_15px_hsl(var(--primary)/0.2)]">
+ <Shield size={20} />
+ </div>
+ <span className="text-xs font-black tracking-widest text-primary uppercase bg-primary/5 border border-primary/10 px-3 py-1 rounded-full">
+ Guaranteed Privacy
+ </span>
+ </div>
+ 
+ <h1 className="text-4xl md:text-5xl font-black text-foreground font-japanese tracking-tight mb-3 select-none">
+ プライバシーポリシー
+ </h1>
+ <p className="text-sm md:text-base font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+ Privacy Policy <span className="text-primary/60">•</span> Kebijakan Privasi
+ </p>
+ </header>
 
-          {/* Konten Tipografi Minimalis & Modern */}
-          {/* Policy content sections */}
-          <article className="prose prose-slate dark:prose-invert max-w-none text-muted-foreground space-y-8">
-            {/* Dynamic date generation. Suppress hydration warning for SSR safety. */}
-            <div className="flex items-center gap-2 text-xs font-semibold text-primary/80 bg-primary/5 border border-primary/10 w-fit px-4 py-2 rounded-xl">
-              <span className="size-2 rounded-full bg-primary animate-pulse" />
-              <span suppressHydrationWarning={true}>Terakhir diperbarui: {new Date().toLocaleDateString("id-ID", { month: "long", year: "numeric" })}</span>
-            </div>
+ {/* Konten Tipografi Minimalis & Modern */}
+ {/* Policy content sections */}
+ <article className="prose prose-slate dark:prose-invert max-w-none text-muted-foreground space-y-8">
+ {/* Dynamic date generation. Suppress hydration warning for SSR safety. */}
+ <div className="flex items-center gap-2 text-xs font-semibold text-primary/80 bg-primary/5 border border-primary/10 w-fit px-4 py-2 rounded-xl">
+ <span className="size-2 rounded-full bg-primary animate-pulse" />
+ <span suppressHydrationWarning={true}>Terakhir diperbarui: {new Date().toLocaleDateString("id-ID", { month: "long", year: "numeric" })}</span>
+ </div>
 
-            <p className="lead text-base md:text-lg text-foreground/80 leading-relaxed font-medium border-l-2 border-primary/30 pl-4">
-              Selamat datang di <strong className="text-foreground font-semibold">NihongoRoute</strong>. Kami menghargai privasi Anda dan berkomitmen penuh untuk melindungi informasi pribadi Anda. Dokumen ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan menjaga data Anda saat menggunakan platform edukasi non-komersial kami.
-            </p>
+ <p className="lead text-base md:text-lg text-foreground/80 leading-relaxed font-medium border-l-2 border-primary/30 pl-4">
+ Selamat datang di <strong className="text-foreground font-semibold">NihongoRoute</strong>. Kami menghargai privasi Anda dan berkomitmen penuh untuk melindungi informasi pribadi Anda. Dokumen ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan menjaga data Anda saat menggunakan platform edukasi non-komersial kami.
+ </p>
 
-            {/* Seksi 1 */}
-            <div className="space-y-4 pt-4 border-t border-border/20">
-              <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
-                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgb(var(--primary-rgb)/0.1)]">1</span>
-                Pendahuluan
-              </h2>
-              <p className="leading-relaxed">
-                NihongoRoute didesain sebagai platform pembelajaran interaktif yang aman dan transparan. Akses pembelajaran Anda dijamin bebas dari pelacakan invasif demi menjaga ketenangan dan fokus penuh dalam mempelajari bahasa Jepang.
-              </p>
-            </div>
+ {/* Seksi 1 */}
+ <div className="space-y-4 pt-4 border-t border-border/20">
+ <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
+ <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--primary)/0.1)]">1</span>
+ Pendahuluan
+ </h2>
+ <p className="leading-relaxed">
+ NihongoRoute didesain sebagai platform pembelajaran interaktif yang aman dan transparan. Akses pembelajaran Anda dijamin bebas dari pelacakan invasif demi menjaga ketenangan dan fokus penuh dalam mempelajari bahasa Jepang.
+ </p>
+ </div>
 
-            {/* Seksi 2 */}
-            <div className="space-y-4 pt-4 border-t border-border/20">
-              <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
-                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgb(var(--primary-rgb)/0.1)]">2</span>
-                Data yang Kami Kumpulkan
-              </h2>
-              <p className="leading-relaxed">
-                Karena NihongoRoute beroperasi dengan prinsip <strong className="text-foreground font-semibold">&quot;Offline-First&quot;</strong> dan menjunjung tinggi privasi, kami mengumpulkan data yang sangat minimal, yaitu:
-              </p>
-              
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 list-none! pl-0!">
-                <li className="glass border border-border/60 hover:border-primary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-[0_0_20px_rgb(var(--primary-rgb)/0.02)]">
-                  <div className="size-8 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
-                    <Lock size={16} />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-foreground mb-1 text-sm">Data Profil (Opsional)</h3>
-                    <p className="text-xs leading-relaxed text-muted-foreground">Nama dan alamat surel apabila Anda memilih masuk log untuk menyinkronkan progres lintas perangkat.</p>
-                  </div>
-                </li>
-                <li className="glass border border-border/60 hover:border-primary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-[0_0_20px_rgb(var(--primary-rgb)/0.02)]">
-                  <div className="size-8 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
-                    <FileText size={16} />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-foreground mb-1 text-sm">Data Progres Belajar</h3>
-                    <p className="text-xs leading-relaxed text-muted-foreground">Riwayat penyelesaian materi, perolehan XP (Experience Points), dan riwayat ulasan Spaced Repetition System (SRS).</p>
-                  </div>
-                </li>
-              </ul>
-            </div>
+ {/* Seksi 2 */}
+ <div className="space-y-4 pt-4 border-t border-border/20">
+ <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
+ <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--primary)/0.1)]">2</span>
+ Data yang Kami Kumpulkan
+ </h2>
+ <p className="leading-relaxed">
+ Karena NihongoRoute beroperasi dengan prinsip <strong className="text-foreground font-semibold">&quot;Offline-First&quot;</strong> dan menjunjung tinggi privasi, kami mengumpulkan data yang sangat minimal, yaitu:
+ </p>
+ 
+ <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 list-none! pl-0!">
+ <li className="glass border border-border/60 hover:border-primary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-[0_0_20px_hsl(var(--primary)/0.02)]">
+ <div className="size-8 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
+ <Lock size={16} />
+ </div>
+ <div>
+ <h3 className="font-bold text-foreground mb-1 text-sm">Data Profil (Opsional)</h3>
+ <p className="text-xs leading-relaxed text-muted-foreground">Nama dan alamat surel apabila Anda memilih masuk log untuk menyinkronkan progres lintas perangkat.</p>
+ </div>
+ </li>
+ <li className="glass border border-border/60 hover:border-primary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-[0_0_20px_hsl(var(--primary)/0.02)]">
+ <div className="size-8 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
+ <FileText size={16} />
+ </div>
+ <div>
+ <h3 className="font-bold text-foreground mb-1 text-sm">Data Progres Belajar</h3>
+ <p className="text-xs leading-relaxed text-muted-foreground">Riwayat penyelesaian materi, perolehan XP (Experience Points), dan riwayat ulasan Spaced Repetition System (SRS).</p>
+ </div>
+ </li>
+ </ul>
+ </div>
 
-            {/* Seksi 3 */}
-            <div className="space-y-4 pt-4 border-t border-border/20">
-              <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
-                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgb(var(--primary-rgb)/0.1)]">3</span>
-                Penggunaan Data
-              </h2>
-              <p className="leading-relaxed">
-                Data yang kami kumpulkan murni digunakan untuk meningkatkan pengalaman belajar Anda, dengan rincian:
-              </p>
-              <ul className="space-y-3 list-none! pl-0!">
-                {[
-                  "Menyimpan dan mengembalikan progres belajar lintas perangkat secara mulus.",
-                  "Menghitung algoritma pengulangan materi (SRS) secara akurat dan terpersonalisasi agar Anda bisa menguasai kosakata lebih efisien.",
-                  "Mengidentifikasi area untuk meningkatkan kualitas konten NihongoRoute di masa depan."
-                ].map((text, idx) => (
-                  <li key={`policy-item-${idx}`} className="flex items-start gap-3 text-sm leading-relaxed">
-                    <span className="size-1.5 rounded-full bg-primary mt-2 shrink-0" />
-                    <span>{text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+ {/* Seksi 3 */}
+ <div className="space-y-4 pt-4 border-t border-border/20">
+ <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
+ <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--primary)/0.1)]">3</span>
+ Penggunaan Data
+ </h2>
+ <p className="leading-relaxed">
+ Data yang kami kumpulkan murni digunakan untuk meningkatkan pengalaman belajar Anda, dengan rincian:
+ </p>
+ <ul className="space-y-3 list-none! pl-0!">
+ {[
+ "Menyimpan dan mengembalikan progres belajar lintas perangkat secara mulus.",
+ "Menghitung algoritma pengulangan materi (SRS) secara akurat dan terpersonalisasi agar Anda bisa menguasai kosakata lebih efisien.",
+ "Mengidentifikasi area untuk meningkatkan kualitas konten NihongoRoute di masa depan."
+ ].map((text, idx) => (
+ <li key={`policy-item-${idx}`} className="flex items-start gap-3 text-sm leading-relaxed">
+ <span className="size-1.5 rounded-full bg-primary mt-2 shrink-0" />
+ <span>{text}</span>
+ </li>
+ ))}
+ </ul>
+ </div>
 
-            {/* Seksi 4 */}
-            <div className="space-y-4 pt-4 border-t border-border/20">
-              <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
-                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgb(var(--primary-rgb)/0.1)]">4</span>
-                Berbagi Data dengan Pihak Ketiga
-              </h2>
-              <p className="leading-relaxed">
-                NihongoRoute adalah <strong className="text-foreground font-semibold">platform edukasi non-komersial</strong>. Kami <strong className="font-semibold text-destructive">tidak pernah menjual, menyewakan, atau memperdagangkan</strong> data pribadi Anda kepada pihak ketiga mana pun untuk tujuan periklanan, pemasaran, atau komersial.
-              </p>
-            </div>
+ {/* Seksi 4 */}
+ <div className="space-y-4 pt-4 border-t border-border/20">
+ <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
+ <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--primary)/0.1)]">4</span>
+ Berbagi Data dengan Pihak Ketiga
+ </h2>
+ <p className="leading-relaxed">
+ NihongoRoute adalah <strong className="text-foreground font-semibold">platform edukasi non-komersial</strong>. Kami <strong className="font-semibold text-destructive">tidak pernah menjual, menyewakan, atau memperdagangkan</strong> data pribadi Anda kepada pihak ketiga mana pun untuk tujuan periklanan, pemasaran, atau komersial.
+ </p>
+ </div>
 
-            {/* Seksi 5 */}
-            <div className="space-y-4 pt-4 border-t border-border/20">
-              <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
-                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgb(var(--primary-rgb)/0.1)]">5</span>
-                Keamanan Data Anda
-              </h2>
-              <p className="leading-relaxed">
-                Kami menerapkan berbagai standar keamanan modern untuk melindungi informasi Anda. Operasi sinkronisasi data ke basis data (Supabase) kami dilakukan menggunakan enkripsi standar industri serta kontrol akses baris (Row Level Security). Namun, karena tidak ada transmisi data di internet yang 100% kebal, kami mendesain aplikasi ini untuk menyimpan data sensitif secara lokal terlebih dahulu demi keamanan optimal.
-              </p>
-            </div>
+ {/* Seksi 5 */}
+ <div className="space-y-4 pt-4 border-t border-border/20">
+ <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
+ <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--primary)/0.1)]">5</span>
+ Keamanan Data Anda
+ </h2>
+ <p className="leading-relaxed">
+ Kami menerapkan berbagai standar keamanan modern untuk melindungi informasi Anda. Operasi sinkronisasi data ke basis data (Supabase) kami dilakukan menggunakan enkripsi standar industri serta kontrol akses baris (Row Level Security). Namun, karena tidak ada transmisi data di internet yang 100% kebal, kami mendesain aplikasi ini untuk menyimpan data sensitif secara lokal terlebih dahulu demi keamanan optimal.
+ </p>
+ </div>
 
-            {/* Seksi 6 */}
-            <div className="space-y-4 pt-4 border-t border-border/20">
-              <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
-                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgb(var(--primary-rgb)/0.1)]">6</span>
-                Hubungi Kami
-              </h2>
-              <p className="leading-relaxed">
-                Jika Anda memiliki pertanyaan terkait Kebijakan Privasi ini atau ingin mengajukan permohonan penghapusan data profil secara penuh dari sistem awan kami, silakan hubungi kami melalui surel atau repositori resmi kami.
-              </p>
+ {/* Seksi 6 */}
+ <div className="space-y-4 pt-4 border-t border-border/20">
+ <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
+ <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--primary)/0.1)]">6</span>
+ Hubungi Kami
+ </h2>
+ <p className="leading-relaxed">
+ Jika Anda memiliki pertanyaan terkait Kebijakan Privasi ini atau ingin mengajukan permohonan penghapusan data profil secara penuh dari sistem awan kami, silakan hubungi kami melalui surel atau repositori resmi kami.
+ </p>
 
-              <div className="glass border border-border/50 rounded-2xl p-4 w-full sm:w-fit flex items-center gap-3 hover:border-primary/30 transition-all duration-300">
-                <div className="size-8 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
-                  <Mail size={16} />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground font-medium">Email Dukungan</span>
-                  <a href="mailto:nihongoroute@gmail.com" className="text-sm text-primary font-bold hover:underline transition-all">
-                    nihongoroute@gmail.com
-                  </a>
-                </div>
-              </div>
-            </div>
-          </article>
+ <div className="glass border border-border/50 rounded-2xl p-4 w-full sm:w-fit flex items-center gap-3 hover:border-primary/30 transition-all duration-300">
+ <div className="size-8 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
+ <Mail size={16} />
+ </div>
+ <div className="flex flex-col">
+ <span className="text-xs text-muted-foreground font-medium">Email Dukungan</span>
+ <a href="mailto:nihongoroute@gmail.com" className="text-sm text-primary font-bold hover:underline transition-all">
+ nihongoroute@gmail.com
+ </a>
+ </div>
+ </div>
+ </div>
+ </article>
 
-          {/* Tombol Kembali Kaki Halaman */}
-          {/* Navigation back to dashboard */}
-          <div className="pt-10 mt-14 border-t border-border/60 flex justify-start">
-            <Link href="/dashboard">
-              <Button variant="outline" className="rounded-2xl px-6 h-12 shadow-sm font-bold tracking-widest uppercase text-xs flex items-center gap-2 hover:bg-muted border border-border hover:border-primary/30 transition-all duration-300">
-                <ArrowLeft size={16} />
-                <span>Kembali ke Dashboard</span>
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </main>
-  );
+ {/* Tombol Kembali Kaki Halaman */}
+ {/* Navigation back to dashboard */}
+ <div className="pt-10 mt-14 border-t border-border/60 flex justify-start">
+ <Link href="/dashboard">
+ <Button variant="outline" className="rounded-2xl px-6 h-12 shadow-sm font-bold tracking-widest uppercase text-xs flex items-center gap-2 hover:bg-muted border border-border hover:border-primary/30 transition-all duration-300">
+ <ArrowLeft size={16} />
+ <span>Kembali ke Dashboard</span>
+ </Button>
+ </Link>
+ </div>
+ </div>
+ </div>
+ </main>
+ );
 }

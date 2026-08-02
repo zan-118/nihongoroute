@@ -15,21 +15,21 @@ export type ExamSessionContextType = ReturnType<typeof useMockExamEngine>;
 const ExamSessionContext = createContext<ExamSessionContextType | null>(null);
 
 interface ExamSessionProviderProps {
-  exam: ExamData;
-  children: ReactNode;
+ exam: ExamData;
+ children: ReactNode;
 }
 
 /**
  * Encapsulates exam session state engine behind a clean React Context seam.
  */
 export function ExamSessionProvider({ exam, children }: ExamSessionProviderProps) {
-  const session = useMockExamEngine(exam);
+ const session = useMockExamEngine(exam);
 
-  return (
-    <ExamSessionContext.Provider value={session}>
-      {children}
-    </ExamSessionContext.Provider>
-  );
+ return (
+ <ExamSessionContext.Provider value={session}>
+ {children}
+ </ExamSessionContext.Provider>
+ );
 }
 
 /**
@@ -37,9 +37,9 @@ export function ExamSessionProvider({ exam, children }: ExamSessionProviderProps
  * Throws clean error if invoked outside of ExamSessionProvider.
  */
 export function useExamSession(): ExamSessionContextType {
-  const context = useContext(ExamSessionContext);
-  if (!context) {
-    throw new Error("useExamSession must be used within an ExamSessionProvider");
-  }
-  return context;
+ const context = useContext(ExamSessionContext);
+ if (!context) {
+ throw new Error("useExamSession must be used within an ExamSessionProvider");
+ }
+ return context;
 }

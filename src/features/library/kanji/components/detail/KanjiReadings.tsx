@@ -16,14 +16,14 @@ import { Play } from "@/components/ui/icons";
  * Props for KanjiReadings component.
  */
 interface KanjiReadingsProps {
-  /**
-   * Chinese reading of kanji. Usually katakana.
-   */
-  onyomi?: string;
-  /**
-   * Japanese reading of kanji. Usually hiragana.
-   */
-  kunyomi?: string;
+ /**
+ * Chinese reading of kanji. Usually katakana.
+ */
+ onyomi?: string;
+ /**
+ * Japanese reading of kanji. Usually hiragana.
+ */
+ kunyomi?: string;
 }
 
 // ==========================================
@@ -36,37 +36,37 @@ interface KanjiReadingsProps {
  * @returns Bento grid layout with readings.
  */
 export function KanjiReadings({ onyomi, kunyomi }: KanjiReadingsProps) {
-  // ==========================================
-  // RENDER KOMPONEN
-  // ==========================================
-  return (
-    /* Grid layout split. Onyomi left, Kunyomi right. */
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-      {/* Bento Onyomi */}
-      <Card className="p-6 md:p-8 bg-card/20  border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center group glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
-        {/* Decorative background icon. Scale up on hover. */}
-        <div className="absolute top-4 right-6 opacity-[0.05] group-hover:scale-110 transition-transform text-primary">
-          <Play size={40} aria-hidden="true" />
-        </div>
-        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary block mb-2 md:mb-3 relative z-10">Onyomi</span>
-        <span className="text-2xl md:text-3xl lg:text-4xl font-japanese font-black text-foreground leading-tight tracking-tight relative z-10">
-          {/* Fallback to dash if reading missing. */}
-          {onyomi || "—"}
-        </span>
-      </Card>
+ // ==========================================
+ // RENDER KOMPONEN
+ // ==========================================
+ return (
+ /* Grid layout split. Onyomi left, Kunyomi right. */
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+ {/* Bento Onyomi */}
+ <Card className="p-6 md:p-8 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center group glass shadow-[0_0_20px_hsl(var(--primary)/0.02)]">
+ {/* Decorative background icon. Scale up on hover. */}
+ <div className="absolute top-4 right-6 opacity-[0.05] group-hover:scale-110 transition-transform text-primary">
+ <Play size={40} aria-hidden="true" />
+ </div>
+ <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary block mb-2 md:mb-3 relative z-10">Onyomi</span>
+ <span className="text-2xl md:text-3xl lg:text-4xl font-japanese font-black text-foreground leading-tight tracking-tight relative z-10">
+ {/* Fallback to dash if reading missing. */}
+ {onyomi || "—"}
+ </span>
+ </Card>
 
-      {/* Bento Kunyomi */}
-      <Card className="p-6 md:p-8 bg-card/20  border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center group glass shadow-[0_0_20px_rgba(var(--success-rgb),0.02)]">
-        {/* Decorative background icon. Scale up on hover. */}
-        <div className="absolute top-4 right-6 opacity-[0.05] group-hover:scale-110 transition-transform text-success">
-          <Play size={40} aria-hidden="true" />
-        </div>
-        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-success block mb-2 md:mb-3 relative z-10">Kunyomi</span>
-        <span className="text-2xl md:text-3xl lg:text-4xl font-japanese font-black text-foreground leading-tight tracking-tight relative z-10">
-          {/* Fallback to dash if reading missing. */}
-          {kunyomi || "—"}
-        </span>
-      </Card>
-    </div>
-  );
+ {/* Bento Kunyomi */}
+ <Card className="p-6 md:p-8 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center group glass shadow-[0_0_20px_hsl(var(--success)/0.02)]">
+ {/* Decorative background icon. Scale up on hover. */}
+ <div className="absolute top-4 right-6 opacity-[0.05] group-hover:scale-110 transition-transform text-success">
+ <Play size={40} aria-hidden="true" />
+ </div>
+ <span className="text-[10px] font-black uppercase tracking-[0.2em] text-success block mb-2 md:mb-3 relative z-10">Kunyomi</span>
+ <span className="text-2xl md:text-3xl lg:text-4xl font-japanese font-black text-foreground leading-tight tracking-tight relative z-10">
+ {/* Fallback to dash if reading missing. */}
+ {kunyomi || "—"}
+ </span>
+ </Card>
+ </div>
+ );
 }

@@ -5,42 +5,42 @@
  */
 
 export interface AssembleDeckOptions<T> {
-  items: T[];
-  limit?: number;
-  shuffle?: boolean;
+ items: T[];
+ limit?: number;
+ shuffle?: boolean;
 }
 
 export interface AdaptiveDistractorOptions<T> {
-  target: T;
-  candidatePool: T[];
-  getKey: (item: T) => string;
-  count?: number;
+ target: T;
+ candidatePool: T[];
+ getKey: (item: T) => string;
+ count?: number;
 }
 
 export interface EvaluateSessionParams {
-  totalQuestions: number;
-  correctCount: number;
-  durationSeconds?: number;
-  xpPerCorrect?: number;
+ totalQuestions: number;
+ correctCount: number;
+ durationSeconds?: number;
+ xpPerCorrect?: number;
 }
 
 export interface SessionEvaluationResult {
-  accuracy: number;
-  totalXp: number;
-  speedBonus: number;
-  isPerfect: boolean;
+ accuracy: number;
+ totalXp: number;
+ speedBonus: number;
+ isPerfect: boolean;
 }
 
 /**
  * Fisher-Yates shuffle algorithm for arrays.
  */
 export function shuffleArray<T>(array: T[]): T[] {
-  const result = [...array];
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
+ const result = [...array];
+ for (let i = result.length - 1; i > 0; i--) {
+ const j = Math.floor(Math.random() * (i + 1));
+ [result[i], result[j]] = [result[j], result[i]];
+ }
+ return result;
 }
 
 /**
@@ -50,16 +50,16 @@ export function shuffleArray<T>(array: T[]): T[] {
  * @returns Array of practice items.
  */
 export function assemblePracticeDeck<T>(options: AssembleDeckOptions<T>): T[] {
-  const { items, limit, shuffle = true } = options;
-  if (!items || items.length === 0) return [];
+ const { items, limit, shuffle = true } = options;
+ if (!items || items.length === 0) return [];
 
-  let deck = shuffle ? shuffleArray(items) : [...items];
+ let deck = shuffle ? shuffleArray(items) : [...items];
 
-  if (limit && limit > 0 && limit < deck.length) {
-    deck = deck.slice(0, limit);
-  }
+ if (limit && limit > 0 && limit < deck.length) {
+ deck = deck.slice(0, limit);
+ }
 
-  return deck;
+ return deck;
 }
 
 /**
@@ -69,26 +69,26 @@ export function assemblePracticeDeck<T>(options: AssembleDeckOptions<T>): T[] {
  * @returns Array of distractor items.
  */
 export function generateAdaptiveDistractors<T>(options: AdaptiveDistractorOptions<T>): T[] {
-  const { target, candidatePool, getKey, count = 3 } = options;
-  const targetKey = getKey(target);
+ const { target, candidatePool, getKey, count = 3 } = options;
+ const targetKey = getKey(target);
 
-  const validCandidates = candidatePool.filter((item) => getKey(item) !== targetKey);
-  const shuffledCandidates = shuffleArray(validCandidates);
+ const validCandidates = candidatePool.filter((item) => getKey(item) !== targetKey);
+ const shuffledCandidates = shuffleArray(validCandidates);
 
-  // Deduplicate candidates by key
-  const uniqueDistractors: T[] = [];
-  const seenKeys = new Set<string>();
+ // Deduplicate candidates by key
+ const uniqueDistractors: T[] = [];
+ const seenKeys = new Set<string>();
 
-  for (const candidate of shuffledCandidates) {
-    const key = getKey(candidate);
-    if (!seenKeys.has(key)) {
-      seenKeys.add(key);
-      uniqueDistractors.push(candidate);
-    }
-    if (uniqueDistractors.length >= count) break;
-  }
+ for (const candidate of shuffledCandidates) {
+ const key = getKey(candidate);
+ if (!seenKeys.has(key)) {
+ seenKeys.add(key);
+ uniqueDistractors.push(candidate);
+ }
+ if (uniqueDistractors.length >= count) break;
+ }
 
-  return uniqueDistractors;
+ return uniqueDistractors;
 }
 
 /**
@@ -98,30 +98,30 @@ export function generateAdaptiveDistractors<T>(options: AdaptiveDistractorOption
  * @returns Evaluation metrics object.
  */
 export function evaluateSessionScore(params: EvaluateSessionParams): SessionEvaluationResult {
-  const { totalQuestions, correctCount, durationSeconds = 0, xpPerCorrect = 10 } = params;
+ const { totalQuestions, correctCount, durationSeconds = 0, xpPerCorrect = 10 } = params;
 
-  if (totalQuestions <= 0) {
-    return { accuracy: 0, totalXp: 0, speedBonus: 0, isPerfect: false };
-  }
+ if (totalQuestions <= 0) {
+ return { accuracy: 0, totalXp: 0, speedBonus: 0, isPerfect: false };
+ }
 
-  const safeCorrect = Math.max(0, Math.min(correctCount, totalQuestions));
-  const accuracy = Math.round((safeCorrect / totalQuestions) * 100);
-  const isPerfect = safeCorrect === totalQuestions;
+ const safeCorrect = Math.max(0, Math.min(correctCount, totalQuestions));
+ const accuracy = Math.round((safeCorrect / totalQuestions) * 100);
+ const isPerfect = safeCorrect === totalQuestions;
 
-  const baseXp = safeCorrect * xpPerCorrect;
+ const baseXp = safeCorrect * xpPerCorrect;
 
-  // Calculate speed bonus if completed fast (< 5s per question on average)
-  let speedBonus = 0;
-  if (isPerfect && durationSeconds > 0 && durationSeconds < totalQuestions * 5) {
-    speedBonus = 20;
-  }
+ // Calculate speed bonus if completed fast (< 5s per question on average)
+ let speedBonus = 0;
+ if (isPerfect && durationSeconds > 0 && durationSeconds < totalQuestions * 5) {
+ speedBonus = 20;
+ }
 
-  const totalXp = baseXp + speedBonus + (isPerfect ? 10 : 0);
+ const totalXp = baseXp + speedBonus + (isPerfect ? 10 : 0);
 
-  return {
-    accuracy,
-    totalXp,
-    speedBonus,
-    isPerfect,
-  };
+ return {
+ accuracy,
+ totalXp,
+ speedBonus,
+ isPerfect,
+ };
 }

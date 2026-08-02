@@ -1,47 +1,66 @@
-# Panduan Memulai
+# Panduan Memulai (Getting Started)
 
-> Terakhir diperbarui: 31 Juli 2026
-
----
-
-## 1. Prasyarat
-
-| Kebutuhan | Versi |
-|-----------|-------|
-| Node.js | 20.x atau lebih baru (CI menggunakan 22) |
-| npm | ≥ 10.x |
-| Git | Untuk manajemen repo dan git hooks |
-| Supabase CLI | Opsional, untuk migrasi lokal |
+> **Status Dokumentasi**: Aktif & Tersinkronisasi  
+> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Ruang Lingkup**: Prasyarat, Setup Lingkungan Lokal, Scripts, & Verification  
+> **Rujukan Utama**: [README.md](../README.md) | [CONFIGURATION.md](CONFIGURATION.md) | [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
-## 2. Instalasi
+## 📋 Daftar Isi
 
-### Kloning & Instalasi Dependensi
+1. [Prasyarat Sistem](#1-prasyarat-sistem)
+2. [Instalasi & Setup Lokal](#2-instalasi--setup-lokal)
+3. [Konfigurasi Environment](#3-konfigurasi-environment)
+4. [Menjalankan Server Pengembangan](#4-menjalankan-server-pengembangan)
+5. [Verifikasi Database & Testing](#5-verifikasi-database--testing)
+6. [Daftar Script npm](#6-daftar-script-npm)
+
+---
+
+## 1. Prasyarat Sistem
+
+| Kebutuhan | Versi Minimal | Keterangan |
+|---|---|---|
+| Node.js | `≥ 20.x` (CI pakai `22.x`) | Runtime JavaScript/TypeScript |
+| npm | `≥ 10.x` | Package manager utama |
+| Git | `≥ 2.40.x` | VCS & Git hooks (Husky) |
+| Supabase CLI | Optional | Diperlukan jika melakukan migrasi database lokal |
+
+---
+
+## 2. Instalasi & Setup Lokal
+
+Kloning repositori dan install seluruh dependensi:
 
 ```bash
-git clone <URL_REPOSITORI>
+git clone https://github.com/zan-118/nihongoroute.git
 cd nihongoroute
 npm install
 ```
 
-Instalasi mengaktifkan git hooks otomatis via `husky` (script `prepare`).
+> [!NOTE]
+> Perintah `npm install` akan mengaktifkan Git hooks secara otomatis melalui `husky` (script `prepare`).
 
-### Konfigurasi Environment
+---
+
+## 3. Konfigurasi Environment
+
+Salin file contoh environment variable:
 
 ```bash
 cp .env.example .env.local
 ```
 
-Isi `.env.local`:
+Sesuaikan variabel di `.env.local`:
 
 ```env
-# Klien (aman di browser)
+# Client-Side Variables (Diakses di Browser)
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
-# Server-only (DILARANG berprefiks NEXT_PUBLIC_)
+# Server-Only Variables (DILARANG diberi prefiks NEXT_PUBLIC_)
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ADMIN_API_SECRET=your-long-random-secret
 GEMINI_API_KEY=your-gemini-api-key
@@ -49,55 +68,55 @@ TRAKTEER_WEBHOOK_SECRET=your-trakteer-secret
 SAWERIA_WEBHOOK_SECRET=your-saweria-secret
 ```
 
+> [!CAUTION]
+> Jangan pernah mengimpor atau menggunakan `SUPABASE_SERVICE_ROLE_KEY` atau `ADMIN_API_SECRET` di Client Component untuk mencegah kebocoran kredensial admin.
+
 ---
 
-## 3. Menjalankan Server
+## 4. Menjalankan Server Pengembangan
+
+Jalankan dev server Next.js:
 
 ```bash
 npm run dev
 ```
 
-Buka `http://localhost:3000`.
+Aplikasi dapat diakses melalui browser di `http://localhost:3000`.
 
 ---
 
-## 4. Validasi Database
+## 5. Verifikasi Database & Testing
 
+### Validasi Migrasi SQL
 ```bash
 npm run db:migrations:check
 ```
 
-Memverifikasi konsistensi file skema di `supabase/migrations/20260620130000_initial_schema.sql`.
-
----
-
-## 5. Pengujian
+### Pengujian Kode & QA
 
 | Perintah | Deskripsi |
-|----------|-----------|
-| `npm run typecheck` | Validasi tipe TypeScript |
-| `npm run lint` | ESLint check |
-| `npm run lint:fix` | ESLint auto-fix |
-| `npm run test` | Vitest unit tests |
-| `npm run test:watch` | Vitest watch mode |
-| `npm run test:e2e` | Playwright E2E tests |
+|---|---|
+| `npm run typecheck` | Validasi tipe TypeScript secara ketat |
+| `npm run lint` | Pengecekan ESLint rule compliance |
+| `npm run lint:fix` | Perbaikan otomatis error linter |
+| `npm run test` | Eksekusi unit test berbasis Vitest |
+| `npm run test:watch` | Vitest mode interaktif watch |
+| `npm run test:e2e` | Eksekusi E2E testing berbasis Playwright |
 
 ---
 
-## 6. Build Produksi
+## 6. Daftar Script npm
 
+### Build Produksi
 ```bash
 npm run build
 ```
 
----
-
-## 7. Scripts Tambahan
-
-| Perintah | Deskripsi |
-|----------|-----------|
-| `npm run exam:import:validate` | Validasi import data ujian JLPT |
-| `npm run exam:generate:moji-goi` | Generate soal moji-goi JLPT |
-| `npm run exam:generate:bunpou` | Generate soal bunpou JLPT |
-| `npm run exam:generate:dokkai` | Generate soal dokkai JLPT |
-| `npm run exam:generate:choukai` | Generate soal choukai JLPT |
+### CLI Generator & Import Data Ujian
+```bash
+npm run exam:import:validate     # Validasi file import data ujian JLPT
+npm run exam:generate:moji-goi   # Generator soal moji-goi JLPT
+npm run exam:generate:bunpou     # Generator soal bunpou JLPT
+npm run exam:generate:dokkai     # Generator soal dokkai JLPT
+npm run exam:generate:choukai    # Generator soal choukai JLPT
+```

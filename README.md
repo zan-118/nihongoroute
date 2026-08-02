@@ -17,11 +17,13 @@
 </p>
 
 <p align="center">
-  <a href="file:///c:/nihongoroute/docs/README.md">📖 Baca Dokumentasi Teknis</a> 
+  <a href="docs/README.md">📖 Baca Dokumentasi Teknis</a> 
   • 
   <a href="#-memulai-cepat-quick-start">🚀 Panduan Instalasi</a> 
   • 
-  <a href="#-peta-dokumentasi">📂 Peta Dokumen</a>
+  <a href="CONTRIBUTING.md">🤝 Kontribusi</a>
+  • 
+  <a href="ROADMAP.md">🗺️ Roadmap</a>
 </p>
 
 ---
@@ -29,87 +31,83 @@
 ## ⚡ Fitur Utama
 
 ### 🔋 Offline-First: Belajar Tanpa Putus
-Nggak perlu takut progres belajar hilang saat internet mati. Semua data belajar, kuis, dan review kartu flashcard (SRS) langsung tersimpan aman di browser Anda menggunakan IndexedDB (via Zustand & `idb-keyval`). Rasakan UI super responsif dengan latensi 0ms.
+Semua data belajar, kuis, dan review kartu flashcard (SRS) langsung tersimpan aman di browser Anda menggunakan IndexedDB (via Zustand & `idb-keyval`). UI super responsif dengan latensi 0ms.
 
 ### 🔄 Sync 3-Tingkat yang Pintar
-Progres lokal Anda akan otomatis diunggah ke cloud Supabase secara cerdas. Menggunakan *dirty tracking* dan *debouncing* 2000ms untuk menghemat kuota internet, diselesaikan secara instan dengan resolusi konflik otomatis berbasis stempel waktu (*timestamp*).
+Progres lokal Anda otomatis diunggah ke cloud Supabase secara cerdas menggunakan *dirty tracking* dan *debouncing* 2000ms.
 
 ### 🛡️ Anti-Cheat XP & Gamifikasi Adil
-Persaingan sehat di papan peringkat! Perolehan XP, level, dan streak dihitung dan divalidasi langsung di server PostgreSQL lewat RPC `sync_user_progress`. Ditambah limit harian 150 XP bonus untuk mencegah bot dan skrip manipulasi dari sisi browser.
+Perolehan XP, level, dan streak dihitung dan divalidasi langsung di server PostgreSQL lewat RPC `sync_user_progress`.
 
 ### 🔊 Smart Cache Text-to-Speech (TTS)
-Pelafalan audio bahasa Jepang secepat kilat tanpa boros kuota. Rute API otomatis memutar file dari storage bucket `tts-cache` Supabase jika ada (*cache hit*), atau menyintesis suara secara instan menggunakan Edge Neural TTS saat *cache miss* tanpa membebani penyimpanan.
+Pelafalan audio bahasa Jepang secepat kilat via `tts_cache` Supabase dan MsEdgeTTS.
 
 ### 📝 Simulasi Ujian JLPT Realistis
-Uji kemampuan Anda sebelum ujian JLPT yang sebenarnya (N5 hingga N1). Bank soal relasional (`jlpt_exam_templates`, `jlpt_passages`, `jlpt_questions`) dari database Supabase dialirkan secara dinamis ke mesin ujian melalui *adapter layer* `supabase-adapter.ts`.
+Simulasi CBT JLPT N5 hingga N1 dengan generator soal relasional Supabase.
 
 ---
 
 ## 🛠️ Di Balik Layar (Tech Stack)
 
-NihongoRoute ditenagai oleh kombinasi Next.js App Router dan serverless database untuk performa tinggi:
-
-* **Sisi Klien (Client-Side)**: Next.js 16 Client Components, Zustand (State), React Query v5 (Caching), Tailwind CSS (Styling), Framer Motion (Animations), Wanakana (IME).
-* **Sisi Server (Server-Side)**: Next.js Server Actions, Route Handlers (Standalone Output), Kuroshiro & Kuromoji (Furigana), Google Gemini API (AI Assistant).
-* **Infrastruktur**: Supabase (PostgreSQL Database, Auth, Storage Buckets, & RLS Policies).
+- **Sisi Klien (Client-Side)**: Next.js 16 Client Components, Zustand, React Query v5, Tailwind CSS, Framer Motion, Wanakana.
+- **Sisi Server (Server-Side)**: Next.js Server Actions, Route Handlers, Kuroshiro & Kuromoji, Google Gemini API.
+- **Infrastruktur**: Supabase (PostgreSQL Database, Auth, Storage Buckets, & RLS Policies).
 
 ---
 
 ## 🚀 Memulai Cepat (Quick Start)
 
 ### 1. Prasyarat
-Pastikan runtime Node.js Anda berada pada versi **Node.js >= 20.x**.
+Node.js versi **`>= 20.x`** (CI pakai `22.x`).
 
 ### 2. Kloning & Instalasi
 ```bash
-git clone https://github.com/username/nihongoroute.git
+git clone https://github.com/zan-118/nihongoroute.git
 cd nihongoroute
 npm install
 ```
 
 ### 3. Konfigurasi Kunci API (.env)
-Salin berkas `.env.example` ke direktori proyek lokal Anda sebagai `.env.local`:
 ```bash
 cp .env.example .env.local
 ```
-Lengkapi nilai kunci Supabase, Gemini API, dan token rahasia webhook Anda.
 
-### 4. Jalankan Lingkungan Pengembangan
+### 4. Jalankan Server Development
 ```bash
 npm run dev
 ```
-Buka browser di [http://localhost:3000](http://localhost:3000) untuk mengakses aplikasi.
 
-### 5. Pengujian Kualitas Kode (Quality Gate Checks)
-Jalankan seluruh perintah pengecekan standar kode dan pengujian otomatis sebelum mengirimkan Pull Request:
+### 5. Pengujian Quality Gate
 ```bash
 npm run typecheck             # Validasi tipe TypeScript
 npm run lint                  # Pengecekan linter kode (ESLint)
 npm run test:unit             # Eksekusi unit test fungsional (Vitest)
 npm run db:migrations:check   # Validasi stempel berkas migrasi database
-npm run build                 # Kompilasi build rilis produksi standalone
+npm run build                 # Kompilasi build rilis produksi
 ```
 
 ---
 
-## 📂 Peta Dokumentasi
+## 📂 Peta Dokumentasi Teknis Multi-Layer
 
-Dokumentasi detail arsitektur sistem dan model data tersimpan secara terstruktur pada direktori [`/docs`](file:///c:/nihongoroute/docs):
+Dokumentasi detail arsitektur sistem dan model data tersimpan secara terstruktur pada direktori [`docs/`](docs/README.md):
 
-* 📖 **[Indeks Dokumentasi Teknis (docs/README.md)](file:///c:/nihongoroute/docs/README.md)**
-* 🗺️ **[Overview & Deskripsi Proyek](file:///c:/nihongoroute/docs/overview.md)**
-* 🏛️ **[Arsitektur Sistem & Alur Sinkronisasi](file:///c:/nihongoroute/docs/architecture.md)**
-* 📦 **[Panduan Memulai & Setup](file:///c:/nihongoroute/docs/getting-started.md)**
-* ⚙️ **[Konfigurasi Variabel Lingkungan](file:///c:/nihongoroute/docs/configuration.md)**
-* 🔌 **[Referensi API & Endpoint Rute](file:///c:/nihongoroute/docs/api-reference.md)**
-* 💾 **[Model Data & Skema Database (28 Tabel)](file:///c:/nihongoroute/docs/data-model.md)**
-* 🚢 **[Deployment & Alur CI/CD](file:///c:/nihongoroute/docs/deployment.md)**
-* 🔒 **[Keamanan, RLS, & Enkapsulasi Token](file:///c:/nihongoroute/docs/security.md)**
-* 🛠️ **[Troubleshooting & FAQ Operasional](file:///c:/nihongoroute/docs/troubleshooting.md)**
-* 🤝 **[Panduan Kontribusi & Git Workflow](file:///c:/nihongoroute/docs/contribution.md)**
+* 📖 **[Indeks Utama Dokumentasi (docs/README.md)](docs/README.md)**
+* 🗺️ **[Overview & Deskripsi Proyek](docs/OVERVIEW.md)**
+* 🏛️ **[Arsitektur Sistem & Alur Data](docs/ARCHITECTURE.md)**
+* 📦 **[Panduan Memulai & Setup](docs/GETTING_STARTED.md)**
+* ⚙️ **[Konfigurasi Variabel Lingkungan](docs/CONFIGURATION.md)**
+* 🔌 **[Referensi API & Route Handlers](docs/API_REFERENCE.md)**
+* 💾 **[Model Data & Skema Database (28 Tabel)](docs/DATA_MODEL.md)**
+* 🚢 **[Deployment & Ops Runbook](docs/DEPLOYMENT.md)**
+* 🔒 **[Keamanan, RLS, & Enkapsulasi Token](docs/SECURITY.md)**
+* 🎨 **[Design System & Token UI](docs/DESIGN_SYSTEM.md)**
+* 🛠️ **[Troubleshooting & FAQ Operasional](docs/TROUBLESHOOTING.md)**
+* 🤝 **[Panduan Kontribusi Teknis](docs/CONTRIBUTING.md)**
+* 📜 **[Architecture Decision Records (ADR)](docs/ADR.md)**
 
 ---
 
 <p align="center">
-  <sub>Dikelola oleh tim pengembang NihongoRoute • Rilis terakhir diperbarui pada 31 Juli 2026.</sub>
+  <sub>Dikelola oleh tim pengembang NihongoRoute • Rilis terakhir diperbarui pada 2 Agustus 2026.</sub>
 </p>

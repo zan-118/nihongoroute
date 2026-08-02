@@ -7,12 +7,12 @@ import { ROUTES } from "@/lib/core/routes";
  * SEO metadata for Sentence Builder page.
  */
 export const metadata: Metadata = {
-  ...createPageMetadata({
-    title: "Japanese Sentence Builder | NihongoRoute",
-    description: "Susun token menjadi kalimat Jepang yang benar untuk melatih pola grammar, urutan kata, dan pemahaman struktur kalimat.",
-    path:ROUTES.TOOLS.SENTENCE_BUILDER,
-    keywords: ["sentence builder Jepang", "latihan kalimat Jepang", "grammar Jepang", "susun kalimat Jepang"],
-  }),
+ ...createPageMetadata({
+ title: "Japanese Sentence Builder | NihongoRoute",
+ description: "Susun token menjadi kalimat Jepang yang benar untuk melatih pola grammar, urutan kata, dan pemahaman struktur kalimat.",
+ path:ROUTES.TOOLS.SENTENCE_BUILDER,
+ keywords: ["sentence builder Jepang", "latihan kalimat Jepang", "grammar Jepang", "susun kalimat Jepang"],
+ }),
 };
 
 /**
@@ -20,5 +20,5 @@ export const metadata: Metadata = {
  * Renders client-side sentence builder tool.
  */
 export default function SentenceBuilderPage() {
-  return <SentenceBuilderClient />;
+ return <SentenceBuilderClient />;
 }

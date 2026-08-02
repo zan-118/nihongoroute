@@ -2,16 +2,13 @@
 
 /**
  * @file MemoryStats.tsx
- * @description Komponen widget dashboard untuk menampilkan visualisasi kemajuan status hafalan pengguna (SRS).
- * Menyajikan persentase distribusi memori dalam empat tingkat (Master, Stabil, Fase Belajar, Baru)
- * dengan grafik progres beranimasi, serta tombol navigasi cepat ke kamus kosakata dan daftar kanji.
- *
- * @package components/features/dashboard/dashboard-stats
- * @project NihongoRoute
+ * @description Dashboard widget component displaying user SRS memory retention status visualization.
+ * Renders percentage distribution across 4 levels (Master, Stable, Learning, New) with animated progress bars and library shortcuts.
+ * @module features/dashboard/components/dashboard-stats
  */
 
 // ==========================================
-// IMPOR
+// Import & Dependencies
 // ==========================================
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -26,105 +23,105 @@ import { useMemoryStats } from "@/features/dashboard/components/srs/stats/useMem
  * Includes navigation links to vocabulary and kanji.
  */
 export default function MemoryStats() {
-  // Fetch memory statistics from custom hook
-  const { activeCount, stats, total } = useMemoryStats();
+ // Fetch memory statistics from custom hook
+ const { activeCount, stats, total } = useMemoryStats();
 
-  // Map memory levels to visual configurations
-  const statConfig = [
-    {
-      label: "Tingkat Master",
-      count: stats.master,
-      color: "text-success",
-      indicatorColor: "bg-success shadow-[0_0_15px_rgb(var(--success-rgb)/0.5)]",
-      icon: <Trophy size={16} />,
-    },
-    {
-      label: "Memori Stabil",
-      count: stats.intermediate,
-      color: "text-primary",
-      indicatorColor: "bg-primary shadow-[0_0_15px_rgb(var(--primary-rgb)/0.5)]",
-      icon: <TrendingUp size={16} />,
-    },
-    {
-      label: "Fase Belajar",
-      count: stats.learning,
-      color: "text-warning",
-      indicatorColor: "bg-warning shadow-[0_0_15px_rgb(var(--warning-rgb)/0.5)]",
-      icon: <Flame size={16} />,
-    },
-    {
-      label: "Materi Baru",
-      count: stats.new,
-      color: "text-muted-foreground",
-      indicatorColor: "bg-muted-foreground/30 shadow-none",
-      icon: <Sprout size={16} />,
-    },
-  ];
+ // Map memory levels to visual configurations
+ const statConfig = [
+ {
+ label: "Tingkat Master",
+ count: stats.master,
+ color: "text-success",
+ indicatorColor: "bg-success shadow-[0_0_15px_hsl(var(--success)/0.5)]",
+ icon: <Trophy size={16} />,
+ },
+ {
+ label: "Memori Stabil",
+ count: stats.intermediate,
+ color: "text-primary",
+ indicatorColor: "bg-primary shadow-[0_0_15px_hsl(var(--primary)/0.5)]",
+ icon: <TrendingUp size={16} />,
+ },
+ {
+ label: "Fase Belajar",
+ count: stats.learning,
+ color: "text-warning",
+ indicatorColor: "bg-warning shadow-[0_0_15px_hsl(var(--warning)/0.5)]",
+ icon: <Flame size={16} />,
+ },
+ {
+ label: "Materi Baru",
+ count: stats.new,
+ color: "text-muted-foreground",
+ indicatorColor: "bg-muted-foreground/30 shadow-none",
+ icon: <Sprout size={16} />,
+ },
+ ];
 
-  return (
-    <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-2xl md:rounded-3xl border-border relative overflow-hidden h-full flex flex-col neo-card shadow-none">
-      {/* Pola Kisi Latar Belakang */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.02)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--primary-rgb)/0.02)_1px,transparent_1px)] bg-size-[20px_20px] pointer-events-none opacity-50" />
+ return (
+ <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-2xl md:rounded-3xl border-border relative overflow-hidden h-full flex flex-col neo-card shadow-none">
+ {/* Pola Kisi Latar Belakang */}
+ <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--primary)/0.02)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--primary)/0.02)_1px,transparent_1px)] bg-size-[20px_20px] pointer-events-none opacity-50" />
 
-      {/* Bagian Header */}
-      <header className="flex items-center justify-between mb-8 md:mb-10 relative z-10">
-        <div className="flex items-center gap-3 md:gap-4">
-          <Card className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center neo-inset shadow-none shrink-0">
-            <Database size={20} className="text-primary md:w-6 md:h-6" />
-          </Card>
-          <div className="text-left">
-            <h3 className="text-foreground uppercase tracking-widest text-xs md:text-sm">
-              Status Hafalan
-            </h3>
-            <span className="block text-xs md:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">Distribusi Memori Pintar</span>
-          </div>
-        </div>
-        <Badge
-          variant="outline"
-          className="bg-muted border-border text-primary px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-xs md:text-xs font-bold tracking-widest uppercase neo-inset h-auto"
-        >
-          {activeCount} Unit
-        </Badge>
-      </header>
+ {/* Bagian Header */}
+ <header className="flex items-center justify-between mb-8 md:mb-10 relative z-10">
+ <div className="flex items-center gap-3 md:gap-4">
+ <Card className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center neo-inset shadow-none shrink-0">
+ <Database size={20} className="text-primary md:w-6 md:h-6" />
+ </Card>
+ <div className="text-left">
+ <h3 className="text-foreground uppercase tracking-widest text-xs md:text-sm">
+ Status Hafalan
+ </h3>
+ <span className="block text-xs md:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">Distribusi Memori Pintar</span>
+ </div>
+ </div>
+ <Badge
+ variant="outline"
+ className="bg-muted border-border text-primary px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-xs md:text-xs font-bold tracking-widest uppercase neo-inset h-auto"
+ >
+ {activeCount} Unit
+ </Badge>
+ </header>
 
-      {/* Kontainer Grafik Progres Batang */}
-      <div className="space-y-6 md:space-y-8 mb-8 md:mb-10 relative z-10 flex-1">
-        {statConfig.map((stat) => (
-          <StatBar
-            key={stat.label}
-            label={stat.label}
-            count={stat.count}
-            total={total}
-            indicatorColor={stat.indicatorColor}
-            icon={stat.icon}
-            colorClass={stat.color}
-          />
-        ))}
-      </div>
+ {/* Kontainer Grafik Progres Batang */}
+ <div className="space-y-6 md:space-y-8 mb-8 md:mb-10 relative z-10 flex-1">
+ {statConfig.map((stat) => (
+ <StatBar
+ key={stat.label}
+ label={stat.label}
+ count={stat.count}
+ total={total}
+ indicatorColor={stat.indicatorColor}
+ icon={stat.icon}
+ colorClass={stat.color}
+ />
+ ))}
+ </div>
 
-      {/* Tombol Pintas Belajar (Footer Card) */}
-      <div className="pt-6 md:pt-8 border-t border-border grid grid-cols-2 gap-4 md:gap-5 relative z-10 mt-auto">
-        <Link
-          href="/library/vocab"
-          className="group relative p-4 md:p-5 bg-muted rounded-lg md:rounded-xl border border-border text-xs md:text-xs font-bold text-center uppercase tracking-widest text-muted-foreground transition-all neo-card shadow-none active:translate-y-1 hover:text-primary hover:border-primary/30 hover:bg-primary/5"
-        >
-          <div className="flex flex-col items-center gap-2 md:gap-3">
-            <BookOpen size={18} className="md:w-5 md:h-5 group-hover:scale-110 transition-transform duration-300" />
-            <span>Koleksi Kata</span>
-          </div>
-        </Link>
-        <Link
-          href="/courses/n5/kanji"
-          className="group relative p-4 md:p-5 bg-muted rounded-lg md:rounded-xl border border-border text-xs md:text-xs font-bold text-center uppercase tracking-widest text-muted-foreground transition-all neo-card shadow-none active:translate-y-1 hover:text-secondary hover:border-secondary/30 hover:bg-secondary/5"
-        >
-          <div className="flex flex-col items-center gap-2 md:gap-3">
-            <PenTool size={18} className="md:w-5 md:h-5 group-hover:scale-110 transition-transform duration-300" />
-            <span>Daftar Kanji</span>
-          </div>
-        </Link>
-      </div>
-    </Card>
-  );
+ {/* Tombol Pintas Belajar (Footer Card) */}
+ <div className="pt-6 md:pt-8 border-t border-border grid grid-cols-2 gap-4 md:gap-5 relative z-10 mt-auto">
+ <Link
+ href="/library/vocab"
+ className="group relative p-4 md:p-5 bg-muted rounded-lg md:rounded-xl border border-border text-xs md:text-xs font-bold text-center uppercase tracking-widest text-muted-foreground transition-all neo-card shadow-none active:translate-y-1 hover:text-primary hover:border-primary/30 hover:bg-primary/5"
+ >
+ <div className="flex flex-col items-center gap-2 md:gap-3">
+ <BookOpen size={18} className="md:w-5 md:h-5 group-hover:scale-110 transition-transform duration-300" />
+ <span>Koleksi Kata</span>
+ </div>
+ </Link>
+ <Link
+ href="/courses/n5/kanji"
+ className="group relative p-4 md:p-5 bg-muted rounded-lg md:rounded-xl border border-border text-xs md:text-xs font-bold text-center uppercase tracking-widest text-muted-foreground transition-all neo-card shadow-none active:translate-y-1 hover:text-primary hover:border-primary/30 hover:bg-primary/5"
+ >
+ <div className="flex flex-col items-center gap-2 md:gap-3">
+ <PenTool size={18} className="md:w-5 md:h-5 group-hover:scale-110 transition-transform duration-300" />
+ <span>Daftar Kanji</span>
+ </div>
+ </Link>
+ </div>
+ </Card>
+ );
 }
 
 // ==========================================
@@ -135,12 +132,12 @@ export default function MemoryStats() {
  * Props for StatBar component.
  */
 interface StatBarProps {
-  label: string;
-  count: number;
-  total: number;
-  indicatorColor: string;
-  icon: React.ReactNode;
-  colorClass: string;
+ label: string;
+ count: number;
+ total: number;
+ indicatorColor: string;
+ icon: React.ReactNode;
+ colorClass: string;
 }
 
 /**
@@ -148,28 +145,28 @@ interface StatBarProps {
  * Shows label, percentage, count, and progress bar.
  */
 function StatBar({ label, count, total, indicatorColor, icon, colorClass }: StatBarProps) {
-  // Calculate percentage. Prevent division by zero.
-  const percent = total > 0 ? (count / total) * 100 : 0;
+ // Calculate percentage. Prevent division by zero.
+ const percent = total > 0 ? (count / total) * 100 : 0;
 
-  return (
-    <div className="group cursor-default">
-      <div className="flex justify-between text-xs md:text-xs font-bold uppercase tracking-widest mb-2.5 md:mb-3">
-        <span className="text-muted-foreground flex items-center gap-2.5 md:gap-3 transition-colors group-hover:text-foreground">
-          <span className={colorClass}>{icon}</span> {label}
-        </span>
-        <div className="flex items-center gap-2.5 md:gap-3">
-          <span className="text-muted-foreground/40 font-mono font-medium">{percent.toFixed(0)}%</span>
-          <Badge variant="outline" className="text-foreground bg-muted px-2 py-1 md:px-3 md:py-1 rounded-lg shadow-none font-mono border-border h-auto neo-inset">
-            {String(count).padStart(3, "0")}
-          </Badge>
-        </div>
-      </div>
+ return (
+ <div className="group cursor-default">
+ <div className="flex justify-between text-xs md:text-xs font-bold uppercase tracking-widest mb-2.5 md:mb-3">
+ <span className="text-muted-foreground flex items-center gap-2.5 md:gap-3 transition-colors group-hover:text-foreground">
+ <span className={colorClass}>{icon}</span> {label}
+ </span>
+ <div className="flex items-center gap-2.5 md:gap-3">
+ <span className="text-muted-foreground/40 font-mono font-medium">{percent.toFixed(0)}%</span>
+ <Badge variant="outline" className="text-foreground bg-muted px-2 py-1 md:px-3 md:py-1 rounded-lg shadow-none font-mono border-border h-auto neo-inset">
+ {String(count).padStart(3, "0")}
+ </Badge>
+ </div>
+ </div>
 
-      <Progress 
-        value={percent} 
-        className="h-2 md:h-2.5 bg-muted" 
-        indicatorClassName={indicatorColor}
-      />
-    </div>
-  );
+ <Progress 
+ value={percent} 
+ className="h-2 md:h-2.5 bg-muted" 
+ indicatorClassName={indicatorColor}
+ />
+ </div>
+ );
 }

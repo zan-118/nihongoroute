@@ -1,13 +1,12 @@
 /**
  * @file robots.ts
- * @description Mengatur kebijakan akses untuk web crawler (SEO).
- * Menentukan rute mana yang boleh diindeks oleh mesin pencari.
+ * @description Configures web crawler access policies (SEO). Defines routes allowed for search engine indexing.
  * @module Robots
  */
 
-// ======================
-// EKSEKUSI UTAMA
-// ======================
+// ==========================================
+// Main Execution
+// ==========================================
 
 import { MetadataRoute } from "next";
 
@@ -18,20 +17,20 @@ import { MetadataRoute } from "next";
  * @returns Robots configuration object.
  */
 export default function robots(): MetadataRoute.Robots {
-  // Fallback to production domain if env variable missing.
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nihongoroute.my.id";
+ // Fallback to production domain if env variable missing.
+ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nihongoroute.my.id";
 
-  return {
-    rules: [
-      {
-        userAgent: "*",
-        allow: "/",
-        disallow: [
-          "/api/",
-        ],
-      },
-    ],
-    // Remove trailing slashes from base URL to prevent malformed path.
-    sitemap: `${siteUrl.replace(/\/+$/, "")}/sitemap.xml`,
-  };
+ return {
+ rules: [
+ {
+ userAgent: "*",
+ allow: "/",
+ disallow: [
+ "/api/",
+ ],
+ },
+ ],
+ // Remove trailing slashes from base URL to prevent malformed path.
+ sitemap: `${siteUrl.replace(/\/+$/, "")}/sitemap.xml`,
+ };
 }

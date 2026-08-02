@@ -23,23 +23,23 @@ import { ReactNode, useState } from "react";
  * @param props.children - Child nodes to render.
  */
 export default function QueryProvider({ children }: { children: ReactNode }) {
-  // Lazy initialize QueryClient. Prevents recreation during component re-renders.
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            // Set stale time to 1 minute. Disable refetch on window focus to reduce API load.
-            staleTime: 60 * 1000,
-            refetchOnWindowFocus: false,
-          },
-        },
-      })
-  );
+ // Lazy initialize QueryClient. Prevents recreation during component re-renders.
+ const [queryClient] = useState(
+ () =>
+ new QueryClient({
+ defaultOptions: {
+ queries: {
+ // Set stale time to 1 minute. Disable refetch on window focus to reduce API load.
+ staleTime: 60 * 1000,
+ refetchOnWindowFocus: false,
+ },
+ },
+ })
+ );
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
-  );
+ return (
+ <QueryClientProvider client={queryClient}>
+ {children}
+ </QueryClientProvider>
+ );
 }

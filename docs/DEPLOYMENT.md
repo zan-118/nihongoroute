@@ -1,90 +1,79 @@
-# Deployment & CI/CD
+# Deployment & Ops Runbook
 
-> Terakhir diperbarui: 31 Juli 2026
+> **Status Dokumentasi**: Aktif & Tersinkronisasi  
+> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Ruang Lingkup**: Configuration Build, CI/CD Pipeline, Release Checklist, & Matrix Cache  
+> **Rujukan Utama**: [README.md](../README.md) | [CONFIGURATION.md](CONFIGURATION.md) | [ARCHITECTURE.md](ARCHITECTURE.md)
 
 ---
 
-## 1. Konfigurasi Build
+## 📋 Daftar Isi
 
-Next.js dikonfigurasi di `next.config.ts` dengan opsi:
+1. [Konfigurasi Build Next.js](#1-konfigurasi-build-nextjs)
+2. [Pipeline CI/CD (GitHub Actions)](#2-pipeline-cicd-github-actions)
+3. [Release Checklist (Pra-Rilis Produksi)](#3-release-checklist-pra-rilis-produksi)
+4. [Strategi Cache & Revalidasi (Runbook Ops)](#4-strategi-cache--revalidasi-runbook-ops)
+   - [Konten Library (ISR)](#konten-library-isr)
+   - [HTTP Cache Headers](#http-cache-headers)
+   - [Data Progres & TTS Cache](#data-progres--tts-cache)
+
+---
+
+## 1. Konfigurasi Build Next.js
+
+Build Next.js dikonfigurasi melalui `next.config.ts`:
 
 | Opsi | Nilai | Keterangan |
-|------|-------|------------|
-| `poweredByHeader` | `false` | Sembunyikan header X-Powered-By |
-| `reactStrictMode` | `true` | |
-| `images.minimumCacheTTL` | 30 hari | |
-| `images.formats` | `avif`, `webp` | |
-| `serverExternalPackages` | `kuroshiro`, `kuroshiro-analyzer-kuromoji`, `msedge-tts`, `isomorphic-ws`, `ws` | Tidak di-bundle ke klien |
-| `transpilePackages` | `@react-pdf/renderer` | |
-
-> [!NOTE]
-> Tidak ada `output: "standalone"` di konfigurasi saat ini. Dependensi `@vercel/analytics` dan `@vercel/speed-insights` tersedia di `package.json`.
+|---|---|---|
+| `poweredByHeader` | `false` | Menghapus header `X-Powered-By` untuk keamanan |
+| `reactStrictMode` | `true` | Penegakan strict mode React 19 |
+| `images.minimumCacheTTL` | 30 hari | Durasi cache optimasi gambar |
+| `images.formats` | `avif`, `webp` | Format gambar modern terkompresi |
+| `serverExternalPackages` | `kuroshiro`, `kuroshiro-analyzer-kuromoji`, `msedge-tts`, `isomorphic-ws`, `ws` | Node.js native dependencies |
 
 ---
 
-## 2. CI/CD Pipeline
+## 2. Pipeline CI/CD (GitHub Actions)
 
-Otomatisasi via GitHub Actions di `.github/workflows/quality.yml`.
+Otomatisasi pengujian dan verifikasi build dikelola via `.github/workflows/quality.yml`.
 
 ### Job: App Quality
-
-| Step | Perintah |
-|------|----------|
-| Typecheck | `npm run typecheck` |
-| Lint | `npm run lint` |
-| Unit tests | `npm run test:unit` |
-| Build | `npm run build` |
-
-Runtime: Node.js 22, Ubuntu.
+- `npm run typecheck`
+- `npm run lint`
+- `npm run test:unit`
+- `npm run build`
 
 ### Job: Database Guard
-
-| Step | Perintah |
-|------|----------|
-| Migration check | `npm run db:migrations:check` |
-| Supabase CLI setup | `supabase/setup-cli@v2` |
-
-**Trigger**: Push ke `main`, Pull Request ke `main`, manual dispatch.
-**Concurrency**: Satu eksekusi per ref — eksekusi lama dibatalkan.
+- `npm run db:migrations:check`
+- `supabase/setup-cli@v2`
 
 ---
 
-## 3. Release Checklist
+## 3. Release Checklist (Pra-Rilis Produksi)
+
+Eksekusi perintah berikut sebelum melakukan penggabungan (merge) ke branch `main`:
 
 ```bash
-npm run typecheck          # Validasi tipe TypeScript
-npm run lint               # Standar kode & keamanan
-npm run test:unit          # Unit test logika bisnis
-npm run db:migrations:check  # Konsistensi migrasi database
-npm run build              # Build produksi
+npm run typecheck            # 1. Validasi pengetikan TypeScript
+npm run lint                 # 2. Audit standar linter
+npm run test:unit            # 3. Eksekusi unit test bisnis
+npm run db:migrations:check    # 4. Verifikasi migrasi SQL Supabase
+npm run build                # 5. Uji kompabilitas build produksi
 ```
 
 ---
 
-## 4. Strategi Cache & Revalidasi
+## 4. Strategi Cache & Revalidasi (Runbook Ops)
 
 ### Konten Library (ISR)
+- **Pre-render**: `generateStaticParams()` untuk slug populer saat build time.
+- **Revalidation**: `revalidate = 3600` (1 jam).
+- **On-demand**: `dynamicParams = true` untuk slug baru.
 
-Halaman detail library menggunakan **Incremental Static Regeneration**:
+### HTTP Cache Headers
+- `/fonts/*` ➔ `public, max-age=31536000, immutable`
+- `/library/*` ➔ `public, s-maxage=3600, stale-while-revalidate=59`
 
-- `generateStaticParams()` untuk pre-render slug populer saat build.
-- `revalidate = 3600` (1 jam) — halaman di-regenerasi di latar belakang.
-- `dynamicParams = true` — slug baru di-render on-demand dan di-cache.
-
-Halaman yang menggunakan ISR: vocab, kanji, grammar, listening, reading, cheatsheet, courses.
-
-### HTTP Cache Headers (next.config.ts)
-
-| Path | Header |
-|------|--------|
-| `/fonts/*` | `public, max-age=31536000, immutable` |
-| `/library/vocab/*`, `/library/kanji/*`, `/library/grammar/*`, `/library/reading/*`, `/library/listening/*`, `/library/cheatsheet/*` | `public, s-maxage=3600, stale-while-revalidate=59` |
-
-### Data Progres Pengguna
-
-Revalidasi progres pengguna dilakukan secara manual via `revalidatePath` setelah mutasi di Server Actions — **bukan** via ISR/time-based revalidation. Data pengguna diproses client-side via Zustand + RPC.
-
-### TTS Cache
-
-- **Cache hit**: `Cache-Control: public, max-age=604800, immutable` (7 hari).
-- **Cache miss** (dynamic synthesis): `Cache-Control: no-store`.
+### Data Progres & TTS Cache
+- **Data Progres**: Revalidasi manual via `revalidatePath` setelah mutasi Server Action.
+- **TTS Cache Hit**: `Cache-Control: public, max-age=604800, immutable` (7 hari).

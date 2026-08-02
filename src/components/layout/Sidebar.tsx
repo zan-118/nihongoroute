@@ -1,7 +1,7 @@
 /**
  * @file Sidebar.tsx
- * @description Fasade pembungkus untuk memelihara kompatibilitas impor Sidebar.
- * Seluruh komponen terpusat di `@/components/layout/sidebar`.
+ * @description Facade wrapper re-export maintaining import backwards compatibility for Sidebar.
+ * All sidebar components are centralized under `@/components/layout/sidebar`.
  */
 
 import Sidebar from "./sidebar/Sidebar";

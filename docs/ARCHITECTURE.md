@@ -1,10 +1,27 @@
-# Arsitektur Sistem
+# Arsitektur Sistem NihongoRoute
 
-> Terakhir diperbarui: 31 Juli 2026
+> **Status Dokumentasi**: Aktif & Tersinkronisasi  
+> **Terakhir Diperbarui**: 2 Agustus 2026 — Diverifikasi 100% dari `src/features/` & `src/lib/`  
+> **Ruang Lingkup**: Diagram Komponen, Alur Data 3-Tier, State Management, ISR Caching, & 20 Modul Feature Domains  
+> **Rujukan Utama**: [README.md](../README.md) | [DATA_MODEL.md](DATA_MODEL.md) | [API_REFERENCE.md](API_REFERENCE.md) | [SECURITY.md](SECURITY.md)
 
 ---
 
-## 1. Diagram Komponen
+## 📋 Daftar Isi
+
+1. [Diagram Komponen Sistem](#1-diagram-komponen-sistem)
+2. [Alur Data Utama](#2-alur-data-utama)
+   - [A. Sinkronisasi Progres 3-Tier (Offline-First)](#a-sinkronisasi-progres-3-tier-offline-first)
+   - [B. Alur Text-to-Speech (TTS)](#b-alur-text-to-speech-tts)
+3. [Zustand Stores & Persistensi](#3-zustand-stores--persistensi)
+4. [Strategi Rendering & Cache (ISR vs Client State)](#4-strategi-rendering--cache-isr-vs-client-state)
+5. [Keputusan Desain Arsitektural](#5-keputusan-desain-arsitektural)
+6. [Struktur 20 Modul Feature Domain (`src/features/`)](#6-struktur-20-modul-feature-domain-srcfeatures)
+7. [Aturan Layer Kode & Encapsulation](#7-aturan-layer-kode--encapsulation)
+
+---
+
+## 1. Diagram Komponen Sistem
 
 ```mermaid
 graph TD
@@ -63,7 +80,7 @@ graph TD
 
 ### A. Sinkronisasi Progres 3-Tier (Offline-First)
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │ TIER 1 — Local Memory (Zero-Latency UI)                        │
 │                                                                 │
@@ -99,7 +116,7 @@ graph TD
 
 ### B. Alur Text-to-Speech (TTS)
 
-```
+```text
 [Komponen UI (DialogueSection / ListeningWorkspace / TTSReader)]
       │
       ├─► Memanggil shared hook useLineTTS (src/features/media/hooks/useLineTTS.ts)
@@ -130,29 +147,27 @@ graph TD
 
 ---
 
-## 3. Zustand Stores
+## 3. Zustand Stores & Persistensi
 
 Empat stores yang dipersistensi via `idb-keyval`:
 
 | Store | File | Data Utama |
-|-------|------|------------|
+|---|---|---|
 | `useAuthStore` | `src/store/useAuthStore.ts` | Session, user auth state |
 | `useUserStore` | `src/store/useUserStore.ts` | XP, level, streak, studyDays, inventory, completedLessons, dirtyLessons |
 | `useSRSStore` | `src/store/useSRSStore.ts` | SRS card states, dirtySrs |
 | `useUIStore` | `src/store/useUIStore.ts` | Settings, notifications, sync status, UI preferences |
 
-**Aturan penggunaan**: Selalu pakai atomic selector (`useUserStore((s) => s.xp)`). Dilarang destructure langsung.
-
 ---
 
-## 4. Strategi Rendering & Cache
+## 4. Strategi Rendering & Cache (ISR vs Client State)
 
 ### ISR (Incremental Static Regeneration)
 
 Halaman konten library menggunakan ISR dengan `generateStaticParams()` untuk pre-render dan `revalidate = 3600` (1 jam):
 
 | Halaman | Path |
-|---------|------|
+|---|---|
 | Kosakata detail | `/library/vocab/[slug]` |
 | Kanji detail | `/library/kanji/[slug]` |
 | Tata bahasa detail | `/library/grammar/[slug]` |
@@ -161,37 +176,50 @@ Halaman konten library menggunakan ISR dengan `generateStaticParams()` untuk pre
 | Cheatsheet detail | `/library/cheatsheet/[id]` |
 | Pelajaran kursus | `/courses/[categoryId]/[slug]` |
 
-Slug yang belum ter-pre-render di-generate on-demand dan di-cache (`dynamicParams = true`).
-
-### Data Progres Pengguna
-
-Status pengguna (XP, SRS, lesson progress) diproses di sisi klien via Zustand + IndexedDB, disinkronkan ke server via RPC — **bukan** melalui ISR/SSR. Ini mencegah cache poisoning pada halaman statis.
-
 ---
 
-## 5. Keputusan Desain
+## 5. Keputusan Desain Arsitektural
 
 - **Zero-latency UI**: Zustand memproses state di klien sebelum data dikirim ke server.
 - **Separasi konten library vs progres pengguna**: Konten library menggunakan ISR + revalidate. Progres pengguna menggunakan client-side sync via RPC.
 - **Legacy exam adapter**: Komponen `MockExamEngine` membaca format data lama. Adapter `src/lib/exams/supabase-adapter.ts` (`toLegacyExamData`) memetakan data relasional baru ke format lama.
-- **Optimasi bundle**: `optimizePackageImports` di `next.config.ts` untuk Radix UI, Iconify, Framer Motion, Date-fns, Sonner, Wanakana. Pemisahan bundle via `next/dynamic` untuk komponen besar.
-- **Tabel `articles`**: Tabel ini ada di database produksi (50 rows, RLS aktif) dan telah terlebur resmi ke dalam file skema konsolidasi `initial_schema.sql` (tabel #7). Tabel ini digunakan sebagai fallback konten pelajaran di `lessons.actions.ts`.
+- **Optimasi bundle**: `optimizePackageImports` di `next.config.ts` untuk Radix UI, Iconify, Framer Motion, Date-fns, Sonner, Wanakana.
 
 ---
 
-## 6. Aturan Layer Kode
+## 6. Struktur 20 Modul Feature Domain (`src/features/`)
 
-Untuk menjaga konsistensi codebase dan mempermudah kontribusi baru, struktur layer didefinisikan sebagai berikut:
+Seluruh UI dan logika bisnis yang spesifik fitur dikelompokkan ke dalam 20 direktori domain di `src/features/`:
 
-- **Pure Route Wrappers (`src/app/`)**:
-  Folder rute `src/app/` secara ketat HANYA diperuntukkan bagi file routing bawaan Next.js (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`). Dilarang menyimpan komponen tampilan klien (`*Client.tsx`) atau helper privat di dalam folder `src/app/`. Seluruh komponen antarmuka dan logika tampilan fitur wajib ditempatkan di `src/features/<feature-name>/`.
-- **Co-located Feature UI Components (`src/features/<feature-name>/components/`)**:
-  Komponen UI yang spesifik untuk domain fitur (seperti komponen dashboard, statistik daya ingat SRS, simulasi ujian CBT, kartu & detail kanji pustaka, dan visualisasi progress) WAJIB ditempatkan di dalam `src/features/<feature-name>/components/`. Folder `src/components/ui/` dipesan secara ketat HANYA untuk atomic UI primitives generik tanpa domain (seperti `Button`, `Card`, `Badge`, `Progress`).
-- **Server Actions (`src/actions/*.actions.ts`)**:
-  Layer tipis yang berfungsi sebagai entry point bagi antarmuka klien. Hanya bertanggung jawab melakukan validasi input/parameter dasar, dan mendelegasikan pemrosesan ke `src/lib/services/`. Tidak diperkenankan melakukan query Supabase secara langsung ke database.
-- **Domain Services & Repository (`src/lib/services/`)**:
-  Satu-satunya layer yang diizinkan untuk menginisiasi klien Supabase (`createStaticClient`) dan mengeksekusi query database PostgreSQL (CRUD terstruktur). Logika hidrasi relasi pelajaran didelegasikan ke `LessonHydrationEngine` (`src/lib/services/lesson-hydration-engine.ts`). Logika akses data konten pustaka generik dipusatkan di `src/lib/services/content-repository.ts`.
-- **Feature Domain Engines (`src/features/*/`)**:
-  Modul dalam (*deep feature modules*) yang mengisolasi klasifikasi, penyaringan, dan transformasi data khusus fitur (mis. `ExamCatalogEngine`, `DashboardStatsEngine`, `PracticeSessionEngine`, `LessonBlockRegistry`, `useSRSReview`, `useReviewSession`) dari komponen rute Next.js `app/(main)`. Komponen halaman Next.js hanya bertindak sebagai wrapper tampilan tipis, sementara logika domain dapat diuji 100% secara terisolasi.
-- **Pure Logic Layer (`src/lib/learning/`, `src/lib/tools/`, `src/lib/exams/`, `src/lib/notifications/`)**:
-  Berisi logika bisnis murni (seperti `ExamSessionAggregate`, kalkulasi SRS, generator soal, adapter legacy data, `FlashcardResolver`, dan `NotificationEngine`). Dilarang mengimpor klien Supabase secara langsung di luar penyediaan injection parameter. Jika logika membutuhkan data, data tersebut harus dikirimkan dari pemanggil sebagai parameter input.
+| No | Modul Feature | Peran Utama |
+|:---:|---|---|
+| 01 | `auth` | Form autentikasi, modal login, OAuth UI |
+| 02 | `courses` | Tampilan navigasi hirarki & kurikulum kursus |
+| 03 | `dashboard` | Dasbor utama pengguna, statistik belajar, ringkasan SRS |
+| 04 | `ecosystem` | Peta ekosistem pembelajaran & rekomendasi |
+| 05 | `exams` | Mesin simulasi CBT JLPT N5–N1, timer, & scoring |
+| 06 | `games` | Minigame edukatif pembelajaran Jepang |
+| 07 | `gamification` | Visualisasi XP, level badges, & streak celebration |
+| 08 | `landing` | Halaman landing publik & penjelas produk |
+| 09 | `library` | Komponen tampilan pustaka leksikal & wacana |
+| 10 | `media` | Audio player, TTS hooks (`useLineTTS`), & media controls |
+| 11 | `notifications` | Notification popover & activity feed |
+| 12 | `pdf` | Rendering & ekspor sertifikat/materi PDF |
+| 13 | `review` | Mode review flashcards, SRS master, & writing practice |
+| 14 | `settings` | Pengaturan akun, preferensi UI, & sinkronisasi data |
+| 15 | `share` | Fitur berbagi progres & pencapaian belajar |
+| 16 | `social` | Community feed, postingan, komentar, & leaderboard |
+| 17 | `srs` | Tombol tambah SRS & editor mnemonic |
+| 18 | `support` | Widget feedback pengguna & halaman bantuan |
+| 19 | `tools` | 13 sub-tools (shadowing-recorder, dictation, text-analyzer, conjugation-trainer, counter-trainer, jlpt-mini-drill, kana, kanji-similarity, particle-trainer, sentence-builder, stroke-canvas, weak-points, dictionary) |
+| 20 | `user` | Navigasi user, profile editor, & auth hooks |
+
+---
+
+## 7. Aturan Layer Kode & Encapsulation
+
+- **Pure Route Wrappers (`src/app/`)**: Folder rute `src/app/` HANYA diperuntukkan bagi file routing bawaan Next.js (`page.tsx`, `layout.tsx`, `route.ts`).
+- **Co-located Feature UI (`src/features/<feature-name>/`)**: UI spesifik fitur wajib disimpan di folder fiturnya masing-masing.
+- **Atomic UI Primitives (`src/components/ui/`)**: Direservasi hanya untuk UI primitives generik tanpa domain.
+- **Server Actions (`src/actions/*.actions.ts`)**: Layer tipis validasi input yang mendelegasikan ke `src/lib/services/`.
+- **Domain Services & Repository (`src/lib/services/`)**: Satu-satunya layer yang melakukan query Supabase database.

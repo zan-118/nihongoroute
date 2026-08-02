@@ -15,13 +15,13 @@ import type { ExamQuestion } from "@/features/exams/components/mock-engine/types
  * @returns Map of section name to question index arrays.
  */
 export function buildQuestionSections(questions: ExamQuestion[]): Record<string, number[]> {
-  const groups: Record<string, number[]> = {};
-  questions.forEach((q, idx) => {
-    const section = q.section || "vocabulary";
-    if (!groups[section]) groups[section] = [];
-    groups[section].push(idx);
-  });
-  return groups;
+ const groups: Record<string, number[]> = {};
+ questions.forEach((q, idx) => {
+ const section = q.section || "vocabulary";
+ if (!groups[section]) groups[section] = [];
+ groups[section].push(idx);
+ });
+ return groups;
 }
 
 /**
@@ -34,19 +34,19 @@ export function buildQuestionSections(questions: ExamQuestion[]): Record<string,
  * @returns True if previous button must be disabled.
  */
 export function shouldDisablePreviousButton(
-  currentIndex: number,
-  questions: ExamQuestion[],
-  hasGlobalChoukai: boolean
+ currentIndex: number,
+ questions: ExamQuestion[],
+ hasGlobalChoukai: boolean
 ): boolean {
-  if (currentIndex <= 0) return true;
-  if (hasGlobalChoukai) return false;
+ if (currentIndex <= 0) return true;
+ if (hasGlobalChoukai) return false;
 
-  const currentQ = questions[currentIndex];
-  const isCurrentlyListening = currentQ?.section === "listening" || !!currentQ?.audioUrl;
-  if (isCurrentlyListening) return true;
+ const currentQ = questions[currentIndex];
+ const isCurrentlyListening = currentQ?.section === "listening" || !!currentQ?.audioUrl;
+ if (isCurrentlyListening) return true;
 
-  const prevQ = questions[currentIndex - 1];
-  return prevQ?.section === "listening" || !!prevQ?.audioUrl;
+ const prevQ = questions[currentIndex - 1];
+ return prevQ?.section === "listening" || !!prevQ?.audioUrl;
 }
 
 /**
@@ -58,34 +58,34 @@ export function shouldDisablePreviousButton(
  * @returns Calculated score and section breakdown.
  */
 export function performScoreCalculation(
-  questions: ExamQuestion[],
-  answers: Record<string, number>,
-  passingScore: number
+ questions: ExamQuestion[],
+ answers: Record<string, number>,
+ passingScore: number
 ) {
-  const mockPackage: SupabaseExamPackage = {
-    id: "session-pkg",
-    title: "Exam Session",
-    timeLimitMinutes: 0,
-    passingScore,
-    questions: questions.map((q) => ({
-      id: q._key,
-      sessionType: q.section,
-      choices: (q.choices || q.options.map((val) => ({ type: "text", value: val }))),
-      correctChoiceIndex: q.correctAnswer,
-      sourceType: q.sourceType,
-      sourceId: q.sourceId,
-      sourceReference: q.sourceReference,
-    })),
-  };
+ const mockPackage: SupabaseExamPackage = {
+ id: "session-pkg",
+ title: "Exam Session",
+ timeLimitMinutes: 0,
+ passingScore,
+ questions: questions.map((q) => ({
+ id: q._key,
+ sessionType: q.section,
+ choices: (q.choices || q.options.map((val) => ({ type: "text", value: val }))),
+ correctChoiceIndex: q.correctAnswer,
+ sourceType: q.sourceType,
+ sourceId: q.sourceId,
+ sourceReference: q.sourceReference,
+ })),
+ };
 
-  const result = calculateJlptExamSubmission(mockPackage, answers);
-  return {
-    correctCount: result.correctCount,
-    finalScore: result.totalScore,
-    sectionBreakdown: result.sectionBreakdown,
-    failedSection: result.failedSection,
-    isPassed: result.isPassed,
-  };
+ const result = calculateJlptExamSubmission(mockPackage, answers);
+ return {
+ correctCount: result.correctCount,
+ finalScore: result.totalScore,
+ sectionBreakdown: result.sectionBreakdown,
+ failedSection: result.failedSection,
+ isPassed: result.isPassed,
+ };
 }
 
 /**
@@ -96,16 +96,16 @@ export function performScoreCalculation(
  * @returns Formatted error string.
  */
 export function getErrorMessage(error: unknown, fallback: string): string {
-  return error instanceof Error ? error.message : fallback;
+ return error instanceof Error ? error.message : fallback;
 }
 
 export interface ExamSessionAggregateOptions {
-  questions: ExamQuestion[];
-  currentIndex?: number;
-  answers?: Record<string, number>;
-  flagged?: Record<string, boolean>;
-  choukaiAudioUrl?: string;
-  passingScore?: number;
+ questions: ExamQuestion[];
+ currentIndex?: number;
+ answers?: Record<string, number>;
+ flagged?: Record<string, boolean>;
+ choukaiAudioUrl?: string;
+ passingScore?: number;
 }
 
 /**
@@ -113,86 +113,86 @@ export interface ExamSessionAggregateOptions {
  * Bebas dari efek samping React DOM/hooks.
  */
 export class ExamSessionAggregate {
-  private questions: ExamQuestion[];
-  private currentIndex: number;
-  private answers: Record<string, number>;
-  private flagged: Record<string, boolean>;
-  private choukaiAudioUrl?: string;
-  private passingScore: number;
-  private isDirtyState: boolean = false;
+ private questions: ExamQuestion[];
+ private currentIndex: number;
+ private answers: Record<string, number>;
+ private flagged: Record<string, boolean>;
+ private choukaiAudioUrl?: string;
+ private passingScore: number;
+ private isDirtyState: boolean = false;
 
-  constructor(options: ExamSessionAggregateOptions) {
-    this.questions = options.questions;
-    this.currentIndex = options.currentIndex ?? 0;
-    this.answers = { ...(options.answers ?? {}) };
-    this.flagged = { ...(options.flagged ?? {}) };
-    this.choukaiAudioUrl = options.choukaiAudioUrl;
-    this.passingScore = options.passingScore ?? 90;
-  }
+ constructor(options: ExamSessionAggregateOptions) {
+ this.questions = options.questions;
+ this.currentIndex = options.currentIndex ?? 0;
+ this.answers = { ...(options.answers ?? {}) };
+ this.flagged = { ...(options.flagged ?? {}) };
+ this.choukaiAudioUrl = options.choukaiAudioUrl;
+ this.passingScore = options.passingScore ?? 90;
+ }
 
-  public getQuestions(): ExamQuestion[] {
-    return this.questions;
-  }
+ public getQuestions(): ExamQuestion[] {
+ return this.questions;
+ }
 
-  public getCurrentIndex(): number {
-    return this.currentIndex;
-  }
+ public getCurrentIndex(): number {
+ return this.currentIndex;
+ }
 
-  public getActiveQuestion(): ExamQuestion | undefined {
-    return this.questions[this.currentIndex];
-  }
+ public getActiveQuestion(): ExamQuestion | undefined {
+ return this.questions[this.currentIndex];
+ }
 
-  public getAnswers(): Record<string, number> {
-    return { ...this.answers };
-  }
+ public getAnswers(): Record<string, number> {
+ return { ...this.answers };
+ }
 
-  public getFlagged(): Record<string, boolean> {
-    return { ...this.flagged };
-  }
+ public getFlagged(): Record<string, boolean> {
+ return { ...this.flagged };
+ }
 
-  public isDirty(): boolean {
-    return this.isDirtyState;
-  }
+ public isDirty(): boolean {
+ return this.isDirtyState;
+ }
 
-  public clearDirtyFlag(): void {
-    this.isDirtyState = false;
-  }
+ public clearDirtyFlag(): void {
+ this.isDirtyState = false;
+ }
 
-  public setAnswer(questionKey: string, optionIndex: number): boolean {
-    if (this.answers[questionKey] === optionIndex) {
-      return false;
-    }
-    this.answers[questionKey] = optionIndex;
-    this.isDirtyState = true;
-    return true;
-  }
+ public setAnswer(questionKey: string, optionIndex: number): boolean {
+ if (this.answers[questionKey] === optionIndex) {
+ return false;
+ }
+ this.answers[questionKey] = optionIndex;
+ this.isDirtyState = true;
+ return true;
+ }
 
-  public toggleFlag(questionKey: string): boolean {
-    const nextVal = !this.flagged[questionKey];
-    this.flagged[questionKey] = nextVal;
-    return nextVal;
-  }
+ public toggleFlag(questionKey: string): boolean {
+ const nextVal = !this.flagged[questionKey];
+ this.flagged[questionKey] = nextVal;
+ return nextVal;
+ }
 
-  public setCurrentIndex(index: number): boolean {
-    if (index < 0 || index >= this.questions.length) return false;
-    this.currentIndex = index;
-    return true;
-  }
+ public setCurrentIndex(index: number): boolean {
+ if (index < 0 || index >= this.questions.length) return false;
+ this.currentIndex = index;
+ return true;
+ }
 
-  public getSections(): Record<string, number[]> {
-    return buildQuestionSections(this.questions);
-  }
+ public getSections(): Record<string, number[]> {
+ return buildQuestionSections(this.questions);
+ }
 
-  public isPreviousDisabled(): boolean {
-    return shouldDisablePreviousButton(
-      this.currentIndex,
-      this.questions,
-      Boolean(this.choukaiAudioUrl)
-    );
-  }
+ public isPreviousDisabled(): boolean {
+ return shouldDisablePreviousButton(
+ this.currentIndex,
+ this.questions,
+ Boolean(this.choukaiAudioUrl)
+ );
+ }
 
-  public calculateResult() {
-    return performScoreCalculation(this.questions, this.answers, this.passingScore);
-  }
+ public calculateResult() {
+ return performScoreCalculation(this.questions, this.answers, this.passingScore);
+ }
 }
 

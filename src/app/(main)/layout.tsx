@@ -1,13 +1,12 @@
 /**
  * @file layout.tsx
- * @description Layout sekunder untuk grup rute fungsional.
- * Menjadi Server Component untuk performa optimal, dengan logika client-side navigasi didelegasikan ke NavWrapper.
+ * @description Main route layout for application functional pages. Server Component delegating client-side navigation to NavWrapper.
  * @module MainLayout
  */
 
-// ======================
-// IMPOR
-// ======================
+// ==========================================
+// Import & Dependencies
+// ==========================================
 import { ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { ProgressProvider } from "@/components/providers/ProgressProvider";
@@ -16,9 +15,9 @@ import NavWrapper from "@/components/layout/NavWrapper";
 const AppClientAddons = dynamic(() => import("@/components/providers/AppClientAddons"));
 const DeferredOnboardingTour = dynamic(() => import("@/components/providers/DeferredOnboardingTour"));
 
-// ======================
-// EKSEKUSI UTAMA
-// ======================
+// ==========================================
+// Main Layout Component
+// ==========================================
 
 /**
  * Main layout component for functional route group.
@@ -28,17 +27,17 @@ const DeferredOnboardingTour = dynamic(() => import("@/components/providers/Defe
  * @param props.children - Child nodes to render.
  */
 export default function MainLayout({ children }: { children: ReactNode }) {
-  return (
-    /* ProgressProvider tracks page transition progress */
-    <ProgressProvider>
-      {/* NavWrapper handles client-side navigation layout */}
-      <NavWrapper>
-        {children}
-      </NavWrapper>
-      {/* AppClientAddons mounts global client utilities */}
-      <AppClientAddons />
-      {/* DeferredOnboardingTour triggers user onboarding flow */}
-      <DeferredOnboardingTour />
-    </ProgressProvider>
-  );
+ return (
+ /* ProgressProvider tracks page transition progress */
+ <ProgressProvider>
+ {/* NavWrapper handles client-side navigation layout */}
+ <NavWrapper>
+ {children}
+ </NavWrapper>
+ {/* AppClientAddons mounts global client utilities */}
+ <AppClientAddons />
+ {/* DeferredOnboardingTour triggers user onboarding flow */}
+ <DeferredOnboardingTour />
+ </ProgressProvider>
+ );
 }

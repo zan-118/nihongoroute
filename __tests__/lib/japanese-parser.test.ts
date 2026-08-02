@@ -28,4 +28,17 @@ describe("splitFurigana", () => {
     expect(result[0].text).toBe("取");
     expect(result[0].furi).toBe("と");
   });
+
+  it("should correctly handle double okurigana hiragana followed by kanji without bleeding furigana", () => {
+    const result = splitFurigana("可愛い猫", "かわいいねこ");
+    expect(result).toEqual([
+      { text: "可愛", furi: "かわ" },
+      { text: "い" },
+      { text: "猫", furi: "ねこ" },
+    ]);
+
+    const sentenceResult = splitFurigana("あそこに可愛い猫がいます。", "あそこにかわいいねこがいます。");
+    const nekoChunk = sentenceResult.find(c => c.text === "猫");
+    expect(nekoChunk?.furi).toBe("ねこ");
+  });
 });

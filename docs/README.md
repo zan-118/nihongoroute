@@ -1,26 +1,41 @@
-# Dokumentasi Teknis NihongoRoute
+# Indeks Dokumentasi Teknis NihongoRoute
 
-> Terakhir diperbarui: 31 Juli 2026 — Sinkronisasi penuh dengan codebase aktual.
-
----
-
-## Daftar Dokumen
-
-| No | Dokumen | Deskripsi |
-|----|---------|-----------|
-| 1 | [Overview Proyek](overview.md) | Latar belakang, masalah yang diselesaikan, target pengguna, dan tech stack lengkap. |
-| 2 | [Arsitektur Sistem](architecture.md) | Diagram komponen, alur sinkronisasi progres 3-tier, alur TTS, dan keputusan desain arsitektural. |
-| 3 | [Panduan Memulai](getting-started.md) | Prasyarat, instalasi, konfigurasi environment, dan menjalankan server pengembangan. |
-| 4 | [Konfigurasi Sistem](configuration.md) | Daftar lengkap environment variables dan file konfigurasi proyek. |
-| 5 | [Referensi API](api-reference.md) | Spesifikasi 7 API Route Handlers aktif: method, parameter, payload, dan respons. |
-| 6 | [Model Data & Database](data-model.md) | Spesifikasi seluruh 28 tabel PostgreSQL, diagram ERD, triggers, RPC functions, dan storage buckets. |
-| 7 | [Deployment & CI/CD](deployment.md) | Pipeline GitHub Actions, release checklist, dan strategi cache/revalidasi. |
-| 8 | [Keamanan](security.md) | Kebijakan kredensial, proteksi admin API, verifikasi webhook, RLS, dan anti-cheat XP. |
-| 9 | [Troubleshooting](troubleshooting.md) | Panduan penanganan masalah umum: Kuroshiro, Edge TTS, sinkronisasi offline, dan health check. |
-| 10 | [Panduan Kontribusi](contribution.md) | Standar TypeScript, konvensi CSS, alur Git, siklus migrasi SQL, dan commit convention. |
-| 11 | [Design System](design-system.md) | Token warna, tipografi, radius, efek permukaan, anti-pattern checklist, dan elemen khas. |
-| 12 | [Keputusan Arsitektur Informasi](ia-decisions.md) | Catatan keputusan IA: Pustaka vs Kamus, halaman Ujian. |
+> **Status Dokumentasi**: Aktif & Tersinkronisasi  
+> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Ruang Lingkup**: Arsitektur, Skema Database, API, Keamanan, UI Design System, dan Operational Runbook
 
 ---
 
-> Jika ada pembaruan pada logika bisnis, skema database, atau alur data — perbarui dokumen terkait sebagai bagian dari deliverable tugas tersebut, bukan tugas terpisah.
+## 🗺️ Struktur & Peta Dokumen Teknis
+
+Seluruh dokumentasi teknis mendalam tersimpan di direktori `docs/` dan dikategorikan berdasarkan domain pembahasan:
+
+| No | Dokumen | Deskripsi | Target Pembaca |
+|:---:|---|---|---|
+| 01 | [OVERVIEW.md](OVERVIEW.md) | Visi produk, latar belakang, target pengguna, dan arsitektur fitur utama. | Semua Kontributor / PM / Dev |
+| 02 | [GETTING_STARTED.md](GETTING_STARTED.md) | Panduan langkah demi langkah setup lingkungan pengembang lokal. | Kontributor / Pengembang Baru |
+| 03 | [ARCHITECTURE.md](ARCHITECTURE.md) | High-level system design, data flow 3-tier (State - Cache - Cloud), & pilihan stack. | System Architect / Senior Dev |
+| 04 | [DATA_MODEL.md](DATA_MODEL.md) | Spesifikasi 28 tabel Supabase, ERD, RLS policies, triggers, RPC, dan storage buckets. | Backend / Database Engineer |
+| 05 | [API_REFERENCE.md](API_REFERENCE.md) | Spesifikasi API Route Handlers & Server Actions (method, payload, response shape). | Fullstack Engineer |
+| 06 | [CONFIGURATION.md](CONFIGURATION.md) | Matrix Environment Variables (publik vs rahasia server) & status opsional/wajib. | DevOps / Fullstack Engineer |
+| 07 | [SECURITY.md](SECURITY.md) | Threat model, kebijakan RLS, proteksi token/secret, verifikasi webhook, & anti-cheat XP. | Security / Backend Engineer |
+| 08 | [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Token warna, tipografi, radius, anti-pattern checklist, dan signature UI elements. | UI/UX / Frontend Engineer |
+| 09 | [DEPLOYMENT.md](DEPLOYMENT.md) | Ops Runbook: Pipeline CI/CD GitHub Actions, revalidation matrix, & release checklist. | DevOps / Release Engineer |
+| 10 | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | Panduan penanganan masalah umum (Kuroshiro, TTS, offline sync, health check). | Fullstack / QA Engineer |
+| 11 | [CONTRIBUTING.md](CONTRIBUTING.md) | Standar TypeScript, konvensi CSS, alur Git, siklus migrasi SQL, dan commit convention. | Seluruh Kontributor |
+| 12 | [ADR.md](ADR.md) | Architecture Decision Records (Context → Decision → Consequences). | System Architect / Tech Lead |
+
+---
+
+## 🔗 Dokumentasi Tingkat Root (Root-Level Docs)
+
+- 📌 **[README.md](../README.md)** — Pintu masuk utama proyek.
+- 🤝 **[CONTRIBUTING.md](../CONTRIBUTING.md)** — Alur kontribusi open-source & standar PR.
+- 📄 **[LICENSE](../LICENSE)** — Lisensi open-source proyek (MIT).
+- 📜 **[CHANGELOG.md](../CHANGELOG.md)** — Histori rilis dan perubahan fitur.
+- 🗺️ **[ROADMAP.md](../ROADMAP.md)** — Rencana pengembangan fitur jangka panjang.
+
+---
+
+> [!IMPORTANT]
+> Setiap pembaruan pada logika bisnis, skema database, atau alur data **WAJIB** memperbarui dokumen `docs/*.md` terkait sebagai bagian dari deliverable tugas tersebut.

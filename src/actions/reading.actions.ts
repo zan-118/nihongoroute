@@ -12,9 +12,9 @@
 import { PaginatedReadingResponse, LibraryItem } from "@/types/library";
 import { ReadingMaterialTable } from "@/types/database";
 import {
-  getPaginatedContent,
-  getContentBySlugOrId,
-  getStaticSlugs
+ getPaginatedContent,
+ getContentBySlugOrId,
+ getStaticSlugs
 } from "@/lib/services/content-repository";
 
 // ======================
@@ -31,43 +31,43 @@ import {
  * @returns Paginated reading response containing mapped items and total count.
  */
 export async function getPaginatedReading(
-  page: number,
-  limit: number,
-  search: string = "",
-  level: string = ""
+ page: number,
+ limit: number,
+ search: string = "",
+ level: string = ""
 ): Promise<PaginatedReadingResponse> {
-  try {
-    const response = await getPaginatedContent<ReadingMaterialTable>("reading", {
-      page,
-      limit,
-      search,
-      searchColumns: ["title", "body", "difficulty"],
-      orderBy: [{ column: "created_at", ascending: false }],
-      filters: (query) => {
-        if (level && level !== "all") {
-          query = query.eq("jlpt_level", level.toUpperCase());
-        }
-        return query;
-      }
-    });
+ try {
+ const response = await getPaginatedContent<ReadingMaterialTable>("reading", {
+ page,
+ limit,
+ search,
+ searchColumns: ["title", "body", "difficulty"],
+ orderBy: [{ column: "created_at", ascending: false }],
+ filters: (query) => {
+ if (level && level !== "all") {
+ query = query.eq("jlpt_level", level.toUpperCase());
+ }
+ return query;
+ }
+ });
 
-    // Map Supabase schema fields to application-compatible structure
-    return {
-      data: response.data.map((r) => ({
-        ...r,
-        id: r.id,
-        difficulty: r.difficulty || r.jlpt_level,
-        body: r.body || "",
-        audioUrl: r.audio_url,
-        imageUrl: r.image_url,
-        videoUrl: r.video_url
-      })) as PaginatedReadingResponse["data"],
-      total: response.total,
-    };
-  } catch (error) {
-    console.error("Gagal mengambil data paginasi bacaan dari Supabase:", error);
-    return { data: [], total: 0 };
-  }
+ // Map Supabase schema fields to application-compatible structure
+ return {
+ data: response.data.map((r) => ({
+ ...r,
+ id: r.id,
+ difficulty: r.difficulty || r.jlpt_level,
+ body: r.body || "",
+ audioUrl: r.audio_url,
+ imageUrl: r.image_url,
+ videoUrl: r.video_url
+ })) as PaginatedReadingResponse["data"],
+ total: response.total,
+ };
+ } catch (error) {
+ console.error("Gagal mengambil data paginasi bacaan dari Supabase:", error);
+ return { data: [], total: 0 };
+ }
 }
 
 /**
@@ -77,24 +77,24 @@ export async function getPaginatedReading(
  * @returns The mapped library item, or null if not found or on error.
  */
 export async function getLibraryReadingDetail(slug: string): Promise<LibraryItem | null> {
-  try {
-    const data = await getContentBySlugOrId<ReadingMaterialTable>("reading", slug);
+ try {
+ const data = await getContentBySlugOrId<ReadingMaterialTable>("reading", slug);
 
-    if (!data) return null;
+ if (!data) return null;
 
-    // Map snake_case Supabase fields to camelCase application properties
-    return {
-      ...data,
-      id: data.id,
-      difficulty: data.difficulty || data.jlpt_level,
-      audioUrl: data.audio_url,
-      imageUrl: data.image_url,
-      videoUrl: data.video_url
-    } as LibraryItem;
-  } catch (error) {
-    console.error("Gagal mengambil detail bacaan dari Supabase:", error);
-    return null;
-  }
+ // Map snake_case Supabase fields to camelCase application properties
+ return {
+ ...data,
+ id: data.id,
+ difficulty: data.difficulty || data.jlpt_level,
+ audioUrl: data.audio_url,
+ imageUrl: data.image_url,
+ videoUrl: data.video_url
+ } as LibraryItem;
+ } catch (error) {
+ console.error("Gagal mengambil detail bacaan dari Supabase:", error);
+ return null;
+ }
 }
 
 /**
@@ -104,11 +104,11 @@ export async function getLibraryReadingDetail(slug: string): Promise<LibraryItem
  * @returns Array of object params with slug property.
  */
 export async function getReadingStaticSlugs(limit: number = 50): Promise<{ slug: string }[]> {
-  try {
-    const data = await getStaticSlugs("reading", { limit, select: "slug" });
-    return data.map((item) => ({ slug: String(item.slug) })).filter((x) => x.slug);
-  } catch (error) {
-    console.error("Gagal mengambil static slugs reading:", error);
-    return [];
-  }
+ try {
+ const data = await getStaticSlugs("reading", { limit, select: "slug" });
+ return data.map((item) => ({ slug: String(item.slug) })).filter((x) => x.slug);
+ } catch (error) {
+ console.error("Gagal mengambil static slugs reading:", error);
+ return [];
+ }
 }

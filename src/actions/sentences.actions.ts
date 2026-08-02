@@ -12,8 +12,8 @@
 // IMPORTS
 // ======================
 import {
-  getSentencesContainingWord,
-  getRandomSentencesPool
+ getSentencesContainingWord,
+ getRandomSentencesPool
 } from "@/lib/services/content-repository";
 
 // ======================
@@ -24,23 +24,23 @@ import {
  * Database sentence record structure.
  */
 export interface SentenceRow {
-  id: string;
-  japanese: string;
-  english: string | null;
-  indonesia: string | null;
-  jlpt_level: string | null;
-  furigana: string | null;
+ id: string;
+ japanese: string;
+ english: string | null;
+ indonesia: string | null;
+ jlpt_level: string | null;
+ furigana: string | null;
 }
 
 /**
  * Sentence structure formatted for drill UI.
  */
 export interface SentenceDrillItem {
-  id: string;
-  japanese: string;
-  translation: string;
-  jlpt_level: string | null;
-  furigana: string | null;
+ id: string;
+ japanese: string;
+ translation: string;
+ jlpt_level: string | null;
+ furigana: string | null;
 }
 
 // ======================
@@ -55,20 +55,20 @@ export interface SentenceDrillItem {
  * @returns Array SentenceRow yang cocok
  */
 export async function getSentencesByWord(
-  word: string,
-  limit: number = 5
+ word: string,
+ limit: number = 5
 ): Promise<SentenceRow[]> {
-  // Return empty if query blank.
-  if (!word.trim()) return [];
+ // Return empty if query blank.
+ if (!word.trim()) return [];
 
-  try {
-    const data = await getSentencesContainingWord(word, limit);
-    return data as SentenceRow[];
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error(`[getSentencesByWord] Gagal mengambil kalimat untuk "${word}":`, message);
-    return [];
-  }
+ try {
+ const data = await getSentencesContainingWord(word, limit);
+ return data as SentenceRow[];
+ } catch (error) {
+ const message = error instanceof Error ? error.message : String(error);
+ console.error(`[getSentencesByWord] Gagal mengambil kalimat untuk "${word}":`, message);
+ return [];
+ }
 }
 
 /**
@@ -80,36 +80,36 @@ export async function getSentencesByWord(
  * @returns Array SentenceDrillItem siap pakai untuk drill/flashcard
  */
 export async function getRandomSentencesForDrill(
-  level: string = "",
-  limit: number = 30
+ level: string = "",
+ limit: number = 30
 ): Promise<SentenceDrillItem[]> {
-  // Get larger pool for random mix.
-  const poolSize = Math.min(limit * 4, 200);
+ // Get larger pool for random mix.
+ const poolSize = Math.min(limit * 4, 200);
 
-  try {
-    const data = await getRandomSentencesPool(level, poolSize);
-    if (!data || data.length === 0) return [];
+ try {
+ const data = await getRandomSentencesPool(level, poolSize);
+ if (!data || data.length === 0) return [];
 
-    // Shuffle pool using Fisher-Yates.
-    const shuffled = [...data];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
+ // Shuffle pool using Fisher-Yates.
+ const shuffled = [...data];
+ for (let i = shuffled.length - 1; i > 0; i--) {
+ const j = Math.floor(Math.random() * (i + 1));
+ [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+ }
 
-    // Slice to limit and map to drill format.
-    return shuffled.slice(0, limit).map((row) => ({
-      id: row.id,
-      japanese: row.japanese,
-      translation: (row.indonesia as string | null) || (row.english as string | null) || "",
-      jlpt_level: row.jlpt_level as string | null,
-      furigana: row.furigana as string | null,
-    }));
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error("[getRandomSentencesForDrill] Gagal mengambil kalimat:", message);
-    return [];
-  }
+ // Slice to limit and map to drill format.
+ return shuffled.slice(0, limit).map((row) => ({
+ id: row.id,
+ japanese: row.japanese,
+ translation: (row.indonesia as string | null) || (row.english as string | null) || "",
+ jlpt_level: row.jlpt_level as string | null,
+ furigana: row.furigana as string | null,
+ }));
+ } catch (error) {
+ const message = error instanceof Error ? error.message : String(error);
+ console.error("[getRandomSentencesForDrill] Gagal mengambil kalimat:", message);
+ return [];
+ }
 }
 
 /**
@@ -120,20 +120,20 @@ export async function getRandomSentencesForDrill(
  * @returns Array SentenceRow yang cocok
  */
 export async function getSentencesByGrammarPattern(
-  pattern: string,
-  limit: number = 4
+ pattern: string,
+ limit: number = 4
 ): Promise<SentenceRow[]> {
-  // Return empty if pattern blank.
-  if (!pattern.trim()) return [];
+ // Return empty if pattern blank.
+ if (!pattern.trim()) return [];
 
-  try {
-    const data = await getSentencesContainingWord(pattern, limit);
-    return data as SentenceRow[];
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error(`[getSentencesByGrammarPattern] Gagal mengambil kalimat untuk "${pattern}":`, message);
-    return [];
-  }
+ try {
+ const data = await getSentencesContainingWord(pattern, limit);
+ return data as SentenceRow[];
+ } catch (error) {
+ const message = error instanceof Error ? error.message : String(error);
+ console.error(`[getSentencesByGrammarPattern] Gagal mengambil kalimat untuk "${pattern}":`, message);
+ return [];
+ }
 }
 
 /**
@@ -144,18 +144,18 @@ export async function getSentencesByGrammarPattern(
  * @returns Array SentenceRow yang cocok
  */
 export async function getSentencesByKanji(
-  character: string,
-  limit: number = 4
+ character: string,
+ limit: number = 4
 ): Promise<SentenceRow[]> {
-  // Return empty if kanji blank.
-  if (!character.trim()) return [];
+ // Return empty if kanji blank.
+ if (!character.trim()) return [];
 
-  try {
-    const data = await getSentencesContainingWord(character, limit);
-    return data as SentenceRow[];
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error(`[getSentencesByKanji] Gagal mengambil kalimat untuk "${character}":`, message);
-    return [];
-  }
+ try {
+ const data = await getSentencesContainingWord(character, limit);
+ return data as SentenceRow[];
+ } catch (error) {
+ const message = error instanceof Error ? error.message : String(error);
+ console.error(`[getSentencesByKanji] Gagal mengambil kalimat untuk "${character}":`, message);
+ return [];
+ }
 }

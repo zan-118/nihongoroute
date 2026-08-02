@@ -16,14 +16,14 @@ import { ReadingMode } from "../types";
  * State and setters for reading preferences.
  */
 interface ReadingContextType {
-  /** Current reading display mode. */
-  mode: ReadingMode;
-  /** Set reading display mode. */
-  setMode: (mode: ReadingMode) => void;
-  /** Toggle translation visibility. */
-  showTranslation: boolean;
-  /** Set translation visibility. */
-  setShowTranslation: (show: boolean) => void;
+ /** Current reading display mode. */
+ mode: ReadingMode;
+ /** Set reading display mode. */
+ setMode: (mode: ReadingMode) => void;
+ /** Toggle translation visibility. */
+ showTranslation: boolean;
+ /** Set translation visibility. */
+ setShowTranslation: (show: boolean) => void;
 }
 
 // ==========================================
@@ -43,16 +43,16 @@ const ReadingContext = createContext<ReadingContextType | undefined>(undefined);
  * @param props.children - Child nodes.
  */
 export function ReadingProvider({ children }: { children: React.ReactNode }) {
-  // Default mode is furigana.
-  const [mode, setMode] = useState<ReadingMode>("furigana");
-  // Default translation visibility is hidden.
-  const [showTranslation, setShowTranslation] = useState(false);
+ // Default mode is furigana.
+ const [mode, setMode] = useState<ReadingMode>("furigana");
+ // Default translation visibility is hidden.
+ const [showTranslation, setShowTranslation] = useState(false);
 
-  return (
-    <ReadingContext.Provider value={{ mode, setMode, showTranslation, setShowTranslation }}>
-      {children}
-    </ReadingContext.Provider>
-  );
+ return (
+ <ReadingContext.Provider value={{ mode, setMode, showTranslation, setShowTranslation }}>
+ {children}
+ </ReadingContext.Provider>
+ );
 }
 
 // ==========================================
@@ -64,11 +64,11 @@ export function ReadingProvider({ children }: { children: React.ReactNode }) {
  * @returns Reading context state and setters.
  */
 export function useReading() {
-  // React use hook retrieves context value.
-  const context = use(ReadingContext);
-  if (context === undefined) {
-    // Guard clause prevents usage outside provider.
-    throw new Error("useReading must be used within a ReadingProvider");
-  }
-  return context;
+ // React use hook retrieves context value.
+ const context = use(ReadingContext);
+ if (context === undefined) {
+ // Guard clause prevents usage outside provider.
+ throw new Error("useReading must be used within a ReadingProvider");
+ }
+ return context;
 }

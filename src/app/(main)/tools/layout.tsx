@@ -17,19 +17,19 @@ import { ROUTES } from "@/lib/core/routes";
  * SEO metadata configuration for tools route group.
  */
 export const metadata: Metadata = {
-  ...createPageMetadata({
-    title: "Pusat Peralatan Bahasa Jepang | NihongoRoute",
-    description:
-      "Kumpulan alat bantu belajar bahasa Jepang: Kana Master, kamus terpadu, text analyzer, latihan menulis, konjugasi, partikel, dan flashcards.",
-    path:ROUTES.TOOLS.ROOT,
-    keywords: [
-      "alat belajar bahasa jepang",
-      "kana master",
-      "text analyzer jepang",
-      "latihan menulis jepang",
-      "konjugasi jepang",
-    ],
-  }),
+ ...createPageMetadata({
+ title: "Pusat Peralatan Bahasa Jepang | NihongoRoute",
+ description:
+ "Kumpulan alat bantu belajar bahasa Jepang: Kana Master, kamus terpadu, text analyzer, latihan menulis, konjugasi, partikel, dan flashcards.",
+ path:ROUTES.TOOLS.ROOT,
+ keywords: [
+ "alat belajar bahasa jepang",
+ "kana master",
+ "text analyzer jepang",
+ "latihan menulis jepang",
+ "konjugasi jepang",
+ ],
+ }),
 };
 
 // ======================
@@ -44,6 +44,6 @@ export const metadata: Metadata = {
  * @returns Rendered children.
  */
 export default function ToolsLayout({ children }: { children: React.ReactNode }) {
-  // Pass children through directly. Layout acts as metadata provider.
-  return children;
+ // Pass children through directly. Layout acts as metadata provider.
+ return children;
 }

@@ -22,9 +22,9 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
  * @returns Theme provider context wrapper.
  */
 export function ThemeProvider({ 
-  children, 
-  ...props 
+ children, 
+ ...props 
 }: React.ComponentProps<typeof NextThemesProvider>) {
-  // Pass props to next-themes provider
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+ // Pass props to next-themes provider
+ return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }

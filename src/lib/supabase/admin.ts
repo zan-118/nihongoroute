@@ -1,15 +1,16 @@
 /**
  * @file admin.ts
- * @description Klien inisiasi Supabase Administrator bypass RLS menggunakan SERVICE_ROLE_KEY. HANYA BOLEH DIJALANKAN DI LINGKUNGAN SERVER (Server Actions/API Routes) dan tidak boleh diekspos ke klien/browser.
+ * @description Supabase Admin client initializer bypassing Row Level Security (RLS) via `SUPABASE_SERVICE_ROLE_KEY`.
+ * SERVER-SIDE ONLY (Server Actions / Route Handlers). Must NEVER be imported into client components.
  */
 
 // ==========================================
-// IMPORT & DEPENDENSI
+// Import & Dependencies
 // ==========================================
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 // ==========================================
-// INISIALISASI KLIEN ADMIN SUPABASE
+// Supabase Admin Client Initializer
 // ==========================================
 /**
  * Create Supabase client with service role key.
@@ -18,18 +19,18 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
  * @throws Error if environment variables missing.
  */
 export function createAdminClient() {
-  // Get environment variables
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+ // Get environment variables
+ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+ const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  // Validate credentials exist
-  if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error("Supabase admin client is not configured");
-  }
+ // Validate credentials exist
+ if (!supabaseUrl || !serviceRoleKey) {
+ throw new Error("Supabase admin client is not configured");
+ }
 
-  // Initialize client with service role key to bypass RLS
-  return createSupabaseClient(
-    supabaseUrl,
-    serviceRoleKey
-  );
+ // Initialize client with service role key to bypass RLS
+ return createSupabaseClient(
+ supabaseUrl,
+ serviceRoleKey
+ );
 }

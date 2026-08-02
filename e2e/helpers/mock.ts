@@ -21,9 +21,13 @@ export async function mockSupabaseAuth(page: Page) {
     });
   });
 
-  // Mock status sesi
-  await page.evaluate(() => {
-    window.localStorage.setItem('supabase.auth.token', 'test-token');
+  // Inject session state via addInitScript sebelum navigasi
+  await page.addInitScript(() => {
+    try {
+      window.localStorage.setItem('supabase.auth.token', 'test-token');
+    } catch {
+      // Ignore if localStorage unavailable
+    }
   });
 }
 

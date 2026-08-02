@@ -20,13 +20,13 @@ const SHADOWING_LEVELS = ["N5", "N4", "N3"] as const;
 
 /** Raw data structure from database for library line sources. */
 export interface LibraryLineSource {
-  _id: string;
-  title?: string;
-  slug?: string;
-  jlpt_level?: string;
-  difficulty?: string;
-  body?: unknown;
-  translation?: unknown;
+ _id: string;
+ title?: string;
+ slug?: string;
+ jlpt_level?: string;
+ difficulty?: string;
+ body?: unknown;
+ translation?: unknown;
 }
 
 // ======================================================
@@ -40,10 +40,10 @@ export interface LibraryLineSource {
  * @returns Valid shadowing level
  */
 export function asShadowingLevel(value: string | null | undefined): "N5" | "N4" | "N3" {
-  const upper = String(value || "").toUpperCase();
-  return SHADOWING_LEVELS.includes(upper as "N5" | "N4" | "N3")
-    ? (upper as "N5" | "N4" | "N3")
-    : "N3";
+ const upper = String(value || "").toUpperCase();
+ return SHADOWING_LEVELS.includes(upper as "N5" | "N4" | "N3")
+ ? (upper as "N5" | "N4" | "N3")
+ : "N3";
 }
 
 // ======================================================
@@ -58,35 +58,35 @@ export function asShadowingLevel(value: string | null | undefined): "N5" | "N4" 
  * @returns Plain text string
  */
 export function textFromPortable(value: unknown): string {
-  if (!value) return "";
-  if (typeof value === "string") return value;
-  if (Array.isArray(value)) {
-    return value
-      .map((block) => {
-        if (typeof block === "string") return block;
-        if (!block || typeof block !== "object") return "";
-        const record = block as { text?: unknown; children?: unknown[] };
-        if (typeof record.text === "string") return record.text;
-        if (!Array.isArray(record.children)) return "";
-        return record.children
-          .map((child) => {
-            if (typeof child === "string") return child;
-            if (!child || typeof child !== "object") return "";
-            return typeof (child as { text?: unknown }).text === "string"
-              ? String((child as { text?: unknown }).text)
-              : "";
-          })
-          .join("");
-      })
-      .filter(Boolean)
-      .join("\n");
-  }
+ if (!value) return "";
+ if (typeof value === "string") return value;
+ if (Array.isArray(value)) {
+ return value
+ .map((block) => {
+ if (typeof block === "string") return block;
+ if (!block || typeof block !== "object") return "";
+ const record = block as { text?: unknown; children?: unknown[] };
+ if (typeof record.text === "string") return record.text;
+ if (!Array.isArray(record.children)) return "";
+ return record.children
+ .map((child) => {
+ if (typeof child === "string") return child;
+ if (!child || typeof child !== "object") return "";
+ return typeof (child as { text?: unknown }).text === "string"
+ ? String((child as { text?: unknown }).text)
+ : "";
+ })
+ .join("");
+ })
+ .filter(Boolean)
+ .join("\n");
+ }
 
-  if (typeof value === "object" && typeof (value as { text?: unknown }).text === "string") {
-    return String((value as { text?: unknown }).text);
-  }
+ if (typeof value === "object" && typeof (value as { text?: unknown }).text === "string") {
+ return String((value as { text?: unknown }).text);
+ }
 
-  return "";
+ return "";
 }
 
 // ======================================================
@@ -101,12 +101,12 @@ export function textFromPortable(value: unknown): string {
  * @returns Array of clean Japanese sentence strings
  */
 export function splitJapaneseLines(text: string): string[] {
-  return text
-    .split(/\r?\n|(?<=[。！？!?])/)
-    .map((line) => line.replace(/^[^:：]{1,16}[:：]\s*/, "").trim())
-    .filter((line) => /[\u3040-\u30ff\u3400-\u9fff]/.test(line))
-    .filter((line) => line.length >= 6)
-    .slice(0, 24);
+ return text
+ .split(/\r?\n|(?<=[。！？!?])/)
+ .map((line) => line.replace(/^[^:：]{1,16}[:：]\s*/, "").trim())
+ .filter((line) => /[\u3040-\u30ff\u3400-\u9fff]/.test(line))
+ .filter((line) => line.length >= 6)
+ .slice(0, 24);
 }
 
 /**
@@ -116,10 +116,10 @@ export function splitJapaneseLines(text: string): string[] {
  * @returns Array of clean translation strings
  */
 export function splitTranslationLines(text: string | undefined): string[] {
-  return String(text || "")
-    .split(/\r?\n|(?<=[.!?。！？])/)
-    .map((line) => line.replace(/^[^:：]{1,24}[:：]\s*/, "").trim())
-    .filter(Boolean);
+ return String(text || "")
+ .split(/\r?\n|(?<=[.!?。！？])/)
+ .map((line) => line.replace(/^[^:：]{1,24}[:：]\s*/, "").trim())
+ .filter(Boolean);
 }
 
 /**
@@ -130,16 +130,16 @@ export function splitTranslationLines(text: string | undefined): string[] {
  * @returns Array of sentence chunks (max 4)
  */
 export function createShadowingChunks(text: string): string[] {
-  const chunks = text
-    .replace(/[。！？!?]$/g, "")
-    .split(/[、,]/)
-    .map((chunk) => chunk.trim())
-    .filter(Boolean);
+ const chunks = text
+ .replace(/[。！？!?]$/g, "")
+ .split(/[、,]/)
+ .map((chunk) => chunk.trim())
+ .filter(Boolean);
 
-  if (chunks.length > 1) return chunks.slice(0, 4);
+ if (chunks.length > 1) return chunks.slice(0, 4);
 
-  const midpoint = Math.ceil(text.length / 2);
-  return [text.slice(0, midpoint), text.slice(midpoint)].map((chunk) => chunk.trim()).filter(Boolean);
+ const midpoint = Math.ceil(text.length / 2);
+ return [text.slice(0, midpoint), text.slice(midpoint)].map((chunk) => chunk.trim()).filter(Boolean);
 }
 
 // ======================================================
@@ -154,7 +154,7 @@ export function createShadowingChunks(text: string): string[] {
  * @returns Estimated seconds (3-14)
  */
 export function estimateTargetSeconds(text: string): number {
-  return Math.max(3, Math.min(14, Math.round(text.length / 4)));
+ return Math.max(3, Math.min(14, Math.round(text.length / 4)));
 }
 
 // ======================================================
@@ -171,27 +171,27 @@ export function estimateTargetSeconds(text: string): number {
  * @param maxLines - Maximum lines to extract (default 2)
  */
 export function pushShadowingPresetsFromSource(
-  presets: ShadowingPreset[],
-  item: LibraryLineSource,
-  sourceType: "reading" | "listening",
-  maxLines = 2
+ presets: ShadowingPreset[],
+ item: LibraryLineSource,
+ sourceType: "reading" | "listening",
+ maxLines = 2
 ): void {
-  const lines = splitJapaneseLines(textFromPortable(item.body));
-  const translations = splitTranslationLines(textFromPortable(item.translation));
+ const lines = splitJapaneseLines(textFromPortable(item.body));
+ const translations = splitTranslationLines(textFromPortable(item.translation));
 
-  lines.slice(0, maxLines).forEach((line, index) => {
-    presets.push({
-      id: `library-${sourceType}-${item._id}-${index}`,
-      level: asShadowingLevel(item.jlpt_level),
-      title: item.title ? `${item.title} #${index + 1}` : `${sourceType} #${index + 1}`,
-      text: line,
-      translation: translations[index] || item.title || `Dari materi ${sourceType} library.`,
-      focus: sourceType === "listening" ? "listening line" : "reading aloud",
-      targetSeconds: estimateTargetSeconds(line),
-      chunks: createShadowingChunks(line),
-      sourceHref: item.slug ? `/library/${sourceType}/${item.slug}` : undefined,
-      sourceTitle: item.title,
-      sourceType,
-    });
-  });
+ lines.slice(0, maxLines).forEach((line, index) => {
+ presets.push({
+ id: `library-${sourceType}-${item._id}-${index}`,
+ level: asShadowingLevel(item.jlpt_level),
+ title: item.title ? `${item.title} #${index + 1}` : `${sourceType} #${index + 1}`,
+ text: line,
+ translation: translations[index] || item.title || `Dari materi ${sourceType} library.`,
+ focus: sourceType === "listening" ? "listening line" : "reading aloud",
+ targetSeconds: estimateTargetSeconds(line),
+ chunks: createShadowingChunks(line),
+ sourceHref: item.slug ? `/library/${sourceType}/${item.slug}` : undefined,
+ sourceTitle: item.title,
+ sourceType,
+ });
+ });
 }

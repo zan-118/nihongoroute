@@ -2,32 +2,33 @@
 
 /**
  * @file useHasMounted.ts
- * @description Hook kustom utilitas untuk memverifikasi apakah komponen React telah terpasang (mounted) seutuhnya di sisi klien (browser). Berguna mencegah inkonsistensi hidrasi (Hydration Mismatch) pada server-side rendering (SSR) Next.js.
+ * @description Utility custom hook verifying whether a React component has fully mounted on the client side (browser).
+ * Prevents Next.js Server-Side Rendering (SSR) hydration mismatches.
  */
 
 // ==========================================
-// IMPORT & DEPENDENSI
+// Import & Dependencies
 // ==========================================
 import { useState, useEffect } from "react";
 
 // ==========================================
-// CUSTOM HOOK UTAMA
+// Main Custom Hook
 // ==========================================
 /**
- * Track component mount status.
+ * Track component client-side mount status.
  * Prevents hydration mismatch in SSR.
  * 
- * @returns {boolean} True if component mounted on client.
+ * @returns {boolean} True if component is fully mounted on client side.
  */
 export function useHasMounted() {
-  // State tracks mount status. Initial false for SSR.
-  const [hasMounted, setHasMounted] = useState(false);
+ // State tracks mount status. Initial false for SSR.
+ const [hasMounted, setHasMounted] = useState(false);
 
-  useEffect(() => {
-    // Trigger state update after mount.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setHasMounted(true);
-  }, []);
+ useEffect(() => {
+ // Trigger state update after mount.
+ // eslint-disable-next-line react-hooks/set-state-in-effect
+ setHasMounted(true);
+ }, []);
 
-  return hasMounted;
+ return hasMounted;
 }

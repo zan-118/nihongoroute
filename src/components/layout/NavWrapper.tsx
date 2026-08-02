@@ -1,7 +1,7 @@
 /**
  * @file NavWrapper.tsx
- * @description Fasade pembungkus untuk memelihara kompatibilitas impor NavWrapper.
- * Seluruh komponen terpusat di `@/components/layout/navigation`.
+ * @description Facade wrapper re-export maintaining import backwards compatibility for NavWrapper.
+ * All navigation components are centralized under `@/components/layout/navigation`.
  */
 
 export { NavWrapper as default } from "./navigation";

@@ -21,26 +21,26 @@ import { createClient } from "@/lib/supabase/server";
  * @returns Redirect response.
  */
 export async function GET(request: Request) {
-  // Extract query params, origin URL.
-  const { searchParams, origin } = new URL(request.url);
-  // Get auth code from provider.
-  const code = searchParams.get("code");
-  // Fallback redirect path.
-  const next = searchParams.get("next") ?? "/dashboard";
+ // Extract query params, origin URL.
+ const { searchParams, origin } = new URL(request.url);
+ // Get auth code from provider.
+ const code = searchParams.get("code");
+ // Fallback redirect path.
+ const next = searchParams.get("next") ?? "/dashboard";
 
-  if (code) {
-    const supabase = await createClient();
-    // Swap code for active session.
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    
-    if (!error) {
-      return NextResponse.redirect(`${origin}${next}`);
-    } else {
-      console.error("Auth callback error:", error);
-    }
-  }
+ if (code) {
+ const supabase = await createClient();
+ // Swap code for active session.
+ const { error } = await supabase.auth.exchangeCodeForSession(code);
+ 
+ if (!error) {
+ return NextResponse.redirect(`${origin}${next}`);
+ } else {
+ console.error("Auth callback error:", error);
+ }
+ }
 
-  // Jika gagal, kembalikan ke halaman login
-  // Redirect to login if auth fail.
-  return NextResponse.redirect(`${origin}/login?error=auth-callback-failed`);
+ // Jika gagal, kembalikan ke halaman login
+ // Redirect to login if auth fail.
+ return NextResponse.redirect(`${origin}/login?error=auth-callback-failed`);
 }

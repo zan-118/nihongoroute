@@ -1,419 +1,153 @@
-# Model Data & Database
+# Model Data & Database Supabase
 
-> Terakhir diperbarui: 31 Juli 2026 — Diverifikasi langsung dari database produksi via Supabase MCP.
+> **Status Dokumentasi**: Aktif & Tersinkronisasi  
+> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Ruang Lingkup**: 28 Tabel PostgreSQL, ERD Diagram, RPC Functions, Triggers, & Storage Buckets  
+> **Catatan Snapshot**: Jumlah baris (*row count*) pada tabel dinamis pengguna (`profiles`, `user_srs`, `user_lessons`, `community_posts`) merupakan snapshot data produksi per 2 Agustus 2026 dan bertambah sesuai aktivitas pengguna. Skema kolom, tipe data, dan RLS bersifat statis terverifikasi.  
+> **Rujukan Utama**: [README.md](../README.md) | [ARCHITECTURE.md](ARCHITECTURE.md) | [SECURITY.md](SECURITY.md)
 
 ---
 
-NihongoRoute menggunakan **PostgreSQL** di **Supabase** dengan **28 tabel**, 2 ekstensi (`uuid-ossp`, `pg_trgm`), 3 storage buckets, dan 1 RPC utama. Seluruh tabel mengaktifkan RLS.
+## 📋 Daftar Isi
+
+1. [Spesifikasi 28 Tabel PostgreSQL](#1-spesifikasi-28-tabel-postgresql)
+   - [A. Pengguna & Progres (Data Dinamis)](#a-pengguna--progres-data-dinamis)
+   - [B. Pustaka Konten (Dataset Referensi)](#b-pustaka-konten-dataset-referensi)
+   - [C. Simulasi Ujian JLPT](#c-simulasi-ujian-jlpt)
+   - [D. Komunitas & Utilitas](#d-komunitas--utilitas)
+2. [Diagram ERD (Entity Relationship Diagram)](#2-diagram-erd-entity-relationship-diagram)
+3. [Database Functions & Triggers](#3-database-functions--triggers)
+4. [Storage Buckets](#4-storage-buckets)
+5. [Anti-Cheat & Formula Validasi XP](#5-anti-cheat--formula-validasi-xp)
 
 ---
 
-## 1. Spesifikasi 28 Tabel
+## 1. Spesifikasi 28 Tabel PostgreSQL
 
-### A. Pengguna & Progres
+### A. Pengguna & Progres (Data Dinamis)
 
-#### 1. `profiles` (91 rows)
-
+#### 1. `profiles` (Snapshot Baseline: 91 rows)
 Profil pengguna, gamifikasi, dan preferensi.
 
 | Kolom | Tipe | Null | Default | Keterangan |
-|-------|------|------|---------|------------|
+|---|---|---|---|---|
 | `id` | uuid, PK | NO | — | FK → `auth.users(id)` ON DELETE CASCADE |
-| `full_name` | text | YES | — | |
-| `avatar_url` | text | YES | — | |
-| `xp` | integer | NO | `0` | |
-| `level` | integer | NO | `1` | |
-| `streak` | integer | NO | `0` | |
-| `today_review_count` | integer | NO | `0` | |
+| `full_name` | text | YES | — | Nama lengkap pengguna |
+| `avatar_url` | text | YES | — | URL avatar profil |
+| `xp` | integer | NO | `0` | Poin pengalaman terverifikasi |
+| `level` | integer | NO | `1` | Level akun pengguna |
+| `streak` | integer | NO | `0` | Beruntun hari belajar aktif |
+| `today_review_count` | integer | NO | `0` | Review selesai hari ini |
 | `last_study_date` | text | YES | — | Format `YYYY-MM-DD` |
 | `study_days` | jsonb | NO | `'{}'` | Peta tanggal → jumlah review |
 | `inventory` | jsonb | NO | `'{"streakFreeze": 0}'` | Item virtual + achievements |
-| `settings` | jsonb | NO | `'{"notificationsEnabled": false}'` | |
-| `created_at` | timestamptz | NO | `now()` | |
-| `updated_at` | timestamptz | NO | `now()` | |
+| `settings` | jsonb | NO | `'{"notificationsEnabled": false}'` | Preferensi aplikasi |
+| `created_at` / `updated_at` | timestamptz | NO | `now()` | Timestamp audit |
 
 **Triggers**: `profiles_updated_at`, `set_profiles_updated_at` → `handle_updated_at()`, `tr_validate_profile_integrity` → `validate_profile_integrity()`.
 
-#### 2. `user_srs` (1.497 rows)
-
+#### 2. `user_srs` (Snapshot Baseline: 1.497 rows)
 Status SRS (Spaced Repetition) per kartu per pengguna.
 
 | Kolom | Tipe | Null | Default |
-|-------|------|------|---------|
+|---|---|---|---|
 | `id` | uuid, PK | NO | `gen_random_uuid()` |
 | `user_id` | uuid | NO | FK → `auth.users(id)` ON DELETE CASCADE |
-| `word_id` | text | NO | |
+| `word_id` | text | NO | Identifier item vocab/kanji |
 | `interval` | integer | NO | `1` |
 | `repetition` | integer | NO | `0` |
 | `ease_factor` | real | NO | `2.5` |
-| `next_review` | timestamptz | YES | |
+| `next_review` | timestamptz | YES | Jadwal review berikutnya |
 | `status` | text | NO | `'learning'` |
-| `custom_mnemonic` | text | YES | |
-| `created_at` / `updated_at` | timestamptz | | |
+| `custom_mnemonic` | text | YES | Catatan mnemonic pribadi |
 
-**Constraint**: `UNIQUE(user_id, word_id)`.
-**Triggers**: `set_user_srs_updated_at`, `tr_protect_srs_logic` (INSERT/UPDATE) → `protect_srs_logic()`.
+**Constraint**: `UNIQUE(user_id, word_id)`. **Triggers**: `protect_srs_logic()`.
 
-#### 3. `user_lessons` (62 rows)
+#### 3. `user_lessons` (Snapshot Baseline: 62 rows)
+Pencatatan penyelesaian modul pelajaran.
 
 | Kolom | Tipe | Null | Default |
-|-------|------|------|---------|
+|---|---|---|---|
 | `user_id` | uuid | NO | FK → `auth.users(id)` ON DELETE CASCADE |
-| `lesson_id` | text | NO | |
+| `lesson_id` | text | NO | ID modul pelajaran |
 | `is_completed` | boolean | NO | `true` |
 | `completed_at` / `updated_at` | timestamptz | NO | `now()` |
 
 **PK**: `(user_id, lesson_id)`.
 
-#### 4. `user_xp_ledger` (0 rows)
-
-Tabel idempotensi untuk mencegah duplikasi poin XP akibat race condition atau replay.
+#### 4. `user_xp_ledger` (Snapshot Baseline: 0 rows)
+Tabel idempotensi untuk mencegah duplikasi poin XP akibat replay request.
 
 | Kolom | Tipe | Null | Default |
-|-------|------|------|---------|
+|---|---|---|---|
 | `id` | uuid, PK | NO | `gen_random_uuid()` |
-| `user_id` | uuid | NO | FK → `auth.users(id)` ON DELETE CASCADE |
-| `event_type` | text | NO | |
-| `amount` | integer | NO | |
-| `reference_id` | text | YES | |
-| `created_at` | timestamptz | NO | `now()` |
+| `user_id` | uuid | NO | FK → `auth.users(id)` |
+| `event_type` | text | NO | Tipe event XP |
+| `amount` | integer | NO | Jumlah XP |
+| `reference_id` | text | YES | Unique reference |
 
 **Constraint**: `UNIQUE(user_id, event_type, reference_id)`.
 
-#### 5. `user_feedback` (2 rows)
+#### 5. `user_feedback` (Snapshot Baseline: 2 rows)
+Laporan bug dan umpan balik pengguna.
 
 | Kolom | Tipe | Null | Default |
-|-------|------|------|---------|
+|---|---|---|---|
 | `id` | uuid, PK | NO | `gen_random_uuid()` |
 | `user_id` | uuid | YES | FK → `auth.users(id)` ON DELETE SET NULL |
 | `type` | text | NO | CHECK `IN ('bug','suggestion','compliment')` |
-| `message` | text | NO | |
-| `route` | text | YES | |
-| `status` | text | NO | `'pending'` — CHECK `IN ('pending','investigating','resolved','rejected')` |
-| `admin_reply` | text | YES | |
-| `created_at` / `updated_at` | timestamptz | | |
-
-**Triggers**: `set_user_feedback_updated_at`, `tr_feedback_update_notification` → `handle_feedback_update_notification()`.
+| `message` | text | NO | Pesan feedback |
+| `route` | text | YES | Path Halaman |
+| `status` | text | NO | `'pending'` |
+| `admin_reply` | text | YES | Balasan admin |
 
 ---
 
-### B. Pustaka Konten
+### B. Pustaka Konten (Dataset Referensi)
 
-#### 6. `course_categories` (6 rows)
-
-| Kolom | Tipe | Null | Default |
-|-------|------|------|---------|
-| `id` | uuid, PK | NO | `gen_random_uuid()` |
-| `title` | text | NO | |
-| `slug` | text | NO | UNIQUE |
-| `order_number` | integer | YES | `0` |
-| `type` / `description` | text | YES | |
-| `created_at` | timestamptz | NO | `now()` |
-
-#### 7. `lessons` (193 rows)
-
-| Kolom | Tipe | Null | Default |
-|-------|------|------|---------|
-| `id` | uuid, PK | NO | `gen_random_uuid()` |
-| `category_id` | uuid | YES | FK → `course_categories(id)` |
-| `title` / `slug` | text | NO | `slug` UNIQUE |
-| `order_number` | integer | YES | `0` |
-| `summary` / `content` | text | YES | |
-| `dialogue`, `vocab_list`, `kanji_list`, `grammar_list`, `listening_list`, `reading_list`, `quizzes` | jsonb | YES | `'[]'` |
-| `estimated_minutes` | integer | YES | `5` |
-| `is_premium` / `is_published` | boolean | YES | |
-| `seo` | jsonb | YES | |
-| `status` | text | YES | CHECK `IN ('draft','review','approved','published','rejected')` |
-| `warnings`, `confidence`, `audit_log`, `generation_context` | jsonb | YES | |
-| `created_at` | timestamptz | NO | |
-
-#### 8. `articles` (50 rows)
-
-Konten artikel/pelajaran tambahan. Digunakan sebagai fallback oleh `lessons.actions.ts`.
-
-| Kolom | Tipe | Null | Default |
-|-------|------|------|---------|
-| `id` | uuid, PK | NO | `gen_random_uuid()` |
-| `category_id` | uuid | YES | |
-| `title` | text | NO | |
-| `slug` | text | NO | |
-| `order_number` | integer | YES | |
-| `summary` | text | YES | |
-| `content` | text | NO | `''` |
-| `quizzes` | jsonb | YES | `'[]'` |
-| `estimated_minutes` | integer | YES | |
-| `is_premium` | boolean | YES | `false` |
-| `is_published` | boolean | YES | `true` |
-| `seo` | jsonb | YES | `'{}'` |
-| `image_url` | text | YES | |
-| `created_at` | timestamptz | YES | `now()` |
-
-#### 9. `kanji` (13.108 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `character` | text, UNIQUE | NO |
-| `english` / `meaning` | text | NO |
-| `onyomi`, `kunyomi`, `romaji` | text | YES |
-| `jlpt_level` | varchar | YES |
-| `grade_level`, `stroke_order_svg` | text | YES |
-| `radicals`, `mnemonics`, `examples` | jsonb | YES |
-| `show_in_flashcard` | boolean | YES |
-| `frequency_rank` | integer | YES |
-| `slug` | text | YES |
-| `created_at` | timestamptz | NO |
-
-#### 10. `vocab` (22.000 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `word` | text | NO |
-| `slug` | text, UNIQUE | NO |
-| `furigana`, `romaji`, `meaning_id`, `jlpt_level`, `pitch_accent`, `audio_url`, `usage_notes`, `mnemonic`, `transitivity` | text | YES |
-| `hinshi` | jsonb | YES |
-| `conjugations` | jsonb | YES |
-| `is_common` | boolean | YES |
-| `related_kanji`, `synonyms`, `antonyms`, `examples` | jsonb | YES |
-| `show_in_flashcard` | boolean | YES |
-| `created_at` | timestamptz | NO |
-
-#### 11. `grammar` (697 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `title` / `meaning` | text | NO |
-| `slug` | text, UNIQUE | NO |
-| `formation`, `formation_furigana`, `formation_romaji`, `notes`, `jlpt_level`, `grammar_family` | text | YES |
-| `examples` | jsonb | YES |
-| `order_number` | integer | YES |
-| `related_grammar` | text[] | YES |
-| `created_at` | timestamptz | NO |
-
-#### 12. `radicals` (253 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `character` | text, UNIQUE | NO |
-| `stroke_count` / `kangxi_number` | integer | YES |
-| `meaning` | text | YES |
-| `kanji_list` | jsonb | YES |
-| `created_at` | timestamptz | YES |
-
-#### 13. `sentences` (25.980 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | text, PK | NO |
-| `japanese` | text | NO |
-| `english`, `indonesia`, `jlpt_level`, `furigana` | text | YES |
-| `created_at` | timestamptz | YES |
-
-#### 14. `expressions` (13.220 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | text, PK | NO |
-| `text` / `reading` | text | NO |
-| `meanings`, `misc`, `indonesia` | jsonb | YES |
-| `common` | boolean | YES |
-| `jlpt_level` | text | YES |
-| `created_at` | timestamptz | YES |
-
-#### 15. `cheatsheets` (50 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `slug` | text, UNIQUE | NO |
-| `title` | text | NO |
-| `category` | text | YES |
-| `items` | jsonb | YES |
-| `created_at` / `updated_at` | timestamptz | YES |
-
-#### 16. `listening` (50 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `title`, `slug` (UNIQUE) | text | NO |
-| `difficulty`, `body` | text | NO |
-| `hiragana`, `translation`, `audio_url`, `image_url`, `video_url` | text | YES |
-| `quizzes`, `seo`, `warnings`, `audit_log`, `confidence`, `generation_context` | jsonb | YES |
-| `jlpt_level` | text | YES — CHECK `IN ('N5','N4','N3','N2','N1')` |
-| `status` | text | YES — CHECK `IN ('draft','review','approved','published','rejected')` |
-| `estimated_minutes` | integer | YES |
-| `created_at` | timestamptz | NO |
-
-#### 17. `reading` (50 rows)
-
-Struktur identik dengan tabel `listening`.
+| Tabel | Rows (Dataset) | Deskripsi |
+|---|---|---|
+| `course_categories` | 6 | Kategori utama materi & kursus |
+| `lessons` | 193 | Modul pelajaran terstruktur + kuis |
+| `articles` | 50 | Artikel pelajaran tambahan (fallback `lessons.actions.ts`) |
+| `kanji` | 13.108 | Pustaka kanji lengkap, stroke SVG, onyomi/kunyomi |
+| `vocab` | 22.000 | Pustaka kosakata, audio, pitch accent, contoh |
+| `grammar` | 697 | Tata bahasa Jepang, pembentukan, dan contoh |
+| `radicals` | 253 | Radikal kanji Kangxi |
+| `sentences` | 25.980 | Contoh kalimat Bahasa Jepang terjemahan |
+| `expressions` | 13.220 | Ungkapan & frasa harian |
+| `cheatsheets` | 50 | Lembar rangkuman materi |
+| `listening` | 50 | Latihan mendengar & audio transcript |
+| `reading` | 50 | Latihan membaca & analisis wacana |
 
 ---
 
 ### C. Simulasi Ujian JLPT
 
-#### 18. `jlpt_exam_templates` (123 rows)
-
-| Kolom | Tipe | Null | Default |
-|-------|------|------|---------|
-| `id` | uuid, PK | NO | |
-| `slug` | text, UNIQUE | NO | |
-| `title` | text | NO | |
-| `description` | text | YES | |
-| `jlpt_level` | text | NO | CHECK `IN ('N5','N4','N3','N2','N1')` |
-| `time_limit_minutes` | integer | NO | CHECK `> 0` |
-| `passing_score` | integer | NO | `90` |
-| `is_published` | boolean | YES | `false` |
-| `generation_mode` | text | YES | `'fixed'` — CHECK `IN ('fixed','random_by_quota')` |
-| `quota_config` | jsonb | YES | `'{}'` |
-| `category_id` | uuid | YES | FK → `course_categories(id)` ON DELETE SET NULL |
-| `legacy_sanity_id` | text | YES | |
-| `created_at` / `updated_at` | timestamptz | YES | |
-
-#### 19. `jlpt_passages` (592 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `jlpt_level` | text | YES — CHECK `IN ('N5'...'N1')` |
-| `session_type` | text | YES — CHECK `IN ('vocabulary','grammar','reading','listening')` |
-| `mondai_number` | integer | YES |
-| `title`, `content_html`, `transcript_html`, `audio_path`, `visual_path`, `source_label` | text | YES |
-| `is_published` | boolean | YES |
-| `created_at` / `updated_at` | timestamptz | YES |
-
-#### 20. `jlpt_questions` (3.466 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `jlpt_level` | text | YES |
-| `session_type` | text | YES |
-| `mondai_number` | integer | NO |
-| `question_number` | integer | YES |
-| `passage_id` | uuid | YES — FK → `jlpt_passages(id)` ON DELETE SET NULL |
-| `prompt_html`, `visual_path`, `audio_path`, `explanation_html` | text | YES |
-| `source_type` | text | YES — CHECK `IN ('vocab','grammar','kanji','listening','reading','custom')` |
-| `source_id`, `source_reference` | text | YES |
-| `choices` | jsonb | NO |
-| `correct_choice_index` | integer | NO — CHECK `>= 0` |
-| `difficulty` | integer | YES — 1-5 |
-| `is_published` | boolean | YES |
-| `created_at` / `updated_at` | timestamptz | YES |
-
-#### 21. `jlpt_exam_template_questions` (3.477 rows)
-
-Junction table penugasan soal ke template.
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `template_id` | uuid | NO — FK → `jlpt_exam_templates(id)` ON DELETE CASCADE |
-| `question_id` | uuid | NO — FK → `jlpt_questions(id)` ON DELETE RESTRICT |
-| `position` | integer | NO — CHECK `> 0` |
-| `section_order` | integer | YES — Default `0` |
-
-**PK**: `(template_id, question_id)`. **UNIQUE**: `(template_id, position)`.
-
-#### 22. `user_exam_sessions` (3 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `user_id` | uuid | NO — FK → `auth.users(id)` ON DELETE CASCADE |
-| `template_id` | uuid | YES — FK → `jlpt_exam_templates(id)` ON DELETE SET NULL |
-| `jlpt_level` | text | YES |
-| `status` | text | YES — Default `'in_progress'` |
-| `question_order` | uuid[] | YES |
-| `payload_snapshot` | jsonb | NO |
-| `answers_snapshot`, `score_breakdown` | jsonb | YES |
-| `total_score` | integer | YES |
-| `started_at` | timestamptz | YES |
-| `completed_at` / `updated_at` | timestamptz | YES |
-
-#### 23. `user_exam_answers` (102 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `session_id` | uuid | NO — FK → `user_exam_sessions(id)` ON DELETE CASCADE |
-| `question_id` | uuid | NO — FK → `jlpt_questions(id)` ON DELETE RESTRICT |
-| `selected_choice_index` | integer | YES |
-| `is_correct` | boolean | YES |
-| `answered_at` | timestamptz | YES |
-
-**UNIQUE**: `(session_id, question_id)`.
+| Tabel | Rows | Deskripsi |
+|---|---|---|
+| `jlpt_exam_templates` | 123 | Template simulasi ujian JLPT N5-N1 |
+| `jlpt_passages` | 592 | Wacana & audio listening soal ujian |
+| `jlpt_questions` | 3.466 | Bank soal pilihan ganda ujian JLPT |
+| `jlpt_exam_template_questions` | 3.477 | Junction table penugasan soal ke template |
+| `user_exam_sessions` | 3 | Sesi pelaksanaan ujian pengguna |
+| `user_exam_answers` | 102 | Jawaban per soal dalam sesi ujian |
 
 ---
 
 ### D. Komunitas & Utilitas
 
-#### 24. `community_posts` (2 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `user_id` | uuid | NO — FK → `profiles(id)` ON DELETE CASCADE |
-| `content` | text | NO |
-| `category` | varchar | YES — Default `'Umum'` |
-| `likes_users` | jsonb | YES |
-| `comments_count` | integer | YES |
-| `created_at` | timestamptz | YES |
-
-**Triggers**: `update_post_comments_count_trigger` (INSERT/DELETE on `community_comments`) → `update_community_post_comments_count()`.
-
-#### 25. `community_comments` (2 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `post_id` | uuid | NO — FK → `community_posts(id)` ON DELETE CASCADE |
-| `user_id` | uuid | NO — FK → `profiles(id)` ON DELETE CASCADE |
-| `content` | text | NO |
-| `created_at` | timestamptz | YES |
-
-#### 26. `notifications` (2 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `user_id` | uuid | NO — FK → `profiles(id)` ON DELETE CASCADE |
-| `sender_id` | uuid | YES — FK → `profiles(id)` ON DELETE CASCADE |
-| `type` | varchar | NO |
-| `title` / `message` | text | NO |
-| `post_id` | uuid | YES — FK → `community_posts(id)` ON DELETE CASCADE |
-| `read` | boolean | YES — Default `false` |
-| `created_at` | timestamptz | NO |
-
-#### 27. `tts_cache` (1.174 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | text, PK | NO — MD5 hash dari `text_voice_rate` |
-| `text` | text | NO |
-| `voice` / `rate` | text | NO |
-| `audio_url` | text | NO |
-| `model_used` | text | YES |
-| `created_at` | timestamptz | NO |
-
-#### 28. `supporters` (2 rows)
-
-| Kolom | Tipe | Null |
-|-------|------|------|
-| `id` | uuid, PK | NO |
-| `name` | text | NO |
-| `amount` | numeric | NO |
-| `message` | text | YES |
-| `tier` | text | YES — Default `'bronze'` |
-| `source` | text | NO |
-| `created_at` | timestamptz | YES |
+| Tabel | Rows | Deskripsi |
+|---|---|---|
+| `community_posts` | 2 | Postingan forum komunitas |
+| `community_comments` | 2 | Komentar postingan komunitas |
+| `notifications` | 2 | Notifikasi dalam aplikasi |
+| `tts_cache` | 1.174 | Cache hash audio TTS MsEdgeTTS |
+| `supporters` | 2 | Daftar donatur Saweria / Trakteer |
 
 ---
 
-## 2. Diagram ERD
+## 2. Diagram ERD (Entity Relationship Diagram)
 
 ```mermaid
 erDiagram
@@ -443,41 +177,24 @@ erDiagram
 
 ---
 
-## 3. Database Functions (Custom)
+## 3. Database Functions & Triggers
 
-| Function | Tipe | Peran |
-|----------|------|-------|
-| `sync_user_progress` | RPC | Sinkronisasi progres + anti-cheat XP |
-| `handle_new_user` | Trigger fn | Auto-create profile saat user register |
-| `handle_updated_at` | Trigger fn | Auto-update `updated_at` timestamp |
-| `set_updated_at` | Trigger fn | Alias `handle_updated_at` |
-| `protect_srs_logic` | Trigger fn | Validasi constraint SRS (interval ≥ 1, ease_factor 1.3–5.0) |
-| `validate_profile_integrity` | Trigger fn | Validasi integritas data profil |
-| `update_community_post_comments_count` | Trigger fn | Auto-update `comments_count` di `community_posts` |
-| `handle_feedback_update_notification` | Trigger fn | Kirim notifikasi saat feedback di-update admin |
-| `clean_formation` | Utility | Pembersihan teks formasi grammar |
-| `clean_seo_intro` | Utility | Pembersihan teks SEO intro |
-| `update_vocab_examples` | Utility | Batch update contoh kalimat vocab |
+- **`sync_user_progress` (RPC)**: Fungsi sinkronisasi progres massal & validasi XP server.
+- **`protect_srs_logic`**: Trigger function penegak aturan algoritma SRS ($interval \ge 1, ease\_factor \in [1.3, 5.0]$).
+- **`handle_new_user`**: Trigger auto-creation `profiles` saat registrasi Auth Supabase.
 
 ---
 
 ## 4. Storage Buckets
 
-| Bucket | Peran |
-|--------|-------|
-| `tts-cache` | Audio TTS yang sudah di-cache |
-| `exam-assets` | Materi ujian (gambar, audio soal) |
-| `asset` | Aset umum aplikasi |
+1. `tts-cache`: Menyimpan file audio `.mp3` hasil generasi TTS.
+2. `exam-assets`: Gambar dan audio pendukung soal ujian JLPT.
+3. `asset`: Gambar sampul dan media umum aplikasi.
 
 ---
 
-## 5. Formula XP (RPC `sync_user_progress`)
+## 5. Anti-Cheat & Formula Validasi XP
 
 $$\Delta\text{XP}_{\text{diterima}} = (\text{SRS}_{\text{aktif}} \times 15) + (\text{Lesson}_{\text{aktif}} \times 100) + \text{BonusLencana} + \Delta\text{BonusHarian}$$
 
-- **SRS aktif**: Jumlah kartu SRS kotor yang disinkronkan × 15 XP.
-- **Lesson aktif**: Jumlah pelajaran baru diselesaikan × 100 XP.
-- **Bonus Lencana**: Gold = 1000, Silver = 250, Bronze = 50 XP.
-- **Bonus Harian**: Maks 150 XP/hari kumulatif.
-
-Server menolak manipulasi XP di luar formula ini dan mengembalikan `accepted_xp`.
+Seluruh klaim XP dari klien divalidasi ulang oleh RPC `sync_user_progress`. Server mengabaikan klaim ilegal dan mengembalikan nilai sah `accepted_xp`.

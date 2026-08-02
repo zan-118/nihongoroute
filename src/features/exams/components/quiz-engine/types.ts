@@ -11,22 +11,22 @@
  * Represents single quiz question.
  */
 export interface QuizQuestion {
-  /** Question text. */
-  question: string;
-  /** List of answer choices. */
-  options: string[];
-  /** Correct answer string. Must match one option. */
-  answer: string;
-  /** Optional explanation for correct answer. */
-  explanation?: string;
+ /** Question text. */
+ question: string;
+ /** List of answer choices. */
+ options: string[];
+ /** Correct answer string. Must match one option. */
+ answer: string;
+ /** Optional explanation for correct answer. */
+ explanation?: string;
 }
 
 /**
  * Props for Quiz component.
  */
 export interface QuizProps {
-  /** Array of quiz questions. */
-  questions: QuizQuestion[];
-  /** Optional ID of associated lesson. */
-  lessonId?: string;
+ /** Array of quiz questions. */
+ questions: QuizQuestion[];
+ /** Optional ID of associated lesson. */
+ lessonId?: string;
 }

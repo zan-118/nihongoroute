@@ -1,25 +1,40 @@
-# Konfigurasi Sistem
+# Konfigurasi Sistem & Environment
 
-> Terakhir diperbarui: 31 Juli 2026
+> **Status Dokumentasi**: Aktif & Tersinkronisasi  
+> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Ruang Lingkup**: Environment Variables Matrix (Public vs Server-Only) & Files System Config  
+> **Rujukan Utama**: [README.md](../README.md) | [SECURITY.md](SECURITY.md) | [GETTING_STARTED.md](GETTING_STARTED.md)
 
 ---
 
-## 1. Environment Variables
+## 📋 Daftar Isi
 
-Dikonfigurasi melalui `.env.local` (development) atau panel deployment (production).
+1. [Matrix Environment Variables](#1-matrix-environment-variables)
+   - [Variabel Publik (Client-Side)](#variabel-publik-client-side)
+   - [Variabel Rahasia (Server-Only)](#variabel-rahasia-server-only)
+2. [Spesifikasi File Konfigurasi Proyek](#2-spesifikasi-file-konfigurasi-proyek)
 
-### Variabel Klien (`NEXT_PUBLIC_`)
+---
+
+## 1. Matrix Environment Variables
+
+Variabel dikonfigurasi melalui file `.env.local` (development) atau environment settings di Vercel/Hosting (production).
+
+> [!CAUTION]
+> DILARANG menambahkan prefiks `NEXT_PUBLIC_` pada variabel yang menyimpan rahasia server (misal service role keys, admin secret, API keys pihak ketiga).
+
+### Variabel Publik (Client-Side)
 
 | Variabel | Tipe | Status | Deskripsi |
-|----------|------|--------|-----------|
+|---|---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | URL | Wajib | URL dasar website. Digunakan untuk CORS dan metadata SEO. |
 | `NEXT_PUBLIC_SUPABASE_URL` | URL | Wajib | Endpoint Supabase API. |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | JWT | Wajib | Kunci publik Supabase (anonim). |
 
-### Variabel Server-Only
+### Variabel Rahasia (Server-Only)
 
 | Variabel | Tipe | Status | Deskripsi |
-|----------|------|--------|-----------|
+|---|---|---|---|
 | `SUPABASE_SERVICE_ROLE_KEY` | JWT | Wajib | Bypass RLS. Hanya di Server Actions / Route Handlers via `createAdminClient()`. |
 | `ADMIN_API_SECRET` | string | Wajib | Token autentikasi rute admin API. |
 | `GEMINI_API_KEY` | string | Wajib | Google Generative AI key. |
@@ -28,42 +43,15 @@ Dikonfigurasi melalui `.env.local` (development) atau panel deployment (producti
 
 ---
 
-## 2. File Konfigurasi
+## 2. Spesifikasi File Konfigurasi Proyek
 
 ### `next.config.ts`
-
-| Fitur | Detail |
-|-------|--------|
-| `poweredByHeader` | `false` |
-| `reactStrictMode` | `true` |
-| Security headers | X-DNS-Prefetch-Control, X-Content-Type-Options (`nosniff`), X-Frame-Options (`SAMEORIGIN`), Referrer-Policy (`strict-origin-when-cross-origin`), Permissions-Policy, Cross-Origin-Opener-Policy (`same-origin-allow-popups`), HSTS (production only) |
-| Image optimization | Format AVIF/WebP, cache 30 hari, remote patterns: Supabase (`hubqetausiziocdlbdmd.supabase.co`), Cloudinary (`res.cloudinary.com`) |
-| `serverExternalPackages` | `kuroshiro`, `kuroshiro-analyzer-kuromoji`, `msedge-tts`, `isomorphic-ws`, `ws` |
-| `transpilePackages` | `@react-pdf/renderer` |
-| `optimizePackageImports` | Radix UI (6 paket), `@iconify/react`, `framer-motion`, `date-fns`, `sonner`, `wanakana` |
-| Bundle analyzer | Aktif jika `ANALYZE=true` via `@next/bundle-analyzer` |
-| Redirect | `/learning-hub` → `/dashboard` (permanent) |
+- **Security Headers**: HSTS, X-Content-Type-Options (`nosniff`), X-Frame-Options (`SAMEORIGIN`), Referrer-Policy (`strict-origin-when-cross-origin`).
+- **Image Optimization**: AVIF/WebP enabled, Supabase & Cloudinary remote patterns.
+- **External Packages**: `kuroshiro`, `kuroshiro-analyzer-kuromoji`, `msedge-tts`.
 
 ### `tailwind.config.js`
-
-Token desain semantik, radius, font-pairing, dan animasi. Menggunakan Tailwind CSS v4 (`@import "tailwindcss"` syntax di `globals.css`).
-
-### `components.json`
-
-Konfigurasi shadcn/ui — penempatan komponen di `src/components/ui/`.
+- Konfigurasi token warna, radius, dan animasi CSS (Tailwind v4 syntax).
 
 ### `tsconfig.json`
-
-Path alias `@/*` → `src/*`, optimasi compiler TypeScript.
-
-### `vitest.config.ts`
-
-Konfigurasi unit test dengan jsdom environment.
-
-### `playwright.config.ts`
-
-Konfigurasi E2E test.
-
-### `eslint.config.mjs`
-
-ESLint flat config dengan `eslint-config-next`.
+- Compiler options, strict mode, & path alias (`@/*` → `./src/*`).

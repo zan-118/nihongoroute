@@ -20,12 +20,12 @@ import { TemplateType } from "./PdfGenerator";
  * Properties for the usePdfGenerator hook.
  */
 interface UsePdfGeneratorProps {
-  /** Type of PDF template to generate. */
-  type: TemplateType;
-  /** Optional title of the document. */
-  title?: string;
-  /** Optional JLPT level or study level. */
-  level?: string;
+ /** Type of PDF template to generate. */
+ type: TemplateType;
+ /** Optional title of the document. */
+ title?: string;
+ /** Optional JLPT level or study level. */
+ level?: string;
 }
 
 // ==========================================
@@ -38,31 +38,31 @@ interface UsePdfGeneratorProps {
  * @returns Object containing client mount status and filename generator function.
  */
 export function usePdfGenerator({ type, title, level }: UsePdfGeneratorProps) {
-  const [isClient, setIsClient] = useState(false);
+ const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    // Delay setting client state to next animation frame to prevent hydration mismatch.
-    const frame = requestAnimationFrame(() => setIsClient(true));
-    return () => cancelAnimationFrame(frame);
-  }, []);
+ useEffect(() => {
+ // Delay setting client state to next animation frame to prevent hydration mismatch.
+ const frame = requestAnimationFrame(() => setIsClient(true));
+ return () => cancelAnimationFrame(frame);
+ }, []);
 
-  /**
-   * Generates a dynamic PDF filename based on title, type, level, and current date.
-   *
-   * @returns Formatted PDF filename string.
-   */
-  const getFileName = () => {
-    if (title) return `${title}_NihongoRoute.pdf`;
-    
-    // Format date to DD-MM-YYYY using Indonesian locale to avoid slash characters in filename.
-    const timestamp = new Date()
-      .toLocaleDateString("id-ID")
-      .replace(/\//g, "-");
+ /**
+ * Generates a dynamic PDF filename based on title, type, level, and current date.
+ *
+ * @returns Formatted PDF filename string.
+ */
+ const getFileName = () => {
+ if (title) return `${title}_NihongoRoute.pdf`;
+ 
+ // Format date to DD-MM-YYYY using Indonesian locale to avoid slash characters in filename.
+ const timestamp = new Date()
+ .toLocaleDateString("id-ID")
+ .replace(/\//g, "-");
 
-    if (type === "vocab")
-      return `ListKosakata_${level || "All"}_${timestamp}.pdf`;
-    return `Materi_NihongoRoute_${timestamp}.pdf`;
-  };
+ if (type === "vocab")
+ return `ListKosakata_${level || "All"}_${timestamp}.pdf`;
+ return `Materi_NihongoRoute_${timestamp}.pdf`;
+ };
 
-  return { isClient, getFileName };
+ return { isClient, getFileName };
 }

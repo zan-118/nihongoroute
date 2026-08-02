@@ -1,7 +1,7 @@
 /**
  * @file AppBreadcrumbs.tsx
- * @description Fasade pembungkus untuk memelihara kompatibilitas impor AppBreadcrumbs.
- * Seluruh komponen terpusat di `@/components/layout/navigation`.
+ * @description Facade wrapper re-export maintaining import backwards compatibility for AppBreadcrumbs.
+ * All navigation components are centralized under `@/components/layout/navigation`.
  */
 
 export { AppBreadcrumbs as default } from "./navigation";

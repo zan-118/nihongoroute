@@ -17,13 +17,13 @@ import { ROUTES } from "@/lib/core/routes";
  * Metadata for settings page. Prevent search engine indexing.
  */
 export const metadata: Metadata = {
-  // Generate SEO metadata. Set noIndex true to hide settings from search engines.
-  ...createPageMetadata({
-    title: "Pengaturan | NihongoRoute",
-    description: "Atur profil, tema tampilan, dan preferensi belajar di NihongoRoute.",
-    path:ROUTES.SETTINGS,
-    noIndex: true,
-  }),
+ // Generate SEO metadata. Set noIndex true to hide settings from search engines.
+ ...createPageMetadata({
+ title: "Pengaturan | NihongoRoute",
+ description: "Atur profil, tema tampilan, dan preferensi belajar di NihongoRoute.",
+ path:ROUTES.SETTINGS,
+ noIndex: true,
+ }),
 };
 
 // ======================
@@ -33,5 +33,5 @@ export const metadata: Metadata = {
  * Layout component for settings route. Render children directly.
  */
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
-  return children;
+ return children;
 }

@@ -1,16 +1,16 @@
 /**
  * @file utils.ts
- * @description Koleksi fungsi utilitas global (formatting tanggal lokal, pengacakan array, tailwind merging, slugify aksara Jepang) untuk antarmuka NihongoRoute.
+ * @description Core global utility functions (local date formatting, array shuffling, Tailwind class merging, Japanese text slugification).
  */
 
 // ==========================================
-// IMPORT & DEPENDENSI
+// Import & Dependencies
 // ==========================================
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
 // ==========================================
-// FUNGSI UTILITAS GLOBAL (EXPORTS)
+// Global Utility Functions
 // ==========================================
 
 /**
@@ -20,8 +20,8 @@ import { twMerge } from "tailwind-merge"
  * @returns Merged class string.
  */
 export function cn(...inputs: ClassValue[]) {
-  // Combine inputs with clsx, then resolve Tailwind conflicts.
-  return twMerge(clsx(inputs))
+ // Combine inputs with clsx, then resolve Tailwind conflicts.
+ return twMerge(clsx(inputs))
 }
 
 /**
@@ -30,12 +30,12 @@ export function cn(...inputs: ClassValue[]) {
  * @returns Date string.
  */
 export function getLocalDateString(): string {
-  const now = new Date();
-  // Get timezone offset in milliseconds.
-  const offset = now.getTimezoneOffset() * 60000;
-  // Shift date by offset, extract date part.
-  const localISOTime = (new Date(now.getTime() - offset)).toISOString().split('T')[0];
-  return localISOTime;
+ const now = new Date();
+ // Get timezone offset in milliseconds.
+ const offset = now.getTimezoneOffset() * 60000;
+ // Shift date by offset, extract date part.
+ const localISOTime = (new Date(now.getTime() - offset)).toISOString().split('T')[0];
+ return localISOTime;
 }
 
 /**
@@ -50,10 +50,10 @@ export const getTodayDateString = getLocalDateString;
  * @returns Formatted time string.
  */
 export const formatTime = (seconds: number): string => {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  // Pad minutes and seconds with leading zeros.
-  return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+ const m = Math.floor(seconds / 60);
+ const s = seconds % 60;
+ // Pad minutes and seconds with leading zeros.
+ return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 };
 
 /**
@@ -63,14 +63,14 @@ export const formatTime = (seconds: number): string => {
  * @returns Shuffled copy of array.
  */
 export const shuffleArray = <T,>(array: T[]): T[] => {
-  // Copy array to avoid mutation.
-  const newArr = [...array];
-  // Swap elements backwards.
-  for (let i = newArr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-  }
-  return newArr;
+ // Copy array to avoid mutation.
+ const newArr = [...array];
+ // Swap elements backwards.
+ for (let i = newArr.length - 1; i > 0; i--) {
+ const j = Math.floor(Math.random() * (i + 1));
+ [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+ }
+ return newArr;
 };
 
 /**
@@ -80,13 +80,13 @@ export const shuffleArray = <T,>(array: T[]): T[] => {
  * @returns Slugified string.
  */
 export function slugify(text: string): string {
-  return text
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, '-')     // Replace spaces with hyphens.
-    .replace(/[^\w\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf-]+/g, '') // Keep alphanumeric and Japanese characters.
-    .replace(/--+/g, '-');    // Remove double hyphens.
+ return text
+ .toString()
+ .toLowerCase()
+ .trim()
+ .replace(/\s+/g, '-') // Replace spaces with hyphens.
+ .replace(/[^\w\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf-]+/g, '') // Keep alphanumeric and Japanese characters.
+ .replace(/--+/g, '-'); // Remove double hyphens.
 }
 
 /**
@@ -96,17 +96,17 @@ export function slugify(text: string): string {
  * @returns Decoded string.
  */
 export function fullyDecode(str: string): string {
-  if (!str) return "";
-  let current = str;
-  try {
-    // Decode until string stops changing.
-    while (true) {
-      const decoded = decodeURIComponent(current);
-      if (decoded === current) break;
-      current = decoded;
-    }
-  } catch {
-    // Prevent crash on bad URI percent encoding.
-  }
-  return current;
+ if (!str) return "";
+ let current = str;
+ try {
+ // Decode until string stops changing.
+ while (true) {
+ const decoded = decodeURIComponent(current);
+ if (decoded === current) break;
+ current = decoded;
+ }
+ } catch {
+ // Prevent crash on bad URI percent encoding.
+ }
+ return current;
 }

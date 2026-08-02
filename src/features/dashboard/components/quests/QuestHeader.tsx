@@ -22,29 +22,29 @@ import { Target } from "@/components/ui/icons";
  * Shows target icon, title, subtitle, and reset time badge.
  */
 export function QuestHeader() {
-  return (
-    <header className="flex items-center justify-between mb-8 relative z-10">
-      <div className="flex items-center gap-3">
-        {/* Icon container with card style */}
-        <Card className="size-10 rounded-xl bg-muted dark:bg-muted/50 border border-border flex items-center justify-center shadow-none shrink-0">
-          <Target size={18} className="text-primary" />
-        </Card>
-        <div className="text-left">
-          <h3 className="text-foreground uppercase tracking-tight text-xs md:text-sm">
-            Target Hari Ini
-          </h3>
-          <span className="block text-xs text-muted-foreground font-bold uppercase tracking-widest mt-0.5">
-            Yuk, kejar targetmu!
-          </span>
-        </div>
-      </div>
-      {/* Reset time indicator */}
-      <Badge
-        variant="ghost"
-        className="bg-muted dark:bg-muted/30 border border-border text-muted-foreground px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest uppercase shadow-none h-auto"
-      >
-        Reset 00:00
-      </Badge>
-    </header>
-  );
+ return (
+ <header className="flex items-center justify-between mb-8 relative z-10">
+ <div className="flex items-center gap-3">
+ {/* Icon container with card style */}
+ <Card className="size-10 rounded-xl bg-muted dark:bg-muted/50 border border-border flex items-center justify-center shadow-none shrink-0">
+ <Target size={18} className="text-primary" />
+ </Card>
+ <div className="text-left">
+ <h3 className="text-foreground uppercase tracking-tight text-xs md:text-sm">
+ Target Hari Ini
+ </h3>
+ <span className="block text-xs text-muted-foreground font-bold uppercase tracking-widest mt-0.5">
+ Yuk, kejar targetmu!
+ </span>
+ </div>
+ </div>
+ {/* Reset time indicator */}
+ <Badge
+ variant="ghost"
+ className="bg-muted dark:bg-muted/30 border border-border text-muted-foreground px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest uppercase shadow-none h-auto"
+ >
+ Reset 00:00
+ </Badge>
+ </header>
+ );
 }

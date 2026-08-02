@@ -41,31 +41,31 @@ export * from "./cheatsheets.actions";
  * @returns Item data or null if not found.
  */
 export async function getLibraryItemBySlug(
-  type: "kanji" | "vocab" | "verb" | "adjective" | "grammar" | "reading" | "listening" | "lessons" | "exams" | "phrase",
-  slugOrId: string
+ type: "kanji" | "vocab" | "verb" | "adjective" | "grammar" | "reading" | "listening" | "lessons" | "exams" | "phrase",
+ slugOrId: string
 ): Promise<LibraryItem | null> {
-  // Route type to specific fetcher action
-  switch (type) {
-    case "kanji":
-      return getLibraryKanjiDetail(slugOrId);
-    // Vocab, verbs, adjectives, phrases share vocab fetcher
-    case "vocab":
-    case "verb":
-    case "adjective":
-    case "phrase":
-      return getLibraryVocabDetail(slugOrId);
-    case "grammar":
-      return getLibraryGrammarDetail(slugOrId);
-    case "reading":
-      return getLibraryReadingDetail(slugOrId);
-    case "listening":
-      return getLibraryListeningDetail(slugOrId);
-    case "lessons":
-      return getLibraryLessonDetail(slugOrId);
-    case "exams":
-      return getLibraryExamDetail(slugOrId);
-    default:
-      // Return null if type not matched
-      return null;
-  }
+ // Route type to specific fetcher action
+ switch (type) {
+ case "kanji":
+ return getLibraryKanjiDetail(slugOrId);
+ // Vocab, verbs, adjectives, phrases share vocab fetcher
+ case "vocab":
+ case "verb":
+ case "adjective":
+ case "phrase":
+ return getLibraryVocabDetail(slugOrId);
+ case "grammar":
+ return getLibraryGrammarDetail(slugOrId);
+ case "reading":
+ return getLibraryReadingDetail(slugOrId);
+ case "listening":
+ return getLibraryListeningDetail(slugOrId);
+ case "lessons":
+ return getLibraryLessonDetail(slugOrId);
+ case "exams":
+ return getLibraryExamDetail(slugOrId);
+ default:
+ // Return null if type not matched
+ return null;
+ }
 }

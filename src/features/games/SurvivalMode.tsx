@@ -23,8 +23,8 @@ import { SurvivalPlaying } from "./survival/SurvivalPlaying";
  * Props for the SurvivalMode component.
  */
 interface SurvivalModeProps {
-  /** Array of card data used as questions in the game. */
-  cards: CardData[];
+ /** Array of card data used as questions in the game. */
+ cards: CardData[];
 }
 
 // ======================
@@ -39,40 +39,40 @@ interface SurvivalModeProps {
  * @returns React element matching current game state.
  */
 export default function SurvivalMode({ cards }: SurvivalModeProps) {
-  // Initialize game state engine hook
-  const engine = useSurvivalMode(cards);
+ // Initialize game state engine hook
+ const engine = useSurvivalMode(cards);
 
-  // Show intro screen if game not started
-  if (engine.gameState === "idle") {
-    return <SurvivalIntro startGame={engine.startGame} />;
-  }
+ // Show intro screen if game not started
+ if (engine.gameState === "idle") {
+ return <SurvivalIntro startGame={engine.startGame} />;
+ }
 
-  // Show game over or victory screen when game ends
-  if (engine.gameState === "gameover" || engine.gameState === "victory") {
-    return (
-      <SurvivalGameOver
-        gameState={engine.gameState}
-        score={engine.score}
-        startGame={engine.startGame}
-      />
-    );
-  }
+ // Show game over or victory screen when game ends
+ if (engine.gameState === "gameover" || engine.gameState === "victory") {
+ return (
+ <SurvivalGameOver
+ gameState={engine.gameState}
+ score={engine.score}
+ startGame={engine.startGame}
+ />
+ );
+ }
 
-  // Show active gameplay screen
-  return (
-    <SurvivalPlaying
-      hp={engine.hp}
-      MAX_HP={engine.MAX_HP}
-      score={engine.score}
-      timeLeft={engine.timeLeft}
-      TIME_PER_QUESTION={engine.TIME_PER_QUESTION}
-      currentCard={engine.currentCard}
-      options={engine.options}
-      isShaking={engine.isShaking}
-      selectedWrongId={engine.selectedWrongId}
-      selectedId={engine.selectedId}
-      isCorrecting={engine.isCorrecting}
-      handleAnswer={engine.handleAnswer}
-    />
-  );
+ // Show active gameplay screen
+ return (
+ <SurvivalPlaying
+ hp={engine.hp}
+ MAX_HP={engine.MAX_HP}
+ score={engine.score}
+ timeLeft={engine.timeLeft}
+ TIME_PER_QUESTION={engine.TIME_PER_QUESTION}
+ currentCard={engine.currentCard}
+ options={engine.options}
+ isShaking={engine.isShaking}
+ selectedWrongId={engine.selectedWrongId}
+ selectedId={engine.selectedId}
+ isCorrecting={engine.isCorrecting}
+ handleAnswer={engine.handleAnswer}
+ />
+ );
 }

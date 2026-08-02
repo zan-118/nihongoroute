@@ -2,7 +2,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: ["class"],
-    content: ["./src/app/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}"],
+    content: [
+      "./src/app/**/*.{ts,tsx}",
+      "./src/components/**/*.{ts,tsx}",
+      "./src/features/**/*.{ts,tsx}",
+      "./src/lib/**/*.{ts,tsx}"
+    ],
   theme: {
   	extend: {
   		colors: {
@@ -55,10 +60,7 @@ module.exports = {
   				'5': 'hsl(var(--chart-5))'
   			}
   		},
-  		boxShadow: {
-  			neumorphic: '15px 15px 40px rgba(0,0,0,0.6), -10px -10px 30px rgba(255,255,255,0.02)',
-  			'neumorphic-pressed': 'inset 4px 4px 10px rgba(0,0,0,0.5), inset -2px -2px 5px rgba(255,255,255,0.02)'
-  		},
+
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

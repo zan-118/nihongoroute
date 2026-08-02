@@ -1,10 +1,10 @@
 /**
  * @file client.ts
- * @description Klien inisiasi Supabase Browser untuk akses data secara luring-first di sisi klien (browser) dengan batasan RLS (Row Level Security) yang aman.
+ * @description Supabase Browser client initializer for offline-first client-side data access adhering to Row Level Security (RLS) policies.
  */
 
 // ==========================================
-// IMPORT & DEPENDENSI
+// Import & Dependencies
 // ==========================================
 import { createBrowserClient } from "@supabase/ssr";
 
@@ -14,7 +14,7 @@ import { createBrowserClient } from "@supabase/ssr";
 let cachedClient: ReturnType<typeof createBrowserClient> | null = null;
 
 // ==========================================
-// INISIALISASI KLIEN BROWSER SUPABASE
+// Supabase Browser Client Initializer
 // ==========================================
 /**
  * Create or return cached Supabase browser client.
@@ -23,19 +23,19 @@ let cachedClient: ReturnType<typeof createBrowserClient> | null = null;
  * @returns Supabase client instance.
  */
 export function createClient() {
-  // Return existing instance if already created.
-  if (cachedClient) return cachedClient;
+ // Return existing instance if already created.
+ if (cachedClient) return cachedClient;
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+ const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+ const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  // Fallback to empty strings if env vars missing. Prevent crash.
-  if (!url || !key) {
-    console.error("Variabel lingkungan Supabase tidak ditemukan!");
-    // Kembalikan client dummy atau tangani secara anggun untuk menghindari error 500
-    return createBrowserClient("", ""); 
-  }
+ // Fallback to empty strings if env vars missing. Prevent crash.
+ if (!url || !key) {
+ console.error("Variabel lingkungan Supabase tidak ditemukan!");
+ // Kembalikan client dummy atau tangani secara anggun untuk menghindari error 500
+ return createBrowserClient("", ""); 
+ }
 
-  cachedClient = createBrowserClient(url, key);
-  return cachedClient;
+ cachedClient = createBrowserClient(url, key);
+ return cachedClient;
 }

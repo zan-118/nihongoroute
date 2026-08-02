@@ -10,16 +10,16 @@ import { cn } from "@/lib/utils";
  * @param props - HTML div element attributes.
  */
 function Skeleton({
-  className,
-  ...props
+ className,
+ ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      // Apply brand shimmer animation and rounded corners.
-      className={cn("skeleton-brand rounded-xl", className)}
-      {...props}
-    />
-  );
+ return (
+ <div
+ // Apply brand shimmer animation and rounded corners.
+ className={cn("skeleton-brand rounded-xl", className)}
+ {...props}
+ />
+ );
 }
 
 export { Skeleton };

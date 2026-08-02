@@ -1,17 +1,17 @@
 /**
  * @file server.ts
- * @description Klien inisiasi Supabase Server-Side untuk Server Components, Route Handlers, dan Server Actions di Next.js dengan penanganan otomatis pembacaan/penulisan cookies.
+ * @description Supabase Server-Side client initializer for Next.js Server Components, Route Handlers, and Server Actions with automatic cookie handling.
  */
 
 // ==========================================
-// IMPORT & DEPENDENSI
+// Import & Dependencies
 // ==========================================
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 // ==========================================
-// INISIALISASI KLIEN SERVER SUPABASE
+// Supabase Server Client Initializer
 // ==========================================
 
 /**
@@ -21,31 +21,31 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
  * @returns Promise resolving to Supabase client instance.
  */
 export async function createClient() {
-  // Await Next.js cookie store for header manipulation
-  const cookieStore = await cookies();
+ // Await Next.js cookie store for header manipulation
+ const cookieStore = await cookies();
 
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            // Apply cookies to response headers
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options);
-            });
-          } catch {
-            // Metode `set` dipanggil dari Server Component.
-            // Hal ini dapat diabaikan jika Anda memiliki middleware yang menyegarkan sesi pengguna.
-          }
-        },
-      },
-    }
-  );
+ return createServerClient(
+ process.env.NEXT_PUBLIC_SUPABASE_URL!,
+ process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+ {
+ cookies: {
+ getAll() {
+ return cookieStore.getAll();
+ },
+ setAll(cookiesToSet) {
+ try {
+ // Apply cookies to response headers
+ cookiesToSet.forEach(({ name, value, options }) => {
+ cookieStore.set(name, value, options);
+ });
+ } catch {
+ // Metode `set` dipanggil dari Server Component.
+ // Hal ini dapat diabaikan jika Anda memiliki middleware yang menyegarkan sesi pengguna.
+ }
+ },
+ },
+ }
+ );
 }
 
 /**
@@ -55,8 +55,8 @@ export async function createClient() {
  * @returns Supabase client instance.
  */
 export function createStaticClient() {
-  return createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+ return createSupabaseClient(
+ process.env.NEXT_PUBLIC_SUPABASE_URL!,
+ process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+ );
 }

@@ -1,14 +1,14 @@
-/**
- * @file expressions.actions.ts
- * @description Server Actions untuk mengambil data ungkapan (expressions) acak dari Supabase.
- * Digunakan untuk menampilkan ungkapan harian pada halaman beranda.
- */
-
 "use server";
 
-// ======================
-// IMPORTS
-// ======================
+/**
+ * @file expressions.actions.ts
+ * @description Server Action for retrieving random Japanese daily expressions from Supabase.
+ * @module actions
+ */
+
+// ==========================================
+// Import & Dependencies
+// ==========================================
 import { getRandomExpressionData } from "@/lib/services/content-repository";
 
 // ======================
@@ -19,12 +19,12 @@ import { getRandomExpressionData } from "@/lib/services/content-repository";
  * Shape of random expression data.
  */
 export interface RandomExpression {
-  id: string;
-  text: string;
-  reading: string;
-  meanings: string[];
-  indonesia: string[];
-  jlpt_level: string | null;
+ id: string;
+ text: string;
+ reading: string;
+ meanings: string[];
+ indonesia: string[];
+ jlpt_level: string | null;
 }
 
 // ======================
@@ -36,22 +36,22 @@ export interface RandomExpression {
  * @returns Expression object or null if error/empty.
  */
 export async function getRandomExpression(): Promise<RandomExpression | null> {
-  try {
-    const data = await getRandomExpressionData();
+ try {
+ const data = await getRandomExpressionData();
 
-    if (!data) return null;
+ if (!data) return null;
 
-    // Map database response to RandomExpression type.
-    return {
-      id: data.id as string,
-      text: data.text as string,
-      reading: data.reading as string,
-      meanings: Array.isArray(data.meanings) ? (data.meanings as string[]) : [],
-      indonesia: Array.isArray(data.indonesia) ? (data.indonesia as string[]) : [],
-      jlpt_level: (data.jlpt_level as string | null) ?? null,
-    };
-  } catch (error) {
-    console.error("[getRandomExpression] error:", error);
-    return null;
-  }
+ // Map database response to RandomExpression type.
+ return {
+ id: data.id as string,
+ text: data.text as string,
+ reading: data.reading as string,
+ meanings: Array.isArray(data.meanings) ? (data.meanings as string[]) : [],
+ indonesia: Array.isArray(data.indonesia) ? (data.indonesia as string[]) : [],
+ jlpt_level: (data.jlpt_level as string | null) ?? null,
+ };
+ } catch (error) {
+ console.error("[getRandomExpression] error:", error);
+ return null;
+ }
 }

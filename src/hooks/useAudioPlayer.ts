@@ -3,8 +3,8 @@ import { useAudioPlayback } from "@/features/media/useAudioPlayback";
 import type { TtsVoice } from "@/lib/tts";
 
 interface UseAudioPlayerOptions {
-  voice?: TtsVoice;
-  rate?: number;
+ voice?: TtsVoice;
+ rate?: number;
 }
 
 /**
@@ -12,18 +12,18 @@ interface UseAudioPlayerOptions {
  * memanfaatkan AudioPlaybackEngine terpadu.
  */
 export function useAudioPlayer(defaultOptions: UseAudioPlayerOptions = {}) {
-  const { playingId, play, stop } = useAudioPlayback(defaultOptions);
+ const { playingId, play, stop } = useAudioPlayback(defaultOptions);
 
-  const playAudio = useCallback(
-    async (text: string, index: number | string, options: UseAudioPlayerOptions = {}) => {
-      play(text, { ...options, id: index });
-    },
-    [play]
-  );
+ const playAudio = useCallback(
+ async (text: string, index: number | string, options: UseAudioPlayerOptions = {}) => {
+ play(text, { ...options, id: index });
+ },
+ [play]
+ );
 
-  return {
-    playingIndex: playingId,
-    playAudio,
-    stopAudio: stop,
-  };
+ return {
+ playingIndex: playingId,
+ playAudio,
+ stopAudio: stop,
+ };
 }

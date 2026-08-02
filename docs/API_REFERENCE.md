@@ -1,189 +1,103 @@
-# Referensi API & Rute Server
+# Referensi API & Route Handlers
 
-> Terakhir diperbarui: 31 Juli 2026
+> **Status Dokumentasi**: Aktif & Tersinkronisasi  
+> **Terakhir Diperbarui**: 2 Agustus 2026 — Diverifikasi 100% dari `src/app/api/` & `src/actions/`  
+> **Ruang Lingkup**: Spesifikasi 7 API Route Handlers Active & 18 Server Action Files  
+> **Rujukan Utama**: [README.md](../README.md) | [ARCHITECTURE.md](ARCHITECTURE.md) | [SECURITY.md](SECURITY.md)
 
 ---
+
+## 📋 Daftar Isi
+
+1. [Rangkuman Endpoint API Route Handlers](#1-rangkuman-endpoint-api-route-handlers)
+2. [Spesifikasi 7 API Route Handlers](#2-spesifikasi-7-api-route-handlers)
+   - [1. `/api/tts` — Text-to-Speech](#1-apitts--text-to-speech)
+   - [2. `/api/furigana` — Konversi Furigana](#2-apifurigana--konversi-furigana)
+   - [3. `/api/cards` — Flashcard Entity Resolver](#3-apicards--flashcard-entity-resolver)
+   - [4. `/api/health` — Health Check Operasional](#4-apihealth--health-check-operasional)
+   - [5. `/api/webhooks/saweria` — Webhook Donasi Saweria](#5-apiwebhookssaweria--webhook-donasi-saweria)
+   - [6. `/api/webhooks/trakteer` — Webhook Donasi Trakteer](#6-apiwebhookstrakteer--webhook-donasi-trakteer)
+   - [7. `/auth/callback` — OAuth Callback](#7-authcallback--oauth-callback)
+3. [Daftar 18 Server Action Files (`src/actions/*.actions.ts`)](#3-daftar-18-server-action-files-srcactionsactionsts)
+
+---
+
+## 1. Rangkuman Endpoint API Route Handlers
 
 NihongoRoute memiliki **7 endpoint aktif**: 5 API Route Handlers di `src/app/api/`, 2 webhook handlers, dan 1 auth callback di `src/app/auth/`.
 
+| Path | Method | Auth | Cache Policy | Deskripsi |
+|---|---|---|---|---|
+| `/api/tts` | GET | Publik | Dynamic / Cache-Control | Sintesis pelafalan suara MsEdgeTTS |
+| `/api/furigana` | POST | Publik | `no-store` | Analisis morfologi & furigana Kuromoji |
+| `/api/cards` | GET | Publik | `no-store` | Resolusi entity ID kartu vocab/kanji |
+| `/api/health` | GET/HEAD | Publik | `no-store` | Monitoring kesehatan server & env vars |
+| `/api/webhooks/saweria` | POST | Webhook Signature | `no-store` | Notifikasi donasi Saweria |
+| `/api/webhooks/trakteer` | POST | Webhook Token | `no-store` | Notifikasi donasi Trakteer |
+| `/auth/callback` | GET | Auth Code | Redirect | Pertukaran OAuth code ke session |
+
 ---
 
-## 1. `/api/tts` — Text-to-Speech
+## 2. Spesifikasi 7 API Route Handlers
 
-Mengambil atau menyintesis audio pelafalan bahasa Jepang menggunakan MsEdgeTTS dengan caching di tabel `tts_cache` dan storage bucket `tts-cache`.
-
+### 1. `/api/tts` — Text-to-Speech
 - **Method**: `GET`
 - **Autentikasi**: Publik
 - **Runtime**: `nodejs` (`force-dynamic`)
+- **Fungsi**: Sintesis audio pelafalan bahasa Jepang via MsEdgeTTS + `tts_cache` + Supabase Storage `tts-cache`.
 
-### Parameter Kueri
-
-| Parameter | Tipe | Wajib | Default | Deskripsi |
-|-----------|------|-------|---------|-----------|
-| `text` | string | Ya | — | Teks Jepang (maks 500 karakter) |
-| `voice` | string | Tidak | `zundamon` | Voice identifier (dipetakan via `SPEAKER_MAP` ke Edge Neural Voice) |
-| `rate` | string | Tidak | `medium` | Kecepatan pelafalan |
-
-### Respons
-
-| Status | Deskripsi |
-|--------|-----------|
-| `200` | `audio/mpeg` — Cache hit: `Cache-Control: public, max-age=604800, immutable`. Cache miss: `Cache-Control: no-store` |
-| `400` | Parameter `text` kosong atau melebihi 500 karakter |
-| `500` | Gagal sintesis Edge TTS (timeout 10 detik) |
-
----
-
-## 2. `/api/furigana` — Konversi Furigana
-
-Mengonversi teks kanji/campuran Jepang menjadi bacaan hiragana menggunakan Kuroshiro + Kuromoji analyzer.
-
+### 2. `/api/furigana` — Konversi Furigana
 - **Method**: `POST`
 - **Autentikasi**: Publik (dibatasi CORS)
-- **Content-Type**: `application/json`
+- **Fungsi**: Konversi teks kanji/campuran Jepang ke hiragana/furigana via Kuroshiro + Kuromoji.
 
-### Request Body
-
-```json
-{
-  "text": "日本語を勉強します",
-  "mode": "furigana"
-}
-```
-
-| Field | Tipe | Wajib | Default | Deskripsi |
-|-------|------|-------|---------|-----------|
-| `text` | string | Ya | — | Teks Jepang yang akan dikonversi |
-| `mode` | string | Tidak | `normal` | Mode konversi: `normal`, `furigana`, `okurigana`, `roma` |
-
-### Respons
-
-| Status | Body |
-|--------|------|
-| `200` | `{ "hiragana": "<ruby>日本語<rt>にほんご</rt></ruby>..." }` |
-| `500` | `{ "error": "Gagal mengonversi teks ke Hiragana", "details": "..." }` |
-
-Jika `text` kosong, endpoint mengembalikan `{ "hiragana": "" }` dengan status 200.
-
----
-
-## 3. `/api/cards` — Flashcard Entity Resolver
-
-Mengambil data kartu vocab dan kanji berdasarkan daftar ID campuran (UUID, slug, romaji legacy, atau karakter kanji tunggal).
-
+### 3. `/api/cards` — Flashcard Entity Resolver
 - **Method**: `GET`
-- **Autentikasi**: Publik (via Supabase server client)
-
-### Parameter Kueri
-
-| Parameter | Tipe | Wajib | Deskripsi |
-|-----------|------|-------|-----------|
-| `ids` | string | Ya | Daftar ID dipisah koma. Contoh: `ids=n5-noun-hon,4a8b...,日` |
-
-### Resolusi ID
-
-| Pola | Tipe |
-|------|------|
-| UUID v4 | Query by `id` |
-| `n5-*` / `n4-*` | Legacy romaji ID — strip prefix, cari di `vocab.romaji` |
-| 1 karakter | Karakter kanji — cari di `kanji.character` |
-| Lainnya | Slug — cari di `vocab.slug` |
-
-### Respons
-
-| Status | Body |
-|--------|------|
-| `200` | `FormattedCard[]` — Array kartu terformat |
-| `400` | Parameter `ids` tidak disertakan |
-| `500` | Gagal query database |
-
----
-
-## 4. `/api/health` — Health Check
-
-Menyediakan status kesehatan operasional dan verifikasi environment variables.
-
-- **Method**: `GET`, `HEAD`
 - **Autentikasi**: Publik
+- **Fungsi**: Mengambil data kartu vocab & kanji dari ID campuran (UUID, slug, romaji legacy, kanji).
+
+### 4. `/api/health` — Health Check Operasional
+- **Method**: `GET`, `HEAD`
 - **Cache**: `no-store`
+- **Fungsi**: Audit kesehatan server & verifikasi keberadaan env vars (wajib & fitur).
 
-### Environment Variables yang Diperiksa
-
-| Kategori | Variables |
-|----------|-----------|
-| **Wajib** | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SITE_URL` |
-| **Fitur** | `ADMIN_API_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY` |
-
-### Respons
-
-| Status | Kondisi |
-|--------|---------|
-| `200` | Semua variabel wajib lengkap (`status: "ok"`) |
-| `503` | Ada variabel wajib yang hilang (`status: "degraded"`) |
-
-Di production, hanya `missingRequiredCount` dan `missingFeatureCount` yang dikembalikan — nama variabel disembunyikan untuk mencegah kebocoran informasi.
-
----
-
-## 5. `/api/webhooks/saweria` — Webhook Donasi Saweria
-
-Menerima notifikasi pembayaran dari Saweria dan menyimpan data donatur ke tabel `supporters`.
-
+### 5. `/api/webhooks/saweria` — Webhook Donasi Saweria
 - **Method**: `POST`
-- **Autentikasi**: HMAC SHA256 signature via header `x-saweria-signature`, atau secret via URL query/body `secret`
+- **Autentikasi**: HMAC SHA256 signature via header `x-saweria-signature`
+- **Fungsi**: Menerima notifikasi donasi Saweria & menyimpan donatur ke `supporters`.
 
-### Tier Lencana
-
-| Jumlah | Tier |
-|--------|------|
-| ≥ 100.000 | Gold |
-| ≥ 50.000 | Silver |
-| < 50.000 | Bronze |
-
-### Respons
-
-| Status | Deskripsi |
-|--------|-----------|
-| `200` | `{ "success": true, "message": "Donator successfully processed and saved" }` |
-| `401` | Signature/secret tidak valid |
-| `400` | Payload transaksi tidak lengkap |
-
----
-
-## 6. `/api/webhooks/trakteer` — Webhook Donasi Trakteer
-
-Menerima notifikasi dukungan dari Trakteer.
-
+### 6. `/api/webhooks/trakteer` — Webhook Donasi Trakteer
 - **Method**: `POST`
-- **Autentikasi**: Token via header `x-webhook-token`, `x-trakteer-token`, atau body `key`
+- **Autentikasi**: Token via `x-webhook-token`
+- **Fungsi**: Menerima notifikasi donasi Trakteer & menyimpan donatur ke `supporters`.
 
-### Respons
-
-| Status | Deskripsi |
-|--------|-----------|
-| `200` | `{ "success": true, "message": "Donator successfully processed and saved" }` |
-| `401` | Token webhook tidak cocok |
-
-Jika `transaction_id` mengandung "test" atau `net_amount ≤ 0`, endpoint mengembalikan sukses tanpa menyimpan ke database (ping test).
----
-
-## 7. `/auth/callback` — OAuth Callback
-
-Menangani callback setelah otentikasi OAuth via Supabase Auth.
-
+### 7. `/auth/callback` — OAuth Callback
 - **Method**: `GET`
-- **Autentikasi**: Publik (menggunakan authorization code)
+- **Fungsi**: OAuth exchange code dari provider Supabase Auth ke session token.
 
-### Parameter Kueri
+---
 
-| Parameter | Tipe | Wajib | Default | Deskripsi |
-|-----------|------|-------|---------|-----------|
-| `code` | string | Ya | — | Authorization code dari provider |
-| `next` | string | Tidak | `/dashboard` | Path tujuan setelah login berhasil |
+## 3. Daftar 18 Server Action Files (`src/actions/*.actions.ts`)
 
-### Respons
+Seluruh Server Action tersimpan di `src/actions/` dan bertindak sebagai layer tipis validasi sebelum memanggil domain services:
 
-| Status | Kondisi |
-|--------|---------|
-| `302` (redirect) | Sukses → `${origin}${next}` |
-| `302` (redirect) | Gagal → `/login?error=auth-callback-failed` |
+| No | File Action | Ruang Lingkup Domain |
+|:---:|---|---|
+| 01 | `vocab.actions.ts` | Query & penyaringan data kosakata pustaka |
+| 02 | `kanji.actions.ts` | Query & penyaringan data kanji & radikal |
+| 03 | `grammar.actions.ts` | Query & detail tata bahasa Jepang |
+| 04 | `lessons.actions.ts` | Hydration modul pelajaran & fallback artikel |
+| 05 | `listening.actions.ts` | Data wacana & kuis listening |
+| 06 | `reading.actions.ts` | Data wacana & kuis reading |
+| 07 | `cheatsheets.actions.ts` | Lembar rangkuman & cheatsheet |
+| 08 | `sentences.actions.ts` | Pencarian contoh kalimat terjemahan |
+| 09 | `expressions.actions.ts` | Query ungkapan & frasa harian |
+| 10 | `dictionary.actions.ts` | Pencarian terpadu kamus (multi-category search) |
+| 11 | `flashcard.actions.ts` | Resolusi kartu flashcard & custom mnemonics |
+| 12 | `exams.actions.ts` | Eksekusi & evaluasi sesi ujian JLPT |
+| 13 | `jlpt-exams.actions.ts` | Catalog & template ujian JLPT |
+| 14 | `community.actions.ts` | Forum komunitas: post, comment, & like |
+| 15 | `support.actions.ts` | Laporan feedback pengguna |
+| 16 | `tools-integration.actions.ts` | Data integrasi tools (drill, shadowing, counter) |
+| 17 | `library.actions.ts` | Pengambilan data agregat pustaka |
+| 18 | `library-counts.actions.ts` | Perhitungan jumlah item pustaka |

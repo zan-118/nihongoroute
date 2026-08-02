@@ -16,10 +16,10 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
  * @returns JSX element rendering analytics.
  */
 export default function VercelAnalytics() {
-  return (
-    <>
-      <Analytics />
-      <SpeedInsights />
-    </>
-  );
+ return (
+ <>
+ <Analytics />
+ <SpeedInsights />
+ </>
+ );
 }

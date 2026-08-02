@@ -27,41 +27,41 @@ import { QuizPlaying } from "./QuizPlaying";
  * @param props.lessonId - Current lesson ID.
  */
 export default function QuizEngine({ questions, lessonId }: QuizProps) {
-  const [isClient, setIsClient] = useState(false);
-  const engine = useQuizEngine(questions, lessonId);
+ const [isClient, setIsClient] = useState(false);
+ const engine = useQuizEngine(questions, lessonId);
 
-  useEffect(() => {
-    // Prevent hydration mismatch. Wait for client render.
-    const frame = requestAnimationFrame(() => setIsClient(true));
-    return () => cancelAnimationFrame(frame);
-  }, []);
+ useEffect(() => {
+ // Prevent hydration mismatch. Wait for client render.
+ const frame = requestAnimationFrame(() => setIsClient(true));
+ return () => cancelAnimationFrame(frame);
+ }, []);
 
-  // Skip render if server-side or empty questions.
-  if (!isClient || !questions || questions.length === 0) return null;
+ // Skip render if server-side or empty questions.
+ if (!isClient || !questions || questions.length === 0) return null;
 
-  // Show summary when quiz ends.
-  if (engine.isFinished) {
-    return (
-      <QuizFinished
-        score={engine.score}
-        totalQuestions={questions.length}
-        showXP={engine.showXP}
-        xpGained={engine.xpGained}
-        resetQuiz={engine.resetQuiz}
-      />
-    );
-  }
+ // Show summary when quiz ends.
+ if (engine.isFinished) {
+ return (
+ <QuizFinished
+ score={engine.score}
+ totalQuestions={questions.length}
+ showXP={engine.showXP}
+ xpGained={engine.xpGained}
+ resetQuiz={engine.resetQuiz}
+ />
+ );
+ }
 
-  // Show active question interface.
-  return (
-    <QuizPlaying
-      currentQ={questions[engine.currentIndex]}
-      currentIndex={engine.currentIndex}
-      totalQuestions={questions.length}
-      selectedOption={engine.selectedOption}
-      isAnswered={engine.isAnswered}
-      handleSelect={engine.handleSelect}
-      nextQuestion={engine.nextQuestion}
-    />
-  );
+ // Show active question interface.
+ return (
+ <QuizPlaying
+ currentQ={questions[engine.currentIndex]}
+ currentIndex={engine.currentIndex}
+ totalQuestions={questions.length}
+ selectedOption={engine.selectedOption}
+ isAnswered={engine.isAnswered}
+ handleSelect={engine.handleSelect}
+ nextQuestion={engine.nextQuestion}
+ />
+ );
 }

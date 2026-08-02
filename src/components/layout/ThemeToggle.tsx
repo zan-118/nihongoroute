@@ -1,7 +1,7 @@
 /**
  * @file ThemeToggle.tsx
- * @description Fasade pembungkus untuk memelihara kompatibilitas impor ThemeToggle.
- * Seluruh komponen terpusat di `@/components/layout/navigation`.
+ * @description Facade wrapper re-export maintaining import backwards compatibility for ThemeToggle.
+ * All navigation components are centralized under `@/components/layout/navigation`.
  */
 
 export { ThemeToggle } from "./navigation";

@@ -22,9 +22,9 @@ import { Badge } from "@/components/ui/badge";
  * @property {string} [pitchAccent] - Pitch accent pattern information.
  */
 interface VocabDetailsProps {
-  hinshi?: string;
-  jlptLevel?: string;
-  pitchAccent?: string;
+ hinshi?: string;
+ jlptLevel?: string;
+ pitchAccent?: string;
 }
 
 // ==========================================
@@ -37,29 +37,29 @@ interface VocabDetailsProps {
  * @returns {JSX.Element} Card component containing metadata badges.
  */
 export function VocabDetails({ hinshi, jlptLevel, pitchAccent }: VocabDetailsProps) {
-  return (
-    <Card className="p-6 bg-card/20  border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative flex flex-col justify-center gap-4 font-sans glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
-      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Atribut Kata</span>
-      
-      {/* Container Lencana Atribut */}
-      <div className="flex flex-wrap gap-2">
-        {/* Fallback to default label if part of speech is missing */}
-        <Badge variant="outline" className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-xl bg-primary/10 text-primary border-primary/20">
-          {hinshi || "Kosakata"}
-        </Badge>
-        {/* Render JLPT badge only if level is provided */}
-        {jlptLevel && (
-          <Badge variant="outline" className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-xl bg-secondary/10 text-secondary border-secondary/20">
-            JLPT {jlptLevel}
-          </Badge>
-        )}
-        {/* Render pitch accent badge only if pattern is provided */}
-        {pitchAccent && (
-          <Badge variant="secondary" className="px-3 py-1.5 text-[9px] font-bold tracking-widest bg-muted border-border">
-            PITCH: {pitchAccent}
-          </Badge>
-        )}
-      </div>
-    </Card>
-  );
+ return (
+ <Card className="p-6 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative flex flex-col justify-center gap-4 font-sans glass shadow-[0_0_20px_hsl(var(--primary)/0.02)]">
+ <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Atribut Kata</span>
+ 
+ {/* Container Lencana Atribut */}
+ <div className="flex flex-wrap gap-2">
+ {/* Fallback to default label if part of speech is missing */}
+ <Badge variant="outline" className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-xl bg-primary/10 text-primary border-primary/20">
+ {hinshi || "Kosakata"}
+ </Badge>
+ {/* Render JLPT badge only if level is provided */}
+ {jlptLevel && (
+ <Badge variant="outline" className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-xl bg-secondary/10 text-secondary border-secondary/20">
+ JLPT {jlptLevel}
+ </Badge>
+ )}
+ {/* Render pitch accent badge only if pattern is provided */}
+ {pitchAccent && (
+ <Badge variant="secondary" className="px-3 py-1.5 text-[9px] font-bold tracking-widest bg-muted border-border">
+ PITCH: {pitchAccent}
+ </Badge>
+ )}
+ </div>
+ </Card>
+ );
 }

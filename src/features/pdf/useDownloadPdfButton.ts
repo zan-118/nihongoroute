@@ -21,15 +21,15 @@ import { useState, useEffect } from "react";
  * @returns Object containing mount status.
  */
 export function useDownloadPdfButton() {
-  // Track client mount status.
-  const [isMounted, setIsMounted] = useState(false);
+ // Track client mount status.
+ const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => {
-    // Defer state update to next frame. Avoid layout thrashing.
-    const frame = requestAnimationFrame(() => setIsMounted(true));
-    // Cancel frame on unmount. Prevent memory leak.
-    return () => cancelAnimationFrame(frame);
-  }, []);
+ useEffect(() => {
+ // Defer state update to next frame. Avoid layout thrashing.
+ const frame = requestAnimationFrame(() => setIsMounted(true));
+ // Cancel frame on unmount. Prevent memory leak.
+ return () => cancelAnimationFrame(frame);
+ }, []);
 
-  return { isMounted };
+ return { isMounted };
 }

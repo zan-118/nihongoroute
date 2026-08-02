@@ -16,8 +16,8 @@ import { useCachedAudio } from "@/hooks/useCachedAudio";
 // ANTARMUKA / TIPE DATA
 // ======================
 export interface OfflineAudioProps extends React.AudioHTMLAttributes<HTMLAudioElement> {
-  /** Source URL of the audio file. */
-  src: string;
+ /** Source URL of the audio file. */
+ src: string;
 }
 
 // ======================
@@ -27,15 +27,15 @@ export interface OfflineAudioProps extends React.AudioHTMLAttributes<HTMLAudioEl
  * HTML5 audio player component. Uses cached audio URL for offline playback.
  */
 export function OfflineAudio({ src, className, ...props }: OfflineAudioProps) {
-  const cachedUrl = useCachedAudio(src);
+ const cachedUrl = useCachedAudio(src);
 
-  return (
-    <audio
-      src={cachedUrl}
-      className={className}
-      {...props}
-    />
-  );
+ return (
+ <audio
+ src={cachedUrl}
+ className={className}
+ {...props}
+ />
+ );
 }
 
 export default OfflineAudio;

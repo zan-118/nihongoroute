@@ -23,63 +23,63 @@ import { useUIStore } from "@/store/useUIStore";
  * @returns null
  */
 export default function ReminderSystem() {
-  const srs = useSRSStore((state) => state.srs);
-  const settings = useUIStore((state) => state.settings);
+ const srs = useSRSStore((state) => state.srs);
+ const settings = useUIStore((state) => state.settings);
 
-  // Track timestamp of last sent notification to throttle alerts
-  const lastNotifiedRef = useRef<number>(0);
+ // Track timestamp of last sent notification to throttle alerts
+ const lastNotifiedRef = useRef<number>(0);
 
-  useEffect(() => {
-    // Exit if notifications disabled, server-side rendered, or unsupported
-    if (!settings.notificationsEnabled || typeof window === "undefined" || !("Notification" in window)) {
-      return;
-    }
+ useEffect(() => {
+ // Exit if notifications disabled, server-side rendered, or unsupported
+ if (!settings.notificationsEnabled || typeof window === "undefined" || !("Notification" in window)) {
+ return;
+ }
 
-    // Exit if user has not granted notification permission
-    if (Notification.permission !== "granted") {
-      return;
-    }
+ // Exit if user has not granted notification permission
+ if (Notification.permission !== "granted") {
+ return;
+ }
 
-    /**
-     * Checks for due cards and triggers notification if throttle limit passed.
-     */
-    const checkDueCards = () => {
-      const now = Date.now();
-      // Count active cards where next review time is in the past
-      const dueCount = Object.values(srs).filter((card) => !card.isDeleted && card.nextReview <= now).length;
+ /**
+ * Checks for due cards and triggers notification if throttle limit passed.
+ */
+ const checkDueCards = () => {
+ const now = Date.now();
+ // Count active cards where next review time is in the past
+ const dueCount = Object.values(srs).filter((card) => !card.isDeleted && card.nextReview <= now).length;
 
-      // Hanya beri notifikasi jika ada kartu yang jatuh tempo dan kita belum memberitahu dalam 1 jam terakhir
-      if (dueCount > 0 && now - lastNotifiedRef.current > 3600000) {
-        const title = "NihongoRoute";
-        const options = {
-          body: `Okaeri! Ada ${dueCount} kartu yang butuh kamu review sekarang. Jangan sampai lupa ya!`,
-          icon: "/logo-branding.png",
-          badge: "/logo-branding.png",
-          tag: "srs-reminder", // Hindari duplikasi
-          vibrate: [100, 50, 100],
-        };
+ // Hanya beri notifikasi jika ada kartu yang jatuh tempo dan kita belum memberitahu dalam 1 jam terakhir
+ if (dueCount > 0 && now - lastNotifiedRef.current > 3600000) {
+ const title = "NihongoRoute";
+ const options = {
+ body: `Okaeri! Ada ${dueCount} kartu yang butuh kamu review sekarang. Jangan sampai lupa ya!`,
+ icon: "/logo-branding.png",
+ badge: "/logo-branding.png",
+ tag: "srs-reminder", // Hindari duplikasi
+ vibrate: [100, 50, 100],
+ };
 
-        // Use Service Worker for background notification if available, fallback to standard API
-        if ("serviceWorker" in navigator) {
-          navigator.serviceWorker.ready.then((registration) => {
-            registration.showNotification(title, options as NotificationOptions);
-          }).catch(() => {
-            new Notification(title, options as NotificationOptions);
-          });
-        } else {
-          new Notification(title, options as NotificationOptions);
-        }
-        
-        lastNotifiedRef.current = now;
-      }
-    };
+ // Use Service Worker for background notification if available, fallback to standard API
+ if ("serviceWorker" in navigator) {
+ navigator.serviceWorker.ready.then((registration) => {
+ registration.showNotification(title, options as NotificationOptions);
+ }).catch(() => {
+ new Notification(title, options as NotificationOptions);
+ });
+ } else {
+ new Notification(title, options as NotificationOptions);
+ }
+ 
+ lastNotifiedRef.current = now;
+ }
+ };
 
-    // Periksa segera dan kemudian setiap 15 menit
-    checkDueCards();
-    const interval = setInterval(checkDueCards, 15 * 60 * 1000);
+ // Periksa segera dan kemudian setiap 15 menit
+ checkDueCards();
+ const interval = setInterval(checkDueCards, 15 * 60 * 1000);
 
-    return () => clearInterval(interval);
-  }, [srs, settings.notificationsEnabled]);
+ return () => clearInterval(interval);
+ }, [srs, settings.notificationsEnabled]);
 
-  return null; // Komponen ini hanya berisi logika
+ return null; // Komponen ini hanya berisi logika
 }

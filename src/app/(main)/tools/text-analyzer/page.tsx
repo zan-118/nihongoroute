@@ -8,12 +8,12 @@ import { ROUTES } from "@/lib/core/routes";
  * Page metadata. Configure SEO for Japanese text analyzer tool.
  */
 export const metadata: Metadata = {
-  ...createPageMetadata({
-    title: "Japanese Text Analyzer | NihongoRoute",
-    description: "Analisis teks Jepang untuk menemukan kosakata, kanji, dan pola tata bahasa penting.",
-    path:ROUTES.TOOLS.TEXT_ANALYZER,
-    keywords: ["text analyzer Jepang", "analisis teks Jepang", "kanji parser", "grammar parser Jepang"],
-  }),
+ ...createPageMetadata({
+ title: "Japanese Text Analyzer | NihongoRoute",
+ description: "Analisis teks Jepang untuk menemukan kosakata, kanji, dan pola tata bahasa penting.",
+ path:ROUTES.TOOLS.TEXT_ANALYZER,
+ keywords: ["text analyzer Jepang", "analisis teks Jepang", "kanji parser", "grammar parser Jepang"],
+ }),
 };
 
 /**
@@ -33,8 +33,8 @@ type ToolSearchParams = Record<string, string | string[] | undefined>;
  * @returns First string value or undefined.
  */
 function firstParam(value: string | string[] | undefined) {
-  // Extract first item if array. Otherwise return value.
-  return Array.isArray(value) ? value[0] : value;
+ // Extract first item if array. Otherwise return value.
+ return Array.isArray(value) ? value[0] : value;
 }
 
 /**
@@ -44,22 +44,22 @@ function firstParam(value: string | string[] | undefined) {
  * @param props.searchParams - URL search parameters.
  */
 export default async function TextAnalyzerPage({
-  searchParams,
+ searchParams,
 }: {
-  searchParams?: Promise<ToolSearchParams>;
+ searchParams?: Promise<ToolSearchParams>;
 }) {
-  // Await search params for Next.js 15 compatibility.
-  const params = searchParams ? await searchParams : {};
-  const source = firstParam(params.source);
-  const slug = firstParam(params.slug);
-  // Fetch text from database using source and slug.
-  const sourceText = await getLibraryTextForTool({ source, slug });
+ // Await search params for Next.js 15 compatibility.
+ const params = searchParams ? await searchParams : {};
+ const source = firstParam(params.source);
+ const slug = firstParam(params.slug);
+ // Fetch text from database using source and slug.
+ const sourceText = await getLibraryTextForTool({ source, slug });
 
-  return (
-    <TextAnalyzerClient
-      initialText={sourceText?.text}
-      initialSourceTitle={sourceText?.title}
-      initialSourceHref={sourceText?.sourceHref}
-    />
-  );
+ return (
+ <TextAnalyzerClient
+ initialText={sourceText?.text}
+ initialSourceTitle={sourceText?.title}
+ initialSourceHref={sourceText?.sourceHref}
+ />
+ );
 }

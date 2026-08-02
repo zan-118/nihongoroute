@@ -13,9 +13,9 @@ import { PaginatedKanjiResponse, LibraryItem } from "@/types/library";
 import { KanjiTable } from "@/types/database";
 import { queryLexicalDomain } from "@/lib/services/lexical-content-engine";
 import {
-  getContentBySlugOrId,
-  getStaticSlugs,
-  getVocabByCharacter
+ getContentBySlugOrId,
+ getStaticSlugs,
+ getVocabByCharacter
 } from "@/lib/services/content-repository";
 
 // ======================
@@ -31,26 +31,26 @@ import {
  * @returns Paginated kanji data.
  */
 export async function getPaginatedKanji(
-  page: number,
-  limit: number,
-  search: string = "",
-  level: string = ""
+ page: number,
+ limit: number,
+ search: string = "",
+ level: string = ""
 ): Promise<PaginatedKanjiResponse> {
-  try {
-    const response = await queryLexicalDomain<KanjiTable>({
-      type: "kanji",
-      filters: { search, level },
-      pagination: { page, limit },
-    });
+ try {
+ const response = await queryLexicalDomain<KanjiTable>({
+ type: "kanji",
+ filters: { search, level },
+ pagination: { page, limit },
+ });
 
-    return {
-      data: response.data.map(k => ({ ...k, _id: k.id, jlptLevel: k.jlpt_level })),
-      total: response.total
-    };
-  } catch (error) {
-    console.error("Gagal mengambil data paginasi kanji:", error);
-    return { data: [], total: 0 };
-  }
+ return {
+ data: response.data.map(k => ({ ...k, _id: k.id, jlptLevel: k.jlpt_level })),
+ total: response.total
+ };
+ } catch (error) {
+ console.error("Gagal mengambil data paginasi kanji:", error);
+ return { data: [], total: 0 };
+ }
 }
 
 /**
@@ -66,35 +66,35 @@ const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-
  * @returns Kanji detail or null.
  */
 export async function getLibraryKanjiDetail(slugOrId: string): Promise<LibraryItem | null> {
-  try {
-    const data = await getContentBySlugOrId<LibraryItem>("kanji", slugOrId);
+ try {
+ const data = await getContentBySlugOrId<LibraryItem>("kanji", slugOrId);
 
-    if (!data) return null;
+ if (!data) return null;
 
-    // Normalisasi bidang properti untuk frontend
-    data.jlptLevel = data.jlpt_level;
-    data.strokeOrderSvg = data.stroke_order_svg;
+ // Normalisasi bidang properti untuk frontend
+ data.jlptLevel = data.jlpt_level;
+ data.strokeOrderSvg = data.stroke_order_svg;
 
-    // Ambil kosakata terkait — cari kata yang mengandung karakter kanji ini
-    try {
-      const related = await getVocabByCharacter(data.character as string, 6);
-      data.relatedVocab = related.map((v: { id: string; word: string; furigana: string | null; meaning_id: string; slug: string }) => ({
-        id: v.id,
-        _id: v.id,
-        word: v.word,
-        meaning: v.meaning_id,
-        furigana: v.furigana || "",
-        slug: v.slug
-      }));
-    } catch {
-      data.relatedVocab = [];
-    }
+ // Ambil kosakata terkait — cari kata yang mengandung karakter kanji ini
+ try {
+ const related = await getVocabByCharacter(data.character as string, 6);
+ data.relatedVocab = related.map((v: { id: string; word: string; furigana: string | null; meaning_id: string; slug: string }) => ({
+ id: v.id,
+ _id: v.id,
+ word: v.word,
+ meaning: v.meaning_id,
+ furigana: v.furigana || "",
+ slug: v.slug
+ }));
+ } catch {
+ data.relatedVocab = [];
+ }
 
-    return data;
-  } catch (error) {
-    console.error("Gagal mengambil detail kanji:", error);
-    return null;
-  }
+ return data;
+ } catch (error) {
+ console.error("Gagal mengambil detail kanji:", error);
+ return null;
+ }
 }
 
 /**
@@ -104,13 +104,13 @@ export async function getLibraryKanjiDetail(slugOrId: string): Promise<LibraryIt
  * @returns Array of object params with slug property.
  */
 export async function getKanjiStaticSlugs(limit: number = 200): Promise<{ slug: string }[]> {
-  try {
-    const data = await getStaticSlugs("kanji", { limit, select: "slug, character" });
-    return data
-      .map((item) => ({ slug: String(item.slug || item.character || "") }))
-      .filter((x) => x.slug);
-  } catch (error) {
-    console.error("Gagal mengambil static slugs kanji:", error);
-    return [];
-  }
+ try {
+ const data = await getStaticSlugs("kanji", { limit, select: "slug, character" });
+ return data
+ .map((item) => ({ slug: String(item.slug || item.character || "") }))
+ .filter((x) => x.slug);
+ } catch (error) {
+ console.error("Gagal mengambil static slugs kanji:", error);
+ return [];
+ }
 }

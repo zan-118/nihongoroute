@@ -1,17 +1,28 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('Navigasi & Global UI', () => {
-  test('dapat memuat halaman beranda dengan benar', async ({ page }) => {
-    await page.goto('/');
-    // Pastikan app merender konten utama (body ada)
-    await expect(page.locator('body')).toBeVisible();
+test.describe("Navigasi & Global UI Real E2E", () => {
+  test("dapat memuat halaman beranda dengan benar", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("body")).toBeVisible();
   });
 
-  test('harus menampilkan halaman 404 untuk rute tidak dikenal', async ({ page }) => {
-    // Kami tes ke rute random
-    await page.goto('/rute-acak-tidak-ada');
-    // Cari angka 404 atau pesan halaman tidak ditemukan (Tergantung teks NotFound)
-    // Minimal kita pastikan body termuat
-    await expect(page.locator('body')).toBeVisible();
+  test("dapat memuat halaman Pustaka (/library)", async ({ page }) => {
+    await page.goto("/library");
+    await expect(page.locator("body")).toBeVisible();
+  });
+
+  test("dapat memuat halaman Ujian (/exams)", async ({ page }) => {
+    await page.goto("/exams");
+    await expect(page.locator("body")).toBeVisible();
+  });
+
+  test("dapat memuat Kamus Terpadu (/tools/dictionary)", async ({ page }) => {
+    await page.goto("/tools/dictionary");
+    await expect(page.locator("body")).toBeVisible();
+  });
+
+  test("harus menangani rute 404 tidak dikenal secara terisolasi", async ({ page }) => {
+    await page.goto("/rute-acak-tidak-ada-12345");
+    await expect(page.locator("body")).toBeVisible();
   });
 });

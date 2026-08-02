@@ -13,12 +13,12 @@ import { ROUTES } from "@/lib/core/routes";
  * Disable search engine indexing.
  */
 export const metadata: Metadata = {
-  ...createPageMetadata({
-    title: "Weak Point Trainer | NihongoRoute",
-    description: "Latihan terarah untuk memperkuat kartu SRS yang paling rentan.",
-    path:ROUTES.TOOLS.WEAK_POINTS,
-    noIndex: true,
-  }),
+ ...createPageMetadata({
+ title: "Weak Point Trainer | NihongoRoute",
+ description: "Latihan terarah untuk memperkuat kartu SRS yang paling rentan.",
+ path:ROUTES.TOOLS.WEAK_POINTS,
+ noIndex: true,
+ }),
 };
 
 /**
@@ -26,5 +26,5 @@ export const metadata: Metadata = {
  * Render client container.
  */
 export default function WeakPointTrainerPage() {
-  return <WeakPointTrainerClient />;
+ return <WeakPointTrainerClient />;
 }

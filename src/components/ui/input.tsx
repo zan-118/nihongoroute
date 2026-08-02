@@ -11,20 +11,20 @@ import { cn } from "@/lib/utils"
  * Custom styled HTML input element.
  */
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
-  ({ className, type, ...props }, ref) => {
-    return (
-      <input
-        type={type}
-        // Apply premium control-surface styling, focus ring, and transition effects.
-        className={cn(
-          "interactive-card flex h-12 w-full px-4 py-2 text-base placeholder:text-muted-foreground/75 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all",
-          className
-        )}
-        ref={ref}
-        {...props}
-      />
-    )
-  }
+ ({ className, type, ...props }, ref) => {
+ return (
+ <input
+ type={type}
+ // Apply standard flat styling and focus ring.
+ className={cn(
+ "flex h-[48px] w-full rounded-[14px] border border-border bg-transparent px-4 py-2 text-[15px] placeholder:text-muted-foreground file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-50 transition-colors",
+ className
+ )}
+ ref={ref}
+ {...props}
+ />
+ )
+ }
 )
 Input.displayName = "Input"
 

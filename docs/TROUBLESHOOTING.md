@@ -1,21 +1,30 @@
-# Troubleshooting
+# Panduan Troubleshooting & FAQ
 
-> Terakhir diperbarui: 31 Juli 2026
+> **Status Dokumentasi**: Aktif & Tersinkronisasi  
+> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Ruang Lingkup**: Penanganan Masalah Kuroshiro, Edge TTS Timeout, Offline Sync Conflict, & Health Check  
+> **Rujukan Utama**: [README.md](../README.md) | [GETTING_STARTED.md](GETTING_STARTED.md) | [CONFIGURATION.md](CONFIGURATION.md)
 
 ---
 
-## 1. Inisialisasi Kuroshiro Gagal
+## 📋 Daftar Isi
+
+1. [Inisialisasi Kuroshiro / Kuromoji Gagal](#1-inisialisasi-kuroshiro--kuromoji-gagal)
+2. [Edge TTS Timeout / Audio Failure](#2-edge-tts-timeout--audio-failure)
+3. [Konflik Sinkronisasi Multi-Tab & Offline](#3-konflik-sinkronisasi-multi-tab--offline)
+4. [Health Check Status Degraded (503)](#4-health-check-status-degraded-503)
+
+---
+
+## 1. Inisialisasi Kuroshiro / Kuromoji Gagal
 
 ### Gejala
-
 Log server: `Kuroshiro Init Error: Cannot find dictionary path...`
 
 ### Penyebab
-
 Modul `kuroshiro-analyzer-kuromoji` memerlukan kamus biner kuromoji di `node_modules/kuromoji/dict`. Folder tidak ditemukan atau terhapus.
 
 ### Solusi
-
 1. Pastikan `node_modules/kuromoji/dict` ada.
 2. Path kamus dikonfigurasi eksplisit di `route.ts`:
    ```typescript
@@ -25,34 +34,28 @@ Modul `kuroshiro-analyzer-kuromoji` memerlukan kamus biner kuromoji di `node_mod
 
 ---
 
-## 2. Edge TTS Timeout
+## 2. Edge TTS Timeout / Audio Failure
 
 ### Gejala
-
 Audio pelafalan lambat atau mengembalikan status 500.
 
 ### Penyebab
-
 Saat cache miss, server melakukan sintesis dinamis via MsEdgeTTS dengan timeout **10 detik**. Jika server Edge TTS lambat, sintesis gagal.
 
-### Fallback Klien
-
-Jika `/api/tts` mengembalikan error (status 500), klien otomatis mengaktifkan **Web Speech API** bawaan browser (`window.speechSynthesis`) dengan bahasa `ja-JP`.
+### Solusi & Fallback Klien
+Jika `/api/tts` mengembalikan error, klien otomatis mengaktifkan **Web Speech API** bawaan browser (`window.speechSynthesis`) dengan bahasa `ja-JP`.
 
 ---
 
-## 3. Konflik Sinkronisasi Offline
+## 3. Konflik Sinkronisasi Multi-Tab & Offline
 
 ### Gejala
+Progres lokal (guest) tidak sinkron setelah login atau diakses di tab lain.
 
-Progres lokal (guest) tidak sinkron setelah login.
+### Strategi Resolusi Konflik
 
-### Resolusi Konflik
-
-Sistem di `src/lib/supabase/sync.ts` menyelesaikan konflik otomatis:
-
-| Data | Strategi |
-|------|----------|
+| Data | Strategi Resolusi |
+|---|---|
 | XP & Streak | `Math.max(lokal, cloud)` |
 | Streak Freeze | Ambil jumlah terbanyak |
 | Study Days | Gabung per tanggal, ambil count tertinggi |
@@ -60,17 +63,10 @@ Sistem di `src/lib/supabase/sync.ts` menyelesaikan konflik otomatis:
 
 ---
 
-## 4. Health Check Degraded
+## 4. Health Check Status Degraded (503)
 
 ### Gejala
-
 `/api/health` mengembalikan status `degraded` (HTTP 503).
 
-### Penyebab
-
-Variabel environment wajib belum terisi di `.env.local`.
-
 ### Solusi
-
-1. Di development, respons `/api/health` menampilkan daftar variabel yang hilang (`missingRequired`).
-2. Pastikan `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, dan `NEXT_PUBLIC_SITE_URL` sudah dikonfigurasi.
+Pastikan `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, dan `NEXT_PUBLIC_SITE_URL` sudah terdefinisi di `.env.local`.

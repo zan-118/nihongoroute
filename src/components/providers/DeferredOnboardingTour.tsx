@@ -7,9 +7,9 @@ import dynamic from "next/dynamic";
  * Disable SSR. Tour needs browser DOM.
  */
 const OnboardingTour = dynamic(
-  () => import("@/features/auth/onboarding/OnboardingTour"),
-  // Disable SSR. Tour library requires window/document access.
-  { ssr: false }
+ () => import("@/features/auth/onboarding/OnboardingTour"),
+ // Disable SSR. Tour library requires window/document access.
+ { ssr: false }
 );
 
 /**
@@ -20,5 +20,5 @@ const OnboardingTour = dynamic(
  * @returns React element rendering client-side tour.
  */
 export default function DeferredOnboardingTour() {
-  return <OnboardingTour />;
+ return <OnboardingTour />;
 }

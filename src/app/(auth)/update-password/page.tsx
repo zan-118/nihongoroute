@@ -1,39 +1,39 @@
 /**
  * @file page.tsx
- * @description Halaman pembaruan kata sandi (Update Password). Entry point untuk UpdatePasswordClient.
+ * @description Password update page route (Update Password). Entry point for UpdatePasswordView.
  */
 
-// ======================
-// IMPOR
-// ======================
+// ==========================================
+// Import & Dependencies
+// ==========================================
 import type { Metadata } from "next";
 import UpdatePasswordView from "@/features/auth/UpdatePasswordView";
 import { createPageMetadata } from "@/lib/seo";
 
-// ======================
-// KONFIGURASI METADATA
-// ======================
+// ==========================================
+// Metadata Configuration
+// ==========================================
 /**
  * Metadata for Update Password page.
  * Disables search engine indexing for security.
  */
 export const metadata: Metadata = {
-  ...createPageMetadata({
-    title: "Perbarui Kata Sandi | NihongoRoute",
-    description: "Perbarui kata sandi akun NihongoRoute Anda.",
-    path: "/update-password",
-    noIndex: true,
-  }),
+ ...createPageMetadata({
+ title: "Perbarui Kata Sandi | NihongoRoute",
+ description: "Perbarui kata sandi akun NihongoRoute Anda.",
+ path: "/update-password",
+ noIndex: true,
+ }),
 };
 
-// ======================
-// EKSEKUSI UTAMA
-// ======================
+// ==========================================
+// Main Execution
+// ==========================================
 /**
  * Page component for password updates.
  * Serves as entry point for client component.
  */
 export default function UpdatePasswordPage() {
-  // Render client-side password update form
-  return <UpdatePasswordView />;
+ // Render client-side password update form
+ return <UpdatePasswordView />;
 }

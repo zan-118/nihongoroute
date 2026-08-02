@@ -1,47 +1,52 @@
 "use server";
 
+/**
+ * @file community.actions.ts
+ * @description Server Actions for community posts, comments, likes, and notifications.
+ */
+
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/core/routes";
 import {
-  buildCommentNotificationPayload,
-  sendCommunityNotification,
+ buildCommentNotificationPayload,
+ sendCommunityNotification,
 } from "@/lib/notifications/notification-engine";
 /**
  * Author profile details for posts and comments.
  */
 export interface PostAuthor {
-  full_name: string;
-  avatar_url?: string;
-  level: number;
+ full_name: string;
+ avatar_url?: string;
+ level: number;
 }
 
 /**
  * Community post structure.
  */
 export interface CommunityPost {
-  id: string;
-  user_id: string;
-  content: string;
-  created_at: string;
-  likes_users: string[]; // UUIDs of users who liked
-  comments_count: number;
-  author?: PostAuthor;
-  category?: string;
+ id: string;
+ user_id: string;
+ content: string;
+ created_at: string;
+ likes_users: string[]; // UUIDs of users who liked
+ comments_count: number;
+ author?: PostAuthor;
+ category?: string;
 }
 
 /**
  * Community comment structure.
  */
 export interface CommunityComment {
-  id: string;
-  post_id: string;
-  user_id: string;
-  content: string;
-  created_at: string;
-  author?: PostAuthor;
+ id: string;
+ post_id: string;
+ user_id: string;
+ content: string;
+ created_at: string;
+ author?: PostAuthor;
 }
 
 /**
@@ -50,17 +55,17 @@ export interface CommunityComment {
  * Throws error if unauthenticated.
  */
 async function requireAuth() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+ const supabase = await createClient();
+ const {
+ data: { user },
+ error,
+ } = await supabase.auth.getUser();
 
-  if (error || !user) {
-    throw new Error("Anda harus masuk log terlebih dahulu.");
-  }
+ if (error || !user) {
+ throw new Error("Anda harus masuk log terlebih dahulu.");
+ }
 
-  return { supabase, user };
+ return { supabase, user };
 }
 
 /**
@@ -70,45 +75,45 @@ async function requireAuth() {
  * @param category - Filter posts by category.
  */
 export async function getCommunityPosts(category?: string): Promise<CommunityPost[]> {
-  try {
-    const supabase = await createClient();
-    let query = supabase
-      .from('community_posts')
-      .select('id, user_id, content, created_at, likes_users, comments_count, category');
+ try {
+ const supabase = await createClient();
+ let query = supabase
+ .from('community_posts')
+ .select('id, user_id, content, created_at, likes_users, comments_count, category');
 
-    if (category && category !== 'Semua') {
-      query = query.eq('category', category);
-    }
+ if (category && category !== 'Semua') {
+ query = query.eq('category', category);
+ }
 
-    const { data: postsData, error: postsError } = await query.order('created_at', { ascending: false });
-    if (postsError) throw postsError;
-    if (!postsData || postsData.length === 0) return [];
+ const { data: postsData, error: postsError } = await query.order('created_at', { ascending: false });
+ if (postsError) throw postsError;
+ if (!postsData || postsData.length === 0) return [];
 
-    const userIds = [...new Set(postsData.map(p => p.user_id))];
-    const { data: profilesData } = await supabase
-      .from('leaderboard_profiles')
-      .select('id, full_name, avatar_url, level')
-      .in('id', userIds);
+ const userIds = [...new Set(postsData.map(p => p.user_id))];
+ const { data: profilesData } = await supabase
+ .from('leaderboard_profiles')
+ .select('id, full_name, avatar_url, level')
+ .in('id', userIds);
 
-    const profileMap = new Map(
-      (profilesData || []).map(p => [p.id, { full_name: p.full_name, avatar_url: p.avatar_url, level: p.level || 1 }])
-    );
+ const profileMap = new Map(
+ (profilesData || []).map(p => [p.id, { full_name: p.full_name, avatar_url: p.avatar_url, level: p.level || 1 }])
+ );
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (postsData as any[]).map((post: any) => ({
-      id: post.id,
-      user_id: post.user_id,
-      content: post.content,
-      created_at: post.created_at,
-      comments_count: post.comments_count,
-      category: post.category,
-      likes_users: Array.isArray(post.likes_users) ? post.likes_users : [],
-      author: profileMap.get(post.user_id) || { full_name: 'Unknown User', level: 1 }
-    }));
-  } catch (error) {
-    console.error('Gagal mengambil postingan komunitas:', error);
-    return [];
-  }
+ // eslint-disable-next-line @typescript-eslint/no-explicit-any
+ return (postsData as any[]).map((post: any) => ({
+ id: post.id,
+ user_id: post.user_id,
+ content: post.content,
+ created_at: post.created_at,
+ comments_count: post.comments_count,
+ category: post.category,
+ likes_users: Array.isArray(post.likes_users) ? post.likes_users : [],
+ author: profileMap.get(post.user_id) || { full_name: 'Unknown User', level: 1 }
+ }));
+ } catch (error) {
+ console.error('Gagal mengambil postingan komunitas:', error);
+ return [];
+ }
 }
 
 /**
@@ -118,32 +123,32 @@ export async function getCommunityPosts(category?: string): Promise<CommunityPos
  * @param category - Post category classification.
  */
 export async function createCommunityPost(content: string, category: string = "Umum"): Promise<{ success: boolean; error?: string }> {
-  try {
-    const { supabase, user } = await requireAuth();
-    
-    // Validate non-empty content
-    if (!content.trim()) {
-      return { success: false, error: "Konten tidak boleh kosong." };
-    }
+ try {
+ const { supabase, user } = await requireAuth();
+ 
+ // Validate non-empty content
+ if (!content.trim()) {
+ return { success: false, error: "Konten tidak boleh kosong." };
+ }
 
-    // Insert post record
-    const { error } = await supabase.from("community_posts").insert({
-      user_id: user.id,
-      content: content.trim(),
-      likes_users: [],
-      comments_count: 0,
-      category
-    });
+ // Insert post record
+ const { error } = await supabase.from("community_posts").insert({
+ user_id: user.id,
+ content: content.trim(),
+ likes_users: [],
+ comments_count: 0,
+ category
+ });
 
-    if (error) throw error;
+ if (error) throw error;
 
-    // Refresh social feed path
-    revalidatePath(ROUTES.SOCIAL);
-    return { success: true };
-  } catch (error: unknown) {
-    console.error("Gagal membuat postingan:", error);
-    return { success: false, error: error instanceof Error ? error.message : "Gagal membuat postingan." };
-  }
+ // Refresh social feed path
+ revalidatePath(ROUTES.SOCIAL);
+ return { success: true };
+ } catch (error: unknown) {
+ console.error("Gagal membuat postingan:", error);
+ return { success: false, error: error instanceof Error ? error.message : "Gagal membuat postingan." };
+ }
 }
 
 /**
@@ -153,78 +158,78 @@ export async function createCommunityPost(content: string, category: string = "U
  * @param postId - Target post ID.
  */
 export async function toggleLikePost(postId: string): Promise<{ success: boolean; likesCount: number; isLiked: boolean }> {
-  try {
-    const { supabase, user } = await requireAuth();
+ try {
+ const { supabase, user } = await requireAuth();
 
-    // Fetch current likes list and author ID
-    const { data: post, error: fetchErr } = await supabase
-      .from("community_posts")
-      .select("likes_users, user_id")
-      .eq("id", postId)
-      .single();
+ // Fetch current likes list and author ID
+ const { data: post, error: fetchErr } = await supabase
+ .from("community_posts")
+ .select("likes_users, user_id")
+ .eq("id", postId)
+ .single();
 
-    if (fetchErr || !post) throw new Error("Postingan tidak ditemukan.");
+ if (fetchErr || !post) throw new Error("Postingan tidak ditemukan.");
 
-    let likesList: string[] = Array.isArray(post.likes_users) ? post.likes_users : [];
-    const userIndex = likesList.indexOf(user.id);
-    let isLiked = false;
+ let likesList: string[] = Array.isArray(post.likes_users) ? post.likes_users : [];
+ const userIndex = likesList.indexOf(user.id);
+ let isLiked = false;
 
-    // Add or remove user ID from likes array
-    if (userIndex > -1) {
-      likesList = likesList.filter(id => id !== user.id);
-    } else {
-      likesList.push(user.id);
-      isLiked = true;
-    }
+ // Add or remove user ID from likes array
+ if (userIndex > -1) {
+ likesList = likesList.filter(id => id !== user.id);
+ } else {
+ likesList.push(user.id);
+ isLiked = true;
+ }
 
-    // Update likes array using admin client to bypass RLS restrictions
-    const adminSupabase = createAdminClient();
-    const { error: updateErr } = await adminSupabase
-      .from("community_posts")
-      .update({ likes_users: likesList })
-      .eq("id", postId);
+ // Update likes array using admin client to bypass RLS restrictions
+ const adminSupabase = createAdminClient();
+ const { error: updateErr } = await adminSupabase
+ .from("community_posts")
+ .update({ likes_users: likesList })
+ .eq("id", postId);
 
-    if (updateErr) throw updateErr;
+ if (updateErr) throw updateErr;
 
-    // Handle notification creation or deletion
-    if (isLiked) {
-      if (post.user_id !== user.id) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("full_name")
-          .eq("id", user.id)
-          .single();
-        const senderName = profile?.full_name || "Seseorang";
+ // Handle notification creation or deletion
+ if (isLiked) {
+ if (post.user_id !== user.id) {
+ const { data: profile } = await supabase
+ .from("profiles")
+ .select("full_name")
+ .eq("id", user.id)
+ .single();
+ const senderName = profile?.full_name || "Seseorang";
 
-        await adminSupabase.from("notifications").insert({
-          user_id: post.user_id,
-          sender_id: user.id,
-          type: "like",
-          title: "Suka Baru",
-          message: `${senderName} menyukai postingan Anda.`,
-          post_id: postId,
-          read: false
-        });
-      }
-    } else {
-      if (post.user_id !== user.id) {
-        await adminSupabase
-          .from("notifications")
-          .delete()
-          .eq("user_id", post.user_id)
-          .eq("sender_id", user.id)
-          .eq("type", "like")
-          .eq("post_id", postId);
-      }
-    }
+ await adminSupabase.from("notifications").insert({
+ user_id: post.user_id,
+ sender_id: user.id,
+ type: "like",
+ title: "Suka Baru",
+ message: `${senderName} menyukai postingan Anda.`,
+ post_id: postId,
+ read: false
+ });
+ }
+ } else {
+ if (post.user_id !== user.id) {
+ await adminSupabase
+ .from("notifications")
+ .delete()
+ .eq("user_id", post.user_id)
+ .eq("sender_id", user.id)
+ .eq("type", "like")
+ .eq("post_id", postId);
+ }
+ }
 
-    // Refresh social feed path
-    revalidatePath(ROUTES.SOCIAL);
-    return { success: true, likesCount: likesList.length, isLiked };
-  } catch (error) {
-    console.error("Gagal mengubah suka postingan:", error);
-    return { success: false, likesCount: 0, isLiked: false };
-  }
+ // Refresh social feed path
+ revalidatePath(ROUTES.SOCIAL);
+ return { success: true, likesCount: likesList.length, isLiked };
+ } catch (error) {
+ console.error("Gagal mengubah suka postingan:", error);
+ return { success: false, likesCount: 0, isLiked: false };
+ }
 }
 
 /**
@@ -233,51 +238,51 @@ export async function toggleLikePost(postId: string): Promise<{ success: boolean
  * @param postId - Target post ID.
  */
 export async function getPostComments(postId: string): Promise<CommunityComment[]> {
-  try {
-    const supabase = await createClient();
-    // Fetch comments with author profile details
-    const { data, error } = await supabase
-      .from("community_comments")
-      .select(`
-        id,
-        post_id,
-        user_id,
-        content,
-        created_at,
-        author:profiles(full_name, avatar_url, level)
-      `)
-      .eq("post_id", postId)
-      .order("created_at", { ascending: true });
+ try {
+ const supabase = await createClient();
+ // Fetch comments with author profile details
+ const { data, error } = await supabase
+ .from("community_comments")
+ .select(`
+ id,
+ post_id,
+ user_id,
+ content,
+ created_at,
+ author:profiles(full_name, avatar_url, level)
+ `)
+ .eq("post_id", postId)
+ .order("created_at", { ascending: true });
 
-    if (error) throw error;
+ if (error) throw error;
 
-    // Map database response to CommunityComment structure
-    return (data || []).map((comment: {
-      id: string;
-      post_id: string;
-      user_id: string;
-      content: string;
-      created_at: string;
-      author?: unknown;
-    }) => {
-      const authorData = comment.author as { full_name: string; avatar_url?: string; level?: number } | null | undefined;
-      return {
-        id: comment.id,
-        post_id: comment.post_id,
-        user_id: comment.user_id,
-        content: comment.content,
-        created_at: comment.created_at,
-        author: authorData ? {
-          full_name: authorData.full_name,
-          avatar_url: authorData.avatar_url,
-          level: authorData.level || 1,
-        } : undefined
-      };
-    }) as CommunityComment[];
-  } catch (error) {
-    console.error("Gagal mengambil komentar:", error);
-    return [];
-  }
+ // Map database response to CommunityComment structure
+ return (data || []).map((comment: {
+ id: string;
+ post_id: string;
+ user_id: string;
+ content: string;
+ created_at: string;
+ author?: unknown;
+ }) => {
+ const authorData = comment.author as { full_name: string; avatar_url?: string; level?: number } | null | undefined;
+ return {
+ id: comment.id,
+ post_id: comment.post_id,
+ user_id: comment.user_id,
+ content: comment.content,
+ created_at: comment.created_at,
+ author: authorData ? {
+ full_name: authorData.full_name,
+ avatar_url: authorData.avatar_url,
+ level: authorData.level || 1,
+ } : undefined
+ };
+ }) as CommunityComment[];
+ } catch (error) {
+ console.error("Gagal mengambil komentar:", error);
+ return [];
+ }
 }
 
 /**
@@ -288,68 +293,68 @@ export async function getPostComments(postId: string): Promise<CommunityComment[
  * @param content - Comment text content.
  */
 export async function addCommunityComment(postId: string, content: string): Promise<{ success: boolean; error?: string }> {
-  try {
-    const { supabase, user } = await requireAuth();
+ try {
+ const { supabase, user } = await requireAuth();
 
-    // Validate non-empty content
-    if (!content.trim()) {
-      return { success: false, error: "Komentar tidak boleh kosong." };
-    }
+ // Validate non-empty content
+ if (!content.trim()) {
+ return { success: false, error: "Komentar tidak boleh kosong." };
+ }
 
-    // Insert comment record
-    const { error } = await supabase.from("community_comments").insert({
-      post_id: postId,
-      user_id: user.id,
-      content: content.trim()
-    });
+ // Insert comment record
+ const { error } = await supabase.from("community_comments").insert({
+ post_id: postId,
+ user_id: user.id,
+ content: content.trim()
+ });
 
-    if (error) throw error;
+ if (error) throw error;
 
-    // Fetch post owner details for notification
-    const { data: post } = await supabase
-      .from("community_posts")
-      .select("user_id")
-      .eq("id", postId)
-      .single();
+ // Fetch post owner details for notification
+ const { data: post } = await supabase
+ .from("community_posts")
+ .select("user_id")
+ .eq("id", postId)
+ .single();
 
-    // Notify post owner if commenter is a different user
-    if (post && post.user_id !== user.id) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("full_name")
-        .eq("id", user.id)
-        .single();
+ // Notify post owner if commenter is a different user
+ if (post && post.user_id !== user.id) {
+ const { data: profile } = await supabase
+ .from("profiles")
+ .select("full_name")
+ .eq("id", user.id)
+ .single();
 
-      const payload = buildCommentNotificationPayload(
-        post.user_id,
-        user.id,
-        profile?.full_name,
-        postId
-      );
-      const adminSupabase = createAdminClient();
-      await sendCommunityNotification(adminSupabase, payload);
-    }
+ const payload = buildCommentNotificationPayload(
+ post.user_id,
+ user.id,
+ profile?.full_name,
+ postId
+ );
+ const adminSupabase = createAdminClient();
+ await sendCommunityNotification(adminSupabase, payload);
+ }
 
-    // Refresh social feed path
-    revalidatePath(ROUTES.SOCIAL);
-    return { success: true };
-  } catch (error: unknown) {
-    console.error("Gagal menambahkan komentar:", error);
-    return { success: false, error: error instanceof Error ? error.message : "Gagal menambahkan komentar." };
-  }
+ // Refresh social feed path
+ revalidatePath(ROUTES.SOCIAL);
+ return { success: true };
+ } catch (error: unknown) {
+ console.error("Gagal menambahkan komentar:", error);
+ return { success: false, error: error instanceof Error ? error.message : "Gagal menambahkan komentar." };
+ }
 }
 
 /**
  * Public profile details for user modal.
  */
 export interface PublicProfile {
-  id: string;
-  full_name: string | null;
-  xp: number;
-  level: number;
-  streak: number;
-  avatar_url: string | null;
-  study_days: Record<string, number | boolean>;
+ id: string;
+ full_name: string | null;
+ xp: number;
+ level: number;
+ streak: number;
+ avatar_url: string | null;
+ study_days: Record<string, number | boolean>;
 }
 
 /**
@@ -358,20 +363,20 @@ export interface PublicProfile {
  * @param userId - Target user ID.
  */
 export async function getPublicProfile(userId: string): Promise<{ success: boolean; profile?: PublicProfile; error?: string }> {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("id, full_name, xp, level, streak, avatar_url, study_days")
-      .eq("id", userId)
-      .single();
+ try {
+ const supabase = await createClient();
+ const { data, error } = await supabase
+ .from("profiles")
+ .select("id, full_name, xp, level, streak, avatar_url, study_days")
+ .eq("id", userId)
+ .single();
 
-    if (error) throw error;
-    return { success: true, profile: data as PublicProfile };
-  } catch (error: unknown) {
-    console.error("Gagal mengambil profil publik:", error);
-    return { success: false, error: error instanceof Error ? error.message : "Gagal mengambil profil." };
-  }
+ if (error) throw error;
+ return { success: true, profile: data as PublicProfile };
+ } catch (error: unknown) {
+ console.error("Gagal mengambil profil publik:", error);
+ return { success: false, error: error instanceof Error ? error.message : "Gagal mengambil profil." };
+ }
 }
 
 /**
@@ -380,25 +385,25 @@ export async function getPublicProfile(userId: string): Promise<{ success: boole
  * @param postId - Target post ID.
  */
 export async function deleteCommunityPost(postId: string): Promise<{ success: boolean; error?: string }> {
-  try {
-    const { supabase, user } = await requireAuth();
+ try {
+ const { supabase, user } = await requireAuth();
 
-    // Delete post matching ID and user ID ownership
-    const { error } = await supabase
-      .from("community_posts")
-      .delete()
-      .eq("id", postId)
-      .eq("user_id", user.id);
+ // Delete post matching ID and user ID ownership
+ const { error } = await supabase
+ .from("community_posts")
+ .delete()
+ .eq("id", postId)
+ .eq("user_id", user.id);
 
-    if (error) throw error;
+ if (error) throw error;
 
-    // Refresh social feed path
-    revalidatePath(ROUTES.SOCIAL);
-    return { success: true };
-  } catch (error: unknown) {
-    console.error("Gagal menghapus postingan:", error);
-    return { success: false, error: error instanceof Error ? error.message : "Gagal menghapus postingan." };
-  }
+ // Refresh social feed path
+ revalidatePath(ROUTES.SOCIAL);
+ return { success: true };
+ } catch (error: unknown) {
+ console.error("Gagal menghapus postingan:", error);
+ return { success: false, error: error instanceof Error ? error.message : "Gagal menghapus postingan." };
+ }
 }
 
 /**
@@ -407,61 +412,61 @@ export async function deleteCommunityPost(postId: string): Promise<{ success: bo
  * @param commentId - Target comment ID.
  */
 export async function deleteCommunityComment(commentId: string): Promise<{ success: boolean; error?: string }> {
-  try {
-    const { supabase, user } = await requireAuth();
+ try {
+ const { supabase, user } = await requireAuth();
 
-    // Delete comment matching ID and user ID ownership
-    const { error } = await supabase
-      .from("community_comments")
-      .delete()
-      .eq("id", commentId)
-      .eq("user_id", user.id);
+ // Delete comment matching ID and user ID ownership
+ const { error } = await supabase
+ .from("community_comments")
+ .delete()
+ .eq("id", commentId)
+ .eq("user_id", user.id);
 
-    if (error) throw error;
+ if (error) throw error;
 
-    // Refresh social feed path
-    revalidatePath(ROUTES.SOCIAL);
-    return { success: true };
-  } catch (error: unknown) {
-    console.error("Gagal menghapus komentar:", error);
-    return { success: false, error: error instanceof Error ? error.message : "Gagal menghapus komentar." };
-  }
+ // Refresh social feed path
+ revalidatePath(ROUTES.SOCIAL);
+ return { success: true };
+ } catch (error: unknown) {
+ console.error("Gagal menghapus komentar:", error);
+ return { success: false, error: error instanceof Error ? error.message : "Gagal menghapus komentar." };
+ }
 }
 
 /**
  * Notification structure.
  */
 export interface CommunityNotification {
-  id: string;
-  user_id: string;
-  sender_id: string | null;
-  type: string;
-  title: string;
-  message: string;
-  post_id: string | null;
-  read: boolean;
-  created_at: string;
+ id: string;
+ user_id: string;
+ sender_id: string | null;
+ type: string;
+ title: string;
+ message: string;
+ post_id: string | null;
+ read: boolean;
+ created_at: string;
 }
 
 /**
  * Fetch latest notifications for the authenticated user.
  */
 export async function getNotifications(): Promise<CommunityNotification[]> {
-  try {
-    const { supabase, user } = await requireAuth();
-    const { data, error } = await supabase
-      .from("notifications")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(50);
+ try {
+ const { supabase, user } = await requireAuth();
+ const { data, error } = await supabase
+ .from("notifications")
+ .select("*")
+ .eq("user_id", user.id)
+ .order("created_at", { ascending: false })
+ .limit(50);
 
-    if (error) throw error;
-    return (data || []) as CommunityNotification[];
-  } catch (error) {
-    console.error("Gagal mengambil notifikasi:", error);
-    return [];
-  }
+ if (error) throw error;
+ return (data || []) as CommunityNotification[];
+ } catch (error) {
+ console.error("Gagal mengambil notifikasi:", error);
+ return [];
+ }
 }
 
 /**
@@ -470,56 +475,56 @@ export async function getNotifications(): Promise<CommunityNotification[]> {
  * @param notificationId - Target notification ID.
  */
 export async function markNotificationRead(notificationId: string): Promise<{ success: boolean; error?: string }> {
-  try {
-    const { supabase, user } = await requireAuth();
-    const { error } = await supabase
-      .from("notifications")
-      .update({ read: true })
-      .eq("id", notificationId)
-      .eq("user_id", user.id);
+ try {
+ const { supabase, user } = await requireAuth();
+ const { error } = await supabase
+ .from("notifications")
+ .update({ read: true })
+ .eq("id", notificationId)
+ .eq("user_id", user.id);
 
-    if (error) throw error;
-    return { success: true };
-  } catch (error: unknown) {
-    console.error("Gagal menandai notifikasi terbaca:", error);
-    return { success: false, error: error instanceof Error ? error.message : "Gagal menandai notifikasi." };
-  }
+ if (error) throw error;
+ return { success: true };
+ } catch (error: unknown) {
+ console.error("Gagal menandai notifikasi terbaca:", error);
+ return { success: false, error: error instanceof Error ? error.message : "Gagal menandai notifikasi." };
+ }
 }
 
 /**
  * Mark all notifications of the authenticated user as read.
  */
 export async function markAllNotificationsRead(): Promise<{ success: boolean; error?: string }> {
-  try {
-    const { supabase, user } = await requireAuth();
-    const { error } = await supabase
-      .from("notifications")
-      .update({ read: true })
-      .eq("user_id", user.id);
+ try {
+ const { supabase, user } = await requireAuth();
+ const { error } = await supabase
+ .from("notifications")
+ .update({ read: true })
+ .eq("user_id", user.id);
 
-    if (error) throw error;
-    return { success: true };
-  } catch (error: unknown) {
-    console.error("Gagal menandai semua notifikasi terbaca:", error);
-    return { success: false, error: error instanceof Error ? error.message : "Gagal menandai semua notifikasi." };
-  }
+ if (error) throw error;
+ return { success: true };
+ } catch (error: unknown) {
+ console.error("Gagal menandai semua notifikasi terbaca:", error);
+ return { success: false, error: error instanceof Error ? error.message : "Gagal menandai semua notifikasi." };
+ }
 }
 
 /**
  * Delete all notifications of the authenticated user.
  */
 export async function clearAllNotifications(): Promise<{ success: boolean; error?: string }> {
-  try {
-    const { supabase, user } = await requireAuth();
-    const { error } = await supabase
-      .from("notifications")
-      .delete()
-      .eq("user_id", user.id);
+ try {
+ const { supabase, user } = await requireAuth();
+ const { error } = await supabase
+ .from("notifications")
+ .delete()
+ .eq("user_id", user.id);
 
-    if (error) throw error;
-    return { success: true };
-  } catch (error: unknown) {
-    console.error("Gagal menghapus semua notifikasi:", error);
-    return { success: false, error: error instanceof Error ? error.message : "Gagal menghapus semua notifikasi." };
-  }
+ if (error) throw error;
+ return { success: true };
+ } catch (error: unknown) {
+ console.error("Gagal menghapus semua notifikasi:", error);
+ return { success: false, error: error instanceof Error ? error.message : "Gagal menghapus semua notifikasi." };
+ }
 }

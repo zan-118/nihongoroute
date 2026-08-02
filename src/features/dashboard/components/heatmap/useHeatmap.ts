@@ -1,19 +1,16 @@
 /**
  * @file useHeatmap.ts
- * @description Hook kustom untuk menghasilkan urutan tanggal 35 hari terakhir secara lokal,
- * serta fungsi utilitas untuk menentukan style warna kotak heatmap berdasarkan intensitas kata yang dipelajari.
- *
- * @package components/features/dashboard/heatmap
- * @project NihongoRoute
+ * @description Custom hook for generating the last 35-day local date sequence and intensity styling utility functions.
+ * @module features/dashboard/components/heatmap
  */
 
 // ==========================================
-// IMPOR
+// Import & Dependencies
 // ==========================================
 import { useMemo } from "react";
 
 // ==========================================
-// FUNGSI UTILITAS LOKAL
+// Helper Functions
 // ==========================================
 /**
  * Format Date object to YYYY-MM-DD local string.
@@ -21,11 +18,11 @@ import { useMemo } from "react";
  * @returns Formatted date string.
  */
 function formatLocalDate(date: Date): string {
-  const year = date.getFullYear();
-  // Pad single digits with leading zero for standard ISO format
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+ const year = date.getFullYear();
+ // Pad single digits with leading zero for standard ISO format
+ const month = String(date.getMonth() + 1).padStart(2, "0");
+ const day = String(date.getDate()).padStart(2, "0");
+ return `${year}-${month}-${day}`;
 }
 
 /**
@@ -34,16 +31,16 @@ function formatLocalDate(date: Date): string {
  * @returns Array of YYYY-MM-DD date strings.
  */
 function generateLastNDays(n: number): string[] {
-  const days: string[] = [];
-  const today = new Date();
+ const days: string[] = [];
+ const today = new Date();
 
-  // Loop backwards to get dates from oldest to today
-  for (let i = n - 1; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(today.getDate() - i);
-    days.push(formatLocalDate(d));
-  }
-  return days;
+ // Loop backwards to get dates from oldest to today
+ for (let i = n - 1; i >= 0; i--) {
+ const d = new Date(today);
+ d.setDate(today.getDate() - i);
+ days.push(formatLocalDate(d));
+ }
+ return days;
 }
 
 // ==========================================
@@ -55,17 +52,17 @@ function generateLastNDays(n: number): string[] {
  * @returns Tailwind CSS class string.
  */
 export function getBoxStyle(value: number): string {
-  // Zero words: empty state
-  if (!value)
-    return "bg-background/40 border-border neo-inset shadow-none opacity-30";
-  // Low intensity: < 10 words
-  if (value < 10)
-    return "bg-primary/20 border-primary/30 shadow-[0_0_10px_rgb(var(--primary-rgb)/0.1)] neo-card shadow-none";
-  // Medium intensity: < 30 words
-  if (value < 30)
-    return "bg-primary/50 border-primary/60 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.3)] neo-card shadow-none";
-  // High intensity: >= 30 words
-  return "bg-primary border-border shadow-[0_0_25px_rgb(var(--primary-rgb)/0.7)] neo-card shadow-none";
+ // Zero words: empty state
+ if (!value)
+ return "bg-background/40 border-border neo-inset shadow-none opacity-30";
+ // Low intensity: < 10 words
+ if (value < 10)
+ return "bg-primary/20 border-primary/30 shadow-[0_0_10px_hsl(var(--primary)/0.1)] neo-card shadow-none";
+ // Medium intensity: < 30 words
+ if (value < 30)
+ return "bg-primary/50 border-primary/60 shadow-[0_0_20px_hsl(var(--primary)/0.3)] neo-card shadow-none";
+ // High intensity: >= 30 words
+ return "bg-primary border-border shadow-[0_0_25px_hsl(var(--primary)/0.7)] neo-card shadow-none";
 }
 
 /**
@@ -73,7 +70,7 @@ export function getBoxStyle(value: number): string {
  * @returns Object containing days array.
  */
 export function useHeatmap() {
-  // Cache 35-day range to prevent recalculation on re-render
-  const days = useMemo(() => generateLastNDays(35), []);
-  return { days };
+ // Cache 35-day range to prevent recalculation on re-render
+ const days = useMemo(() => generateLastNDays(35), []);
+ return { days };
 }

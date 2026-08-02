@@ -9,8 +9,8 @@
 // IMPORTS
 // ======================
 import {
-  getCheatsheetsList,
-  getContentBySlugOrId
+ getCheatsheetsList,
+ getContentBySlugOrId
 } from "@/lib/services/content-repository";
 import { CheatsheetTable } from "@/types/database";
 import type { SheetItem } from "@/features/library/cheatsheet/CheatsheetView";
@@ -27,25 +27,25 @@ import type { SheetItem } from "@/features/library/cheatsheet/CheatsheetView";
  * @returns {Promise<Array<{ _id: string; slug: string; title: string; category: string; items: SheetItem[]; linkedVocab: SheetItem[] }>>} Array of cheatsheets.
  */
 export async function getCheatsheets() {
-  try {
-    const data = await getCheatsheetsList();
+ try {
+ const data = await getCheatsheetsList();
 
-    // Map database schema to application domain model
-    return (data || []).map(s => ({
-      _id: s.id,
-      slug: s.slug,
-      title: s.title,
-      category: s.category || "",
-      // Fallback to empty array if items column is null
-      items: (s.items || []) as unknown as SheetItem[],
-      // Compatibility field for vocabulary relations
-      linkedVocab: []
-    }));
-  } catch (error) {
-    // Log error and return empty array to prevent UI crashes
-    console.error("Gagal mengambil daftar cheatsheet:", error);
-    return [];
-  }
+ // Map database schema to application domain model
+ return (data || []).map(s => ({
+ _id: s.id,
+ slug: s.slug,
+ title: s.title,
+ category: s.category || "",
+ // Fallback to empty array if items column is null
+ items: (s.items || []) as unknown as SheetItem[],
+ // Compatibility field for vocabulary relations
+ linkedVocab: []
+ }));
+ } catch (error) {
+ // Log error and return empty array to prevent UI crashes
+ console.error("Gagal mengambil daftar cheatsheet:", error);
+ return [];
+ }
 }
 
 /**
@@ -56,27 +56,27 @@ export async function getCheatsheets() {
  * @returns {Promise<{ _id: string; slug: string; title: string; category: string; items: SheetItem[]; linkedVocab: SheetItem[] } | null>} The cheatsheet object, or null if not found.
  */
 export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
-  try {
-    const sheet = await getContentBySlugOrId<CheatsheetTable>("cheatsheets", idOrSlug);
+ try {
+ const sheet = await getContentBySlugOrId<CheatsheetTable>("cheatsheets", idOrSlug);
 
-    if (!sheet) return null;
+ if (!sheet) return null;
 
-    // Map database record to application domain model
-    return {
-      _id: sheet.id,
-      slug: sheet.slug,
-      title: sheet.title,
-      category: sheet.category || "",
-      // Fallback to empty array if items column is null
-      items: (sheet.items || []) as unknown as SheetItem[],
-      // Compatibility field for vocabulary relations
-      linkedVocab: []
-    };
-  } catch (error) {
-    // Log error and return null to indicate fetch failure
-    console.error("Gagal mengambil detail cheatsheet:", error);
-    return null;
-  }
+ // Map database record to application domain model
+ return {
+ _id: sheet.id,
+ slug: sheet.slug,
+ title: sheet.title,
+ category: sheet.category || "",
+ // Fallback to empty array if items column is null
+ items: (sheet.items || []) as unknown as SheetItem[],
+ // Compatibility field for vocabulary relations
+ linkedVocab: []
+ };
+ } catch (error) {
+ // Log error and return null to indicate fetch failure
+ console.error("Gagal mengambil detail cheatsheet:", error);
+ return null;
+ }
 }
 
 /**
@@ -85,16 +85,16 @@ export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
  * @returns Array of objects with id property.
  */
 export async function getCheatsheetStaticParams(): Promise<{ id: string }[]> {
-  try {
-    const sheets = await getCheatsheets();
-    return sheets.flatMap((s) => {
-      const results = [];
-      if (s.slug) results.push({ id: s.slug });
-      if (s._id) results.push({ id: s._id });
-      return results;
-    });
-  } catch (error) {
-    console.error("Gagal mengambil static params cheatsheet:", error);
-    return [];
-  }
+ try {
+ const sheets = await getCheatsheets();
+ return sheets.flatMap((s) => {
+ const results = [];
+ if (s.slug) results.push({ id: s.slug });
+ if (s._id) results.push({ id: s._id });
+ return results;
+ });
+ } catch (error) {
+ console.error("Gagal mengambil static params cheatsheet:", error);
+ return [];
+ }
 }

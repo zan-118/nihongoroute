@@ -1,3 +1,8 @@
+/**
+ * @file route.ts
+ * @description Health check API route handler evaluating application status and environment variable configurations.
+ */
+
 /** Node.js runtime configuration. */
 export const runtime = "nodejs";
 
@@ -6,16 +11,16 @@ export const dynamic = "force-dynamic";
 
 /** Critical environment variables needed for app startup. */
 const REQUIRED_ENV = [
-  "NEXT_PUBLIC_SUPABASE_URL",
-  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-  "NEXT_PUBLIC_SITE_URL",
+ "NEXT_PUBLIC_SUPABASE_URL",
+ "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+ "NEXT_PUBLIC_SITE_URL",
 ];
 
 /** Optional environment variables for specific features. */
 const FEATURE_ENV = [
-  "ADMIN_API_SECRET",
-  "SUPABASE_SERVICE_ROLE_KEY",
-  "GEMINI_API_KEY",
+ "ADMIN_API_SECRET",
+ "SUPABASE_SERVICE_ROLE_KEY",
+ "GEMINI_API_KEY",
 ];
 
 /**
@@ -23,30 +28,30 @@ const FEATURE_ENV = [
  * @returns Health status object.
  */
 function getHealthPayload() {
-  const missingRequired = REQUIRED_ENV.filter((key) => !process.env[key]);
-  const missingFeature = FEATURE_ENV.filter((key) => !process.env[key]);
-  const healthy = missingRequired.length === 0;
-  const envCheck = {
-    ok: healthy,
-    missingRequired,
-    missingFeature,
-  };
+ const missingRequired = REQUIRED_ENV.filter((key) => !process.env[key]);
+ const missingFeature = FEATURE_ENV.filter((key) => !process.env[key]);
+ const healthy = missingRequired.length === 0;
+ const envCheck = {
+ ok: healthy,
+ missingRequired,
+ missingFeature,
+ };
 
-  return {
-    status: healthy ? "ok" : "degraded",
-    time: new Date().toISOString(),
-    uptimeSeconds: Math.round(process.uptime()),
-    checks: {
-      // Hide exact missing keys in production to prevent info leaks.
-      env: process.env.NODE_ENV === "production"
-        ? {
-            ok: healthy,
-            missingRequiredCount: missingRequired.length,
-            missingFeatureCount: missingFeature.length,
-          }
-        : envCheck,
-    },
-  };
+ return {
+ status: healthy ? "ok" : "degraded",
+ time: new Date().toISOString(),
+ uptimeSeconds: Math.round(process.uptime()),
+ checks: {
+ // Hide exact missing keys in production to prevent info leaks.
+ env: process.env.NODE_ENV === "production"
+ ? {
+ ok: healthy,
+ missingRequiredCount: missingRequired.length,
+ missingFeatureCount: missingFeature.length,
+ }
+ : envCheck,
+ },
+ };
 }
 
 /**
@@ -54,15 +59,15 @@ function getHealthPayload() {
  * @returns Response with health payload.
  */
 export function GET() {
-  const payload = getHealthPayload();
-  const envOk = payload.status === "ok";
+ const payload = getHealthPayload();
+ const envOk = payload.status === "ok";
 
-  return Response.json(payload, {
-    status: envOk ? 200 : 503,
-    headers: {
-      "Cache-Control": "no-store",
-    },
-  });
+ return Response.json(payload, {
+ status: envOk ? 200 : 503,
+ headers: {
+ "Cache-Control": "no-store",
+ },
+ });
 }
 
 /**
@@ -70,13 +75,13 @@ export function GET() {
  * @returns Response with status code only.
  */
 export function HEAD() {
-  const payload = getHealthPayload();
-  const envOk = payload.status === "ok";
+ const payload = getHealthPayload();
+ const envOk = payload.status === "ok";
 
-  return new Response(null, {
-    status: envOk ? 200 : 503,
-    headers: {
-      "Cache-Control": "no-store",
-    },
-  });
+ return new Response(null, {
+ status: envOk ? 200 : 503,
+ headers: {
+ "Cache-Control": "no-store",
+ },
+ });
 }

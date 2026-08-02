@@ -20,12 +20,12 @@ import { GrammarLevelNav } from "./GrammarLevelNav";
  * Properties for GrammarHeader component.
  */
 interface GrammarHeaderProps {
-  /** Array of available JLPT levels. */
-  levels: string[];
-  /** Active JLPT level selection. */
-  selectedLevel: string;
-  /** Callback triggered when user selects different level. */
-  onLevelChange: (level: string) => void;
+ /** Array of available JLPT levels. */
+ levels: string[];
+ /** Active JLPT level selection. */
+ selectedLevel: string;
+ /** Callback triggered when user selects different level. */
+ onLevelChange: (level: string) => void;
 }
 
 // ==========================================
@@ -38,39 +38,39 @@ interface GrammarHeaderProps {
  * @returns Header JSX element.
  */
 export function GrammarHeader({
-  levels,
-  selectedLevel,
-  onLevelChange,
+ levels,
+ selectedLevel,
+ onLevelChange,
 }: GrammarHeaderProps) {
-  return (
-    <>
-      {/* Bagian Judul Utama Halaman */}
-      <header className="mb-6 md:mb-12">
-        {/* Responsive layout: stacks on mobile, side-by-side on large screens */}
-        <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-6 md:gap-8 border-b border-border pb-6 md:pb-12">
-          <div className="flex items-center gap-4 md:gap-6">
-            {/* Decorative icon card with custom neo-inset shadow */}
-            <Card className="w-12 h-12 md:w-16 md:h-16 shrink-0 rounded-lg bg-primary/10 border-primary/20 flex items-center justify-center neo-inset shadow-none">
-              <BookOpen size={24} className="text-primary md:w-8 md:h-8" />
-            </Card>
-            <div className="text-left">
-              <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl text-foreground tracking-tight leading-none mb-1 md:mb-2">
-                Panduan <span className="text-primary">Tata Bahasa</span>
-              </h1>
-              <span className="text-[10px] md:text-xs text-muted-foreground font-medium tracking-tight uppercase tracking-widest font-sans">
-                Pahami pola kalimat biar naklukin JLPT.
-              </span>
-            </div>
-          </div>
+ return (
+ <>
+ {/* Bagian Judul Utama Halaman */}
+ <header className="mb-6 md:mb-12">
+ {/* Responsive layout: stacks on mobile, side-by-side on large screens */}
+ <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-6 md:gap-8 border-b border-border pb-6 md:pb-12">
+ <div className="flex items-center gap-4 md:gap-6">
+ {/* Decorative icon card with custom neo-inset shadow */}
+ <Card className="w-12 h-12 md:w-16 md:h-16 shrink-0 rounded-lg bg-primary/10 border-primary/20 flex items-center justify-center neo-inset shadow-none">
+ <BookOpen size={24} className="text-primary md:w-8 md:h-8" />
+ </Card>
+ <div className="text-left">
+ <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl text-foreground tracking-tight leading-none mb-1 md:mb-2">
+ Panduan <span className="text-primary">Tata Bahasa</span>
+ </h1>
+ <span className="text-[10px] md:text-xs text-muted-foreground font-medium tracking-tight uppercase tracking-widest font-sans">
+ Pahami pola kalimat biar naklukin JLPT.
+ </span>
+ </div>
+ </div>
 
-          {/* Navigasi Selektor Level JLPT */}
-          <GrammarLevelNav 
-            levels={levels}
-            selectedLevel={selectedLevel}
-            onLevelChange={onLevelChange}
-          />
-        </div>
-      </header>
-    </>
-  );
+ {/* Navigasi Selektor Level JLPT */}
+ <GrammarLevelNav 
+ levels={levels}
+ selectedLevel={selectedLevel}
+ onLevelChange={onLevelChange}
+ />
+ </div>
+ </header>
+ </>
+ );
 }

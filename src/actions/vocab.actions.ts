@@ -14,10 +14,10 @@ import { PaginatedVocabResponse, LibraryItem } from "@/types/library";
 import { VocabTable } from "@/types/database";
 import { queryLexicalDomain } from "@/lib/services/lexical-content-engine";
 import {
-  getContentBySlugOrId,
-  getStaticSlugs,
-  getRelatedKanjis,
-  getRelatedVocabByWords
+ getContentBySlugOrId,
+ getStaticSlugs,
+ getRelatedKanjis,
+ getRelatedVocabByWords
 } from "@/lib/services/content-repository";
 
 // ======================
@@ -35,28 +35,28 @@ import {
  * @returns Paginated vocabulary response.
  */
 export async function getPaginatedVocab(
-  page: number,
-  limit: number,
-  search: string = "",
-  level: string = "",
-  hinshi: string = "",
-  type: "vocab" | "verb" | "adjective" | "phrase" = "vocab"
+ page: number,
+ limit: number,
+ search: string = "",
+ level: string = "",
+ hinshi: string = "",
+ type: "vocab" | "verb" | "adjective" | "phrase" = "vocab"
 ): Promise<PaginatedVocabResponse> {
-  try {
-    const response = await queryLexicalDomain<VocabTable>({
-      type,
-      filters: { search, level, hinshi },
-      pagination: { page, limit },
-    });
+ try {
+ const response = await queryLexicalDomain<VocabTable>({
+ type,
+ filters: { search, level, hinshi },
+ pagination: { page, limit },
+ });
 
-    return {
-      data: response.data.map((v) => ({ ...v, _id: v.id, meaning: v.meaning_id })),
-      total: response.total,
-    };
-  } catch (error) {
-    console.error("Gagal mengambil data paginasi vocab:", error);
-    return { data: [], total: 0 };
-  }
+ return {
+ data: response.data.map((v) => ({ ...v, _id: v.id, meaning: v.meaning_id })),
+ total: response.total,
+ };
+ } catch (error) {
+ console.error("Gagal mengambil data paginasi vocab:", error);
+ return { data: [], total: 0 };
+ }
 }
 
 /**
@@ -71,86 +71,86 @@ const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-
  * @returns Vocabulary detail or null.
  */
 export async function getLibraryVocabDetail(slugOrId: string): Promise<LibraryItem | null> {
-  try {
-    const data = await getContentBySlugOrId<LibraryItem>("vocab", slugOrId);
+ try {
+ const data = await getContentBySlugOrId<LibraryItem>("vocab", slugOrId);
 
-    if (!data) return null;
+ if (!data) return null;
 
-    // Normalisasi bidang properti untuk frontend
-    data.pitchAccent = data.pitch_accent;
-    data.jlptLevel = data.jlpt_level;
-    data.usageNotes = data.usage_notes;
-    data.meaning = data.meaning_id;
-    data._id = data.id;
+ // Normalisasi bidang properti untuk frontend
+ data.pitchAccent = data.pitch_accent;
+ data.jlptLevel = data.jlpt_level;
+ data.usageNotes = data.usage_notes;
+ data.meaning = data.meaning_id;
+ data._id = data.id;
 
-    const rawRelatedKanji = Array.isArray(data.related_kanji) ? data.related_kanji : [];
-    const rawSynonyms = Array.isArray(data.synonyms) ? data.synonyms : [];
-    const rawAntonyms = Array.isArray(data.antonyms) ? data.antonyms : [];
+ const rawRelatedKanji = Array.isArray(data.related_kanji) ? data.related_kanji : [];
+ const rawSynonyms = Array.isArray(data.synonyms) ? data.synonyms : [];
+ const rawAntonyms = Array.isArray(data.antonyms) ? data.antonyms : [];
 
-    // Fetch detail related kanji
-    if (rawRelatedKanji.length > 0) {
-      const kanjis = await getRelatedKanjis(rawRelatedKanji);
-      data.relatedKanji = rawRelatedKanji.map((char: string) => {
-        const matched = (kanjis || []).find((k) => k.character === char);
-        return matched ? { ...matched, _id: matched.id } : { character: char, meaning: "", onyomi: "", kunyomi: "", slug: "" };
-      });
-    } else {
-      data.relatedKanji = [];
-    }
+ // Fetch detail related kanji
+ if (rawRelatedKanji.length > 0) {
+ const kanjis = await getRelatedKanjis(rawRelatedKanji);
+ data.relatedKanji = rawRelatedKanji.map((char: string) => {
+ const matched = (kanjis || []).find((k) => k.character === char);
+ return matched ? { ...matched, _id: matched.id } : { character: char, meaning: "", onyomi: "", kunyomi: "", slug: "" };
+ });
+ } else {
+ data.relatedKanji = [];
+ }
 
-    // Fetch detail synonyms
-    if (rawSynonyms.length > 0) {
-      const syns = await getRelatedVocabByWords(rawSynonyms);
-      data.synonyms = rawSynonyms.map((word: string) => {
-        const matched = (syns || []).find((v) => v.word === word);
-        return matched ? { ...matched, _id: matched.id, meaning: matched.meaning_id } : { word, meaning: "", romaji: "", slug: "" };
-      });
-    } else {
-      data.synonyms = [];
-    }
+ // Fetch detail synonyms
+ if (rawSynonyms.length > 0) {
+ const syns = await getRelatedVocabByWords(rawSynonyms);
+ data.synonyms = rawSynonyms.map((word: string) => {
+ const matched = (syns || []).find((v) => v.word === word);
+ return matched ? { ...matched, _id: matched.id, meaning: matched.meaning_id } : { word, meaning: "", romaji: "", slug: "" };
+ });
+ } else {
+ data.synonyms = [];
+ }
 
-    // Fetch detail antonyms
-    if (rawAntonyms.length > 0) {
-      const ants = await getRelatedVocabByWords(rawAntonyms);
-      data.antonyms = rawAntonyms.map((word: string) => {
-        const matched = (ants || []).find((v) => v.word === word);
-        return matched ? { ...matched, _id: matched.id, meaning: matched.meaning_id } : { word, meaning: "", romaji: "", slug: "" };
-      });
-    } else {
-      data.antonyms = [];
-    }
-    
-    // Tangani contoh kalimat secara aman
-    if (typeof data.examples === "string") {
-      try {
-        data.examples = JSON.parse(data.examples);
-      } catch {
-        data.examples = [];
-      }
-    }
-    data.examples = Array.isArray(data.examples) ? data.examples : [];
+ // Fetch detail antonyms
+ if (rawAntonyms.length > 0) {
+ const ants = await getRelatedVocabByWords(rawAntonyms);
+ data.antonyms = rawAntonyms.map((word: string) => {
+ const matched = (ants || []).find((v) => v.word === word);
+ return matched ? { ...matched, _id: matched.id, meaning: matched.meaning_id } : { word, meaning: "", romaji: "", slug: "" };
+ });
+ } else {
+ data.antonyms = [];
+ }
+ 
+ // Tangani contoh kalimat secara aman
+ if (typeof data.examples === "string") {
+ try {
+ data.examples = JSON.parse(data.examples);
+ } catch {
+ data.examples = [];
+ }
+ }
+ data.examples = Array.isArray(data.examples) ? data.examples : [];
 
-    // Tangani konjugasi kata
-    let conj = typeof data.conjugations === "object" && data.conjugations !== null ? data.conjugations : {};
-    if (conj.display_forms && typeof conj.display_forms === "object") {
-      conj = conj.display_forms;
-    } else if (conj.forms && typeof conj.forms === "object") {
-      conj = conj.forms;
-    } else if (conj.conjugations && typeof conj.conjugations === "object") {
-      conj = conj.conjugations;
-    }
+ // Tangani konjugasi kata
+ let conj = typeof data.conjugations === "object" && data.conjugations !== null ? data.conjugations : {};
+ if (conj.display_forms && typeof conj.display_forms === "object") {
+ conj = conj.display_forms;
+ } else if (conj.forms && typeof conj.forms === "object") {
+ conj = conj.forms;
+ } else if (conj.conjugations && typeof conj.conjugations === "object") {
+ conj = conj.conjugations;
+ }
 
-    data.negative = conj.negative || conj.negative_form || conj.polite_negative || conj.polite_negative_form;
-    data.past = conj.past || conj.past_form || conj.polite_past || conj.polite_past_form;
-    data.pastNegative = conj.pastNegative || conj.past_negative_form || conj.polite_past_negative || conj.polite_past_negative_form;
-    data.teForm = conj.te || conj.te_form || conj.teForm;
-    data.adverbial = conj.adverb || conj.adverbial || conj.adverb_form || conj.adverbial_form;
+ data.negative = conj.negative || conj.negative_form || conj.polite_negative || conj.polite_negative_form;
+ data.past = conj.past || conj.past_form || conj.polite_past || conj.polite_past_form;
+ data.pastNegative = conj.pastNegative || conj.past_negative_form || conj.polite_past_negative || conj.polite_past_negative_form;
+ data.teForm = conj.te || conj.te_form || conj.teForm;
+ data.adverbial = conj.adverb || conj.adverbial || conj.adverb_form || conj.adverbial_form;
 
-    return data;
-  } catch (error) {
-    console.error("Gagal mengambil detail kosakata:", error);
-    return null;
-  }
+ return data;
+ } catch (error) {
+ console.error("Gagal mengambil detail kosakata:", error);
+ return null;
+ }
 }
 
 /**
@@ -160,15 +160,15 @@ export async function getLibraryVocabDetail(slugOrId: string): Promise<LibraryIt
  * @returns Array of object params with slug property.
  */
 export async function getVocabStaticSlugs(limit: number = 200): Promise<{ slug: string }[]> {
-  try {
-    const data = await getStaticSlugs("vocab", {
-      limit,
-      orderBy: { column: "created_at", ascending: false },
-      select: "slug",
-    });
-    return data.map((item) => ({ slug: String(item.slug) }));
-  } catch (error) {
-    console.error("Gagal mengambil static slugs vocab:", error);
-    return [];
-  }
+ try {
+ const data = await getStaticSlugs("vocab", {
+ limit,
+ orderBy: { column: "created_at", ascending: false },
+ select: "slug",
+ });
+ return data.map((item) => ({ slug: String(item.slug) }));
+ } catch (error) {
+ console.error("Gagal mengambil static slugs vocab:", error);
+ return [];
+ }
 }

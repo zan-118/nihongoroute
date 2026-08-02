@@ -13,11 +13,11 @@ import { GrammarTable } from "@/types/database";
 import { LibraryItem } from "@/types/library";
 import { queryLexicalDomain } from "@/lib/services/lexical-content-engine";
 import {
-  getContentBySlugOrId,
-  getStaticSlugs,
-  getGrammarListBySlugs,
-  getGrammarFamilyList,
-  getRandomGrammarPool
+ getContentBySlugOrId,
+ getStaticSlugs,
+ getGrammarListBySlugs,
+ getGrammarFamilyList,
+ getRandomGrammarPool
 } from "@/lib/services/content-repository";
 
 // ======================
@@ -34,25 +34,25 @@ import {
  * @returns Paginated grammar list and total count.
  */
 export async function getPaginatedGrammar(
-  page: number,
-  limit: number,
-  level: string = ""
+ page: number,
+ limit: number,
+ level: string = ""
 ): Promise<{ data: (GrammarTable & { _id: string; jlptLevel: string | null })[]; total: number }> {
-  try {
-    const response = await queryLexicalDomain<GrammarTable>({
-      type: "grammar",
-      filters: { level },
-      pagination: { page, limit },
-    });
+ try {
+ const response = await queryLexicalDomain<GrammarTable>({
+ type: "grammar",
+ filters: { level },
+ pagination: { page, limit },
+ });
 
-    return {
-      data: response.data.map(g => ({ ...g, _id: g.id, jlptLevel: g.jlpt_level ?? null })),
-      total: response.total
-    };
-  } catch (error) {
-    console.error("Gagal mengambil data paginasi tata bahasa:", error);
-    return { data: [], total: 0 };
-  }
+ return {
+ data: response.data.map(g => ({ ...g, _id: g.id, jlptLevel: g.jlpt_level ?? null })),
+ total: response.total
+ };
+ } catch (error) {
+ console.error("Gagal mengambil data paginasi tata bahasa:", error);
+ return { data: [], total: 0 };
+ }
 }
 
 /**
@@ -63,22 +63,22 @@ export async function getPaginatedGrammar(
  * @returns Random grammar article metadata or null.
  */
 export async function getRandomGrammarArticle(level: string = "N5") {
-  try {
-    const data = await getRandomGrammarPool(level, 10);
-    if (!data || data.length === 0) return null;
+ try {
+ const data = await getRandomGrammarPool(level, 10);
+ if (!data || data.length === 0) return null;
 
-    // Select random item from pool.
-    const randomItem = data[Math.floor(Math.random() * data.length)];
-    return {
-      _id: randomItem.id,
-      title: randomItem.title,
-      slug: randomItem.slug,
-      jlptLevel: randomItem.jlpt_level
-    };
-  } catch (error) {
-    console.error("Gagal mengambil artikel tata bahasa acak:", error);
-    return null;
-  }
+ // Select random item from pool.
+ const randomItem = data[Math.floor(Math.random() * data.length)];
+ return {
+ _id: randomItem.id,
+ title: randomItem.title,
+ slug: randomItem.slug,
+ jlptLevel: randomItem.jlpt_level
+ };
+ } catch (error) {
+ console.error("Gagal mengambil artikel tata bahasa acak:", error);
+ return null;
+ }
 }
 
 /**
@@ -88,8 +88,8 @@ export async function getRandomGrammarArticle(level: string = "N5") {
  * @returns Array of grammar articles.
  */
 export async function getGrammarArticles(level: string = "") {
-  const { data } = await getPaginatedGrammar(1, 1000, level);
-  return data;
+ const { data } = await getPaginatedGrammar(1, 1000, level);
+ return data;
 }
 
 /**
@@ -108,44 +108,44 @@ const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-
  * @returns Detailed grammar item or null.
  */
 export async function getLibraryGrammarDetail(slugOrId: string): Promise<LibraryItem | null> {
-  try {
-    const data = await getContentBySlugOrId<LibraryItem>("grammar", slugOrId);
+ try {
+ const data = await getContentBySlugOrId<LibraryItem>("grammar", slugOrId);
 
-    if (!data) return null;
+ if (!data) return null;
 
-    data._id = data.id;
+ data._id = data.id;
 
-    // Parse JSON string examples safely.
-    if (typeof data.examples === "string") {
-      try {
-        data.examples = JSON.parse(data.examples);
-      } catch {
-        data.examples = [];
-      }
-    }
-    data.examples = Array.isArray(data.examples) ? data.examples : [];
-    
-    // Fetch related grammar items by slug.
-    if (Array.isArray(data.related_grammar) && data.related_grammar.length > 0) {
-      const related = await getGrammarListBySlugs(data.related_grammar);
-      data.relatedGrammarList = related || [];
-    } else {
-      data.relatedGrammarList = [];
-    }
+ // Parse JSON string examples safely.
+ if (typeof data.examples === "string") {
+ try {
+ data.examples = JSON.parse(data.examples);
+ } catch {
+ data.examples = [];
+ }
+ }
+ data.examples = Array.isArray(data.examples) ? data.examples : [];
+ 
+ // Fetch related grammar items by slug.
+ if (Array.isArray(data.related_grammar) && data.related_grammar.length > 0) {
+ const related = await getGrammarListBySlugs(data.related_grammar);
+ data.relatedGrammarList = related || [];
+ } else {
+ data.relatedGrammarList = [];
+ }
 
-    // Fetch other items in same grammar family.
-    if (data.grammar_family) {
-      const family = await getGrammarFamilyList(data.grammar_family, data.id as string);
-      data.familyGrammarList = family || [];
-    } else {
-      data.familyGrammarList = [];
-    }
+ // Fetch other items in same grammar family.
+ if (data.grammar_family) {
+ const family = await getGrammarFamilyList(data.grammar_family, data.id as string);
+ data.familyGrammarList = family || [];
+ } else {
+ data.familyGrammarList = [];
+ }
 
-    return data;
-  } catch (error) {
-    console.error("Gagal mengambil detail tata bahasa:", error);
-    return null;
-  }
+ return data;
+ } catch (error) {
+ console.error("Gagal mengambil detail tata bahasa:", error);
+ return null;
+ }
 }
 
 /**
@@ -155,11 +155,11 @@ export async function getLibraryGrammarDetail(slugOrId: string): Promise<Library
  * @returns Array of object params with slug property.
  */
 export async function getGrammarStaticSlugs(limit: number = 100): Promise<{ slug: string }[]> {
-  try {
-    const data = await getStaticSlugs("grammar", { limit, select: "slug" });
-    return data.map((item) => ({ slug: String(item.slug) })).filter((x) => x.slug);
-  } catch (error) {
-    console.error("Gagal mengambil static slugs grammar:", error);
-    return [];
-  }
+ try {
+ const data = await getStaticSlugs("grammar", { limit, select: "slug" });
+ return data.map((item) => ({ slug: String(item.slug) })).filter((x) => x.slug);
+ } catch (error) {
+ console.error("Gagal mengambil static slugs grammar:", error);
+ return [];
+ }
 }

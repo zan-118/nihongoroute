@@ -1,13 +1,13 @@
 /**
  * @file page.tsx
- * @description Pusat ujian simulasi JLPT. 
- * Mengambil daftar ujian dari CMS dan mendelegasikan rendering ke komponen client.
+ * @description JLPT simulation exam center page route component.
+ * Fetches exams list and delegates client-side rendering to ExamsView.
  * @module ExamsPage
  */
 
-// ======================
-// IMPOR
-// ======================
+// ==========================================
+// Import & Dependencies
+// ==========================================
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -15,16 +15,16 @@ import { JsonLd } from "@/components/seo/JsonLd";
 const ExamsView = dynamic(() => import("@/features/exams/ExamsView"));
 import { getExamsList } from "@/actions/library.actions";
 import {
-  breadcrumbJsonLd,
-  createPageMetadata,
-  learningResourceJsonLd,
+ breadcrumbJsonLd,
+ createPageMetadata,
+ learningResourceJsonLd,
 } from "@/lib/seo";
 
 /**
  * Represents a simplified exam item for SEO metadata generation.
  */
 type ExamListItem = {
-  title?: string;
+ title?: string;
 };
 
 // ======================
@@ -34,13 +34,13 @@ type ExamListItem = {
  * SEO metadata configuration for the Exams page.
  */
 export const metadata: Metadata = {
-  ...createPageMetadata({
-    title: "Pusat Ujian Simulasi JLPT | NihongoRoute",
-    description:
-      "Uji kemampuan bahasa Jepang dengan simulasi ujian JLPT waktu nyata, pembagian sesi, dan laporan hasil untuk latihan mandiri.",
-    path: "/exams",
-    keywords: ["simulasi JLPT", "tryout JLPT", "ujian bahasa Jepang", "latihan JLPT"],
-  }),
+ ...createPageMetadata({
+ title: "Pusat Ujian Simulasi JLPT | NihongoRoute",
+ description:
+ "Uji kemampuan bahasa Jepang dengan simulasi ujian JLPT waktu nyata, pembagian sesi, dan laporan hasil untuk latihan mandiri.",
+ path: "/exams",
+ keywords: ["simulasi JLPT", "tryout JLPT", "ujian bahasa Jepang", "latihan JLPT"],
+ }),
 };
 
 // ======================
@@ -54,30 +54,30 @@ export const metadata: Metadata = {
  * @returns React element containing SEO JSON-LD and the ExamsClient component.
  */
 export default async function ExamsPage() {
-  // Fetch available exams from database
-  const exams = await getExamsList();
+ // Fetch available exams from database
+ const exams = await getExamsList();
 
-  return (
-    <>
-      {/* Inject JSON-LD structured data for SEO */}
-      <JsonLd
-        data={[
-          breadcrumbJsonLd([
-            { name: "Beranda", path: "/" },
-            { name: "Ujian", path: "/exams" },
-          ]),
-          learningResourceJsonLd({
-            name: "Pusat Ujian Simulasi JLPT",
-            description: metadata.description as string,
-            path: "/exams",
-            educationalLevel: "JLPT N5-N1",
-            // Map exam titles to teachable topics for SEO schema
-            teaches: (exams as ExamListItem[]).map((exam) => exam.title || "").filter(Boolean),
-          }),
-        ]}
-      />
-      {/* Render client component with fetched exams */}
-      <ExamsView exams={exams} />
-    </>
-  );
+ return (
+ <>
+ {/* Inject JSON-LD structured data for SEO */}
+ <JsonLd
+ data={[
+ breadcrumbJsonLd([
+ { name: "Beranda", path: "/" },
+ { name: "Ujian", path: "/exams" },
+ ]),
+ learningResourceJsonLd({
+ name: "Pusat Ujian Simulasi JLPT",
+ description: metadata.description as string,
+ path: "/exams",
+ educationalLevel: "JLPT N5-N1",
+ // Map exam titles to teachable topics for SEO schema
+ teaches: (exams as ExamListItem[]).map((exam) => exam.title || "").filter(Boolean),
+ }),
+ ]}
+ />
+ {/* Render client component with fetched exams */}
+ <ExamsView exams={exams} />
+ </>
+ );
 }

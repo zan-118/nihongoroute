@@ -9,30 +9,30 @@ import React from "react";
 import { Icon } from "@iconify/react";
 
 export interface IconProps extends Omit<React.ComponentPropsWithoutRef<"svg">, "size"> {
-  size?: number;
+ size?: number;
 }
 
 export type IconType = React.ComponentType<IconProps>;
 
 function createIcon(iconName: string): IconType {
-  const Component = React.forwardRef<SVGSVGElement, IconProps>(
-    ({ size = 24, className, ...props }, ref) => {
-      return (
-        <Icon
-          icon={iconName}
-          width={size}
-          height={size}
-          className={className}
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ref={ref as any}
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          {...(props as any)}
-        />
-      );
-    }
-  );
-  Component.displayName = iconName.split(":")[1] || iconName;
-  return Component;
+ const Component = React.forwardRef<SVGSVGElement, IconProps>(
+ ({ size = 24, className, ...props }, ref) => {
+ return (
+ <Icon
+ icon={iconName}
+ width={size}
+ height={size}
+ className={className}
+ // eslint-disable-next-line @typescript-eslint/no-explicit-any
+ ref={ref as any}
+ // eslint-disable-next-line @typescript-eslint/no-explicit-any
+ {...(props as any)}
+ />
+ );
+ }
+ );
+ Component.displayName = iconName.split(":")[1] || iconName;
+ return Component;
 }
 
 export const Activity = createIcon("flat-color-icons:sales-performance");
@@ -163,8 +163,8 @@ export const Radio = createIcon("flat-color-icons:voice-presentation");
 export const RefreshCcw = createIcon("flat-color-icons:synchronize");
 export const RefreshCw = createIcon("flat-color-icons:synchronize");
 export const Repeat2 = createIcon("flat-color-icons:synchronize");
-export const RotateCcw = createIcon("flat-color-icons:rotate-to-landscape");
-export const RotateCw = createIcon("flat-color-icons:rotate-to-portrait");
+export const RotateCcw = createIcon("flat-color-icons:rotate-");
+export const RotateCw = createIcon("flat-color-icons:rotate-");
 export const Save = createIcon("flat-color-icons:filing-cabinet");
 export const ScanText = createIcon("flat-color-icons:fine-print");
 export const Search = createIcon("flat-color-icons:search");

@@ -7,8 +7,8 @@ import dynamic from "next/dynamic";
  * Load dynamically. Disable SSR to prevent hydration mismatch.
  */
 const FeedbackWidget = dynamic(
-  () => import("@/features/support/feedback/FeedbackWidget"),
-  { ssr: false } // Disable SSR. Component need browser APIs.
+ () => import("@/features/support/feedback/FeedbackWidget"),
+ { ssr: false } // Disable SSR. Component need browser APIs.
 );
 
 /**
@@ -16,8 +16,8 @@ const FeedbackWidget = dynamic(
  * Load dynamically. Disable SSR to prevent hydration mismatch.
  */
 const DictionaryPopup = dynamic(
-  () => import("@/features/tools/dictionary/DictionaryPopup"),
-  { ssr: false } // Disable SSR. Component need browser APIs.
+ () => import("@/features/tools/dictionary/DictionaryPopup"),
+ { ssr: false } // Disable SSR. Component need browser APIs.
 );
 
 /**
@@ -27,10 +27,10 @@ const DictionaryPopup = dynamic(
  * @returns JSX element containing client addons.
  */
 export default function AppClientAddons() {
-  return (
-    <>
-      <FeedbackWidget />
-      <DictionaryPopup />
-    </>
-  );
+ return (
+ <>
+ <FeedbackWidget />
+ <DictionaryPopup />
+ </>
+ );
 }
