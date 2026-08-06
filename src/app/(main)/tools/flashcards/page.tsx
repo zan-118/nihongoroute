@@ -13,7 +13,7 @@ import React, { Suspense } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import {
  Zap,
- RotateCw,
+ RefreshCw,
  ChevronLeft,
  Flame,
  PenTool,
@@ -55,7 +55,7 @@ function FlashcardsContent() {
  exit={{ opacity: 0 }}
  className="flex-1 flex flex-col items-center justify-center px-4"
  >
- <RotateCw className="text-primary animate-spin mb-4" size={32} />
+ <RefreshCw className="text-primary animate-spin mb-4" size={32} />
  <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs font-bold">
  Mengumpulkan kartu...
  </p>
@@ -123,7 +123,7 @@ export default function FlashcardsPage() {
  return (
  <Suspense fallback={
  <div className="flex-1 flex flex-col items-center justify-center px-4">
- <RotateCw className="text-primary animate-spin mb-4" size={32} />
+ <RefreshCw className="text-primary animate-spin mb-4" size={32} />
  <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs font-bold">
  Memuat Modul...
  </p>

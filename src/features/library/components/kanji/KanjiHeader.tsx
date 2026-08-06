@@ -7,7 +7,7 @@
 // ==========================================
 // IMPOR UTAMA
 // ==========================================
-import { Search, Grid3X3, LayoutList } from "@/components/ui/icons";
+import { Search, LayoutGrid } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/useUIStore";
@@ -112,7 +112,7 @@ export function KanjiHeader({
  }`}
  aria-label="Tampilan Grid"
  >
- <Grid3X3 size={16} />
+ <LayoutGrid size={16} />
  </Button>
  <Button
  type="button"
@@ -125,7 +125,7 @@ export function KanjiHeader({
  }`}
  aria-label="Tampilan Tabel Ringkas"
  >
- <LayoutList size={16} />
+ <LayoutGrid size={16} />
  </Button>
  </div>
  </div>

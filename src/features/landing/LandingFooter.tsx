@@ -5,7 +5,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Github, Instagram, MessageCircle } from "@/components/ui/icons";
+import { Facebook, Github, Instagram, Threads } from "@/components/ui/icons";
 
 import { ROUTES } from "@/lib/core/routes";
 /**
@@ -33,6 +33,8 @@ const featureLinks = [
  * Navigation links for support and legal pages.
  */
 const supportLinks = [
+ { href: "/about", label: "Tentang Kami" },
+ { href: "/contact", label: "Hubungi Kami" },
  { href: "/support", label: "Dukung Kami" },
  { href: "/privacy", label: "Kebijakan Privasi" },
  { href: "/terms", label: "Syarat & Ketentuan" },
@@ -42,8 +44,9 @@ const supportLinks = [
  * Social media links with icons.
  */
 const socialLinks = [
+ { href: "https://www.facebook.com/nihongoroute/", label: "Facebook", icon: Facebook },
  { href: "https://www.instagram.com/nihongoroute", label: "Instagram", icon: Instagram },
- { href: "https://www.threads.com/nihongoroute", label: "Threads", icon: MessageCircle },
+ { href: "https://www.threads.com/nihongoroute", label: "Threads", icon: Threads },
  { href: "https://github.com/zan-118/nihongoroute", label: "GitHub", icon: Github },
 ];
 
@@ -136,9 +139,9 @@ export function LandingFooter() {
  target="_blank"
  rel="noreferrer"
  aria-label={`Kunjungi ${item.label} NihongoRoute`}
- className="size-11 rounded-xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-300 hover:-translate-y-0.5"
+ className="size-11 rounded-xl bg-card border border-border flex items-center justify-center text-foreground hover:text-primary hover:border-primary/40 transition-all duration-300 hover:-translate-y-0.5"
  >
- <item.icon size={18} />
+ <item.icon size={20} />
  </a>
  ))}
  </div>

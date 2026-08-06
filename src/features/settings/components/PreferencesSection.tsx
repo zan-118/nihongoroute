@@ -18,7 +18,6 @@ import {
  Moon, 
  Monitor, 
  LayoutGrid, 
- LayoutList, 
  Sparkles,
  Sliders
 } from "@/components/ui/icons";
@@ -130,7 +129,7 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
  }`}
  title="List Layout"
  >
- <LayoutList size={16} />
+ <LayoutGrid size={16} />
  </button>
  </div>
  </div>

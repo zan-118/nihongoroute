@@ -11,7 +11,7 @@
 // ==========================================
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2 } from "@/components/ui/icons";
+import { Check } from "@/components/ui/icons";
 import { useUserStore } from "@/store/useUserStore";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -72,7 +72,7 @@ export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({ lessonId
  if (isCompleted || marked) {
  return (
  <div className="flex items-center justify-center gap-3 py-6 px-8 rounded-lg bg-success/10 border border-success/20 text-success transition-all duration-500 shadow-sm">
- <CheckCircle2 size={24} />
+ <Check size={24} />
  <span className="font-bold tracking-widest uppercase text-sm">Materi Selesai</span>
  </div>
  );
@@ -88,7 +88,7 @@ export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({ lessonId
  "hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 border-none"
  )}
  >
- <CheckCircle2 size={20} />
+ <Check size={20} />
  Tandai Selesai & Lanjut
  </Button>
  );

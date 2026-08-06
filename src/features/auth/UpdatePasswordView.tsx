@@ -10,7 +10,7 @@
 // Import & Dependencies
 // ==========================================
 import React from "react";
-import { Lock, KeyRound, CheckCircle } from "@/components/ui/icons";
+import { Lock, KeyRound, Check } from "@/components/ui/icons";
 import Link from "next/link";
 import { usePasswordUpdate } from "@/features/user/usePasswordUpdate";
 
@@ -52,7 +52,7 @@ export default function UpdatePasswordView() {
  <div className="text-center mb-6">
  {/* Toggle icon based on success state */}
  <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-[0_0_20px_hsl(var(--primary)/0.15)]">
- {isSuccess ? <CheckCircle className="text-primary animate-premium-bounce" size={32} /> : <KeyRound className="text-primary animate-pulse" size={32} />}
+ {isSuccess ? <Check className="text-primary animate-premium-bounce" size={32} /> : <KeyRound className="text-primary animate-pulse" size={32} />}
  </div>
  <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2 uppercase tracking-tight font-japanese">
  Perbarui Kata Sandi

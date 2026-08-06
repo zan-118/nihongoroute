@@ -16,7 +16,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/store/useUserStore";
 import dynamic from "next/dynamic";
-import { Trophy, Skull, Share2, Loader2, FileText, BarChart2, Calendar, User, Award, CheckCircle2, AlertCircle, AlertTriangle } from "@/components/ui/icons";
+import { Trophy, RefreshCw, ChevronRight, BarChart, Check, Skull, Share2, Loader2, FileText, Calendar, User, Award, AlertCircle, AlertTriangle } from "@/components/ui/icons";
 import Link from "next/link";
 import { ExamData, GameState } from "./types";
 import { SECTION_LABELS } from "./constants";
@@ -246,7 +246,7 @@ export function ExamResult({
  : "text-muted-foreground hover:text-foreground"
  }`}
  >
- <BarChart2 size={14} className={viewMode === "modern" ? "text-primary" : ""} />
+ <BarChart size={14} className={viewMode === "modern" ? "text-primary" : ""} />
  Modern Breakdown
  </Button>
  </div>
@@ -365,7 +365,7 @@ export function ExamResult({
  <div className="mt-2 flex items-center justify-center gap-2">
  {isPassed ? (
  <div className="flex items-center gap-1.5 text-success font-extrabold text-2xl tracking-wider">
- <CheckCircle2 size={24} />
+ <Check size={24} />
  合格 (PASS)
  </div>
  ) : (

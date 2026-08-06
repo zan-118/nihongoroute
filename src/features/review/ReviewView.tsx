@@ -8,8 +8,8 @@
 
 import React from "react";
 import { 
- BrainCircuit, 
- RotateCw, 
+ Brain, 
+ RefreshCw, 
  ChevronLeft, 
  Zap, 
 } from "@/components/ui/icons";
@@ -39,7 +39,7 @@ export function ReviewView() {
  if (loading) {
  return (
  <div className="flex-1 flex flex-col items-center justify-center px-4">
- <RotateCw className="text-primary animate-spin mb-4" size={32} />
+ <RefreshCw className="text-primary animate-spin mb-4" size={32} />
  <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs animate-pulse font-bold">
  Sinkronisasi data…
  </p>
@@ -64,7 +64,7 @@ export function ReviewView() {
  <ReviewModeCard
  onClick={() => startSession("srs")}
  isEnabled={dueCount > 0}
- icon={BrainCircuit}
+ icon={Brain}
  count={dueCount}
  badgeLabel="Item Menunggu"
  title="Tinjauan Berkala"
@@ -93,7 +93,7 @@ export function ReviewView() {
  if (isFetching) {
  return (
  <div className="flex-1 flex flex-col items-center justify-center px-4">
- <RotateCw className="text-primary animate-spin mb-4" size={32} />
+ <RefreshCw className="text-primary animate-spin mb-4" size={32} />
  <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs animate-pulse font-bold">
  Menyiapkan sesi {mode === "srs" ? "Review" : "Latihan"}...
  </p>
@@ -125,7 +125,7 @@ export function ReviewView() {
  variant="outline"
  className={`${mode === 'srs' ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-warning/10 border-warning/30 text-warning'} px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 h-auto`}
  >
- {mode === 'srs' ? <BrainCircuit size={16} /> : <Zap size={16} />}
+ {mode === 'srs' ? <Brain size={16} /> : <Zap size={16} />}
  <span>{mode === 'srs' ? 'Review SRS' : 'Latihan Cepat'}</span>
  </Badge>
  </header>

@@ -6,7 +6,7 @@
  */
 
 import Link from "next/link";
-import { BookMarked, ExternalLink, Trash2 } from "@/components/ui/icons";
+import { Book, ExternalLink, Trash2 } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -38,7 +38,7 @@ export function ReadingVocabularyCollector({ sourceId }: ReadingVocabularyCollec
  if (entries.length === 0) {
  return (
  <Card className="mt-16 rounded-2xl md:rounded-3xl border border-dashed border-border bg-card/30 p-6 text-center">
- <BookMarked size={28} aria-hidden="true" className="mx-auto mb-3 text-muted-foreground/50" />
+ <Book size={28} aria-hidden="true" className="mx-auto mb-3 text-muted-foreground/50" />
  <p className="text-xs font-black uppercase tracking-[0.22em] text-muted-foreground">
  Bank kosakata bacaan masih kosong
  </p>
@@ -51,7 +51,7 @@ export function ReadingVocabularyCollector({ sourceId }: ReadingVocabularyCollec
  <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
  <div className="flex items-center gap-3">
  <div className="flex size-11 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
- <BookMarked size={20} aria-hidden="true" />
+ <Book size={20} aria-hidden="true" />
  </div>
  <div className="flex flex-col gap-1">
  <span className="text-sm font-black uppercase tracking-widest text-foreground">

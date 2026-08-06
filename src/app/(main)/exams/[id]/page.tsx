@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { getExamByIdOrSlug } from "@/actions/library.actions";
 import type { Metadata } from "next";
 import { createPageMetadata, encodeRouteSegment } from "@/lib/seo";
-import { ShieldAlert, Wrench } from "@/components/ui/icons";
+import { Shield, Wrench } from "@/components/ui/icons";
 
 // ======================
 // ANTARMUKA
@@ -83,7 +83,7 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
  <div className="absolute top-0 right-1/4 size-75 bg-destructive/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
  <Card className="p-10 md:p-14 border-destructive/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-4xl bg-card">
  <div className="size-20 mx-auto neo-inset text-destructive flex items-center justify-center rounded-full mb-8 shadow-inner bg-destructive/10">
- <ShieldAlert size={36} className="text-destructive" />
+ <Shield size={36} className="text-destructive" />
  </div>
  <h1 className="text-2xl md:text-3xl text-foreground uppercase tracking-tight mb-4">
  Ujian Tidak Ditemukan

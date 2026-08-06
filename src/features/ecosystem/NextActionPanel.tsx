@@ -4,10 +4,11 @@ import Link from "next/link";
 import {
  ArrowRight,
  BookOpen,
- BrainCircuit,
+ Brain,
+ ChevronRight,
  Compass,
- PlayCircle,
- RotateCcw,
+ Play,
+ RefreshCcw,
  Sparkles,
 } from "@/components/ui/icons";
 import { buildEcosystemRecommendations } from "@/lib/learning-ecosystem";
@@ -22,17 +23,17 @@ import { cn } from "@/lib/utils";
 const CATEGORY_META = {
  continue: {
  label: "Lanjut",
- icon: PlayCircle,
+ icon: Play,
  className: "border-primary/25 bg-primary/10 text-primary",
  },
  review: {
  label: "Review",
- icon: RotateCcw,
+ icon: RefreshCcw,
  className: "border-warning/25 bg-warning/10 text-warning",
  },
  tool: {
  label: "Tool",
- icon: BrainCircuit,
+ icon: Brain,
  className: "border-success/25 bg-success/10 text-success",
  },
  library: {

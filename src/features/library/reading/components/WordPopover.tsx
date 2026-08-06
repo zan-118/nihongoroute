@@ -16,7 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SmartJapanese } from "@/components/ui/japanese";
-import { BookmarkCheck, BookmarkPlus, ExternalLink, Loader2, Trash2, X } from "@/components/ui/icons";
+import { Bookmark, ExternalLink, Loader2, Trash2, X } from "@/components/ui/icons";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import AddToSRSButton from "@/features/srs/actions/AddToSRSButton";
@@ -246,9 +246,9 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
  className="rounded-xl"
  >
  {isCollected ? (
- <BookmarkCheck data-icon="inline-start" />
+ <Bookmark data-icon="inline-start" />
  ) : (
- <BookmarkPlus data-icon="inline-start" />
+ <Bookmark data-icon="inline-start" />
  )}
  {isCollected ? "Tersimpan" : "Simpan"}
  </Button>
@@ -266,9 +266,9 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
  className="rounded-xl"
  >
  {isCollected ? (
- <Trash2 data-icon="inline-start" />
+ <Bookmark data-icon="inline-start" />
  ) : (
- <BookmarkPlus data-icon="inline-start" />
+ <Bookmark data-icon="inline-start" />
  )}
  {isCollected ? "Hapus" : "Simpan Kata"}
  </Button>

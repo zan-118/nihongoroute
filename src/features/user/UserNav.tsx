@@ -13,8 +13,8 @@ import { useNavbar } from "@/components/layout/navigation/useNavbar";
 import { 
  User, 
  Settings, 
- LogOut, 
- ShieldCheck,
+ LogIn, 
+ Shield,
  ChevronDown
 } from "@/components/ui/icons";
 import { useUserStore } from "@/store/useUserStore";
@@ -80,7 +80,7 @@ export default function UserNav() {
  {userFullName || "Pelajar"}
  </span>
  <div className="flex items-center gap-1">
- <ShieldCheck size={8} className="text-primary" />
+ <Shield size={8} className="text-primary" />
  <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Level {level}</span>
  </div>
  </div>
@@ -115,7 +115,7 @@ export default function UserNav() {
  onClick={handleLogout}
  className="rounded-xl cursor-pointer bg-destructive/5 hover:bg-destructive hover:text-destructive-foreground transition-all py-2.5 text-destructive"
  >
- <LogOut size={16} className="mr-3" />
+ <LogIn size={16} className="mr-3" />
  <span className="text-xs font-black uppercase tracking-widest">Keluar Akun</span>
  </DropdownMenuItem>
  </div>

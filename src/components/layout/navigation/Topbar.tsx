@@ -9,7 +9,7 @@
 // Import & Dependencies
 // ==========================================
 import { useState, useEffect } from "react";
-import { Search, Bell, Menu, Cloud, RefreshCw, CloudOff, CloudUpload, ChevronLeft, BookOpen, Eye, EyeOff, Share2 } from "@/components/ui/icons";
+import { Search, Bell, Menu, Cloud, RefreshCw, ChevronLeft, BookOpen, Eye, EyeOff, Share2 } from "@/components/ui/icons";
 import { m, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -89,7 +89,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
 
  return (
  <>
- <header data-tour="topbar" className="topbar-shell sticky top-0 z-40 w-full px-3 sm:px-4 md:px-8 lg:px-10 py-3 flex items-center justify-between transition-all">
+ <header data-tour="topbar" className="topbar-shell sticky top-0 z-40 w-full px-3 sm:px-4 md:px-8 lg:px-10 py-3 flex items-center justify-between transition-all bg-background/95 backdrop-blur-md border-b border-border/40">
  <div className="flex items-center gap-3 sm:gap-5 min-w-0">
  <div className="md:hidden flex items-center gap-2">
  {breadcrumbItems.length > 1 ? (
@@ -161,7 +161,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
  exit={{ opacity: 0, x: -10 }}
  className="flex items-center"
  >
- <CloudOff size={12} className="text-destructive" aria-hidden="true" />
+ <Cloud size={12} className="text-destructive" aria-hidden="true" />
  <span className="text-destructive/90 sr-only">Sinkron Gagal</span>
  </m.div>
  ) : hasPendingSync ? (
@@ -172,7 +172,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
  exit={{ opacity: 0, x: -10 }}
  className="flex items-center"
  >
- <CloudUpload size={12} className="text-warning" aria-hidden="true" />
+ <Cloud size={12} className="text-warning" aria-hidden="true" />
  <span className="text-warning/90 sr-only">Menunggu</span>
  </m.div>
  ) : (

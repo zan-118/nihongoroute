@@ -543,18 +543,25 @@ Balas HANYA dengan JSON murni (tanpa markdown, tanpa penjelasan lain) dengan str
 
       const filename = `${type}/${slugStr}/illustration.png`;
 
-      console.log(`   ⚡ Mengunggah ilustrasi ke Supabase Storage (${BUCKET_NAME}/${filename})...`);
-      const { error: uploadError } = await supabase.storage
-        .from(BUCKET_NAME)
-        .upload(filename, buffer, {
-          contentType: "image/png",
-          upsert: true,
-        });
+      let publicUrl = "";
+      if (isR2Configured()) {
+        console.log(`   ⚡ Mengunggah ilustrasi ke Cloudflare R2 Storage (${BUCKET_NAME}/${filename})...`);
+        publicUrl = await uploadToR2Storage(BUCKET_NAME, filename, buffer, "image/png");
+        console.log(`   ✓ Gambar berhasil diunggah ke Cloudflare R2 CDN: ${publicUrl}`);
+      } else {
+        console.log(`   ⚡ Mengunggah ilustrasi ke Supabase Storage (${BUCKET_NAME}/${filename})...`);
+        const { error: uploadError } = await supabase.storage
+          .from(BUCKET_NAME)
+          .upload(filename, buffer, {
+            contentType: "image/png",
+            upsert: true,
+          });
 
-      if (uploadError) throw new Error(`Upload storage gagal: ${uploadError.message}`);
+        if (uploadError) throw new Error(`Upload storage gagal: ${uploadError.message}`);
 
-      const publicUrl = supabase.storage.from(BUCKET_NAME).getPublicUrl(filename).data.publicUrl;
-      console.log(`   ✓ Gambar berhasil diunggah ke Supabase: ${publicUrl}`);
+        publicUrl = supabase.storage.from(BUCKET_NAME).getPublicUrl(filename).data.publicUrl;
+        console.log(`   ✓ Gambar berhasil diunggah ke Supabase: ${publicUrl}`);
+      }
 
       const { error: updateError } = await supabase
         .from(type === "article" ? "articles" : "lessons")

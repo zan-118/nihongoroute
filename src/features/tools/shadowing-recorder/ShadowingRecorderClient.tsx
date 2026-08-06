@@ -6,7 +6,7 @@ import {
  AudioLines,
  Mic,
  Play,
- RotateCcw,
+ RefreshCcw,
  Square,
  Volume2,
  Waves,
@@ -450,7 +450,7 @@ export default function ShadowingRecorderClient({
  disabled={isRecording || !audioUrl}
  className="rounded-xl"
  >
- <RotateCcw data-icon="inline-start" />
+ <RefreshCcw data-icon="inline-start" />
  Ulang Rekaman
  </Button>
  </div>

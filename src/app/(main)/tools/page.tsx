@@ -69,7 +69,7 @@ export default function ToolsPage() {
  <Card className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 md:p-10 relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.015)] group-hover:border-primary/50 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
  <div className="relative z-10 flex flex-col gap-6">
  <div className="flex justify-between items-start">
- <div className={`w-14 h-14 rounded-lg bg-muted border border-border/60 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]`}>
+ <div className={`w-14 h-14 rounded-xl ${tool.bgColor} border ${tool.border} flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]`}>
  <tool.icon className={tool.color} size={28} />
  </div>
  {/* Arrow indicator slides in on hover - clean circular icon */}

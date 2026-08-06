@@ -9,7 +9,7 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, BookOpen, Compass, ShieldCheck } from "@/components/ui/icons";
+import { ArrowLeft, BookOpen, Compass, Shield } from "@/components/ui/icons";
 import AppBreadcrumbs from "@/components/layout/AppBreadcrumbs";
 import { createPageMetadata } from "@/lib/seo";
 import { getBreadcrumbItems } from "@/lib/routes";
@@ -127,7 +127,7 @@ export default function TermsPage() {
  </li>
  <li className="glass border border-border/60 hover:border-secondary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-[0_0_20px_hsl(var(--secondary)/0.02)]">
  <div className="size-8 rounded-lg bg-secondary/5 border border-secondary/10 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-300">
- <ShieldCheck size={16} />
+ <Shield size={16} />
  </div>
  <div>
  <h3 className="font-bold text-foreground mb-1 text-sm">Automasi & Scraping</h3>

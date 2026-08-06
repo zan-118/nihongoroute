@@ -7,7 +7,7 @@
 "use client";
 
 import { m, Variants } from "framer-motion";
-import { Settings as SettingsIcon, Layers, ShieldAlert } from "@/components/ui/icons";
+import { Settings as SettingsIcon, Layers, Shield } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -136,7 +136,7 @@ export function SettingsView() {
 
  <Card className="bg-destructive/2 border border-destructive/20 rounded-2xl p-6 md:p-8 shadow-sm flex flex-col md:flex-row items-center md:items-start gap-6 group hover:bg-destructive/4 transition-all duration-300">
  <div className="size-14 shrink-0 rounded-lg bg-destructive/10 flex items-center justify-center border border-destructive/20 shadow-md group-hover:scale-105 transition-transform">
- <ShieldAlert size={28} className="text-destructive" />
+ <Shield size={28} className="text-destructive" />
  </div>
  <div className="flex-1 text-center md:text-left">
  <h4 className="text-destructive uppercase italic tracking-tighter text-lg mb-2">Zona Berbahaya</h4>

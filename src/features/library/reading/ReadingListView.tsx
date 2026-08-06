@@ -9,7 +9,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { BookOpen, ArrowUpRight, GraduationCap, ChevronLeft, ChevronsLeft, ChevronsRight, ChevronRight, Search, Loader2, Clock, CheckCircle2 } from "@/components/ui/icons";
+import { BookOpen, ArrowUpRight, GraduationCap, ChevronLeft, ChevronsLeft, ChevronsRight, ChevronRight, Search, Loader2, Clock, Check } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -197,7 +197,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  </span>
  {isCompleted && (
  <span className="text-[9px] font-mono font-bold text-emerald-400 inline-flex items-center gap-1">
- <CheckCircle2 size={10} /> SELESAI
+ <Check size={10} /> SELESAI
  </span>
  )}
  </div>

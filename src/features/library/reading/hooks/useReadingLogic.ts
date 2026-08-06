@@ -8,7 +8,7 @@
 // ==========================================
 import { useEffect, useMemo, type ElementType } from "react";
 import { useUIStore } from "@/store/useUIStore";
-import { BookOpen, Eye, EyeOff, Type } from "@/components/ui/icons";
+import { BookOpen, Eye, EyeOff, LayoutGrid } from "@/components/ui/icons";
 import { ReadingData, ReadingMode, PortableTextContent, PortableTextBlock } from "../types";
 
 // ==========================================
@@ -92,7 +92,7 @@ export function useReadingLogic(data: ReadingData) {
  { id: "kanji", label: "Kanji", icon: BookOpen },
  { id: "furigana", label: "Furigana", icon: Eye },
  { id: "hiragana", label: "Hiragana", icon: EyeOff },
- { id: "romaji", label: "Romaji", icon: Type },
+ { id: "romaji", label: "Romaji", icon: LayoutGrid },
  ];
 
  /**

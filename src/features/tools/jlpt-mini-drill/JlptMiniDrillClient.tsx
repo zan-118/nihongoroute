@@ -3,15 +3,17 @@
 import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
- ArrowRight,
- CheckCircle2,
- ClipboardList,
- ListChecks,
- RotateCcw,
- Shuffle,
- Sparkles,
- Trophy,
- XCircle,
+  ArrowRight,
+  Check,
+  Clipboard,
+  Flame,
+  HelpCircle,
+  ListChecks,
+  RefreshCcw,
+  Shuffle,
+  Sparkles,
+  Trophy,
+  X,
 } from "@/components/ui/icons";
 import {
  createMiniDrill,
@@ -237,7 +239,7 @@ export default function JlptMiniDrillClient({
  <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
  <div className="mb-5 flex items-center gap-2">
- <ClipboardList size={16} className="text-primary" aria-hidden="true" />
+ <Clipboard size={16} className="text-primary" aria-hidden="true" />
  <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
  Atur Latihan
  </h2>
@@ -393,7 +395,7 @@ export default function JlptMiniDrillClient({
 
  <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
  <Button type="button" variant="ghost" onClick={() => resetSession(seed)} className="rounded-xl">
- <RotateCcw data-icon="inline-start" />
+ <RefreshCcw data-icon="inline-start" />
  Reset
  </Button>
  <Button type="button" onClick={handleNext} disabled={!hasAnswered} className="rounded-xl">
@@ -409,9 +411,9 @@ export default function JlptMiniDrillClient({
  <div className="mb-4 flex items-center gap-2">
  {hasAnswered ? (
  isCorrect ? (
- <CheckCircle2 size={16} className="text-success" aria-hidden="true" />
+ <Check size={16} className="text-success" aria-hidden="true" />
  ) : (
- <XCircle size={16} className="text-warning" aria-hidden="true" />
+ <X size={16} className="text-warning" aria-hidden="true" />
  )
  ) : (
  <Sparkles size={16} className="text-primary" aria-hidden="true" />

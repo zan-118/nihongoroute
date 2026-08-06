@@ -13,8 +13,8 @@ import {
  BadgeCheck,
  BookOpen,
  Brain,
- CheckCircle2,
- ClipboardList,
+ Check,
+ Clipboard,
  Compass,
  FileText,
  Gauge,
@@ -22,18 +22,18 @@ import {
  Headphones,
  HelpCircle,
  Home,
- Kanban,
+ LayoutGrid,
  Keyboard,
- Library,
+ Book,
  Lightbulb,
  ListChecks,
  IconType,
- PenLine,
+ Edit,
  PenTool,
  Search,
  Settings,
  Share2,
- ShieldCheck,
+ Shield,
  Sparkles,
  Target,
  TimerReset,
@@ -148,7 +148,7 @@ const pageTours: PageTour[] = [
  {
  title: "Simpan progres",
  description: "Buat akun saat siap agar riwayat latihan, review, dan target belajarmu aman.",
- icon: icon(ShieldCheck, "text-success"),
+ icon: icon(Shield, "text-success"),
  },
  ],
  },
@@ -173,7 +173,7 @@ const pageTours: PageTour[] = [
  {
  title: "Tandai progres",
  description: "Saat selesai, lanjutkan ke pelajaran berikutnya agar rute belajarmu tetap rapi.",
- icon: icon(CheckCircle2, "text-secondary"),
+ icon: icon(Check, "text-secondary"),
  },
  ],
  },
@@ -187,7 +187,7 @@ const pageTours: PageTour[] = [
  {
  title: "Scan daftar pelajaran",
  description: "Lihat topik yang tersedia dan pilih materi yang sesuai dengan posisi belajarmu.",
- icon: icon(Kanban),
+ icon: icon(LayoutGrid),
  },
  {
  title: "Ikuti rute yang disarankan",
@@ -221,7 +221,7 @@ const pageTours: PageTour[] = [
  {
  title: "Sambungkan dengan ujian",
  description: "Setelah beberapa pelajaran, pakai simulasi dan drill untuk mengecek kesiapanmu.",
- icon: icon(ClipboardList, "text-success"),
+ icon: icon(Clipboard, "text-success"),
  },
  ],
  },
@@ -260,7 +260,7 @@ const pageTours: PageTour[] = [
  {
  title: "Pilih paket latihan",
  description: "Cari ujian berdasarkan level, cakupan, atau tujuan latihan yang ingin kamu ukur.",
- icon: icon(ClipboardList),
+ icon: icon(Clipboard),
  },
  {
  title: "Baca aturan sebelum mulai",
@@ -280,12 +280,12 @@ const pageTours: PageTour[] = [
  match: /^\/library$/,
  eyebrow: "Perpustakaan",
  title: "Cari referensi belajar",
- intro: "Library menyimpan materi rujukan untuk vocab, kanji, grammar, reading, listening, dan cheatsheet.",
+ intro: "Book menyimpan materi rujukan untuk vocab, kanji, grammar, reading, listening, dan cheatsheet.",
  steps: [
  {
  title: "Pilih koleksi",
  description: "Masuk ke kategori yang kamu butuhkan: kosakata, kanji, grammar, reading, atau listening.",
- icon: icon(Library),
+ icon: icon(Book),
  },
  {
  title: "Gunakan pencarian",
@@ -357,7 +357,7 @@ const pageTours: PageTour[] = [
  {
  title: "Mulai dari pola",
  description: "Perhatikan struktur kalimat, nuansa, dan level JLPT sebelum masuk contoh.",
- icon: icon(ClipboardList),
+ icon: icon(Clipboard),
  },
  {
  title: "Bandingkan contoh",
@@ -367,7 +367,7 @@ const pageTours: PageTour[] = [
  {
  title: "Latih produksi kalimat",
  description: "Coba susun kalimat sendiri atau buka sentence builder untuk latihan lanjutan.",
- icon: icon(PenLine, "text-success"),
+ icon: icon(Edit, "text-success"),
  },
  ],
  },
@@ -415,7 +415,7 @@ const pageTours: PageTour[] = [
  {
  title: "Lihat vocab terkait",
  description: "Hubungkan kanji dengan kata nyata supaya tidak berhenti di hafalan bentuk.",
- icon: icon(Library, "text-success"),
+ icon: icon(Book, "text-success"),
  },
  ],
  },
@@ -506,12 +506,12 @@ const pageTours: PageTour[] = [
  {
  title: "Gunakan bantuan bahasa",
  description: "Manfaatkan furigana, catatan vocab, atau audio jika tersedia.",
- icon: icon(Library, "text-secondary"),
+ icon: icon(Book, "text-secondary"),
  },
  {
  title: "Uji pemahaman",
  description: "Jawab pertanyaan atau ulangi bagian sulit untuk melatih membaca cepat dan akurat.",
- icon: icon(CheckCircle2, "text-success"),
+ icon: icon(Check, "text-success"),
  },
  ],
  },
@@ -626,7 +626,7 @@ const pageTours: PageTour[] = [
  {
  title: "Kelola data",
  description: "Gunakan ekspor, impor, atau sinkronisasi agar progres belajarmu tidak hilang.",
- icon: icon(ShieldCheck, "text-secondary"),
+ icon: icon(Shield, "text-secondary"),
  },
  {
  title: "Cek akun",
@@ -698,7 +698,7 @@ const pageTours: PageTour[] = [
  {
  title: "Laporkan kebutuhan",
  description: "Gunakan kanal bantuan bila ada bug, ide fitur, atau materi yang ingin ditambahkan.",
- icon: icon(ClipboardList, "text-secondary"),
+ icon: icon(Clipboard, "text-secondary"),
  },
  {
  title: "Ikuti perkembangan",
@@ -789,17 +789,17 @@ const pageTours: PageTour[] = [
  {
  title: "Tentukan prompt",
  description: "Pilih atau tulis topik agar latihan menulis punya arah yang jelas.",
- icon: icon(PenLine),
+ icon: icon(Edit),
  },
  {
  title: "Susun kalimat Jepang",
  description: "Fokus pada grammar, partikel, dan kosakata yang sedang kamu pelajari.",
- icon: icon(ClipboardList, "text-secondary"),
+ icon: icon(Clipboard, "text-secondary"),
  },
  {
  title: "Review hasil",
  description: "Bandingkan masukan dengan materi grammar atau dictionary untuk memperbaiki pola.",
- icon: icon(CheckCircle2, "text-success"),
+ icon: icon(Check, "text-success"),
  },
  ],
  },
@@ -818,12 +818,12 @@ const pageTours: PageTour[] = [
  {
  title: "Bandingkan pola",
  description: "Lihat bentuk masu, te, ta, negatif, potensial, dan pola lain yang tersedia.",
- icon: icon(ClipboardList, "text-secondary"),
+ icon: icon(Clipboard, "text-secondary"),
  },
  {
  title: "Pakai dalam kalimat",
  description: "Buat contoh sendiri agar perubahan bentuk tidak hanya dihafal sebagai tabel.",
- icon: icon(PenLine, "text-success"),
+ icon: icon(Edit, "text-success"),
  },
  ],
  },
@@ -885,7 +885,7 @@ const pageTours: PageTour[] = [
  {
  title: "Pilih kategori benda",
  description: "Perhatikan bentuk, jenis, dan konteks benda sebelum memilih counter.",
- icon: icon(ClipboardList),
+ icon: icon(Clipboard),
  },
  {
  title: "Latih pengecualian",
@@ -895,7 +895,7 @@ const pageTours: PageTour[] = [
  {
  title: "Pakai dalam kalimat",
  description: "Coba buat contoh sederhana agar counter terasa alami saat dipakai.",
- icon: icon(PenLine, "text-success"),
+ icon: icon(Edit, "text-success"),
  },
  ],
  },
@@ -919,7 +919,7 @@ const pageTours: PageTour[] = [
  {
  title: "Kaitkan dengan vocab",
  description: "Gunakan kata contoh agar perbedaan kanji lebih mudah diingat.",
- icon: icon(Library, "text-success"),
+ icon: icon(Book, "text-success"),
  },
  ],
  },
@@ -933,17 +933,17 @@ const pageTours: PageTour[] = [
  {
  title: "Pilih pola atau tujuan",
  description: "Mulai dari grammar, maksud kalimat, atau komponen yang ingin dilatih.",
- icon: icon(ClipboardList),
+ icon: icon(Clipboard),
  },
  {
  title: "Susun bagian kalimat",
  description: "Perhatikan urutan, partikel, bentuk verba, dan kosakata yang dipakai.",
- icon: icon(PenLine, "text-secondary"),
+ icon: icon(Edit, "text-secondary"),
  },
  {
  title: "Bandingkan hasil",
  description: "Gunakan masukan untuk memperbaiki kalimat dan menyimpan pola yang berguna.",
- icon: icon(CheckCircle2, "text-success"),
+ icon: icon(Check, "text-success"),
  },
  ],
  },
@@ -981,7 +981,7 @@ const pageTours: PageTour[] = [
  {
  title: "Pilih deck",
  description: "Mulai dari kumpulan kartu yang sesuai level atau materi yang sedang dipelajari.",
- icon: icon(Library),
+ icon: icon(Book),
  },
  {
  title: "Jawab sebelum membuka",

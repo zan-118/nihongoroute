@@ -12,7 +12,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Timer, Zap, ShieldAlert, AlertTriangle, Target, BatteryMedium } from "@/components/ui/icons";
+import { Timer, Zap, Shield, AlertTriangle, Target, BatteryMedium } from "@/components/ui/icons";
 import { CardData } from "./types";
 import { toHiragana } from "wanakana";
 import { SmartJapanese } from "@/components/ui/japanese";
@@ -208,7 +208,7 @@ export function SurvivalPlaying({
  </p>
  {isWrong && (
  <div className="absolute right-4 top-1/2 -translate-y-1/2">
- <ShieldAlert aria-hidden="true" className="text-destructive" size={20} />
+ <Shield aria-hidden="true" className="text-destructive" size={20} />
  </div>
  )}
  </div>

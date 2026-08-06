@@ -6,7 +6,7 @@
  * Menyediakan filter level JLPT, pencarian interaktif, selektor jenis kata (hinshi), serta toggle romaji dan layout.
  */
 
-import { Search, Grid3X3, LayoutList } from "@/components/ui/icons";
+import { Search, LayoutGrid } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -141,7 +141,7 @@ export function VocabFilterPanel({
  }`}
  aria-label="Tampilan Grid"
  >
- <Grid3X3 size={14} />
+ <LayoutGrid size={14} />
  </Button>
  <Button
  type="button"
@@ -154,7 +154,7 @@ export function VocabFilterPanel({
  }`}
  aria-label="Tampilan Tabel Ringkas"
  >
- <LayoutList size={14} />
+ <LayoutGrid size={14} />
  </Button>
  </div>
  </div>

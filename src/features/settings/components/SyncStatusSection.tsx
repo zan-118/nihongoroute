@@ -9,7 +9,7 @@
 import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Cloud, CheckCircle, RefreshCw } from "@/components/ui/icons";
+import { Cloud, Check, RefreshCw } from "@/components/ui/icons";
 
 interface SyncStatusSectionProps {
  dirtySrsCount: number;
@@ -42,7 +42,7 @@ export default function SyncStatusSection({
  {dirtySrsCount > 0 ? (
  <Cloud size={32} />
  ) : (
- <CheckCircle size={32} />
+ <Check size={32} />
  )}
  </div>
  <div className="space-y-1">

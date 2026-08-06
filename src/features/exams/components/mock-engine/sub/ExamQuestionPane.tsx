@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
  Volume2,
- CheckCircle,
+ Check,
  Flag,
  ArrowLeft,
  ArrowRight,
@@ -118,7 +118,7 @@ const OptionButton = memo(({
  />
  )}
  {isSelected && (
- <CheckCircle size={16} aria-hidden="true" className="text-destructive shrink-0" />
+ <Check size={16} aria-hidden="true" className="text-destructive shrink-0" />
  )}
  </button>
  );

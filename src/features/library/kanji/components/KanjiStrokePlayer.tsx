@@ -13,7 +13,7 @@ import { m, AnimatePresence } from "framer-motion";
 import { 
  Play, 
  Pause, 
- RotateCcw, 
+ RefreshCcw, 
  ChevronLeft, 
  ChevronRight, 
  Zap, 
@@ -292,7 +292,7 @@ export default function KanjiStrokePlayer({
  aria-label="Reset animation"
  className="rounded-xl hover:bg-background/10"
  >
- <RotateCcw size={18} aria-hidden="true" />
+ <RefreshCcw size={18} aria-hidden="true" />
  </Button>
 
  <Button

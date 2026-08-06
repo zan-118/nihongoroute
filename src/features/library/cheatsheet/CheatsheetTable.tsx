@@ -11,7 +11,7 @@
 // ======================
 import { useState } from "react";
 import { 
- List, 
+ LayoutGrid, 
  Layers, 
  ChevronLeft, 
  ChevronRight, 
@@ -162,7 +162,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
  )}
  aria-label="Tampilan Tabel"
  >
- <List size={14} /> Tabel Data
+ <LayoutGrid size={14} /> Tabel Data
  </Button>
  <Button
  id="view-mode-flashcard"

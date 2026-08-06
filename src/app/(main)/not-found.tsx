@@ -6,7 +6,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { MapPinOff, ArrowLeft, LayoutDashboard } from "@/components/ui/icons";
+import { MapPin, ArrowLeft, LayoutDashboard } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 
 /**
@@ -43,7 +43,7 @@ export default function MainNotFound() {
  <div className="space-y-3 mb-6">
  <div className="flex justify-center mb-4">
  <div className="size-20 bg-destructive/10 rounded-lg flex items-center justify-center border border-destructive/20 shadow-[0_0_20px_hsl(var(--destructive)/0.15)] animate-premium-bounce">
- <MapPinOff className="text-destructive animate-pulse" size={36} />
+ <MapPin className="text-destructive animate-pulse" size={36} />
  </div>
  </div>
  <h1 className="text-2xl sm:text-3xl tracking-tight text-foreground font-japanese">

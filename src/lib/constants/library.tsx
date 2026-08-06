@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { BookOpen, Headphones, Type, Languages, BookText, Zap } from "@/components/ui/icons";
+import { BookOpen, Headphones, LayoutGrid, Book, Zap } from "@/components/ui/icons";
 import { LibraryCounts } from "@/actions/library-counts.actions";
 
 export interface LibraryCategoryItem {
@@ -30,7 +30,7 @@ export function buildLibraryCategories(counts: LibraryCounts): LibraryCategoryIt
  href: "/library/vocab",
  title: "Pustaka Kata",
  desc: "Kuasai ribuan kosakata bahasa Jepang dengan panduan audio native, cara baca hiragana/romaji, dan contoh kalimat praktis.",
- icon: <Languages size={28} />,
+ icon: <LayoutGrid size={28} />,
  label: "Kosakata Core",
  count: counts.vocab,
  accentRgb: "59 130 246",
@@ -40,7 +40,7 @@ export function buildLibraryCategories(counts: LibraryCounts): LibraryCategoryIt
  href: "/library/kanji",
  title: "Kamus Kanji",
  desc: "Pelajari karakter Kanji JLPT N5-N1 lengkap dengan cara baca Onyomi/Kunyomi, radikal pembentuk, dan urutan guratan visual.",
- icon: <Type size={28} />,
+ icon: <LayoutGrid size={28} />,
  label: "Kanji Vault",
  count: counts.kanji,
  accentRgb: "239 68 68",
@@ -59,7 +59,7 @@ export function buildLibraryCategories(counts: LibraryCounts): LibraryCategoryIt
  href: "/library/reading",
  title: "Graded Reading",
  desc: "Asah kemahiran membaca melalui artikel teks interaktif berjenjang yang dikategorikan sesuai standar kelulusan JLPT.",
- icon: <BookText size={28} />,
+ icon: <Book size={28} />,
  label: "Bacaan Berjenjang",
  count: counts.reading,
  accentRgb: "168 85 247",

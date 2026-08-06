@@ -12,16 +12,16 @@
 
     --background: 40 25% 95%;
     --foreground: 0 0% 5%;
-    --card: 0 0% 100%;
+    --card: 40 30% 98%;
     --card-foreground: 0 0% 5%;
-    --popover: 0 0% 100%;
+    --popover: 40 30% 98%;
     --popover-foreground: 0 0% 5%;
     --primary: 215 80% 32%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 40 20% 90%;
+    --secondary: 40 20% 91%;
     --secondary-foreground: 0 0% 5%;
-    --muted: 40 18% 90%;
-    --muted-foreground: 215 25% 32%;
+    --muted: 40 20% 91%;
+    --muted-foreground: 35 12% 40%;
     --accent: 11 80% 48%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 75% 45%;
@@ -30,11 +30,11 @@
     --success-foreground: 0 0% 98%;
     --warning: 38 85% 42%;
     --warning-foreground: 0 0% 5%;
-    --border: 215 20% 80%;
-    --input: 215 20% 80%;
+    --border: 35 15% 82%;
+    --input: 35 15% 82%;
     --ring: 215 80% 32%;
     --sidebar: 40 20% 92%;
-    --surface: 0 0% 100%;
+    --surface: 40 30% 98%;
     --surface-elevated: 40 25% 95%;
 
     --radius: 14px;

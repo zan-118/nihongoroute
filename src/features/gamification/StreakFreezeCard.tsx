@@ -12,7 +12,7 @@
 // ======================
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShieldCheck, Zap, Info } from "@/components/ui/icons";
+import { Shield, Zap, Info } from "@/components/ui/icons";
 import { toast } from "sonner";
 import { useUserStore, STREAK_FREEZE_COST } from "@/store/useUserStore";
 
@@ -58,13 +58,13 @@ export default function StreakFreezeCard() {
  <Card className="p-6 rounded-lg bg-secondary/5 border border-secondary/20 shadow-lg relative overflow-hidden group h-full flex flex-col justify-between">
  {/* Background decorative icon */}
  <div className="absolute -top-4 -right-4 text-secondary/10 rotate-12 group-hover:scale-125 transition-transform duration-700">
- <ShieldCheck size={120} />
+ <Shield size={120} />
  </div>
 
  <div className="relative z-10">
  <div className="flex items-center gap-3 mb-4">
  <div className="size-10 rounded-xl bg-secondary/20 flex items-center justify-center text-secondary">
- <ShieldCheck size={20} />
+ <Shield size={20} />
  </div>
  <div>
  <h4 className="text-xs text-secondary uppercase tracking-widest mb-0.5">Peningkatan</h4>

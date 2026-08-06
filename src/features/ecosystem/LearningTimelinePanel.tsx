@@ -7,15 +7,15 @@ import {
  Activity,
  ArrowRight,
  BookOpen,
- CheckCircle2,
+ Check,
  GraduationCap,
  Hash,
  Headphones,
- Languages,
+ LayoutGrid,
  ListChecks,
  Mic,
- PlayCircle,
- XCircle,
+ Play,
+ X,
  type IconType,
 } from "@/components/ui/icons";
 import type { LearningEvent, LearningEventType, LearningSourceType } from "@/lib/learning-ecosystem";
@@ -46,7 +46,7 @@ const EVENT_META: Record<
  reading_completed: {
  label: "Reading",
  description: "Selesai membaca materi library.",
- icon: CheckCircle2,
+ icon: Check,
  className: "border-success/25 bg-success/10 text-success",
  },
  listening_started: {
@@ -58,7 +58,7 @@ const EVENT_META: Record<
  listening_completed: {
  label: "Listening",
  description: "Sesi listening selesai.",
- icon: CheckCircle2,
+ icon: Check,
  className: "border-success/25 bg-success/10 text-success",
  },
  jlpt_drill_answered: {
@@ -70,7 +70,7 @@ const EVENT_META: Record<
  jlpt_drill_completed: {
  label: "Drill",
  description: "Sesi JLPT mini drill selesai.",
- icon: CheckCircle2,
+ icon: Check,
  className: "border-success/25 bg-success/10 text-success",
  },
  counter_answered: {
@@ -82,7 +82,7 @@ const EVENT_META: Record<
  counter_completed: {
  label: "Counter",
  description: "Bank counter selesai dikerjakan.",
- icon: CheckCircle2,
+ icon: Check,
  className: "border-success/25 bg-success/10 text-success",
  },
  shadowing_recorded: {
@@ -100,7 +100,7 @@ const EVENT_META: Record<
  text_analyzed: {
  label: "Analyzer",
  description: "Menganalisis teks Jepang.",
- icon: Languages,
+ icon: LayoutGrid,
  className: "border-primary/25 bg-primary/10 text-primary",
  },
 };
@@ -138,7 +138,7 @@ function getOutcome(event: LearningEvent) {
  // Check incorrect answer
  if (event.details?.isCorrect === false) {
  return {
- icon: XCircle,
+ icon: X,
  label: "Review",
  className: "border-warning/25 bg-warning/10 text-warning",
  };
@@ -147,7 +147,7 @@ function getOutcome(event: LearningEvent) {
  // Check correct answer
  if (event.details?.isCorrect === true) {
  return {
- icon: CheckCircle2,
+ icon: Check,
  label: "Tepat",
  className: "border-success/25 bg-success/10 text-success",
  };
@@ -156,7 +156,7 @@ function getOutcome(event: LearningEvent) {
  // Check completion event
  if (event.type.endsWith("_completed")) {
  return {
- icon: CheckCircle2,
+ icon: Check,
  label: "Selesai",
  className: "border-success/25 bg-success/10 text-success",
  };
@@ -164,7 +164,7 @@ function getOutcome(event: LearningEvent) {
 
  // Default active state
  return {
- icon: PlayCircle,
+ icon: Play,
  label: "Aktif",
  className: "border-border bg-muted/20 text-muted-foreground",
  };

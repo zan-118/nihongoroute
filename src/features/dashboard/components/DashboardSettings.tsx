@@ -12,7 +12,7 @@
 import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Save, Upload, Trash2, LogOut } from "@/components/ui/icons";
+import { Save, Upload, Trash2, LogIn } from "@/components/ui/icons";
 import NotificationManager from "@/features/notifications/NotificationManager";
 
 // ==========================================
@@ -99,7 +99,7 @@ export default function DashboardSettings({
  onClick={handleLogout}
  className="h-14 bg-destructive/10 border-destructive/30 hover:bg-destructive/30 hover:border-destructive text-destructive rounded-lg uppercase tracking-widest font-bold text-xs transition-all"
  >
- <LogOut size={16} className="mr-2" /> Keluar
+ <LogIn size={16} className="mr-2" /> Keluar
  </Button>
  )}
  </div>

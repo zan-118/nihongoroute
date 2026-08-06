@@ -11,14 +11,14 @@
 import Link from "next/link";
 import { useMemo } from "react";
 import {
- ArrowRight,
- BookOpenCheck,
- BrainCircuit,
- ClipboardCheck,
- Gauge,
- Library,
- Repeat2,
- Trophy,
+  ArrowRight,
+  BookOpen,
+  Brain,
+  Clipboard,
+  Gauge,
+  Book,
+  Repeat2,
+  Trophy,
 } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,10 +42,10 @@ interface JLPTReadinessCardProps {
 /** Map action IDs to Lucide icons. */
 const actionIcons = {
  review: Repeat2,
- course: BookOpenCheck,
- library: Library,
- exam: ClipboardCheck,
- routine: BrainCircuit,
+ course: BookOpen,
+ library: Book,
+ exam: Clipboard,
+ routine: Brain,
 };
 
 /**

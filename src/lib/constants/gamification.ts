@@ -21,8 +21,7 @@ import {
  GraduationCap, 
  Star,
  Activity,
- Heart,
- TrendingUp
+ Heart
 } from "@/components/ui/icons";
 import { UserProgress } from "@/store/types";
 

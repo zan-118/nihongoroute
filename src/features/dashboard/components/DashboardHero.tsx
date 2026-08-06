@@ -11,7 +11,7 @@
 // ==========================================
 import { useMemo } from "react";
 import { m, Variants } from "framer-motion";
-import { Sparkles, BrainCircuit, Target, BookMarked, Zap } from "@/components/ui/icons";
+import { Sparkles, Brain, Target, Book, Zap } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -203,7 +203,7 @@ export default function DashboardHero({
  }`}
  >
  {dueCount > 0 ? (
- <BrainCircuit size={36} />
+ <Brain size={36} />
  ) : (
  <Trophy size={36} />
  )}
@@ -270,7 +270,7 @@ export default function DashboardHero({
  <Link href={activeData ? `/courses/${activeData.courseSlug}/${activeData.lessonSlug}` : "/courses"} className="flex items-center justify-between w-full">
  <span>{activeData ? `Lanjut: ${activeData.lessonTitle}` : "Mulai Pelajaran"}</span>
  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-background/10 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1">
- <BookMarked size={14} />
+ <Book size={14} />
  </span>
  </Link>
  </Button>

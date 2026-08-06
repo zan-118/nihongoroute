@@ -8,7 +8,7 @@
 // ==========================================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MousePointer2, CheckCircle2, XCircle, Sprout, Flame, Award } from "@/components/ui/icons";
+import { MousePointer2, Check, X, Sprout, Flame, Award } from "@/components/ui/icons";
 import { FlashcardThemeContext } from "./types";
 import { Input } from "@/components/ui/input";
 import { toHiragana } from "wanakana";
@@ -152,8 +152,8 @@ export function FlashcardFront({
  autoFocus
  />
  <div className="absolute right-3 top-1/2 -translate-y-1/2">
- {inputResult === "correct" && <CheckCircle2 className="text-success size-6" />}
- {inputResult === "wrong" && <XCircle className="text-destructive size-6" />}
+ {inputResult === "correct" && <Check className="text-success size-6" />}
+ {inputResult === "wrong" && <X className="text-destructive size-6" />}
  </div>
  </div>
 

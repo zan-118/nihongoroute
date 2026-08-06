@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, HelpCircle, RotateCcw, Sparkles, Target, XCircle } from "@/components/ui/icons";
+import { ArrowRight, Check, HelpCircle, RefreshCcw, Sparkles, Target, X } from "@/components/ui/icons";
 import {
  getParticleQuestion,
  isParticleAnswerCorrect,
@@ -169,7 +169,7 @@ export default function ParticleTrainerClient() {
  </Button>
  <div className="flex flex-wrap gap-2">
  <Button type="button" variant="ghost" onClick={handleReset} className="rounded-xl">
- <RotateCcw data-icon="inline-start" />
+ <RefreshCcw data-icon="inline-start" />
  Reset
  </Button>
  <Button type="button" onClick={handleNext} className="rounded-xl">
@@ -183,7 +183,6 @@ export default function ParticleTrainerClient() {
  <div className="flex flex-col gap-6">
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
  <div className="mb-4 flex items-center gap-2">
- <Sparkles size={16} className="text-primary" aria-hidden="true" />
  <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
  Feedback
  </h2>
@@ -198,7 +197,7 @@ export default function ParticleTrainerClient() {
  )}
  >
  <div className="flex items-center gap-2">
- {isCorrect ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
+ {isCorrect ? <Check size={18} /> : <X size={18} />}
  <span className="text-xs font-black uppercase tracking-widest">
  {isCorrect ? "Benar" : "Coba ingat lagi"}
  </span>

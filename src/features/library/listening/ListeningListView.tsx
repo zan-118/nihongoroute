@@ -8,7 +8,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Search, Headphones, Play, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2, CheckCircle2, Radio, ArrowUpRight } from "@/components/ui/icons";
+import { Search, Headphones, Play, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2, Check, Radio, ArrowUpRight } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -196,7 +196,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  )}
  {isCompleted && (
  <span className="text-[9px] font-mono font-bold text-emerald-400 inline-flex items-center gap-1">
- <CheckCircle2 size={10} /> SELESAI
+ <Check size={10} /> SELESAI
  </span>
  )}
  </div>

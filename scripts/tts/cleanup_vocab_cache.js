@@ -175,6 +175,15 @@ async function cleanupVocabCache() {
 
       for (let i = 0; i < orphans.length; i += batchSize) {
         const batchFiles = orphans.slice(i, i + batchSize);
+        try {
+          const { isR2Configured, deleteFromR2Storage } = await import("../utils/r2-helper.mjs");
+          if (isR2Configured()) {
+            for (const f of batchFiles) {
+              await deleteFromR2Storage(BUCKET_NAME, f).catch(() => {});
+            }
+          }
+        } catch (_) {}
+
         const { error: removeErr } = await supabase.storage
           .from(BUCKET_NAME)
           .remove(batchFiles);

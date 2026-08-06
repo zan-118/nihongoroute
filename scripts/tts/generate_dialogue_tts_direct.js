@@ -772,16 +772,29 @@ async function processTtsItem(supabase, text, voice, rate = "medium", folder = "
     }
   }
 
-  const { error: uploadError } = await supabase.storage
-    .from(BUCKET_NAME)
-    .upload(filename, mp3Buffer, {
-      contentType: "audio/mpeg",
-      upsert: true,
-    });
+  let publicUrl = "";
+  try {
+    const { isR2Configured, uploadToR2Storage } = await import("../utils/r2-helper.mjs");
+    if (isR2Configured()) {
+      publicUrl = await uploadToR2Storage(BUCKET_NAME, filename, mp3Buffer, "audio/mpeg");
+      log(`   └─ [R2 Storage] Upload ke Cloudflare R2 sukses.`);
+    }
+  } catch (err) {
+    log(`   └─ [R2 Warning] Gagal upload ke R2, mencoba Supabase: ${err.message}`);
+  }
 
-  if (uploadError) throw new Error(`Upload storage gagal: ${uploadError.message}`);
+  if (!publicUrl) {
+    const { error: uploadError } = await supabase.storage
+      .from(BUCKET_NAME)
+      .upload(filename, mp3Buffer, {
+        contentType: "audio/mpeg",
+        upsert: true,
+      });
 
-  const publicUrl = supabase.storage.from(BUCKET_NAME).getPublicUrl(filename).data.publicUrl;
+    if (uploadError) throw new Error(`Upload storage gagal: ${uploadError.message}`);
+
+    publicUrl = supabase.storage.from(BUCKET_NAME).getPublicUrl(filename).data.publicUrl;
+  }
 
   const { error: dbError } = await supabase
     .from("tts_cache")

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowDown, CheckCircle2, RotateCcw, Shuffle, Sparkles, XCircle } from "@/components/ui/icons";
+import { ArrowDown, Check, RefreshCcw, Shuffle, Sparkles, X } from "@/components/ui/icons";
 import {
  isBuiltSentenceCorrect,
  SENTENCE_BUILDER_PROMPTS,
@@ -274,7 +274,7 @@ export default function SentenceBuilderClient() {
  Acak
  </Button>
  <Button type="button" variant="ghost" onClick={handleReset} className="rounded-xl">
- <RotateCcw data-icon="inline-start" />
+ <RefreshCcw data-icon="inline-start" />
  Reset
  </Button>
  </div>
@@ -348,9 +348,9 @@ export default function SentenceBuilderClient() {
  <div className="mb-4 flex items-center gap-2">
  {hasChecked ? (
  isCorrect ? (
- <CheckCircle2 size={16} className="text-success" />
+ <Check size={16} className="text-success" />
  ) : (
- <XCircle size={16} className="text-warning" />
+ <X size={16} className="text-warning" />
  )
  ) : (
  <Sparkles size={16} className="text-primary" />

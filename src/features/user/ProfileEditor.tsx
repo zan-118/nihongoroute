@@ -13,7 +13,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Edit2, Check, X, UserCircle, Loader2 } from "@/components/ui/icons";
+import { Edit, Check, X, User, Loader2 } from "@/components/ui/icons";
 import { useProfileEditor } from "@/features/user/useProfileEditor";
 
 /**
@@ -79,7 +79,7 @@ export default function ProfileEditor() {
  <div className="flex items-center gap-4 group">
  <div className="relative">
  <div className="size-16 rounded-lg border border-border flex items-center justify-center text-primary shadow-sm group-hover:shadow-md transition-all">
- <UserCircle size={32} />
+ <User size={32} />
  </div>
  <div className="absolute -bottom-1 -right-1 size-5 bg-success rounded-full border-2 border-background" />
  </div>
@@ -92,9 +92,9 @@ export default function ProfileEditor() {
  <button type="button"
  onClick={startEditing}
  className="opacity-0 group-hover:opacity-100 transition-opacity p-2 text-muted-foreground hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg shrink-0"
- aria-label="Edit Nama Profil"
+ aria-label="Edit Nama"
  >
- <Edit2 size={20} className="sm:w-6 sm:h-6" />
+ <Edit size={20} className="sm:w-6 sm:h-6" />
  </button>
  </h2>
  <p className="text-muted-foreground text-xs md:text-sm font-bold uppercase tracking-[0.2em] mt-2 flex items-center gap-2">

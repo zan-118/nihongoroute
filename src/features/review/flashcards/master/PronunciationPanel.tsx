@@ -9,7 +9,7 @@
 // Import & Dependencies
 // ==========================================
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Mic, MicOff, RefreshCw, ChevronRight, Zap, CheckCircle2, AlertCircle } from "@/components/ui/icons";
+import { Mic, RefreshCw, ChevronRight, Zap, Check, AlertCircle } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useUserStore } from "@/store/useUserStore";
@@ -417,7 +417,7 @@ export default function PronunciationPanel({
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  {inputResult === "correct" ? (
- <CheckCircle2 size={16} className="text-success" />
+ <Check size={16} className="text-success" />
  ) : (
  <AlertCircle size={16} className="text-destructive" />
  )}
@@ -453,7 +453,7 @@ export default function PronunciationPanel({
  >
  {isRecording ? (
  <>
- <MicOff size={14} className="mr-2" /> Hentikan & Selesai
+ <Mic size={14} className="mr-2" /> Hentikan & Selesai
  </>
  ) : (
  <>

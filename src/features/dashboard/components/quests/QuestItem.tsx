@@ -12,7 +12,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Lock } from "@/components/ui/icons";
+import { Check, Lock } from "@/components/ui/icons";
 import { Quest } from "./types";
 
 // ==========================================
@@ -86,7 +86,7 @@ export function QuestItem({
  <div className="flex items-center gap-3">
  <Card className={`w-10 h-10 md:w-11 md:h-11 rounded-xl flex items-center justify-center shadow-none transition-all shrink-0 ${isCompleted && !isClaimed ? 'bg-success/10 border-success/20' : 'bg-background dark:bg-background/[0.04] border border-border'}`}>
  {isClaimed ? (
- <CheckCircle2 size={18} className="text-success/60" />
+ <Check size={18} className="text-success/60" />
  ) : (
  <IconComponent size={18} className="text-primary" />
  )}

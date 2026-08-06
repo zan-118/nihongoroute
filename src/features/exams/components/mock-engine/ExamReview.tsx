@@ -15,14 +15,13 @@ import {
  ArrowLeft,
  ArrowRight,
  BookOpen,
- BrainCircuit,
- CheckCircle,
- CheckCircle2,
- ClipboardList,
+ Brain,
+ Check,
+ Clipboard,
  Filter,
  Target,
  Volume2,
- XCircle,
+ X,
  Star,
  type IconType,
 } from "@/components/ui/icons";
@@ -58,10 +57,10 @@ type ReviewFilter = "mistakes" | "all";
 /** Map action ID to icon. */
 const ACTION_ICONS: Record<ExamReviewAction["id"], IconType> = {
  "weak-points": Target,
- flashcards: ClipboardList,
+ flashcards: Clipboard,
  listening: Volume2,
  reading: BookOpen,
- grammar: BrainCircuit,
+ grammar: Brain,
  vocab: BookOpen,
 };
 
@@ -81,27 +80,27 @@ function getQuestionBorderClass(insight: ExamReviewQuestionInsight) {
 
 /** Get status metadata for question. */
 function getQuestionStatus(insight: ExamReviewQuestionInsight) {
- if (insight.isCorrect) {
- return {
- label: "Benar",
- icon: CheckCircle,
- className: "bg-success/10 text-success border-success/20",
- };
- }
+  if (insight.isCorrect) {
+    return {
+      label: "Benar",
+      icon: Check,
+      className: "bg-success/10 text-success border-success/20",
+    };
+  }
 
- if (!insight.isAnswered) {
- return {
- label: "Kosong",
- icon: AlertTriangle,
- className: "bg-warning/10 text-warning border-warning/20",
- };
- }
+  if (!insight.isAnswered) {
+    return {
+      label: "Kosong",
+      icon: AlertTriangle,
+      className: "bg-warning/10 text-warning border-warning/20",
+    };
+  }
 
- return {
- label: "Salah",
- icon: XCircle,
- className: "bg-destructive/10 text-destructive border-destructive/20",
- };
+  return {
+    label: "Salah",
+    icon: X,
+    className: "bg-destructive/10 text-destructive border-destructive/20",
+  };
 }
 
 /** Get library URL from source type and ID. */
@@ -245,19 +244,19 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
  className: getAccuracyTone(analysis.accuracy),
  },
  {
- label: "Benar",
- value: analysis.correctCount,
- detail: "jawaban tepat",
- icon: CheckCircle2,
- className: "text-success border-success/25 bg-success/10",
- },
- {
- label: "Salah",
- value: analysis.wrongCount,
- detail: "perlu ditinjau",
- icon: XCircle,
- className: "text-destructive border-destructive/25 bg-destructive/10",
- },
+    label: "Benar",
+    value: analysis.correctCount,
+    detail: "jawaban tepat",
+    icon: Check,
+    className: "text-success border-success/25 bg-success/10",
+  },
+  {
+    label: "Salah",
+    value: analysis.wrongCount,
+    detail: "perlu ditinjau",
+    icon: X,
+    className: "text-destructive border-destructive/25 bg-destructive/10",
+  },
  {
  label: "Kosong",
  value: analysis.unansweredCount,
@@ -387,7 +386,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
  <div className="rounded-lg border border-border bg-muted/20 p-5">
  <div className="mb-5 flex items-center justify-between gap-4">
  <div className="flex items-center gap-2">
- <BrainCircuit size={18} aria-hidden="true" className="text-primary" />
+ <Brain size={18} aria-hidden="true" className="text-primary" />
  <span className="text-xs font-black uppercase tracking-widest text-foreground">
  Performa Section
  </span>
@@ -504,11 +503,11 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
  <div className="flex flex-col gap-10 md:gap-16">
  {visibleInsights.length === 0 ? (
  <Card className="p-8 text-center rounded-2xl md:rounded-3xl border border-border bg-card">
- <CheckCircle2
- size={44}
- aria-hidden="true"
- className="mx-auto mb-4 text-success"
- />
+      <Check
+        size={44}
+        aria-hidden="true"
+        className="mx-auto mb-4 text-success"
+      />
  <p className="text-sm font-black uppercase tracking-widest text-foreground">
  Tidak ada soal untuk filter ini.
  </p>
@@ -636,14 +635,14 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
  </Badge>
  <ReviewChoiceContent choice={choice} text={opt} />
  {isCorrectAnswer && (
- <CheckCircle
+ <Check
  size={24}
  aria-hidden="true"
  className="shrink-0 text-success"
  />
  )}
  {isUserSelection && !isCorrectAnswer && (
- <XCircle
+ <X
  size={24}
  aria-hidden="true"
  className="shrink-0 text-destructive"

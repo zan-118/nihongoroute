@@ -13,7 +13,7 @@
 import { useUserStore } from "@/store/useUserStore";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Play, ArrowRight, BookOpen, CheckCircle2 } from "@/components/ui/icons";
+import { Play, ArrowRight, BookOpen, Check } from "@/components/ui/icons";
 import Link from "next/link";
 import { useMemo } from "react";
 import { m } from "framer-motion";
@@ -159,7 +159,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
  <div className="shrink-0 relative transition-transform duration-300 group-hover:scale-105">
  <div className="size-[89px] rounded-lg bg-card border border-border/60 flex items-center justify-center shadow-md overflow-hidden group-hover:border-primary/30 transition-colors">
  {activeData.progress === 100 ? (
- <CheckCircle2 size={34} className="text-success" />
+ <Check size={34} className="text-success" />
  ) : (
  <BookOpen size={34} className="text-primary group-hover:scale-110 transition-transform duration-500" />
  )}

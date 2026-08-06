@@ -9,7 +9,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Trophy, Flame, RotateCcw, Clock, Zap } from "@/components/ui/icons";
+import { Trophy, Flame, RefreshCcw, Clock, Zap } from "@/components/ui/icons";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 // ==========================================
@@ -199,7 +199,7 @@ export function SessionSummaryModal({
  onClick={handleRestart}
  className={`w-full h-auto py-4 rounded-xl text-xs md:text-xs font-bold uppercase tracking-widest border-none bg-primary text-primary-foreground hover:bg-foreground hover:text-background transition-all shadow-lg`}
  >
- <RotateCcw size={16} aria-hidden="true" className="mr-2" /> Ulangi Semua
+ <RefreshCcw size={16} aria-hidden="true" className="mr-2" /> Ulangi Semua
  </Button>
  <Button
  variant="ghost"

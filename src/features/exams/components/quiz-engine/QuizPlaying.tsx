@@ -10,7 +10,7 @@
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, AlertCircle, ArrowRight, CheckCircle2, XCircle } from "@/components/ui/icons";
+import { Brain, ArrowRight, Check, Sparkles, X, AlertCircle } from "@/components/ui/icons";
 import { QuizQuestion } from "./types";
 import { Button } from "@/components/ui/button";
 import { QuizProgress } from "./QuizProgress";
@@ -123,8 +123,8 @@ export function QuizPlaying({
  isCorrectAnswer ? 'bg-success/20' : 'bg-destructive/20'
  }`}>
  {isCorrectAnswer 
- ? <CheckCircle2 className="w-6 h-6 md:w-7 md:h-7 text-success" />
- : <XCircle className="w-6 h-6 md:w-7 md:h-7 text-destructive" />
+ ? <Check className="w-6 h-6 md:w-7 md:h-7 text-success" />
+ : <X className="w-6 h-6 md:w-7 md:h-7 text-destructive" />
  }
  </div>
  <div>
@@ -157,10 +157,10 @@ export function QuizPlaying({
  if (isAnswered) {
  if (isCorrect) {
  buttonStyle = "bg-success/15 border-success/60 text-success shadow-[0_0_30px_hsl(var(--success)/0.2)] neo-card scale-[1.03] z-10 ring-2 ring-success/30";
- statusIcon = <CheckCircle2 className="w-6 h-6 md:w-7 md:h-7 text-success" />;
+ statusIcon = <Check className="w-6 h-6 md:w-7 md:h-7 text-success" />;
  } else if (isSelected && !isCorrect) {
  buttonStyle = "bg-destructive/15 border-destructive/60 text-destructive shadow-[0_0_30px_hsl(var(--destructive)/0.2)] neo-card z-10 ring-2 ring-destructive/30";
- statusIcon = <XCircle className="w-6 h-6 md:w-7 md:h-7 text-destructive" />;
+ statusIcon = <X className="w-6 h-6 md:w-7 md:h-7 text-destructive" />;
  } else {
  buttonStyle = "bg-muted/20 border-transparent text-muted-foreground/20 scale-95 opacity-40 neo-card grayscale";
  }

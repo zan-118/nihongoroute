@@ -16,13 +16,15 @@ import {
  VolumeX,
  ChevronLeft,
  ChevronRight,
- Play,
- RotateCw,
- Award,
- CheckCircle,
- XCircle,
+  Headphones,
+  RefreshCw,
+  Sparkles,
+  Check,
+  X,
  HelpCircle,
- BookOpen
+ BookOpen,
+ Play,
+ Trophy,
 } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -325,7 +327,7 @@ export default function DictationClient() {
  >
  {loading ? (
  <>
- <RotateCw className="animate-spin size-4" /> Memuat Kalimat...
+ <RefreshCw className="animate-spin size-4" /> Memuat Kalimat...
  </>
  ) : (
  <>
@@ -445,17 +447,17 @@ export default function DictationClient() {
  <div className="flex items-center gap-3">
  {isPerfectMatch ? (
  <>
- <CheckCircle className="text-success shrink-0" size={24} />
+ <Check className="text-success shrink-0" size={24} />
  <span className="text-sm font-bold text-success">Sempurna! 100% Cocok</span>
  </>
  ) : isPhoneticMatch ? (
  <>
- <CheckCircle className="text-warning shrink-0" size={24} />
+ <Check className="text-warning shrink-0" size={24} />
  <span className="text-sm font-bold text-warning">Benar! (Beda Kanji/Penulisan saja)</span>
  </>
  ) : (
  <>
- <XCircle className="text-destructive shrink-0" size={24} />
+ <X className="text-destructive shrink-0" size={24} />
  <span className="text-sm font-bold text-destructive">Belum Tepat</span>
  </>
  )}
@@ -499,7 +501,7 @@ export default function DictationClient() {
  disabled={!userInput.trim()}
  className="flex-1 py-6 rounded-xl text-xs font-bold uppercase tracking-widest bg-success hover:bg-success/95 text-success-foreground gap-2"
  >
- <CheckCircle size={16} /> Periksa
+ <Check size={16} /> Periksa
  </Button>
  </>
  ) : (
@@ -575,7 +577,7 @@ export default function DictationClient() {
  <div className="fixed inset-0 bg-background/80 z-50 flex items-center justify-center p-4">
  <Card className="w-full max-w-md p-8 bg-card border-border rounded-2xl md:rounded-3xl flex flex-col items-center text-center gap-6 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
  <div className="w-16 h-16 rounded-full bg-success/10 border border-success/20 flex items-center justify-center shadow-lg text-success animate-bounce">
- <Award size={32} />
+ <Trophy size={32} />
  </div>
  
  <div>

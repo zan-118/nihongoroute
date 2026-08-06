@@ -10,6 +10,10 @@ const { buildJlptImportPlan, validateJlptImportPackage } = await import(
 
 const EXAM_ASSETS_BUCKET = "exam-assets";
 
+const { isR2Configured, uploadToR2Storage } = await import(
+  "./utils/r2-helper.mjs"
+);
+
 function printUsage() {
   console.error(
     [
@@ -192,16 +196,23 @@ async function uploadAssets(supabase, plan, options, inputDir, assetRoot) {
     }
 
     const body = fs.readFileSync(localPath);
-    const { error } = await supabase.storage
-      .from(EXAM_ASSETS_BUCKET)
-      .upload(asset.path, body, {
-        cacheControl: "31536000",
-        contentType: asset.mimeType || inferMimeType(localPath),
-        upsert: options.upsertAssets,
-      });
+    const mimeType = asset.mimeType || inferMimeType(localPath);
 
-    if (error) throw new Error(`Upload asset "${asset.path}" gagal: ${error.message}`);
-    console.log(`Uploaded asset: ${asset.path}`);
+    if (isR2Configured()) {
+      await uploadToR2Storage(EXAM_ASSETS_BUCKET, asset.path, body, mimeType);
+      console.log(`Uploaded asset to Cloudflare R2: ${asset.path}`);
+    } else {
+      const { error } = await supabase.storage
+        .from(EXAM_ASSETS_BUCKET)
+        .upload(asset.path, body, {
+          cacheControl: "31536000",
+          contentType: mimeType,
+          upsert: options.upsertAssets,
+        });
+
+      if (error) throw new Error(`Upload asset "${asset.path}" gagal: ${error.message}`);
+      console.log(`Uploaded asset: ${asset.path}`);
+    }
   }
 }
 

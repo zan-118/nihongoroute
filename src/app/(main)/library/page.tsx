@@ -9,7 +9,7 @@
 // ==========================================
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { Library, Sparkles } from "@/components/ui/icons";
+import { Book, Sparkles } from "@/components/ui/icons";
 import { buildLibraryCategories, buildLibraryStats } from "@/lib/constants/library";
 
 // Supporting Components
@@ -96,7 +96,7 @@ export default async function LibraryPage() {
  {/* Eyebrow & Status Pills */}
  <div className="flex flex-wrap items-center justify-between gap-4">
  <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 dark:bg-primary/10 backdrop-blur-md">
- <Library size={16} className="text-primary" />
+ <Book size={16} className="text-primary" />
  <span className="text-[10px] font-black uppercase tracking-[0.25em] font-mono text-primary">
  ARCHIVE // PUSTAKA BELAJAR
  </span>

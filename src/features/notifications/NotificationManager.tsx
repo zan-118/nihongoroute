@@ -10,7 +10,7 @@
 // IMPOR
 // ======================
 import { useState, useEffect } from "react";
-import { Bell, BellOff, BellRing, Settings2 } from "@/components/ui/icons";
+import { Bell, BellOff, BellRing, Settings } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -150,7 +150,7 @@ export default function NotificationManager() {
  onClick={requestPermission}
  className="h-auto py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-widest border-primary/30 text-primary hover:bg-primary/10"
  >
- <Settings2 size={12} className="mr-2" /> Konfigurasi
+ <Settings size={12} className="mr-2" /> Konfigurasi
  </Button>
  </div>
  </div>

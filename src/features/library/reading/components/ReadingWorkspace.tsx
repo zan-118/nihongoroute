@@ -9,7 +9,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { m, AnimatePresence, useScroll, useSpring } from "framer-motion";
-import { Volume2, Loader2, Sparkles, CheckCircle2, BookmarkCheck } from "@/components/ui/icons";
+import { Volume2, Loader2, Sparkles, Check, Bookmark } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FuriganaDisplay } from "@/components/ui/japanese";
@@ -253,7 +253,7 @@ function ReadingWorkspace({
  onClick={onComplete}
  className="rounded-lg px-12 py-6 bg-linear- text-white shadow-lg shadow-primary/20 font-black uppercase tracking-wider text-xs hover:scale-105 active:scale-95 transition-all"
  >
- <CheckCircle2 className="mr-2 h-4 w-4" /> Tandai Selesai Membaca
+ <Check className="mr-2 h-4 w-4" /> Tandai Selesai Membaca
  </Button>
  </div>
  )}

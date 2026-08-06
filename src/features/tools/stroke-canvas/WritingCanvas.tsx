@@ -7,7 +7,7 @@
 // Import & Dependencies
 // ==========================================
 import React from "react";
-import { Trash2, Eye, EyeOff, RotateCcw, Zap, CheckCircle } from "@/components/ui/icons";
+import { Trash2, Eye, EyeOff, RefreshCcw, Zap, Check } from "@/components/ui/icons";
 import { AnimatedKanji } from "./AnimatedKanji";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -84,7 +84,7 @@ export function WritingCanvas({
  {isCompleted && (
  <div className="absolute inset-0 bg-background/85 flex flex-col items-center justify-center gap-4 z-30 transition-all duration-300 animate-in fade-in">
  <div className="h-14 w-14 rounded-full bg-success/15 border border-success/30 flex items-center justify-center text-success shadow-[0_0_20px_hsl(var(--success)/0.3)]">
- <CheckCircle size={28} className="animate-premium-bounce" />
+ <Check size={28} className="animate-premium-bounce" />
  </div>
  <div className="text-center space-y-1">
  <h4 className="text-xs uppercase tracking-widest text-success">Latihan Selesai!</h4>
@@ -163,7 +163,7 @@ export function WritingCanvas({
  onClick={handleReplay}
  className="flex flex-col items-center justify-center gap-1.5 h-auto py-2.5 rounded-xl bg-muted dark:bg-card/50 text-muted-foreground border border-border text-[8px] font-bold uppercase tracking-wider hover:text-primary hover:border-primary/20 transition-all"
  >
- <RotateCcw size={16} />
+ <RefreshCcw size={16} />
  <span>Replay</span>
  </Button>
  </>

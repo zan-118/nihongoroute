@@ -12,7 +12,7 @@
 // Import & Dependencies
 // ==========================================
 import Link from "next/link";
-import { ArrowRight, BrainCircuit, Target } from "@/components/ui/icons";
+import { ArrowRight, Brain, Target } from "@/components/ui/icons";
 import { buildWeakPointInsights } from "@/lib/learning-ecosystem";
 import { useUIStore } from "@/store/useUIStore";
 import { Badge } from "@/components/ui/badge";
@@ -63,7 +63,7 @@ export default function WeakPointSummary() {
  href={wp.href}
  className="inline-flex min-h-9 items-center gap-2 rounded-xl border border-border bg-background/45 px-3 py-2 text-xs font-black text-foreground transition-colors hover:border-warning/35 hover:text-warning"
  >
- <BrainCircuit size={14} aria-hidden="true" />
+ <Brain size={14} aria-hidden="true" />
  {wp.label}
  <span className="font-mono text-[10px] text-muted-foreground">
  {wp.mistakes}/{wp.attempts}

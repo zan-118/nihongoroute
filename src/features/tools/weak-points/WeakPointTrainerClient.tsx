@@ -12,14 +12,16 @@ import { m, AnimatePresence } from "framer-motion";
 import {
  AlertTriangle,
  ArrowRight,
- BrainCircuit,
+ Brain,
+ Check,
  ChevronLeft,
+ Flame,
+ Book,
  Gauge,
- Library,
  Loader2,
  Play,
- RotateCcw,
- ShieldCheck,
+ RefreshCcw,
+ Shield,
  Target,
 } from "@/components/ui/icons";
 import { toast } from "sonner";
@@ -307,9 +309,9 @@ export default function WeakPointTrainerClient() {
 
  <div className="grid grid-cols-2 gap-3">
  <SummaryTile label="Kritis" value={summary.critical} icon={AlertTriangle} />
- <SummaryTile label="Jatuh Tempo" value={summary.due} icon={RotateCcw} />
+ <SummaryTile label="Jatuh Tempo" value={summary.due} icon={RefreshCcw} />
  <SummaryTile label="Rentan" value={summary.fragile} icon={Gauge} />
- <SummaryTile label="Belajar" value={summary.learning} icon={BrainCircuit} />
+ <SummaryTile label="Belajar" value={summary.learning} icon={Brain} />
  </div>
  </div>
  </Card>
@@ -324,7 +326,7 @@ export default function WeakPointTrainerClient() {
  16 item teratas dari SRS
  </p>
  </div>
- <ShieldCheck className="text-primary" size={24} />
+ <Shield className="text-primary" size={24} />
  </div>
 
  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -410,7 +412,7 @@ function EmptyDiagnosis() {
  return (
  <Card className="rounded-[34px] border-border bg-card/35 p-8 text-center shadow-none md:p-12">
  <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-lg border border-success/20 bg-success/10 text-success">
- <ShieldCheck size={30} />
+ <Shield size={30} />
  </div>
  <h2 className="text-2xl uppercase tracking-tight text-foreground">
  Tidak ada titik lemah aktif
@@ -422,7 +424,7 @@ function EmptyDiagnosis() {
  <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
  <Button asChild className="h-12 rounded-lg px-5 text-xs font-black uppercase tracking-widest">
  <Link href="/library/vocab">
- <Library size={15} />
+ <Book size={15} />
  Tambah Kartu
  </Link>
  </Button>

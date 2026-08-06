@@ -45,6 +45,9 @@ Variabel dikonfigurasi melalui file `.env.local` (development) atau environment 
 | `R2_BUCKET_NAME` | string | Opsional | (Opsional) Nama bucket tunggal R2 jika digabung. |
 | `TRAKTEER_WEBHOOK_SECRET` | string | Opsional | Token verifikasi webhook Trakteer. |
 | `SAWERIA_WEBHOOK_SECRET` | string | Opsional | Secret HMAC SHA256 verifikasi webhook Saweria. |
+| `CONTACT_WEBHOOK_URL` | URL | Opsional | Webhook URL (Discord/Telegram/Email) untuk notifikasi otomatis pesan kontak pengembang. |
+| `RESEND_API_KEY` | string | Opsional | API Key dari Resend.com untuk pengiriman email notifikasi kontak ke Gmail. |
+| `ADMIN_EMAIL` | email | Opsional | Alamat email admin/pengembang penerima notifikasi kontak (default: `fauzanghiffari118@gmail.com`). |
 | `VERCEL_TOKEN` | string | Opsional (CI/CD) | Token Personal/Team Vercel untuk GitHub Actions Deployment. |
 | `VERCEL_ORG_ID` | string | Opsional (CI/CD) | Scope/Org ID dari Vercel Project untuk `vercel pull/build`. |
 | `VERCEL_PROJECT_ID` | string | Opsional (CI/CD) | Project ID Vercel untuk `vercel pull/build`. |

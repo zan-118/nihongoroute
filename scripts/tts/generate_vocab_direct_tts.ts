@@ -3,6 +3,8 @@ import path from 'node:path';
 import process from 'node:process';
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
+// @ts-ignore
+import { isR2Configured, uploadToR2Storage } from '../utils/r2-helper.mjs';
 // @ts-ignore (msedge-tts doesn't have official TS typings)
 import { MsEdgeTTS } from 'msedge-tts';
 
@@ -131,17 +133,21 @@ async function processVocabItem(supabase: any, id: string, word: string) {
   }
   console.log(`   └─ [Edge TTS] Sintesis sukses. Ukuran: ${audioBuffer.length} bytes.`);
 
-  // Upload ke storage bucket 'asset' path 'vocab/id.mp3'
-  const { error: uploadError } = await supabase.storage
-    .from(BUCKET_NAME)
-    .upload(filename, audioBuffer, {
-      contentType: "audio/mpeg",
-      upsert: true,
-    });
+  let publicUrl = "";
+  if (isR2Configured()) {
+    publicUrl = await uploadToR2Storage(BUCKET_NAME, filename, audioBuffer, "audio/mpeg");
+    console.log(`   └─ [R2 Storage] Upload ke Cloudflare R2 sukses: ${publicUrl}`);
+  } else {
+    const { error: uploadError } = await supabase.storage
+      .from(BUCKET_NAME)
+      .upload(filename, audioBuffer, {
+        contentType: "audio/mpeg",
+        upsert: true,
+      });
 
-  if (uploadError) throw new Error(`Upload storage gagal: ${uploadError.message}`);
-
-  const publicUrl = supabase.storage.from(BUCKET_NAME).getPublicUrl(filename).data.publicUrl;
+    if (uploadError) throw new Error(`Upload storage gagal: ${uploadError.message}`);
+    publicUrl = supabase.storage.from(BUCKET_NAME).getPublicUrl(filename).data.publicUrl;
+  }
 
   // Update langsung ke tabel vocab
   const { error: updateError } = await supabase

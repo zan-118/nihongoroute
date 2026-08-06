@@ -11,7 +11,7 @@
 // ======================
 import { useState, useEffect, useCallback } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Lightbulb, Save, Check, Edit2, BrainCircuit } from "@/components/ui/icons";
+import { Lightbulb, Save, Check, Edit, Brain } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useSRSStore } from "@/store/useSRSStore";
@@ -112,7 +112,7 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
  )}
  >
  <span className="text-[7px] font-black uppercase tracking-widest text-primary/50 flex items-center gap-1 mb-0.5">
- <BrainCircuit size={8} aria-hidden="true" />
+ <Brain size={8} aria-hidden="true" />
  Jembatan Keledai Saya
  </span>
  <p className="text-[9px] md:text-[11px] font-medium text-foreground/80 italic leading-tight line-clamp-2">
@@ -127,7 +127,7 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
  {/* Header */}
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
- <BrainCircuit size={14} aria-hidden="true" className="text-primary" />
+ <Brain size={14} aria-hidden="true" className="text-primary" />
  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
  Jembatan Keledai Saya
  </span>
@@ -140,7 +140,7 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
  aria-label="Edit jembatan keledai"
  className="size-7 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
  >
- <Edit2 size={12} />
+ <Edit size={12} />
  </Button>
  )}
  </div>

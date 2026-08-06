@@ -1,7 +1,6 @@
 /**
  * @file index.ts
- * @description Pustaka ikon terpadu NihongoRoute (Iconify + Stempel Jepang Custom SVG).
+ * @description Pustaka ikon terpadu NihongoRoute berbasis Iconify.
  */
 
 export * from "./IconifyIcons";
-export * from "./CustomJapaneseIcons";

@@ -294,17 +294,30 @@ async function main() {
       console.log(`   └─ [Gemini TTS] Sintesis sukses (${geminiVoice}).`);
     }
 
-    console.log(`   ⚡ Mengunggah ke Supabase Storage (${filename})...`);
-    const { error: uploadError } = await supabase.storage
-      .from(BUCKET_NAME)
-      .upload(filename, audioBuffer, {
-        contentType: "audio/mpeg",
-        upsert: true,
-      });
+    let publicUrl = "";
+    try {
+      const { isR2Configured, uploadToR2Storage } = await import("../utils/r2-helper.mjs");
+      if (isR2Configured()) {
+        console.log(`   ⚡ Mengunggah ke Cloudflare R2 Storage (${filename})...`);
+        publicUrl = await uploadToR2Storage(BUCKET_NAME, filename, audioBuffer, "audio/mpeg");
+      }
+    } catch (err) {
+      console.warn(`   └─ [R2 Warning] Gagal upload ke R2, mencoba Supabase:`, err.message);
+    }
 
-    if (uploadError) throw uploadError;
+    if (!publicUrl) {
+      console.log(`   ⚡ Mengunggah ke Supabase Storage (${filename})...`);
+      const { error: uploadError } = await supabase.storage
+        .from(BUCKET_NAME)
+        .upload(filename, audioBuffer, {
+          contentType: "audio/mpeg",
+          upsert: true,
+        });
 
-    const publicUrl = supabase.storage.from(BUCKET_NAME).getPublicUrl(filename).data.publicUrl;
+      if (uploadError) throw uploadError;
+
+      publicUrl = supabase.storage.from(BUCKET_NAME).getPublicUrl(filename).data.publicUrl;
+    }
 
     console.log("   💾 Menyimpan ke database...");
     const { error: dbError } = await supabase

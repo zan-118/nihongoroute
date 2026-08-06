@@ -13,9 +13,12 @@ import {
 } from "@/lib/seo";
 
 // Server Components (rendered purely statically to HTML for zero JS overhead on initial render)
+import { LandingHeader } from "@/features/landing/LandingHeader";
 import { Hero } from "@/features/landing/Hero";
 import { FeatureGrid } from "@/features/landing/FeatureGrid";
 import { TrustBanner } from "@/features/landing/TrustBanner";
+import { LandingFaq } from "@/features/landing/LandingFaq";
+import { PreFooterCta } from "@/features/landing/PreFooterCta";
 import { LandingFooter } from "@/features/landing/LandingFooter";
 
 
@@ -48,7 +51,10 @@ export const metadata: Metadata = {
  */
 export default function LandingPage() {
  return (
- <main className="bg-background text-foreground selection:bg-primary/30 overflow-x-hidden w-full relative transition-colors duration-500">
+ <main className="bg-background text-foreground selection:bg-primary/30 overflow-x-clip w-full relative transition-colors duration-500">
+ {/* Header Navigasi Atas Landing Page */}
+ <LandingHeader />
+
  {/* Inject JSON-LD structured data for search engines */}
  <JsonLd
  data={[
@@ -88,6 +94,12 @@ export default function LandingPage() {
 
  {/* BANNER KEPERCAYAAN (Pure SSG Server Component) */}
  <TrustBanner />
+
+ {/* PERTANYAAN UMUM / FAQ ACCORDION */}
+ <LandingFaq />
+
+ {/* BANNER PENUTUP CTA */}
+ <PreFooterCta />
  </div>
 
  {/* KAKI HALAMAN (Pure SSG Server Component) */}

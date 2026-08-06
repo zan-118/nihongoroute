@@ -9,7 +9,7 @@ import {
  Hash,
  Loader2,
  Search,
- SlidersHorizontal,
+ Sliders,
  Sparkles,
  X,
 } from "@/components/ui/icons";
@@ -305,7 +305,7 @@ export default function DictionaryPageClient() {
 
  <div className="mt-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
  <div className="flex flex-wrap items-center gap-2">
- <SlidersHorizontal size={16} className="text-primary" aria-hidden="true" />
+ <Sliders size={16} className="text-primary" aria-hidden="true" />
  {FILTERS.map((item) => {
  const Icon = item.icon;
  return (

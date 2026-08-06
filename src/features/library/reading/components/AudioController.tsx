@@ -9,7 +9,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, Square, AlertCircle, RotateCcw, Loader2, Gauge } from "@/components/ui/icons";
+import { Play, Pause, Square, AlertCircle, RefreshCcw, Loader2, Gauge } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useCachedAudio } from "@/hooks/useCachedAudio";
@@ -573,7 +573,7 @@ export default function AudioController({
  aria-label="Ulangi dari awal"
  className="size-10 rounded-full hover:bg-background/5 text-muted-foreground/60 hover:text-primary transition-all"
  >
- <RotateCcw size={18} />
+ <RefreshCcw size={18} />
  </Button>
 
  {/* Stop */}

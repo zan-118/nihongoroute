@@ -17,7 +17,7 @@ import { getSupporters, FormattedSupporter } from "@/actions/support.actions";
 import {
  Heart,
  Coffee,
- ShieldCheck,
+ Shield,
  Zap,
  Globe,
  ChevronDown,
@@ -27,7 +27,7 @@ import {
  ArrowUpRight,
  Server,
  Sparkles,
- CheckCircle2,
+ Check,
 } from "@/components/ui/icons";
 
 // ======================
@@ -158,11 +158,11 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  {/* Metrik Cepat */}
  <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs font-semibold text-muted-foreground">
  <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/30 px-3.5 py-1.5">
- <CheckCircle2 className="size-4 text-emerald-500" />
+ <Check className="size-4 text-emerald-500" />
  <span>Tanpa Paywall</span>
  </div>
  <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/30 px-3.5 py-1.5">
- <ShieldCheck className="size-4 text-primary" />
+ <Shield className="size-4 text-primary" />
  <span>Transparansi 100%</span>
  </div>
  <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/30 px-3.5 py-1.5">
@@ -260,7 +260,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
  <div>
  <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-primary">
- <ShieldCheck className="size-3.5" />
+ <Shield className="size-3.5" />
  <span>Transparansi Penggunaan Dana</span>
  </div>
  <h2 className="mt-3 text-2xl font-black tracking-tight text-foreground sm:text-3xl">

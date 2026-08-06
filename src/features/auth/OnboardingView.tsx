@@ -12,7 +12,7 @@
 import { m, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { BookOpen, Briefcase, Plane, Tv, ChevronRight, CheckCircle2, Loader2, Sparkles, ArrowLeft } from "@/components/ui/icons";
+import { BookOpen, Briefcase, Plane, Tv, ChevronRight, Check, Loader2, Sparkles, ArrowLeft } from "@/components/ui/icons";
 import { useOnboardingWizard } from "@/features/auth/onboarding/useOnboardingWizard";
 
 // ==========================================
@@ -255,7 +255,7 @@ export default function OnboardingView() {
  </>
  ) : (
  <>
- <CheckCircle2 className="mr-2 size-4" /> Selesaikan Profil
+ <Check className="mr-2 size-4" /> Selesaikan Profil
  </>
  )}
  </Button>

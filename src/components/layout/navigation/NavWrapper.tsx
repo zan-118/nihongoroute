@@ -49,7 +49,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
  const breadcrumbItems = useMemo(() => getBreadcrumbItems(pathname), [pathname]);
 
  return (
- <div className="bg-background relative min-h-dvh text-foreground flex flex-col md:flex-row overflow-x-hidden w-full transition-colors duration-300">
+ <div className="bg-background relative min-h-dvh text-foreground flex flex-col md:flex-row overflow-x-clip w-full transition-colors duration-300">
  <a 
  href="#main-content" 
  className="sr-only focus:not-sr-only focus:fixed focus:top-6 focus:left-6 focus:z-100 focus:px-6 focus:py-3 focus:bg-primary focus:text-primary-foreground focus:font-black focus:rounded-xl focus:shadow-xl outline-none transition-all"

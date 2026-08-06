@@ -9,7 +9,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, m } from "framer-motion";
-import { X, ZoomIn } from "@/components/ui/icons";
+import { X, Search } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 /**
@@ -98,7 +98,7 @@ export function IllustrationGallery({
  {/* Hover Zoom overlay */}
  <div className="absolute inset-0 bg-background/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
  <div className="p-3.5 rounded-full bg-background/80 shadow-lg border border-border transform scale-90 group-hover:scale-100 transition-transform duration-300">
- <ZoomIn className="size-5 text-primary" />
+ <Search className="size-5 text-primary" />
  </div>
  </div>
 

@@ -15,14 +15,14 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { 
  ChevronLeft, 
- BookText, 
+ Book, 
  Lightbulb, 
  Volume2, 
  VolumeX, 
  Sparkles,
  ArrowRight,
  Share2,
- CheckCircle2,
+ Check,
  ListChecks,
  AlertTriangle
 } from "@/components/ui/icons";
@@ -375,7 +375,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
  >
  {isCopied ? (
  <>
- <CheckCircle2 size={16} className="text-success animate-premium-bounce" />
+ <Check size={16} className="text-success animate-premium-bounce" />
  <span className="text-xs font-black uppercase tracking-wider text-success">Disalin!</span>
  </>
  ) : (
@@ -396,12 +396,12 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
  {article.formation && (
  <Card className="p-8 md:p-10 bg-linear- border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_hsl(var(--primary)/0.05)] transition-all duration-500 select-none glass">
  <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-primary">
- <BookText size={180} />
+ <Book size={180} />
  </div>
  <div className="absolute top-0 left-0 w-1.5 h-full bg-primary/30 group-hover:bg-primary transition-all duration-300" />
  
  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-6 opacity-80 flex items-center gap-2">
- <Sparkles size={12} className="animate-spin-slow" /> Struktur Kalimat (Formation)
+ Struktur Kalimat (Formation)
  </span>
  
  <div className="text-2xl md:text-3xl font-black text-foreground font-japanese leading-relaxed tracking-tight select-text selection:bg-primary/20 flex flex-wrap items-center gap-y-3">

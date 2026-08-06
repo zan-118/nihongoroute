@@ -6,7 +6,7 @@
 import React from "react";
 import Link from "next/link";
 import { 
- ShieldCheck, 
+ Shield, 
  ArrowRight, 
  WifiOff, 
  Heart, 
@@ -68,7 +68,7 @@ export function TrustBanner() {
  <Card className="p-5 bg-card border border-border/60 dark:border-white/10 rounded-lg transition-all duration-300 hover:border-primary/40 flex flex-col justify-between h-full group/item shadow-sm">
  <div className="space-y-3">
  <div className="size-10 rounded-lg bg-primary/10 border border-primary/25 flex items-center justify-center text-primary transition-transform group-hover/item:scale-105">
- <ShieldCheck size={20} />
+ <Shield size={20} />
  </div>
  <h3 className="text-sm text-foreground uppercase tracking-tight font-bold">Tanpa Iklan / Biaya Tersembunyi</h3>
  <p className="text-xs text-muted-foreground leading-relaxed font-semibold">
@@ -139,7 +139,7 @@ export function TrustBanner() {
  <div className="flex gap-8 flex-wrap justify-between items-center">
  {tickerItems.map((text, index) => (
  <span key={index} className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
- <Sparkles size={10} className="text-primary animate-pulse" /> {text}
+ • {text}
  </span>
  ))}
  </div>

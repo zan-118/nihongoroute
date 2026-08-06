@@ -11,7 +11,7 @@
 // ==========================================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { LineChart, BarChart2, AlertTriangle, Zap, ShieldCheck } from "@/components/ui/icons";
+import { Flame, Brain, BarChart, Trophy, Zap, Shield, Sparkles, AlertTriangle } from "@/components/ui/icons";
 import { useSRSAnalytics } from "./useSRSAnalytics";
 
 // ==========================================
@@ -32,8 +32,8 @@ export default function SRSAnalytics() {
  const data = rawData.map((item) => {
  let icon = <AlertTriangle size={14} />;
  if (item.label === "Fragile") icon = <Zap size={14} />;
- if (item.label === "Stable") icon = <BarChart2 size={14} />;
- if (item.label === "Master") icon = <ShieldCheck size={14} />;
+ if (item.label === "Stable") icon = <BarChart size={14} />;
+ if (item.label === "Master") icon = <Shield size={14} />;
 
  return { ...item, icon };
  });
@@ -45,7 +45,7 @@ export default function SRSAnalytics() {
  <header className="flex items-center justify-between mb-10 relative z-10">
  <div className="flex items-center gap-4">
  <Card className="size-12 rounded-xl bg-primary/10 border-primary/20 flex items-center justify-center neo-inset shadow-none">
- <LineChart size={24} className="text-primary" />
+ <BarChart size={24} className="text-primary" />
  </Card>
  <div>
  <h3 className="text-foreground uppercase tracking-widest text-sm">Kekuatan Ingatan</h3>

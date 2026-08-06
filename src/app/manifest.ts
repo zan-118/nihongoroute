@@ -55,7 +55,7 @@ export default function manifest(): MetadataRoute.Manifest {
  },
  {
  src: "/opengraph-image-mobile.png",
- sizes: "1442x2564",
+ sizes: "630x1365",
  type: "image/png",
  // Target mobile screens for app store listing
  form_factor: "narrow",

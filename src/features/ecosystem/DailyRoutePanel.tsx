@@ -4,11 +4,13 @@ import Link from "next/link";
 import {
  ArrowRight,
  BookOpen,
- BrainCircuit,
- Compass,
- Flame,
- PlayCircle,
- RotateCcw,
+  Brain,
+  Check,
+  ChevronRight,
+  Compass,
+  Flame,
+  Play,
+  RefreshCcw,
  Sparkles,
  Target,
  Wrench,
@@ -41,12 +43,12 @@ const CATEGORY_META: Record<
  },
  continue: {
  label: "Lanjut",
- icon: PlayCircle,
+ icon: Play,
  className: "border-primary/25 bg-primary/10 text-primary",
  },
  review: {
  label: "Review",
- icon: RotateCcw,
+ icon: RefreshCcw,
  className: "border-warning/25 bg-warning/10 text-warning",
  },
  tool: {
@@ -199,7 +201,7 @@ export default function DailyRoutePanel({ compact = false, className, courseMeta
  href={weakPoint.href}
  className="inline-flex min-h-9 items-center gap-2 rounded-xl border border-border bg-background/45 px-3 py-2 text-xs font-black text-foreground transition-colors hover:border-warning/35 hover:text-warning"
  >
- <BrainCircuit size={14} aria-hidden="true" />
+ <Brain size={14} aria-hidden="true" />
  {weakPoint.label}
  <span className="font-mono text-[10px] text-muted-foreground">
  {weakPoint.mistakes}

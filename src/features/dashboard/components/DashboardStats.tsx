@@ -14,7 +14,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Flame, BookOpen, CheckCircle2 } from "@/components/ui/icons";
+import { Flame, BookOpen, Check } from "@/components/ui/icons";
 import DailyQuests from "./quests/DailyQuests";
 import MemoryStats from "./dashboard-stats/MemoryStats";
 import SRSAnalytics from "@/features/dashboard/components/srs/analytics/SRSAnalytics";
@@ -214,7 +214,7 @@ export default function DashboardStats({
  <Card className="bg-card border border-border/50 dark:border-white/10 p-5 rounded-2xl group shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-primary/45 transition-colors duration-500">
  <div className="flex items-center gap-4 mb-5">
  <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
- {percentage === 100 ? <CheckCircle2 size={24} /> : <BookOpen size={24} />}
+ {percentage === 100 ? <Check size={24} /> : <BookOpen size={24} />}
  </div>
  <div className="flex-1">
  <h4 className="text-sm font-black uppercase tracking-tight line-clamp-1">{cat.title}</h4>

@@ -7,7 +7,7 @@ import {
  Clipboard,
  FileText,
  Hash,
- Languages,
+ LayoutGrid,
  Loader2,
  Search,
  Sparkles,
@@ -269,7 +269,7 @@ export default function TextAnalyzerClient({
  <div className="flex flex-col gap-3">
  <div className="flex items-center gap-3">
  <div className="flex size-12 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
- <Languages size={24} aria-hidden="true" />
+ <LayoutGrid size={24} aria-hidden="true" />
  </div>
  <Badge className="w-fit rounded-xl px-3 py-1">Penganalisis Teks</Badge>
  </div>

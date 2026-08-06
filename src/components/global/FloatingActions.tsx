@@ -10,7 +10,7 @@
 // ==========================================
 import { useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Plus, MessageSquarePlus, Coffee, X } from "@/components/ui/icons";
+import { Plus, MessageSquare, Coffee, X } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,7 +18,7 @@ import FeedbackWidget from "@/features/support/feedback/FeedbackWidget";
 import { useUIStore } from "@/store/useUIStore";
 import { ReadingMode } from "@/features/library/reading/types";
 import AudioController from "@/features/library/reading/components/AudioController";
-import { Eye, Languages, BookOpen as BookIcon, GraduationCap, Headphones } from "@/components/ui/icons";
+import { Eye, LayoutGrid, BookOpen as BookIcon, GraduationCap, Headphones } from "@/components/ui/icons";
 
 import React from "react";
 import { cn } from "@/lib/utils";
@@ -54,7 +54,7 @@ export default function FloatingActions() {
  const modes: { id: ReadingMode; label: string; icon: React.ElementType }[] = [
  { id: "kanji", label: "Kanji", icon: BookIcon },
  { id: "furigana", label: "Furigana", icon: Eye },
- { id: "hiragana", label: "Hiragana", icon: Languages },
+ { id: "hiragana", label: "Hiragana", icon: LayoutGrid },
  ];
 
  return (
@@ -78,7 +78,7 @@ export default function FloatingActions() {
  className="button-outline-premium rounded-lg px-4 py-6 flex items-center gap-3 h-auto group"
  >
  <span className="text-xs font-black uppercase tracking-widest hidden md:block">Feedback</span>
- <MessageSquarePlus size={20} className="text-primary group-hover:text-current" />
+ <MessageSquare size={20} className="text-primary group-hover:text-current" />
  </Button>
  </m.div>
 
@@ -149,7 +149,7 @@ export default function FloatingActions() {
  <span className="text-[10px] font-black uppercase tracking-widest hidden md:block" aria-hidden="true">
  {readingState.showTranslation ? "Terjemahan ON" : "Terjemahan OFF"}
  </span>
- <Languages size={20} className={readingState.showTranslation ? "text-success group-hover:text-current" : "text-success"} />
+ <LayoutGrid size={20} className={readingState.showTranslation ? "text-success group-hover:text-current" : "text-success"} />
  </button>
  </m.div>
  </div>

@@ -8,7 +8,7 @@
 // ==========================================
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { MapPinOff, ArrowLeft, Home } from "@/components/ui/icons";
+import { MapPin, ArrowLeft, Home } from "@/components/ui/icons";
 
 // ==========================================
 // Main Component
@@ -42,7 +42,7 @@ export default function NotFound() {
  <div className="space-y-3 mb-6">
  <div className="flex justify-center mb-4">
  <div className="size-20 bg-destructive/10 rounded-lg flex items-center justify-center border border-destructive/20 shadow-[0_0_20px_hsl(var(--destructive)/0.15)] animate-premium-bounce">
- <MapPinOff className="text-destructive animate-pulse" size={36} />
+ <MapPin className="text-destructive animate-pulse" size={36} />
  </div>
  </div>
  {/* Japanese text asks "Are you lost?" */}

@@ -14,7 +14,7 @@ import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Star, ArrowRight, ShieldCheck, Zap } from "@/components/ui/icons";
+import { Award, Sparkles, Trophy, Shield, ArrowRight, Star, Zap } from "@/components/ui/icons";
 import { useLevelUpOverlay } from "./useLevelUpOverlay";
 
 // ======================
@@ -85,7 +85,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
  {/* Level stats indicators */}
  <div className="flex items-center justify-center gap-4 md:gap-8 mb-6 md:mb-12">
  <div className="flex flex-col items-center">
- <ShieldCheck size={20} className="text-success mb-2 md:w-6 md:h-6" />
+ <Shield size={20} className="text-success mb-2 md:w-6 md:h-6" />
  <span className="text-xs md:text-xs text-muted-foreground font-bold uppercase tracking-widest">Target Selesai</span>
  </div>
  <div className="w-px h-8 md:h-10 bg-border dark:bg-background/10" />

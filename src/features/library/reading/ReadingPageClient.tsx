@@ -12,7 +12,7 @@
 import React, { useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import Link from "next/link";
-import { BookmarkCheck, Clock, Gauge, Languages, MapPin, Mic, Minimize2, ScanText, Sparkles, Type, Zap, BarChart } from "@/components/ui/icons";
+import { Bookmark, Clock, Gauge, LayoutGrid, MapPin, Mic, Minimize2, ScanText, Sparkles, Zap, BarChart } from "@/components/ui/icons";
 import { ReadingProvider } from "@/features/library/reading/components/ReadingContext";
 import { cn } from "@/lib/utils";
 import { useReadingLogic } from "@/features/library/reading/hooks/useReadingLogic";
@@ -501,7 +501,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
  : "bg-muted/10 text-muted-foreground hover:text-foreground hover:bg-muted/20"
  )}
  >
- <Languages size={11} />
+ <LayoutGrid size={11} />
  <span>IND: {showTranslation ? "ON" : "OFF"}</span>
  </Button>
 

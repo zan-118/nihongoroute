@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import React, { useState, useEffect, useCallback } from "react";
-import { Download, Loader2, CheckCircle2, CloudLightning } from "@/components/ui/icons";
+import { Download, Loader2, Check, Cloud } from "@/components/ui/icons";
 import { sounds } from "@/lib/audio";
 import { cn } from "@/lib/utils";
 
@@ -134,10 +134,10 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
 
  {status === "completed" && (
  <>
- <CheckCircle2 size={14} className="text-success animate-in zoom-in duration-300" />
+ <Check size={14} className="text-success animate-in zoom-in duration-300" />
  <span className="flex items-center gap-1.5">
  Luring Aktif
- <CloudLightning size={12} className="animate-pulse" />
+ <Cloud size={12} className="animate-pulse" />
  </span>
  </>
  )}

@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
-import { Zap, Flame, ShieldCheck, User } from "@/components/ui/icons";
+import { Zap, Flame, Shield, User } from "@/components/ui/icons";
 
 interface ProfileSectionProps {
  name: string;
@@ -92,7 +92,7 @@ export default function ProfileSection({
  </span>
  </div>
  <div className="absolute -bottom-2 -right-2 size-10 bg-card border border-border rounded-lg flex items-center justify-center z-20 shadow-md group-hover/avatar:scale-110 transition-transform">
- <ShieldCheck size={20} className="text-success" />
+ <Shield size={20} className="text-success" />
  </div>
  </div>
  <div className="flex flex-col items-center">

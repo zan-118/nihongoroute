@@ -68,13 +68,13 @@ export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
  )}
 
  <div className={`size-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
- isActive ? "bg-primary/10 text-primary" : "bg-transparent text-muted-foreground group-hover:bg-muted/70 group-hover:text-foreground"
- }`}>
- <item.icon size={16} strokeWidth={2.1} />
- </div>
- <span className={`text-[10px] font-black uppercase tracking-[0.16em] flex-1 transition-colors duration-300 ${isActive ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>
- {item.label}
- </span>
+            isActive ? "bg-primary/20 text-primary dark:bg-primary dark:text-primary-foreground" : "bg-transparent text-foreground/80 group-hover:bg-muted/70 group-hover:text-foreground"
+          }`}>
+            <item.icon size={16} strokeWidth={2.1} />
+          </div>
+          <span className={`text-[10px] font-black uppercase tracking-[0.16em] flex-1 transition-colors duration-300 ${isActive ? 'text-primary dark:text-primary-foreground' : 'text-foreground/80 group-hover:text-foreground'}`}>
+            {item.label}
+          </span>
  {isActive && (
  // Framer motion layout animation for active dot.
  <m.div 

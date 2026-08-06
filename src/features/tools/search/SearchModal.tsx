@@ -10,7 +10,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Search, X, Command, BookOpen, Trophy, Layers, BrainCircuit, Heart, Settings, Share2, ArrowRight, Zap, Loader2, FileText, Hash } from "@/components/ui/icons";
+import { Search, X, Command, BookOpen, Trophy, Layers, Brain, Heart, Settings, Share2, ArrowRight, Zap, Loader2, FileText, Hash } from "@/components/ui/icons";
 import { useRouter } from "next/navigation";
 
 // ==========================================
@@ -39,7 +39,7 @@ const SEARCH_ITEMS: SearchItem[] = [
  { id: "materi", title: "Materi", description: "Jalur belajar JLPT dan Topik Umum", href: "/courses", icon: BookOpen, category: "Platform" },
  { id: "ujian", title: "Ujian", description: "Simulasi JLPT dan Test Mandiri", href: "/exams", icon: Trophy, category: "Platform" },
  { id: "pustaka", title: "Pustaka", description: "Daftar kata benda, kata kerja, dan kanji", href: "/library", icon: Layers, category: "Belajar" },
- { id: "hafalan", title: "Peninjauan", description: "Latihan SRS untuk ingatan jangka panjang", href:ROUTES.REVIEW, icon: BrainCircuit, category: "Belajar" },
+ { id: "hafalan", title: "Peninjauan", description: "Latihan SRS untuk ingatan jangka panjang", href:ROUTES.REVIEW, icon: Brain, category: "Belajar" },
  { id: "sosial", title: "Papan Skor", description: "Peringkat global dan komunitas", href:ROUTES.SOCIAL, icon: Trophy, category: "Belajar" },
  { id: "dukungan", title: "Dukungan", description: "Bantuan dan panduan penggunaan", href: "/support", icon: Heart, category: "Sistem" },
  { id: "pengaturan", title: "Pengaturan", description: "Kelola profil dan preferensi aplikasi", href:ROUTES.SETTINGS, icon: Settings, category: "Sistem" },

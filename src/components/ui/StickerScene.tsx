@@ -9,7 +9,7 @@
 
 import React, { useState, useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, MessageSquare, RotateCcw, Play } from "@/components/ui/icons";
+import { ChevronLeft, ChevronRight, MessageSquare, RefreshCcw, Play } from "@/components/ui/icons";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -260,7 +260,7 @@ export function StickerScene({
  title="Reset"
  aria-label="Reset"
  >
- <RotateCcw size={13} />
+ <RefreshCcw size={13} />
  </button>
  <button
  onClick={handlePrev}

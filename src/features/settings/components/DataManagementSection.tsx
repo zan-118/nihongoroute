@@ -9,7 +9,7 @@
 import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Save, Upload, Trash2, LogOut, Database } from "@/components/ui/icons";
+import { Save, Upload, Trash2, LogIn, Database } from "@/components/ui/icons";
 
 interface DataManagementSectionProps {
  isAuthenticated: boolean;
@@ -77,7 +77,7 @@ export default function DataManagementSection({
  onClick={handleLogout}
  className="h-16 bg-background/50 border border-border/80 hover:bg-foreground/5 hover:border-foreground/20 text-muted-foreground hover:text-foreground rounded-lg rounded-br-none uppercase tracking-[0.2em] font-black text-[10px] transition-all duration-200 group/btn shadow-sm"
  >
- <LogOut size={18} className="mr-3 group-hover:translate-x-1 transition-transform text-muted-foreground/70 group-hover:text-foreground" /> Keluar Akun
+ <LogIn size={18} className="mr-3 group-hover:translate-x-1 transition-transform text-muted-foreground/70 group-hover:text-foreground" /> Keluar Akun
  </Button>
  )}
  </div>

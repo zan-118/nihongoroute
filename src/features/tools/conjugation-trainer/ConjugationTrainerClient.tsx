@@ -4,13 +4,14 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
  AlertTriangle,
- CheckCircle2,
- ClipboardList,
+ Check,
+ Clipboard,
+ Flame,
  GraduationCap,
  Loader2,
- RotateCcw,
+ RefreshCcw,
  Sparkles,
- XCircle,
+ X,
 } from "@/components/ui/icons";
 import { toRomaji } from "wanakana";
 import {
@@ -227,7 +228,7 @@ export default function ConjugationTrainerClient({
  <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-2xl md:p-6">
  <div className="mb-5 flex items-center gap-2">
- <ClipboardList size={16} className="text-primary" aria-hidden="true" />
+ <Clipboard size={16} className="text-primary" aria-hidden="true" />
  <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
  Setup
  </h2>
@@ -392,9 +393,9 @@ export default function ConjugationTrainerClient({
  >
  <div className="flex items-center gap-2">
  {isCorrect ? (
- <CheckCircle2 size={18} aria-hidden="true" />
+ <Check size={18} aria-hidden="true" />
  ) : (
- <XCircle size={18} aria-hidden="true" />
+ <X size={18} aria-hidden="true" />
  )}
  <span className="text-xs font-black uppercase tracking-widest">
  {isCorrect ? "Benar" : "Belum Tepat"}
@@ -411,7 +412,7 @@ export default function ConjugationTrainerClient({
 
  <div className="mt-5 flex flex-wrap gap-2">
  <Button type="button" variant="outline" onClick={handleReset} className="rounded-xl">
- <RotateCcw data-icon="inline-start" />
+ <RefreshCcw data-icon="inline-start" />
  Reset
  </Button>
  </div>

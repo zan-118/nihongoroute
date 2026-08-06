@@ -13,17 +13,17 @@ import {
  Mic,
  ScanText,
  Volume2,
- CheckCircle2,
- XCircle,
+ Check,
+ X,
  Eye,
  EyeOff,
- RotateCcw,
+ RefreshCcw,
  Sparkles,
  ChevronLeft,
  ChevronRight,
  ClipboardPenLine,
  Target,
- Languages,
+ LayoutGrid,
  Play,
  Pause,
  Headphones,
@@ -444,9 +444,9 @@ export default function ListeningWorkspace({
  <span>Baris {index + 1}</span>
  {attempt ? (
  attempt.isPassed ? (
- <CheckCircle2 size={13} className="text-success" />
+ <Check size={13} className="text-success" />
  ) : (
- <XCircle size={13} className="text-destructive" />
+ <X size={13} className="text-destructive" />
  )
  ) : null}
  </button>
@@ -531,9 +531,9 @@ export default function ListeningWorkspace({
  >
  <div className="flex items-center gap-2">
  {dictationAttempt.isPassed ? (
- <CheckCircle2 size={16} className="text-success" />
+ <Check size={16} className="text-success" />
  ) : (
- <XCircle size={16} className="text-destructive" />
+ <X size={16} className="text-destructive" />
  )}
  <span className="text-xs font-bold">
  {dictationAttempt.isPassed ? "Sangat Akurat!" : "Butuh Koreksi"}
@@ -617,8 +617,8 @@ export default function ListeningWorkspace({
  className={cn("w-full border p-3 rounded-xl text-left text-sm transition-all flex justify-between items-center", optStyle)}
  >
  <span>{opt.text}</span>
- {quizSubmitted && isCorrectOpt && <CheckCircle2 size={14} className="text-success shrink-0" />}
- {quizSubmitted && isSelected && !isCorrectOpt && <XCircle size={14} className="text-destructive shrink-0" />}
+ {quizSubmitted && isCorrectOpt && <Check size={14} className="text-success shrink-0" />}
+ {quizSubmitted && isSelected && !isCorrectOpt && <X size={14} className="text-destructive shrink-0" />}
  </button>
  );
  })}
@@ -724,7 +724,7 @@ export default function ListeningWorkspace({
  : "bg-muted/10 text-muted-foreground hover:text-foreground hover:bg-muted/20"
  )}
  >
- <Languages size={11} />
+ <LayoutGrid size={11} />
  <span>IND: {showTranslation ? "ON" : "OFF"}</span>
  </Button>
 

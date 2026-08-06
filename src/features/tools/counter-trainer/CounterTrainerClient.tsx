@@ -4,12 +4,13 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import {
  ArrowRight,
- CheckCircle2,
+ Check,
+ Flame,
  Hash,
  HelpCircle,
- RotateCcw,
+ RefreshCcw,
  Sparkles,
- XCircle,
+ X,
 } from "@/components/ui/icons";
 import {
  COUNTER_OPTIONS,
@@ -243,7 +244,7 @@ export default function CounterTrainerClient({
  </Button>
  <div className="flex flex-wrap gap-2">
  <Button type="button" variant="ghost" onClick={handleReset} className="rounded-xl">
- <RotateCcw data-icon="inline-start" />
+ <RefreshCcw data-icon="inline-start" />
  Reset
  </Button>
  <Button type="button" onClick={handleNext} className="rounded-xl">
@@ -259,9 +260,9 @@ export default function CounterTrainerClient({
  <div className="mb-4 flex items-center gap-2">
  {hasAnswered ? (
  isCorrect ? (
- <CheckCircle2 size={16} className="text-success" aria-hidden="true" />
+ <Check size={16} className="text-success" aria-hidden="true" />
  ) : (
- <XCircle size={16} className="text-warning" aria-hidden="true" />
+ <X size={16} className="text-warning" aria-hidden="true" />
  )
  ) : (
  <Sparkles size={16} className="text-primary" aria-hidden="true" />

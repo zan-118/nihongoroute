@@ -14,7 +14,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, TrendingUp, Flame, Sprout, BookOpen, PenTool, Database } from "@/components/ui/icons";
+import { Trophy, Activity, Flame, Sprout, BookOpen, PenTool, Database } from "@/components/ui/icons";
 import { useMemoryStats } from "@/features/dashboard/components/srs/stats/useMemoryStats";
 
 /**
@@ -40,7 +40,7 @@ export default function MemoryStats() {
  count: stats.intermediate,
  color: "text-primary",
  indicatorColor: "bg-primary shadow-[0_0_15px_hsl(var(--primary)/0.5)]",
- icon: <TrendingUp size={16} />,
+ icon: <Activity size={16} />,
  },
  {
  label: "Fase Belajar",

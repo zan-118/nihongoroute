@@ -10,7 +10,7 @@
 // IMPOR UTAMA
 // ==========================================
 import React from "react";
-import { BookText } from "@/components/ui/icons";
+import { Book } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -45,7 +45,7 @@ export function GrammarEmptyState({ searchTerm, selectedLevel, onResetSearch }: 
  <div className="flex justify-center mb-8">
  {/* Icon container with subtle glow effect */}
  <div className="size-20 rounded-2xl md:rounded-3xl bg-primary/5 flex items-center justify-center border border-primary/10 shadow-[0_0_30px_hsl(var(--primary)/0.1)]">
- <BookText size={32} aria-hidden="true" className="text-primary/40" />
+ <Book size={32} aria-hidden="true" className="text-primary/40" />
  </div>
  </div>
  <h3 className="text-xl md:text-2xl text-foreground uppercase tracking-tight mb-4">

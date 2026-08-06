@@ -9,7 +9,7 @@
 // ======================
 // IMPOR
 // ======================
-import { MessageSquarePlus, Send, Loader2 } from "@/components/ui/icons";
+import { MessageSquare, Send, Loader2 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useFeedbackWidget } from "./useFeedbackWidget";
@@ -66,7 +66,7 @@ export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidg
  <DialogContent className="sm:max-w-[425px] border-border bg-background text-foreground transition-colors duration-300 shadow-2xl rounded-xl">
  <DialogHeader>
  <DialogTitle className="text-xl text-foreground flex items-center gap-2 font-black uppercase tracking-tight">
- <MessageSquarePlus aria-hidden="true" className="text-primary" />
+ <MessageSquare aria-hidden="true" className="text-primary" />
  Kirim Masukan
  </DialogTitle>
  <DialogDescription className="text-muted-foreground">
