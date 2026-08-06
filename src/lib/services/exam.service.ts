@@ -23,6 +23,7 @@ import {
 } from "@/lib/exams/jlpt-session";
 import { toLegacyExamData, type SupabaseExamSection } from "@/lib/exams/supabase-adapter";
 import { createClient, createStaticClient } from "@/lib/supabase/server";
+import { getR2PublicUrl } from "@/lib/storage/r2";
 import type { Json } from "@/types/supabase.generated";
 
 /**
@@ -316,11 +317,9 @@ async function requireAuthenticatedUser() {
  * Creates resolver function for public asset URLs.
  */
 function createAssetUrlResolver(
- supabase: Awaited<ReturnType<typeof createClient>> | ReturnType<typeof createStaticClient>
+  _supabase: Awaited<ReturnType<typeof createClient>> | ReturnType<typeof createStaticClient>
 ) {
- return (objectPath: string) =>
- supabase.storage.from(EXAM_ASSETS_BUCKET).getPublicUrl(objectPath).data
- .publicUrl;
+  return (objectPath: string) => getR2PublicUrl(EXAM_ASSETS_BUCKET, objectPath);
 }
 
 /**

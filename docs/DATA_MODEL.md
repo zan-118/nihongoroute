@@ -185,11 +185,15 @@ erDiagram
 
 ---
 
-## 4. Storage Buckets
+## 4. Storage Buckets & Cloudflare R2 Migration
 
-1. `tts-cache`: Menyimpan file audio `.mp3` hasil generasi TTS.
-2. `exam-assets`: Gambar dan audio pendukung soal ujian JLPT.
-3. `asset`: Gambar sampul dan media umum aplikasi.
+Penyimpanan aset media dan audio disajikan langsung melalui **Cloudflare R2** via Custom Domain CDN (`NEXT_PUBLIC_R2_PUBLIC_URL`) untuk menghindari batasan egress Supabase dan pemblokiran ISP di Indonesia:
+
+1. `tts-cache`: Menyimpan file audio `.mp3` hasil generasi MsEdgeTTS.
+2. `exam-assets`: Gambar wacana dan audio pendukung soal ujian JLPT.
+3. `asset`: Gambar sampul artikel, ilustrasi kosakata, dan media umum aplikasi.
+
+*Catatan Migrasi*: Skrip CLI `scripts/migrate-supabase-to-r2.mjs` dapat digunakan untuk melakukan migrasi/kopi file massal dari Supabase Storage ke Cloudflare R2.
 
 ---
 

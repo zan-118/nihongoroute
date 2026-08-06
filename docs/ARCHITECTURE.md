@@ -132,8 +132,8 @@ graph TD
       │
       ├─► Query tabel tts_cache by hash
       │
-      ├───[CACHE HIT]──► Download .mp3 dari bucket tts-cache
-      │                   Response: audio/mpeg + Cache-Control: immutable
+      ├───[CACHE HIT]──► Return URL Cloudflare R2 Custom Domain CDN (NEXT_PUBLIC_R2_PUBLIC_URL)
+      │                   Response 302 Redirect / Direct CDN URL (Zero Egress Supabase)
       │
       └───[CACHE MISS]─► Sintesis dinamis via MsEdgeTTS
                           Response: audio/mpeg + Cache-Control: no-store

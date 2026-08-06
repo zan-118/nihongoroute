@@ -21,7 +21,16 @@ export async function GET(request: Request) {
     const result = await processTtsPipeline({ text: rawText, voice: rawVoice, rate });
 
     if (result.redirectUrl) {
-      return NextResponse.redirect(result.redirectUrl, 302);
+      const r2Res = await fetch(result.redirectUrl);
+      if (r2Res.ok) {
+        const audioBuffer = await r2Res.arrayBuffer();
+        return new Response(audioBuffer, {
+          headers: {
+            "Content-Type": "audio/mpeg",
+            "Cache-Control": "public, max-age=31536000, immutable",
+          },
+        });
+      }
     }
 
     if (!result.audioBuffer) {

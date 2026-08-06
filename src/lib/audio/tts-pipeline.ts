@@ -5,6 +5,8 @@ import { TTS_VOICES, SPEAKER_MAP, type TtsVoice } from "@/lib/constants/tts";
 import { MALE_VOICES } from "@/lib/audio/tts";
 import { createAdminClient } from "@/lib/supabase/admin";
 
+import { getR2PublicUrl } from "@/lib/storage/r2";
+
 export const MAX_TTS_TEXT_LENGTH = 500;
 const ALLOWED_VOICES = new Set(Object.values(TTS_VOICES));
 
@@ -107,7 +109,7 @@ export async function processTtsPipeline(params: TTSRequestParams): Promise<TTSP
  storagePath = decodeURIComponent(match[1]);
  }
 
- const publicUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/tts-cache/${storagePath}`;
+ const publicUrl = getR2PublicUrl("tts-cache", storagePath);
 
  return {
  redirectUrl: publicUrl,

@@ -30,6 +30,7 @@ Variabel dikonfigurasi melalui file `.env.local` (development) atau environment 
 | `NEXT_PUBLIC_SITE_URL` | URL | Wajib | URL dasar website. Digunakan untuk CORS dan metadata SEO. |
 | `NEXT_PUBLIC_SUPABASE_URL` | URL | Wajib | Endpoint Supabase API. |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | JWT | Wajib | Kunci publik Supabase (anonim). |
+| `NEXT_PUBLIC_R2_PUBLIC_URL` | URL | Opsional | Custom Domain CDN Cloudflare R2 (misal `https://assets.nihongoroute.com`). Mencegah limit egress Supabase & blokir ISP Indonesia. |
 
 ### Variabel Rahasia (Server-Only)
 
@@ -38,6 +39,10 @@ Variabel dikonfigurasi melalui file `.env.local` (development) atau environment 
 | `SUPABASE_SERVICE_ROLE_KEY` | JWT | Wajib | Bypass RLS. Hanya di Server Actions / Route Handlers via `createAdminClient()`. |
 | `ADMIN_API_SECRET` | string | Wajib | Token autentikasi rute admin API. |
 | `GEMINI_API_KEY` | string | Wajib | Google Generative AI key. |
+| `R2_ACCOUNT_ID` | string | Opsional | Cloudflare Account ID untuk endpoint S3 R2. |
+| `R2_ACCESS_KEY_ID` | string | Opsional | Access Key ID untuk Cloudflare R2 S3 API. |
+| `R2_SECRET_ACCESS_KEY` | string | Opsional | Secret Access Key untuk Cloudflare R2 S3 API. |
+| `R2_BUCKET_NAME` | string | Opsional | (Opsional) Nama bucket tunggal R2 jika digabung. |
 | `TRAKTEER_WEBHOOK_SECRET` | string | Opsional | Token verifikasi webhook Trakteer. |
 | `SAWERIA_WEBHOOK_SECRET` | string | Opsional | Secret HMAC SHA256 verifikasi webhook Saweria. |
 
