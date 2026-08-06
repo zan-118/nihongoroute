@@ -45,6 +45,10 @@ Variabel dikonfigurasi melalui file `.env.local` (development) atau environment 
 | `R2_BUCKET_NAME` | string | Opsional | (Opsional) Nama bucket tunggal R2 jika digabung. |
 | `TRAKTEER_WEBHOOK_SECRET` | string | Opsional | Token verifikasi webhook Trakteer. |
 | `SAWERIA_WEBHOOK_SECRET` | string | Opsional | Secret HMAC SHA256 verifikasi webhook Saweria. |
+| `VERCEL_TOKEN` | string | Opsional (CI/CD) | Token Personal/Team Vercel untuk GitHub Actions Deployment. |
+| `VERCEL_ORG_ID` | string | Opsional (CI/CD) | Scope/Org ID dari Vercel Project untuk `vercel pull/build`. |
+| `VERCEL_PROJECT_ID` | string | Opsional (CI/CD) | Project ID Vercel untuk `vercel pull/build`. |
+
 
 ---
 
