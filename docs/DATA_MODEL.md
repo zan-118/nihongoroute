@@ -109,7 +109,7 @@ Laporan bug dan umpan balik pengguna.
 |---|---|---|
 | `course_categories` | 6 | Kategori utama materi & kursus |
 | `lessons` | 193 | Modul pelajaran terstruktur + kuis |
-| `articles` | 50 | Artikel pelajaran tambahan (fallback `lessons.actions.ts`) |
+| `articles` | 100+ | Artikel pelajaran tambahan (fallback `lessons.actions.ts`) |
 | `kanji` | 13.108 | Pustaka kanji lengkap, stroke SVG, onyomi/kunyomi |
 | `vocab` | 22.000 | Pustaka kosakata, audio, pitch accent, contoh |
 | `grammar` | 697 | Tata bahasa Jepang, pembentukan, dan contoh |

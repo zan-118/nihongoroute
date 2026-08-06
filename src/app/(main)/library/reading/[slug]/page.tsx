@@ -21,11 +21,11 @@ import {
 } from "@/lib/seo";
 
 export const dynamicParams = true;
-export const revalidate = 3600;
+export const revalidate = 604800;
 
 /** Generate static params for reading detail pages (ISR). */
 export async function generateStaticParams() {
- return await getReadingStaticSlugs(50);
+ return await getReadingStaticSlugs();
 }
 
 /** Fetch reading item by slug. Cache result to avoid duplicate requests. */

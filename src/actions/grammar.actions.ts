@@ -151,12 +151,11 @@ export async function getLibraryGrammarDetail(slugOrId: string): Promise<Library
 /**
  * Fetch top grammar slugs for static build generation (ISR).
  * 
- * @param limit - Maximum number of slugs to pre-render.
  * @returns Array of object params with slug property.
  */
-export async function getGrammarStaticSlugs(limit: number = 100): Promise<{ slug: string }[]> {
+export async function getGrammarStaticSlugs(): Promise<{ slug: string }[]> {
  try {
- const data = await getStaticSlugs("grammar", { limit, select: "slug" });
+ const data = await getStaticSlugs("grammar", { limit: 1000, select: "slug" });
  return data.map((item) => ({ slug: String(item.slug) })).filter((x) => x.slug);
  } catch (error) {
  console.error("Gagal mengambil static slugs grammar:", error);

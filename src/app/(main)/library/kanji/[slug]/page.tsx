@@ -86,13 +86,13 @@ export async function generateMetadata({
 }
 
 export const dynamicParams = true;
-export const revalidate = 3600;
+export const revalidate = 604800;
 
 /**
  * Generate static params for Kanji detail pages (ISR).
  */
 export async function generateStaticParams() {
- return await getKanjiStaticSlugs(200);
+ return await getKanjiStaticSlugs();
 }
 
 // ======================

@@ -43,6 +43,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   images: {
+    unoptimized: true,
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
@@ -62,7 +63,7 @@ const nextConfig: NextConfig = {
     position: "top-right",
   },
   transpilePackages: ["@react-pdf/renderer"],
-  serverExternalPackages: ["kuroshiro", "kuroshiro-analyzer-kuromoji", "msedge-tts", "isomorphic-ws", "ws"],
+
   experimental: {
     optimizePackageImports: [
       "@radix-ui/react-dialog",
@@ -114,7 +115,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, s-maxage=3600, stale-while-revalidate=59",
+            value: "public, s-maxage=604800, stale-while-revalidate=59",
           },
         ],
       },
@@ -123,7 +124,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, s-maxage=3600, stale-while-revalidate=59",
+            value: "public, s-maxage=604800, stale-while-revalidate=59",
           },
         ],
       },
@@ -132,7 +133,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, s-maxage=3600, stale-while-revalidate=59",
+            value: "public, s-maxage=604800, stale-while-revalidate=59",
           },
         ],
       },
@@ -141,7 +142,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, s-maxage=3600, stale-while-revalidate=59",
+            value: "public, s-maxage=604800, stale-while-revalidate=59",
           },
         ],
       },
@@ -150,7 +151,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, s-maxage=3600, stale-while-revalidate=59",
+            value: "public, s-maxage=604800, stale-while-revalidate=59",
           },
         ],
       },
@@ -159,7 +160,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, s-maxage=3600, stale-while-revalidate=59",
+            value: "public, s-maxage=604800, stale-while-revalidate=59",
           },
         ],
       },

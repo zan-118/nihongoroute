@@ -214,9 +214,9 @@ export async function getLibraryListeningDetail(slug: string): Promise<LibraryIt
  * @param limit - Maximum number of slugs to pre-render.
  * @returns Array of object params with slug property.
  */
-export async function getListeningStaticSlugs(limit: number = 50): Promise<{ slug: string }[]> {
+export async function getListeningStaticSlugs(): Promise<{ slug: string }[]> {
  try {
- const data = await getStaticSlugs("listening", { limit, select: "slug" });
+ const data = await getStaticSlugs("listening", { limit: 1000, select: "slug" });
  return data.map((item) => ({ slug: String(item.slug) })).filter((x) => x.slug);
  } catch (error) {
  console.error("Gagal mengambil static slugs listening:", error);

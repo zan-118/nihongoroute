@@ -17,6 +17,7 @@ import {
  getStaticSlugs,
  getVocabByCharacter
 } from "@/lib/services/content-repository";
+import { createStaticClient } from "@/lib/supabase/server";
 
 // ======================
 // SERVER ACTIONS
@@ -103,14 +104,22 @@ export async function getLibraryKanjiDetail(slugOrId: string): Promise<LibraryIt
  * @param limit - Maximum number of slugs to pre-render.
  * @returns Array of object params with slug property.
  */
-export async function getKanjiStaticSlugs(limit: number = 200): Promise<{ slug: string }[]> {
- try {
- const data = await getStaticSlugs("kanji", { limit, select: "slug, character" });
- return data
- .map((item) => ({ slug: String(item.slug || item.character || "") }))
- .filter((x) => x.slug);
- } catch (error) {
- console.error("Gagal mengambil static slugs kanji:", error);
- return [];
- }
+export async function getKanjiStaticSlugs(): Promise<{ slug: string }[]> {
+  try {
+    const supabase = createStaticClient();
+    const { data } = await supabase
+      .from("kanji")
+      .select("slug, character")
+      .not("jlpt_level", "is", null)
+      .not("slug", "is", null);
+
+    if (!data) return [];
+
+    return data
+      .map((item) => ({ slug: String(item.slug || item.character || "") }))
+      .filter((x) => x.slug);
+  } catch (error) {
+    console.error("Gagal mengambil static slugs kanji:", error);
+    return [];
+  }
 }

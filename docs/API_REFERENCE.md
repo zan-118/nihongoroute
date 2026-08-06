@@ -10,26 +10,24 @@
 ## 📋 Daftar Isi
 
 1. [Rangkuman Endpoint API Route Handlers](#1-rangkuman-endpoint-api-route-handlers)
-2. [Spesifikasi 7 API Route Handlers](#2-spesifikasi-7-api-route-handlers)
+2. [Spesifikasi 6 API Route Handlers](#2-spesifikasi-6-api-route-handlers)
    - [1. `/api/tts` — Text-to-Speech](#1-apitts--text-to-speech)
-   - [2. `/api/furigana` — Konversi Furigana](#2-apifurigana--konversi-furigana)
-   - [3. `/api/cards` — Flashcard Entity Resolver](#3-apicards--flashcard-entity-resolver)
-   - [4. `/api/health` — Health Check Operasional](#4-apihealth--health-check-operasional)
-   - [5. `/api/webhooks/saweria` — Webhook Donasi Saweria](#5-apiwebhookssaweria--webhook-donasi-saweria)
-   - [6. `/api/webhooks/trakteer` — Webhook Donasi Trakteer](#6-apiwebhookstrakteer--webhook-donasi-trakteer)
-   - [7. `/auth/callback` — OAuth Callback](#7-authcallback--oauth-callback)
+   - [2. `/api/cards` — Flashcard Entity Resolver](#2-apicards--flashcard-entity-resolver)
+   - [3. `/api/health` — Health Check Operasional](#3-apihealth--health-check-operasional)
+   - [4. `/api/webhooks/saweria` — Webhook Donasi Saweria](#4-apiwebhookssaweria--webhook-donasi-saweria)
+   - [5. `/api/webhooks/trakteer` — Webhook Donasi Trakteer](#5-apiwebhookstrakteer--webhook-donasi-trakteer)
+   - [6. `/auth/callback` — OAuth Callback](#6-authcallback--oauth-callback)
 3. [Daftar 18 Server Action Files (`src/actions/*.actions.ts`)](#3-daftar-18-server-action-files-srcactionsactionsts)
 
 ---
 
 ## 1. Rangkuman Endpoint API Route Handlers
 
-NihongoRoute memiliki **7 endpoint aktif**: 5 API Route Handlers di `src/app/api/`, 2 webhook handlers, dan 1 auth callback di `src/app/auth/`.
+NihongoRoute memiliki **6 endpoint aktif**: 4 API Route Handlers di `src/app/api/`, 2 webhook handlers, dan 1 auth callback di `src/app/auth/`.
 
 | Path | Method | Auth | Cache Policy | Deskripsi |
 |---|---|---|---|---|
 | `/api/tts` | GET | Publik | Dynamic / Cache-Control | Sintesis pelafalan suara MsEdgeTTS |
-| `/api/furigana` | POST | Publik | `no-store` | Analisis morfologi & furigana Kuromoji |
 | `/api/cards` | GET | Publik | `no-store` | Resolusi entity ID kartu vocab/kanji |
 | `/api/health` | GET/HEAD | Publik | `no-store` | Monitoring kesehatan server & env vars |
 | `/api/webhooks/saweria` | POST | Webhook Signature | `no-store` | Notifikasi donasi Saweria |
@@ -38,7 +36,7 @@ NihongoRoute memiliki **7 endpoint aktif**: 5 API Route Handlers di `src/app/api
 
 ---
 
-## 2. Spesifikasi 7 API Route Handlers
+## 2. Spesifikasi 6 API Route Handlers
 
 ### 1. `/api/tts` — Text-to-Speech
 - **Method**: `GET`
@@ -46,32 +44,27 @@ NihongoRoute memiliki **7 endpoint aktif**: 5 API Route Handlers di `src/app/api
 - **Runtime**: `nodejs` (`force-dynamic`)
 - **Fungsi**: Sintesis audio pelafalan bahasa Jepang via MsEdgeTTS + `tts_cache` + Supabase Storage `tts-cache`.
 
-### 2. `/api/furigana` — Konversi Furigana
-- **Method**: `POST`
-- **Autentikasi**: Publik (dibatasi CORS)
-- **Fungsi**: Konversi teks kanji/campuran Jepang ke hiragana/furigana via Kuroshiro + Kuromoji.
-
-### 3. `/api/cards` — Flashcard Entity Resolver
+### 2. `/api/cards` — Flashcard Entity Resolver
 - **Method**: `GET`
 - **Autentikasi**: Publik
 - **Fungsi**: Mengambil data kartu vocab & kanji dari ID campuran (UUID, slug, romaji legacy, kanji).
 
-### 4. `/api/health` — Health Check Operasional
+### 3. `/api/health` — Health Check Operasional
 - **Method**: `GET`, `HEAD`
 - **Cache**: `no-store`
 - **Fungsi**: Audit kesehatan server & verifikasi keberadaan env vars (wajib & fitur).
 
-### 5. `/api/webhooks/saweria` — Webhook Donasi Saweria
+### 4. `/api/webhooks/saweria` — Webhook Donasi Saweria
 - **Method**: `POST`
 - **Autentikasi**: HMAC SHA256 signature via header `x-saweria-signature`
 - **Fungsi**: Menerima notifikasi donasi Saweria & menyimpan donatur ke `supporters`.
 
-### 6. `/api/webhooks/trakteer` — Webhook Donasi Trakteer
+### 5. `/api/webhooks/trakteer` — Webhook Donasi Trakteer
 - **Method**: `POST`
 - **Autentikasi**: Token via `x-webhook-token`
 - **Fungsi**: Menerima notifikasi donasi Trakteer & menyimpan donatur ke `supporters`.
 
-### 7. `/auth/callback` — OAuth Callback
+### 6. `/auth/callback` — OAuth Callback
 - **Method**: `GET`
 - **Fungsi**: OAuth exchange code dari provider Supabase Auth ke session token.
 

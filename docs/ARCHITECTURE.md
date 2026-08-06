@@ -37,7 +37,7 @@ graph TD
     subgraph Server ["Server Next.js"]
         Actions["Server Actions<br/>src/actions/*.actions.ts"]
         Services["Domain Services<br/>src/lib/services/*.service.ts"]
-        API["API Route Handlers<br/>/api/tts, /api/furigana,<br/>/api/cards, /api/health,<br/>/api/webhooks/*"]
+        API["API Route Handlers<br/>/api/tts, /api/cards,<br/>/api/health,<br/>/api/webhooks/*"]
         AuthCB["Auth Callback<br/>/auth/callback"]
         EdgeTTS["MsEdgeTTS Client"]
         Gemini["Gemini AI Client"]
@@ -164,7 +164,7 @@ Empat stores yang dipersistensi via `idb-keyval`:
 
 ### ISR (Incremental Static Regeneration)
 
-Halaman konten library menggunakan ISR dengan `generateStaticParams()` untuk pre-render dan `revalidate = 3600` (1 jam):
+Halaman konten library menggunakan ISR dengan `generateStaticParams()` untuk pre-render dan `revalidate = 604800` (7 hari):
 
 | Halaman | Path |
 |---|---|
@@ -184,6 +184,7 @@ Halaman konten library menggunakan ISR dengan `generateStaticParams()` untuk pre
 - **Separasi konten library vs progres pengguna**: Konten library menggunakan ISR + revalidate. Progres pengguna menggunakan client-side sync via RPC.
 - **Legacy exam adapter**: Komponen `MockExamEngine` membaca format data lama. Adapter `src/lib/exams/supabase-adapter.ts` (`toLegacyExamData`) memetakan data relasional baru ke format lama.
 - **Optimasi bundle**: `optimizePackageImports` di `next.config.ts` untuk Radix UI, Iconify, Framer Motion, Date-fns, Sonner, Wanakana.
+- **Custom Markdown Renderer**: Proyek menggunakan `LessonBlockRegistry` untuk menginjeksi komponen interaktif, dengan ekstensi Regex di `lesson-hydration-engine.ts` yang mendukung elemen struktural standar (Headings, Tables) serta ekstensi modern (Fenced Code Blocks & Horizontal Rules).
 
 ---
 

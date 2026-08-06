@@ -52,6 +52,23 @@ export function renderContentBlock({ block, vocabList = [], kanjiList = [] }: Le
  return <TableBlock block={block} />;
  case "heading":
  return <HeadingBlock block={block} />;
+ case "hr":
+ return <hr className="my-8 border-border" />;
+ case "code":
+ return (
+   <div className="my-6 rounded-lg border border-border/60 bg-muted/40 overflow-hidden text-sm">
+     {(typeof rawBlock.language === "string" && rawBlock.language !== "text") && (
+       <div className="px-4 py-1.5 bg-muted/60 border-b border-border/60 text-xs font-mono text-muted-foreground uppercase tracking-wider">
+         {rawBlock.language as string}
+       </div>
+     )}
+     <div className="p-4 overflow-x-auto">
+       <pre className="font-mono text-foreground leading-relaxed">
+         <code>{rawBlock.content as string}</code>
+       </pre>
+     </div>
+   </div>
+ );
  case "text":
  case "article":
  default:

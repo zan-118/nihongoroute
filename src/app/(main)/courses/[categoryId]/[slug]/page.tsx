@@ -87,13 +87,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export const dynamicParams = true;
-export const revalidate = 3600;
+export const revalidate = 604800;
 
 /**
  * Generate static params for lesson/course detail pages (ISR).
  */
 export async function generateStaticParams() {
- return await getLessonStaticParams(100);
+ return await getLessonStaticParams();
 }
 
 // ======================

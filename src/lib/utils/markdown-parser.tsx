@@ -10,13 +10,20 @@ import { AlertTriangle } from "@/components/ui/icons";
 export function parseInlineStyles(text: string): React.ReactNode[] {
  if (!text || typeof text !== "string") return [];
  // Split text by markdown tokens to isolate styled segments
- const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*|\[.*?\]\(.*?\))/g);
+ const parts = text.split(/(\*\*.*?\*\*|__.*?__|`.*?`|\*.*?\*|_.*?_|~~.*?~~|\[.*?\]\(.*?\))/g);
  return parts.map((part, index) => {
- if (part.startsWith("**") && part.endsWith("**")) {
+ if ((part.startsWith("**") && part.endsWith("**")) || (part.startsWith("__") && part.endsWith("__"))) {
  return (
  <strong key={index} className="text-foreground font-black">
  {part.slice(2, -2)}
  </strong>
+ );
+ }
+ if (part.startsWith("~~") && part.endsWith("~~")) {
+ return (
+ <del key={index} className="text-muted-foreground/80 line-through">
+ {part.slice(2, -2)}
+ </del>
  );
  }
  if (part.startsWith("`") && part.endsWith("`")) {
@@ -30,7 +37,7 @@ export function parseInlineStyles(text: string): React.ReactNode[] {
  </code>
  );
  }
- if (part.startsWith("*") && part.endsWith("*")) {
+ if ((part.startsWith("*") && part.endsWith("*")) || (part.startsWith("_") && part.endsWith("_"))) {
  return (
  <em key={index} className="italic text-muted-foreground/90 font-medium">
  {part.slice(1, -1)}

@@ -67,12 +67,12 @@ npm run build                # 5. Uji kompabilitas build produksi
 
 ### Konten Library (ISR)
 - **Pre-render**: `generateStaticParams()` untuk slug populer saat build time.
-- **Revalidation**: `revalidate = 3600` (1 jam).
+- **Revalidation**: `revalidate = 604800` (7 hari).
 - **On-demand**: `dynamicParams = true` untuk slug baru.
 
 ### HTTP Cache Headers
 - `/fonts/*` ➔ `public, max-age=31536000, immutable`
-- `/library/*` ➔ `public, s-maxage=3600, stale-while-revalidate=59`
+- `/library/*` ➔ `public, s-maxage=604800, stale-while-revalidate=86400`
 
 ### Data Progres & TTS Cache
 - **Data Progres**: Revalidasi manual via `revalidatePath` setelah mutasi Server Action.

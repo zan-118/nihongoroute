@@ -17,6 +17,20 @@ vi.mock("@/lib/services/lexical-content-engine", () => ({
   }),
 }));
 
+vi.mock("@/lib/supabase/server", () => ({
+  createStaticClient: vi.fn().mockReturnValue({
+    from: vi.fn().mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        in: vi.fn().mockReturnValue({
+          not: vi.fn().mockResolvedValue({
+            data: [{ slug: "taberu" }],
+          }),
+        }),
+      }),
+    }),
+  }),
+}));
+
 vi.mock("@/lib/services/content-repository", () => ({
   getContentBySlugOrId: vi.fn().mockImplementation((table: string, slugOrId: string) => {
     if (slugOrId === "taberu") {
@@ -62,7 +76,7 @@ describe("Vocab Actions Integration Test", () => {
   });
 
   it("harus mengambil static slugs via getVocabStaticSlugs", async () => {
-    const slugs = await getVocabStaticSlugs(10);
+    const slugs = await getVocabStaticSlugs();
     expect(slugs).toBeDefined();
     expect(slugs.length).toBe(1);
     expect(slugs[0].slug).toBe("taberu");

@@ -16,7 +16,7 @@ if (!supabaseUrl || !supabaseServiceKey) {
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-const csvFilePath = path.resolve(process.cwd(), 'articles_rows_fixed.csv');
+const csvFilePath = path.resolve(process.cwd(), 'articles_rows.csv');
 
 async function importArticles() {
   const results = [];

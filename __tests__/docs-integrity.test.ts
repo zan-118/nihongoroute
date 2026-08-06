@@ -80,10 +80,9 @@ describe("100% Documentation Integrity & Codebase Sync Audit", () => {
     });
   });
 
-  it("harus memiliki seluruh 7 API Route Handlers yang tertulis di API_REFERENCE.md", () => {
+  it("harus memiliki seluruh 6 API Route Handlers yang tertulis di API_REFERENCE.md", () => {
     const apiRoutes = [
       "src/app/api/tts/route.ts",
-      "src/app/api/furigana/route.ts",
       "src/app/api/cards/route.ts",
       "src/app/api/health/route.ts",
       "src/app/api/webhooks/saweria/route.ts",

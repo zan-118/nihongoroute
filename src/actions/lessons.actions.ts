@@ -38,6 +38,6 @@ export async function getLessonData(categoryId: string, slug: string) {
  return serviceGetLessonData(categoryId, slug);
 }
 
-export async function getLessonStaticParams(limit?: number) {
- return serviceGetLessonStaticParams(limit);
+export async function getLessonStaticParams() {
+ return serviceGetLessonStaticParams();
 }

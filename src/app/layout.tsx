@@ -16,7 +16,7 @@ import QueryProvider from "@/components/providers/QueryProvider";
 import { LazyMotion, domAnimation } from "framer-motion";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import VercelAnalytics from "@/components/providers/VercelAnalytics";
+import CloudflareAnalytics from "@/components/providers/CloudflareAnalytics";
 
 /**
  * Noto Sans JP font configuration.
@@ -189,7 +189,7 @@ export default function RootLayout({
  }}
  />
  {/* Load Vercel analytics and Speed Insights */}
- <VercelAnalytics />
+ <CloudflareAnalytics />
  </ThemeProvider>
  </body>
  </html>

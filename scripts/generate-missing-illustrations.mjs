@@ -438,7 +438,7 @@ Balas HANYA dengan JSON murni (tanpa markdown, tanpa penjelasan lain) dengan str
         ...(imgApiKey ? { Authorization: `Bearer ${imgApiKey}` } : {}),
       },
       body: JSON.stringify({
-        model: process.env.AI_VISION_MODEL || process.env.AI_MODEL || "ag/gemini-3-flash",
+        model: process.env.AI_VISION_MODEL || process.env.AI_MODEL || "ag/claude-sonnet-4-6",
         messages: [
           {
             role: "user",

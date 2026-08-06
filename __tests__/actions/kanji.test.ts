@@ -16,6 +16,20 @@ vi.mock("@/lib/services/lexical-content-engine", () => ({
   }),
 }));
 
+vi.mock("@/lib/supabase/server", () => ({
+  createStaticClient: vi.fn().mockReturnValue({
+    from: vi.fn().mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        not: vi.fn().mockReturnValue({
+          not: vi.fn().mockResolvedValue({
+            data: [{ slug: "nichi" }],
+          }),
+        }),
+      }),
+    }),
+  }),
+}));
+
 vi.mock("@/lib/services/content-repository", () => ({
   getContentBySlugOrId: vi.fn().mockImplementation((table: string, slugOrId: string) => {
     if (slugOrId === "nichi") {
@@ -53,7 +67,7 @@ describe("Kanji Actions Integration Test", () => {
   });
 
   it("harus mengambil static slugs via getKanjiStaticSlugs", async () => {
-    const slugs = await getKanjiStaticSlugs(10);
+    const slugs = await getKanjiStaticSlugs();
     expect(slugs).toBeDefined();
     expect(slugs.length).toBe(1);
   });

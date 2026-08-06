@@ -15,9 +15,10 @@ export interface TTSRequestParams {
 }
 
 export interface TTSPipelineResult {
- audioBuffer: Uint8Array;
- contentType: string;
- cacheControl: string;
+ audioBuffer?: Uint8Array;
+ contentType?: string;
+ cacheControl?: string;
+ redirectUrl?: string;
  isCacheHit: boolean;
 }
 
@@ -106,22 +107,12 @@ export async function processTtsPipeline(params: TTSRequestParams): Promise<TTSP
  storagePath = decodeURIComponent(match[1]);
  }
 
- const { data: fileData, error: downloadError } = await supabase
- .storage
- .from("tts-cache")
- .download(storagePath);
+ const publicUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/tts-cache/${storagePath}`;
 
- if (!downloadError && fileData) {
- const audioBuffer = await fileData.arrayBuffer();
- if (audioBuffer.byteLength > 0) {
  return {
- audioBuffer: new Uint8Array(audioBuffer),
- contentType: "audio/mpeg",
- cacheControl: "public, max-age=604800, immutable",
+ redirectUrl: publicUrl,
  isCacheHit: true,
  };
- }
- }
  }
  } catch (err) {
  console.warn("[TTSPipeline] Gagal membaca cache Supabase:", err);

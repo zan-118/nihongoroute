@@ -19,6 +19,7 @@ import {
  getRelatedKanjis,
  getRelatedVocabByWords
 } from "@/lib/services/content-repository";
+import { createStaticClient } from "@/lib/supabase/server";
 
 // ======================
 // SERVER ACTIONS
@@ -159,16 +160,20 @@ export async function getLibraryVocabDetail(slugOrId: string): Promise<LibraryIt
  * @param limit - Maximum number of slugs to pre-render.
  * @returns Array of object params with slug property.
  */
-export async function getVocabStaticSlugs(limit: number = 200): Promise<{ slug: string }[]> {
- try {
- const data = await getStaticSlugs("vocab", {
- limit,
- orderBy: { column: "created_at", ascending: false },
- select: "slug",
- });
- return data.map((item) => ({ slug: String(item.slug) }));
- } catch (error) {
- console.error("Gagal mengambil static slugs vocab:", error);
- return [];
- }
+export async function getVocabStaticSlugs(): Promise<{ slug: string }[]> {
+  try {
+    const supabase = createStaticClient();
+    const { data } = await supabase
+      .from("vocab")
+      .select("slug")
+      .in("jlpt_level", ["N5", "N4"])
+      .not("slug", "is", null);
+
+    if (!data) return [];
+    
+    return data.map((item) => ({ slug: String(item.slug) }));
+  } catch (error) {
+    console.error("Gagal mengambil static slugs vocab:", error);
+    return [];
+  }
 }

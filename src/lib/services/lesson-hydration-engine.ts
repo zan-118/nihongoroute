@@ -161,27 +161,77 @@ export function parseMarkdownToBlocks(markdown: string): HydrationContentBlock[]
  if (!markdown) return [];
 
  const blocks: HydrationContentBlock[] = [];
- const sections = markdown.split(/\r?\n\s*\r?\n/);
+ 
+ // Ekstrak code blocks untuk menghindari terpotong oleh split double-newline
+ const codeBlocks: string[] = [];
+ const markdownWithoutCode = markdown.replace(/```([\s\S]*?)```/g, (match) => {
+   codeBlocks.push(match);
+   return `__CODEBLOCK_${codeBlocks.length - 1}__`;
+ });
 
- sections.forEach((section, idx) => {
+ const sections = markdownWithoutCode.split(/\r?\n\s*\r?\n/);
+ let globalIdx = 0;
+
+ sections.forEach((section) => {
  const trimmed = section.trim();
  if (!trimmed) return;
 
- const id = `block-${idx}`;
+ const id = `block-${globalIdx}`;
+
+ // Code block
+ if (trimmed.startsWith("__CODEBLOCK_") && trimmed.endsWith("__")) {
+   const match = trimmed.match(/__CODEBLOCK_(\d+)__/);
+   if (match) {
+     const codeIdx = parseInt(match[1], 10);
+     const rawCode = codeBlocks[codeIdx];
+     // Ekstrak bahasa jika ada, misal ```javascript\n...
+     const codeContentMatch = rawCode.match(/```(\w+)?\n([\s\S]*?)```/);
+     if (codeContentMatch) {
+       blocks.push({
+         id,
+         type: "code",
+         language: codeContentMatch[1] || "text",
+         content: codeContentMatch[2].trim(),
+         order: globalIdx
+       });
+     } else {
+       // Fallback
+       blocks.push({
+         id,
+         type: "code",
+         language: "text",
+         content: rawCode.replace(/```/g, "").trim(),
+         order: globalIdx
+       });
+     }
+     globalIdx++;
+     return;
+   }
+ }
+
+ // Horizontal Rule
+ if (/^(---|___|\*\*\*)$/.test(trimmed)) {
+ blocks.push({ id, type: "hr", order: globalIdx });
+ globalIdx++;
+ return;
+ }
 
  // Heading 3
  if (trimmed.startsWith("### ")) {
- blocks.push({ id, type: "heading", content: trimmed.slice(4).trim(), level: 3, order: idx });
+ blocks.push({ id, type: "heading", content: trimmed.slice(4).trim(), level: 3, order: globalIdx });
+ globalIdx++;
  return;
  }
  // Heading 2
  if (trimmed.startsWith("## ")) {
- blocks.push({ id, type: "heading", content: trimmed.slice(3).trim(), level: 2, order: idx });
+ blocks.push({ id, type: "heading", content: trimmed.slice(3).trim(), level: 2, order: globalIdx });
+ globalIdx++;
  return;
  }
  // Heading 1
  if (trimmed.startsWith("# ")) {
- blocks.push({ id, type: "heading", content: trimmed.slice(2).trim(), level: 1, order: idx });
+ blocks.push({ id, type: "heading", content: trimmed.slice(2).trim(), level: 1, order: globalIdx });
+ globalIdx++;
  return;
  }
 
@@ -196,21 +246,24 @@ export function parseMarkdownToBlocks(markdown: string): HydrationContentBlock[]
  } else {
  content = lines.join("\n");
  }
- blocks.push({ id, type: "callout", title, content, calloutType: "info", order: idx });
+ blocks.push({ id, type: "callout", title, content, calloutType: "info", order: globalIdx });
+ globalIdx++;
  return;
  }
 
  // List block (bullet)
  if (trimmed.startsWith("- ") || trimmed.startsWith("* ") || trimmed.startsWith("• ")) {
  const items = trimmed.split(/\r?\n/).map(line => line.replace(/^[-*•]\s?/, "").trim());
- blocks.push({ id, type: "list", listType: "bullet", items, order: idx });
+ blocks.push({ id, type: "list", listType: "bullet", items, order: globalIdx });
+ globalIdx++;
  return;
  }
 
  // List block (numbered)
  if (/^\d+\.\s/.test(trimmed)) {
  const items = trimmed.split(/\r?\n/).map(line => line.replace(/^\d+\.\s?/, "").trim());
- blocks.push({ id, type: "list", listType: "number", items, order: idx });
+ blocks.push({ id, type: "list", listType: "number", items, order: globalIdx });
+ globalIdx++;
  return;
  }
 
@@ -220,7 +273,8 @@ export function parseMarkdownToBlocks(markdown: string): HydrationContentBlock[]
  if (lines.length >= 2) {
  const headers = lines[0].split("|").slice(1, -1).map(c => c.trim());
  const rows = lines.slice(2).map(line => line.split("|").slice(1, -1).map(c => c.trim()));
- blocks.push({ id, type: "table", headers, rows, order: idx });
+ blocks.push({ id, type: "table", headers, rows, order: globalIdx });
+ globalIdx++;
  return;
  }
  }
@@ -228,12 +282,14 @@ export function parseMarkdownToBlocks(markdown: string): HydrationContentBlock[]
  // Image
  const imgMatch = trimmed.match(/^!\[(.*?)\]\((.*?)\)$/);
  if (imgMatch) {
- blocks.push({ id, type: "image", title: imgMatch[1], content: imgMatch[2], order: idx });
+ blocks.push({ id, type: "image", title: imgMatch[1], content: imgMatch[2], order: globalIdx });
+ globalIdx++;
  return;
  }
 
  // Default: text block
- blocks.push({ id, type: "text", content: trimmed, order: idx });
+ blocks.push({ id, type: "text", content: trimmed, order: globalIdx });
+ globalIdx++;
  });
 
  return blocks;

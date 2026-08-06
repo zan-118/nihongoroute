@@ -30,7 +30,7 @@ import {
 // ======================
 
 export const dynamicParams = true;
-export const revalidate = 3600;
+export const revalidate = 604800;
 
 /**
  * Generate static params.

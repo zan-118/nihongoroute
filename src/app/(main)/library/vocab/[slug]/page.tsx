@@ -130,13 +130,13 @@ export async function generateMetadata({
 }
 
 export const dynamicParams = true;
-export const revalidate = 3600;
+export const revalidate = 604800;
 
 /**
  * Generate static params for vocabulary detail pages (ISR).
  */
 export async function generateStaticParams() {
- return await getVocabStaticSlugs(200);
+ return await getVocabStaticSlugs();
 }
 
 // ======================

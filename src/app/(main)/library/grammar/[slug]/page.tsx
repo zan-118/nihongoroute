@@ -74,13 +74,13 @@ export async function generateMetadata({
 }
 
 export const dynamicParams = true;
-export const revalidate = 3600;
+export const revalidate = 604800;
 
 /**
  * Generate static params for grammar detail pages (ISR).
  */
 export async function generateStaticParams() {
- return await getGrammarStaticSlugs(100);
+ return await getGrammarStaticSlugs();
 }
 
 // ======================

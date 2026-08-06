@@ -1,10 +1,10 @@
 /**
  * @file page.tsx
- * @description Landing page route for NihongoRoute. Renders static Hero, FeatureGrid, TrustBanner, and lazy-loaded InteractivePlayground.
+ * @description Landing page route for NihongoRoute. Renders static Hero, FeatureGrid, TrustBanner, and LandingFooter.
  */
 
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
+
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
  createPageMetadata,
@@ -18,11 +18,6 @@ import { FeatureGrid } from "@/features/landing/FeatureGrid";
 import { TrustBanner } from "@/features/landing/TrustBanner";
 import { LandingFooter } from "@/features/landing/LandingFooter";
 
-// Lazy-loaded interactive client playground
-const InteractivePlayground = dynamic(
- () => import("@/features/landing/InteractivePlayground").then((m) => m.InteractivePlayground),
- { loading: () => <div className="w-full h-[450px] rounded-2xl bg-card/20 animate-pulse mb-[120px]" /> }
-);
 
 /**
  * Metadata configuration for the landing page.
@@ -87,8 +82,6 @@ export default function LandingPage() {
  {/* SEKSI HERO UTAMA (Pure SSG Server Component) */}
  <Hero />
 
- {/* PLAYGROUND INTERAKTIF KONVERSI FURIGANA (Code-split Client Component) */}
- <InteractivePlayground />
 
  {/* KISI FITUR UNGGULAN (Pure SSG Server Component) */}
  <FeatureGrid />
