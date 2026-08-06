@@ -66,6 +66,10 @@ const STATIC_ROUTES: SitemapEntryInput[] = [
  { path:ROUTES.TOOLS.COUNTER_TRAINER, changeFrequency: "monthly", priority: 0.6 },
  { path:ROUTES.TOOLS.SENTENCE_BUILDER, changeFrequency: "monthly", priority: 0.6 },
  { path:ROUTES.TOOLS.SHADOWING, changeFrequency: "monthly", priority: 0.6 },
+ { path:ROUTES.TOOLS.DICTATION, changeFrequency: "monthly", priority: 0.65 },
+ { path:ROUTES.TOOLS.FLASHCARDS, changeFrequency: "monthly", priority: 0.65 },
+ { path:ROUTES.TOOLS.SURVIVAL, changeFrequency: "monthly", priority: 0.65 },
+ { path:ROUTES.TOOLS.WEAK_POINTS, changeFrequency: "monthly", priority: 0.65 },
  { path: "/support", changeFrequency: "monthly", priority: 0.55 },
  { path: "/privacy", changeFrequency: "yearly", priority: 0.35 },
  { path: "/terms", changeFrequency: "yearly", priority: 0.35 },
@@ -168,7 +172,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
  readingsResult,
  listeningsResult,
  grammarRows,
- cheatsheetRows
+ cheatsheetRows,
+ kanjiRows,
+ vocabRows
  ] = await Promise.all([
  supabase.from("course_categories").select("id, slug, created_at"),
  supabase
@@ -207,6 +213,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
  fetchAllSupabaseRows("listening", "slug, created_at", "created_at"),
  fetchAllSupabaseRows("grammar", "slug, created_at", "created_at"),
  fetchAllSupabaseRows("cheatsheets", "slug, created_at, updated_at", "updated_at"),
+ fetchAllSupabaseRows("kanji", "slug, created_at, updated_at", "updated_at"),
+ fetchAllSupabaseRows("vocab", "slug, created_at, updated_at", "updated_at"),
  ]);
 
  const categories = categoriesResult.data || [];
@@ -283,6 +291,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
  lastModified: item.updated_at || item.created_at,
  path: `/library/cheatsheet/${encodeRouteSegment(item.slug)}`,
  priority: 0.58,
+ });
+ }
+
+ // Add kanji entries.
+ for (const item of kanjiRows) {
+ if (!item.slug) continue;
+ addUniqueEntry(urls, seen, {
+ changeFrequency: "weekly",
+ lastModified: item.updated_at || item.created_at,
+ path: `/library/kanji/${encodeRouteSegment(item.slug)}`,
+ priority: 0.85,
+ });
+ }
+
+ // Add vocab entries.
+ for (const item of vocabRows) {
+ if (!item.slug) continue;
+ addUniqueEntry(urls, seen, {
+ changeFrequency: "weekly",
+ lastModified: item.updated_at || item.created_at,
+ path: `/library/vocab/${encodeRouteSegment(item.slug)}`,
+ priority: 0.85,
  });
  }
 
