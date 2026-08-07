@@ -23,19 +23,27 @@ let cachedClient: ReturnType<typeof createBrowserClient> | null = null;
  * @returns Supabase client instance.
  */
 export function createClient() {
- // Return existing instance if already created.
- if (cachedClient) return cachedClient;
+  // Return existing instance if already created.
+  if (cachedClient) return cachedClient;
 
- const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
- const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  let url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  let key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
- // Fallback to empty strings if env vars missing. Prevent crash.
- if (!url || !key) {
- console.error("Variabel lingkungan Supabase tidak ditemukan!");
- // Kembalikan client dummy atau tangani secara anggun untuk menghindari error 500
- return createBrowserClient("", ""); 
- }
+  if (url && key) {
+    url = url.trim();
+    if (!/^https?:\/\//i.test(url)) {
+      url = `https://${url}`;
+    }
+    try {
+      new URL(url);
+      cachedClient = createBrowserClient(url, key);
+      return cachedClient;
+    } catch {
+      // Ignore URL parse error and fall back below
+    }
+  }
 
- cachedClient = createBrowserClient(url, key);
- return cachedClient;
+  // Fallback to valid dummy credentials during build time prerender shell to prevent ERR_INVALID_URL crash
+  console.error("Variabel lingkungan Supabase tidak ditemukan atau tidak valid saat inisialisasi browser client!");
+  return createBrowserClient("https://example.supabase.co", "ci-anon-key");
 }
