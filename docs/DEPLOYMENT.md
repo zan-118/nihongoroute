@@ -33,29 +33,20 @@ Build Next.js dikonfigurasi melalui `next.config.ts`:
 
 ---
 
-## 2. Pipeline CI/CD (GitHub Actions)
+## 2. Pipeline CI/CD (GitHub Actions & Vercel)
 
-Otomatisasi pengujian, verifikasi build, dan deployment dikelola via `.github/workflows/quality.yml`.
+Otomatisasi pengujian dan verifikasi kualitas dikelola via `.github/workflows/quality.yml`, sedangkan deployment dikelola secara native via Vercel Git Integration.
 
-### Job: App Quality
+### Job: App Quality (GitHub Actions)
 - `npm run typecheck`
 - `npm run lint`
 - `npm run test:unit`
-- `npm run build`
 
-### Job: Database Guard
-- `npm run db:migrations:check`
-- `supabase/setup-cli@v2`
+### Job: Database Guard (GitHub Actions)
+- Pengecekan integritas skema Supabase.
 
-### Job: Deploy to Vercel (Prebuilt)
-- Membutuhkan suksesnya job `App Quality` & `Database Guard` pada push branch `main`.
-- `vercel pull --yes --environment=production --scope=nihongoroute --token="${{ secrets.VERCEL_TOKEN }}"`
-- `vercel build --prod --scope=nihongoroute --token="${{ secrets.VERCEL_TOKEN }}"`
-- `vercel deploy --prebuilt --prod --scope=nihongoroute --token="${{ secrets.VERCEL_TOKEN }}"`
-
-> **Prasyarat Konfigurasi Deployment**:
-> 1. **GitHub Secrets**: Daftarkan `VERCEL_TOKEN`, `VERCEL_ORG_ID`, dan `VERCEL_PROJECT_ID` di Settings Repository ➔ Secrets and variables ➔ Actions.
-> 2. **Vercel Dashboard Setup**: Pada Vercel Dashboard ➔ Project Settings ➔ Git ➔ **Ignored Build Step**, set command ke `exit 0` agar Vercel mengabaikan auto-build bawaan Git push dan menantikan *prebuilt deployment* dari GitHub Actions.
+### CD: Vercel Native Deployment
+- Build & deployment otomatis dieksekusi oleh infrastruktur Vercel saat push ke branch `main` terdeteksi.
 
 
 ---
