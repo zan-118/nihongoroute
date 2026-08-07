@@ -4,13 +4,12 @@ import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import {
  BookOpen,
- Clock,
+ Time,
  FileText,
- Hash,
- Loader2,
+ Hashtag,
+ Loader,
  Search,
  Sliders,
- Sparkles,
  X,
 } from "@/components/ui/icons";
 import {
@@ -40,7 +39,7 @@ const FILTERS: Array<{ id: DictionaryFilter; label: string; icon: typeof Search 
  { id: "all", label: "Semua", icon: Search },
  { id: "vocab", label: "Kosakata", icon: FileText },
  { id: "grammar", label: "Tata Bahasa", icon: BookOpen },
- { id: "kanji", label: "Kanji", icon: Hash },
+ { id: "kanji", label: "Kanji", icon: Hashtag },
 ];
 
 /**
@@ -218,7 +217,7 @@ export default function DictionaryPageClient() {
  ...emptyToolSearchResult(),
  vocab: nextResult.vocab.map((item) => ({ ...item, icon: FileText })),
  grammar: nextResult.grammar.map((item) => ({ ...item, icon: BookOpen })),
- kanji: nextResult.kanji.map((item) => ({ ...item, icon: Hash })),
+ kanji: nextResult.kanji.map((item) => ({ ...item, icon: Hashtag })),
  };
  setResult(mappedResult);
  setHistory((prev) => {
@@ -289,7 +288,7 @@ export default function DictionaryPageClient() {
  </div>
  <Button type="submit" disabled={isPending || !query.trim()} className="rounded-xl">
  {isPending ? (
- <Loader2 data-icon="inline-start" className="animate-spin" />
+ <Loader data-icon="inline-start" className="animate-spin" />
  ) : (
  <Search data-icon="inline-start" />
  )}
@@ -329,7 +328,7 @@ export default function DictionaryPageClient() {
  </div>
  {history.length > 0 ? (
  <div className="flex flex-wrap items-center gap-2">
- <Clock size={14} className="text-muted-foreground" aria-hidden="true" />
+ <Time size={14} className="text-muted-foreground" aria-hidden="true" />
  {history.slice(0, 4).map((item) => (
  <button
  key={item}
@@ -363,9 +362,9 @@ export default function DictionaryPageClient() {
  ))
  ) : (
  <Card className="rounded-2xl md:rounded-3xl border border-dashed border-border/80 bg-card/25 p-12 text-center glass shadow-[0_0_30px_hsl(var(--primary)/0.015)] relative overflow-hidden">
- <div className="mx-auto mb-5 flex size-16 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
- <Sparkles size={26} aria-hidden="true" />
- </div>
+        <div className="mx-auto mb-5 flex size-16 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
+          <Search size={28} className="text-primary" />
+        </div>
  <h2 className="text-xl uppercase tracking-tight text-foreground">
  Mulai Dari Pencarian
  </h2>

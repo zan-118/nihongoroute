@@ -12,13 +12,13 @@
 import { useState } from "react";
 import { 
  LayoutGrid, 
- Layers, 
+ Stack, 
  ChevronLeft, 
  ChevronRight, 
  Shuffle, 
  Eye, 
  EyeOff, 
- Info
+ Information
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -176,12 +176,12 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
  )}
  aria-label="Tampilan Flashcard Mode"
  >
- <Layers size={14} /> Flashcard Mode ({items.length})
+ <Stack size={14} /> Flashcard Mode ({items.length})
  </Button>
  </div>
 
  <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
- <Info size={14} className="text-amber-500" />
+ <Information size={14} className="text-amber-500" />
  {viewMode === "table" && "Tabel data referensi ringkas & padat."}
  {viewMode === "flashcard" && "Uji hafalan dengan mode kuis interaktif."}
  </div>

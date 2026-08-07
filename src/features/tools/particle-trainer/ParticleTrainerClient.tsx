@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Check, HelpCircle, RefreshCcw, Sparkles, Target, X } from "@/components/ui/icons";
+import { ArrowRight, Check, Question, Refresh, Target, X } from "@/components/ui/icons";
 import {
  getParticleQuestion,
  isParticleAnswerCorrect,
@@ -164,12 +164,12 @@ export default function ParticleTrainerClient() {
  onClick={() => setShowHint((prev) => !prev)}
  className="rounded-xl"
  >
- <HelpCircle data-icon="inline-start" />
+ <Question data-icon="inline-start" />
  Hint
  </Button>
  <div className="flex flex-wrap gap-2">
  <Button type="button" variant="ghost" onClick={handleReset} className="rounded-xl">
- <RefreshCcw data-icon="inline-start" />
+ <Refresh data-icon="inline-start" />
  Reset
  </Button>
  <Button type="button" onClick={handleNext} className="rounded-xl">

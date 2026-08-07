@@ -14,7 +14,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Flame, BookOpen, Check } from "@/components/ui/icons";
+import { Fire, BookOpen, Check } from "@/components/ui/icons";
 import DailyQuests from "./quests/DailyQuests";
 import MemoryStats from "./dashboard-stats/MemoryStats";
 import SRSAnalytics from "@/features/dashboard/components/srs/analytics/SRSAnalytics";
@@ -171,7 +171,7 @@ export default function DashboardStats({
  <span className="text-warning/80 font-bold uppercase tracking-widest text-xs mb-1">Hari</span>
  </div>
  <div className="absolute -bottom-4 -right-4 text-warning/10 rotate-12 group-hover:scale-125 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
- <Flame size={80} />
+ <Fire size={80} />
  </div>
  </Card>
  </div>

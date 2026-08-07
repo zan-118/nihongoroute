@@ -13,10 +13,10 @@ import React, { Suspense } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import {
  Zap,
- RefreshCw,
+ Restart,
  ChevronLeft,
- Flame,
- PenTool,
+ Fire,
+ Pencil,
  Mic,
  BookOpen
 } from "@/components/ui/icons";
@@ -55,7 +55,7 @@ function FlashcardsContent() {
  exit={{ opacity: 0 }}
  className="flex-1 flex flex-col items-center justify-center px-4"
  >
- <RefreshCw className="text-primary animate-spin mb-4" size={32} />
+ <Restart className="text-primary animate-spin mb-4" size={32} />
  <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs font-bold">
  Mengumpulkan kartu...
  </p>
@@ -91,8 +91,8 @@ function FlashcardsContent() {
  selectedMode === "sentence" ? "bg-success/10 border-success/30 text-success" :
  "bg-primary/10 border-primary/30 text-primary"
  }`}>
- {selectedMode === "survival" ? <Flame size={16} /> :
- selectedMode === "kanji" ? <PenTool size={16} /> :
+ {selectedMode === "survival" ? <Fire size={16} /> :
+ selectedMode === "kanji" ? <Pencil size={16} /> :
  selectedMode === "pronunciation" ? <Mic size={16} /> :
  selectedMode === "sentence" ? <BookOpen size={16} /> :
  <Zap size={16} />}
@@ -123,7 +123,7 @@ export default function FlashcardsPage() {
  return (
  <Suspense fallback={
  <div className="flex-1 flex flex-col items-center justify-center px-4">
- <RefreshCw className="text-primary animate-spin mb-4" size={32} />
+ <Restart className="text-primary animate-spin mb-4" size={32} />
  <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs font-bold">
  Memuat Modul...
  </p>

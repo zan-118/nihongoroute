@@ -9,7 +9,7 @@
 import { m } from "framer-motion";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { PenTool, X, Sparkles } from "@/components/ui/icons";
+import { Pencil, X } from "@/components/ui/icons";
 import WritingCanvas from "@/features/tools/stroke-canvas/WritingCanvas";
 
 // ==========================================
@@ -58,7 +58,7 @@ export function WritingPracticeModal({
  <header className="flex items-center justify-between mb-6">
  <div className="flex items-center gap-3">
  <div className="size-10 shrink-0 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center">
- <PenTool size={18} className="text-secondary" />
+ <Pencil size={18} className="text-secondary" />
  </div>
  <div className="text-left">
  <span className="block font-bold text-xs uppercase tracking-widest text-secondary/50 mb-0.5">Latihan Kanji</span>
@@ -98,7 +98,7 @@ export function WritingPracticeModal({
  </div>
 
  <p className="text-center text-xs text-muted-foreground font-bold uppercase tracking-widest mt-4">
- <Sparkles size={10} className="inline mr-1 text-secondary/50" />{" "}
+ {" "}
  Tulis goresan kanji di atas secara berurutan!
  </p>
  </div>

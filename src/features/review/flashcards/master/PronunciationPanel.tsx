@@ -9,7 +9,7 @@
 // Import & Dependencies
 // ==========================================
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Mic, RefreshCw, ChevronRight, Zap, Check, AlertCircle } from "@/components/ui/icons";
+import { Mic, Restart, ChevronRight, Zap, Check, ErrorWarning } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useUserStore } from "@/store/useUserStore";
@@ -419,7 +419,7 @@ export default function PronunciationPanel({
  {inputResult === "correct" ? (
  <Check size={16} className="text-success" />
  ) : (
- <AlertCircle size={16} className="text-destructive" />
+ <ErrorWarning size={16} className="text-destructive" />
  )}
  <span className={`text-[10px] font-black uppercase tracking-widest ${inputResult === "correct" ? 'text-success' : 'text-destructive'}`}>
  {inputResult === "correct" ? "Pelafalan Bagus!" : "Coba Ucapkan Lagi"}

@@ -7,7 +7,7 @@
 "use client";
 
 import { m, Variants } from "framer-motion";
-import { Settings as SettingsIcon, Layers, Shield } from "@/components/ui/icons";
+import { Settings as SettingsIcon, Stack, Shield } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -152,7 +152,7 @@ export function SettingsView() {
  <h3 className="text-primary uppercase tracking-[0.2em] text-[10px] mb-4">Navigasi Lanjutan</h3>
  <Button asChild variant="ghost" className="w-full h-14 bg-background/50 border border-border justify-start hover:bg-primary/10 hover:text-primary rounded-lg rounded-br-none font-black uppercase tracking-widest text-[10px] transition-all">
  <Link href="/library">
- <Layers size={18} className="mr-3 text-primary" /> Buka Perpustakaan
+ <Stack size={18} className="mr-3 text-primary" /> Buka Perpustakaan
  </Link>
  </Button>
  </Card>

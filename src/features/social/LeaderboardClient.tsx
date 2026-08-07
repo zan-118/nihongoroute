@@ -13,7 +13,7 @@ import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Medal, Flame, Search, Crown, X, Lock, Target, Calendar } from "@/components/ui/icons";
+import { Trophy, Medal, Fire, Search, VipCrown, X, Lock, Target, CalendarEvent } from "@/components/ui/icons";
 import { m, AnimatePresence } from "framer-motion";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { get as idbGet, set as idbSet } from "idb-keyval";
@@ -431,7 +431,7 @@ export default function LeaderboardClient() {
  <Trophy className="w-6 h-6 sm:w-9 sm:h-9" />
  </div>
  <div className="absolute -bottom-1.5 -right-1 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-warning flex items-center justify-center text-warning-foreground border border-background shadow-md z-20">
- <Crown className="w-4 h-4 sm:w-5 sm:h-5" />
+ <VipCrown className="w-4 h-4 sm:w-5 sm:h-5" />
  </div>
  </div>
  <div className="bg-card p-2 sm:p-6 rounded-t-lg w-full text-center border-x border-t border-warning/30 h-30 sm:h-44 flex flex-col justify-between group-hover/champ:border-warning/50 transition-colors shadow-md relative overflow-hidden">
@@ -572,7 +572,7 @@ export default function LeaderboardClient() {
  </Badge>
  <div className="size-1 rounded-full bg-muted-foreground/30" />
  <div className="flex items-center gap-1 text-[11px] sm:text-xs font-bold text-warning select-none">
- <Flame size={12} className="drop-shadow-sm text-warning fill-current" /> 
+ <Fire size={12} className="drop-shadow-sm text-warning fill-current" /> 
  {user.streak} <span className="hidden sm:inline text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-0.5">Hari Beruntun</span>
  </div>
  </div>
@@ -694,7 +694,7 @@ export default function LeaderboardClient() {
  {/* Streak */}
  <div className="p-4 bg-background/25 border border-border/80 rounded-lg flex items-center gap-3">
  <div className="size-8 rounded-lg bg-warning/10 border border-warning/20 text-warning flex items-center justify-center shrink-0">
- <Flame size={15} className="fill-current" />
+ <Fire size={15} className="fill-current" />
  </div>
  <div>
  <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-wider block">Streak</span>
@@ -716,7 +716,7 @@ export default function LeaderboardClient() {
  {/* Hari Aktif Belajar */}
  <div className="p-4 bg-background/25 border border-border/80 rounded-lg flex items-center gap-3 col-span-2">
  <div className="size-8 rounded-lg bg-success/10 border border-success/20 text-success flex items-center justify-center shrink-0">
- <Calendar size={15} />
+ <CalendarEvent size={15} />
  </div>
  <div>
  <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-wider block">Hari Belajar Aktif</span>

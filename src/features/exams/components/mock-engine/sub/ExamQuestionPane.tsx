@@ -4,7 +4,7 @@ import React, { memo } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
- Volume2,
+ VolumeUp,
  Check,
  Flag,
  ArrowLeft,
@@ -218,7 +218,7 @@ export function ExamQuestionPane() {
  }`}
  aria-label="Putar Audio Choukai"
  >
- <Volume2
+ <VolumeUp
  size={18}
  aria-hidden="true"
  className={

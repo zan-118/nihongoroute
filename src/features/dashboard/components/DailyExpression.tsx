@@ -9,8 +9,8 @@
 // Import & Dependencies
 // ==========================================
 import { RandomExpression } from "@/actions/expressions.actions";
-import { Sparkles } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
+import { BookOpen } from "@/components/ui/icons";
 
 // ==========================================
 // Component Props Interface
@@ -53,9 +53,9 @@ export default function DailyExpression({ expression }: DailyExpressionProps) {
 
  {/* Bagian Header */}
  <div className="relative z-10 flex items-center gap-2 mb-5">
- <div className="flex items-center justify-center size-7 rounded-lg bg-primary/10">
- <Sparkles size={14} className="text-primary" />
- </div>
+        <div className="flex items-center justify-center size-7 rounded-lg bg-primary/10">
+          <BookOpen size={14} className="text-primary" />
+        </div>
  <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
  Ungkapan Hari Ini
  </span>

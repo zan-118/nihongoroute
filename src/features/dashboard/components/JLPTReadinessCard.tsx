@@ -15,9 +15,9 @@ import {
   BookOpen,
   Brain,
   Clipboard,
-  Gauge,
+  DashboardSpeed,
   Book,
-  Repeat2,
+  Repeat,
   Trophy,
 } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
@@ -41,7 +41,7 @@ interface JLPTReadinessCardProps {
 
 /** Map action IDs to Lucide icons. */
 const actionIcons = {
- review: Repeat2,
+ review: Repeat,
  course: BookOpen,
  library: Book,
  exam: Clipboard,
@@ -125,7 +125,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
  <div className="flex flex-col gap-5">
  <div className="flex flex-wrap items-center gap-3">
  <Badge className={tone.badge}>
- <Gauge size={12} />
+ <DashboardSpeed size={12} />
  Kesiapan
  </Badge>
  <Badge variant="outline" className="bg-muted/45 text-muted-foreground">

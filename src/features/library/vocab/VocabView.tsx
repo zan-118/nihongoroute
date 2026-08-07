@@ -15,7 +15,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
  Search,
  ChevronLeft,
- Loader2,
+ Loader,
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
@@ -289,7 +289,7 @@ export default function VocabView({
  <div className="relative">
  {loading && (
  <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 rounded-4xl">
- <Loader2 className="size-10 animate-spin text-primary" />
+ <Loader className="size-10 animate-spin text-primary" />
  </div>
  )}
  {vocabList.length === 0 && !loading ? (
@@ -399,7 +399,7 @@ export default function VocabView({
  {/* Footer Navigation */}
  <footer className="mt-16 md:mt-24 pt-10 md:pt-16 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-6">
  <div className="flex items-center gap-3">
- <Loader2 size={16} className={`text-primary ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
+ <Loader size={16} className={`text-primary ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
  <span className="text-muted-foreground font-black text-[10px] md:text-xs uppercase tracking-[0.2em]">Basis Data Real-time</span>
  </div>
  <Link href="/library" className="w-full sm:w-auto">

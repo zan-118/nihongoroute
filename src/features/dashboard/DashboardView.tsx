@@ -33,7 +33,7 @@ const AchievementsGrid = dynamic(() => import("@/features/gamification/Achieveme
  loading: () => <div className="h-50 w-full animate-pulse bg-muted rounded-lg" />
 });
 
-import { Home, Activity, Trophy, Settings } from "@/components/ui/icons";
+import { Home, Pulse, Trophy, Settings } from "@/components/ui/icons";
 
 // ======================
 // CONFIG / CONSTANTS
@@ -52,7 +52,7 @@ const itemVariants: Variants = {
 /** Navigation tabs configuration. */
 const TABS = [
  { id: "beranda", label: "Beranda", icon: Home },
- { id: "progres", label: "Progres", icon: Activity },
+ { id: "progres", label: "Progres", icon: Pulse },
  { id: "pencapaian", label: "Koleksi", icon: Trophy },
  { id: "pengaturan", label: "Setelan", icon: Settings },
 ];

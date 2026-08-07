@@ -10,7 +10,7 @@
 // ==========================================
 import { useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Plus, MessageSquare, Coffee, X } from "@/components/ui/icons";
+import { Add, Message, Cup, X } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,7 +18,7 @@ import FeedbackWidget from "@/features/support/feedback/FeedbackWidget";
 import { useUIStore } from "@/store/useUIStore";
 import { ReadingMode } from "@/features/library/reading/types";
 import AudioController from "@/features/library/reading/components/AudioController";
-import { Eye, LayoutGrid, BookOpen as BookIcon, GraduationCap, Headphones } from "@/components/ui/icons";
+import { Eye, LayoutGrid, BookOpen as BookIcon, GraduationCap, Headphone } from "@/components/ui/icons";
 
 import React from "react";
 import { cn } from "@/lib/utils";
@@ -78,7 +78,7 @@ export default function FloatingActions() {
  className="button-outline-premium rounded-lg px-4 py-6 flex items-center gap-3 h-auto group"
  >
  <span className="text-xs font-black uppercase tracking-widest hidden md:block">Feedback</span>
- <MessageSquare size={20} className="text-primary group-hover:text-current" />
+ <Message size={20} className="text-primary group-hover:text-current" />
  </Button>
  </m.div>
 
@@ -88,7 +88,7 @@ export default function FloatingActions() {
  className="rounded-lg px-4 py-6 flex items-center gap-3 h-auto group border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground"
  >
  <span className="text-xs font-black uppercase tracking-widest hidden md:block">Donasi</span>
- <Coffee size={20} className="text-destructive group-hover:text-current" />
+ <Cup size={20} className="text-destructive group-hover:text-current" />
  </Button>
  </Link>
  </m.div>
@@ -208,8 +208,8 @@ export default function FloatingActions() {
  >
  {isOpen ? <X size={28} /> : (
  isReadingPage ? <BookIcon size={28} className={isOpen ? "" : "animate-pulse"} /> : 
- isListeningPage ? <Headphones size={28} className={isOpen ? "" : "animate-pulse"} /> :
- <Plus size={28} className={isOpen ? "" : "animate-pulse"} />
+ isListeningPage ? <Headphone size={28} className={isOpen ? "" : "animate-pulse"} /> :
+ <Add size={28} className={isOpen ? "" : "animate-pulse"} />
  )}
 
  </Button>

@@ -12,7 +12,7 @@
 import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Save, Upload, Trash2, LogIn } from "@/components/ui/icons";
+import { Save, Upload, DeleteBin, LoginBox } from "@/components/ui/icons";
 import NotificationManager from "@/features/notifications/NotificationManager";
 
 // ==========================================
@@ -90,7 +90,7 @@ export default function DashboardSettings({
  onClick={handleResetData}
  className="h-14 bg-destructive/5 border-destructive/20 hover:bg-destructive/20 hover:border-destructive text-destructive rounded-lg uppercase tracking-widest font-bold text-xs transition-all"
  >
- <Trash2 size={16} className="mr-2" /> Setel Ulang Data
+ <DeleteBin size={16} className="mr-2" /> Setel Ulang Data
  </Button>
  {/* Render logout button if user logged in. */}
  {isAuthenticated && (
@@ -99,7 +99,7 @@ export default function DashboardSettings({
  onClick={handleLogout}
  className="h-14 bg-destructive/10 border-destructive/30 hover:bg-destructive/30 hover:border-destructive text-destructive rounded-lg uppercase tracking-widest font-bold text-xs transition-all"
  >
- <LogIn size={16} className="mr-2" /> Keluar
+ <LoginBox size={16} className="mr-2" /> Keluar
  </Button>
  )}
  </div>

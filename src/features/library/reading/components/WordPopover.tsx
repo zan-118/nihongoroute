@@ -16,7 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SmartJapanese } from "@/components/ui/japanese";
-import { Bookmark, ExternalLink, Loader2, Trash2, X } from "@/components/ui/icons";
+import { Bookmark, ExternalLink, Loader, DeleteBin, X } from "@/components/ui/icons";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import AddToSRSButton from "@/features/srs/actions/AddToSRSButton";
@@ -209,7 +209,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
  )}
  {isLoading ? (
  <div className="flex items-center justify-center py-8">
- <Loader2 size={24} className="animate-spin text-primary" />
+ <Loader size={24} className="animate-spin text-primary" />
  </div>
  ) : vocab ? (
  <div className="space-y-4">

@@ -13,13 +13,13 @@ import React, { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { m, AnimatePresence } from "framer-motion";
 import {
- Flame,
- RefreshCw,
+ Fire,
+ Restart,
  ChevronLeft,
- Layers,
- Hash,
- Play,
- Gamepad2
+ Stack,
+ Hashtag,
+ PlayCircle,
+ Gamepad
 } from "@/components/ui/icons";
 import SurvivalMode from "@/features/games/SurvivalMode";
 import { useSurvivalSetup } from "@/features/games/survival/useSurvivalSetup";
@@ -64,7 +64,7 @@ function SurvivalContent() {
  exit={{ opacity: 0 }}
  className="flex-1 flex flex-col items-center justify-center px-4"
  >
- <RefreshCw className="text-primary animate-spin mb-4" size={32} />
+ <Restart className="text-primary animate-spin mb-4" size={32} />
  <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs font-bold">
  Menyiapkan arena tantangan...
  </p>
@@ -80,7 +80,7 @@ function SurvivalContent() {
  >
  <div className="text-center mb-10">
  <div className="w-16 h-16 rounded-lg bg-destructive/10 border border-destructive/20 flex items-center justify-center shadow-md mx-auto mb-4">
- <Flame className="text-primary" size={32} />
+ <Fire className="text-primary" size={32} />
  </div>
  <h1 className="text-4xl md:text-5xl text-foreground uppercase tracking-tight italic">
  Mode <span className="text-primary">Bertahan Hidup</span>
@@ -98,7 +98,7 @@ function SurvivalContent() {
  {/* Level Selection */}
  <div className="space-y-4">
  <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-muted-foreground mb-2">
- <Layers size={16} className="text-primary" />
+ <Stack size={16} className="text-primary" />
  <h2>Pilih Tingkat JLPT</h2>
  </div>
  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -122,7 +122,7 @@ function SurvivalContent() {
  {/* Amount Selection */}
  <div className="space-y-4">
  <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-muted-foreground mb-2">
- <Hash size={16} className="text-primary" />
+ <Hashtag size={16} className="text-primary" />
  <h2>Jumlah Kosakata Tantangan</h2>
  </div>
  <div className="flex flex-wrap gap-3">
@@ -155,7 +155,7 @@ function SurvivalContent() {
  onClick={handleStartGame}
  className="w-full sm:w-2/3 py-6 rounded-lg text-xs font-black uppercase tracking-widest bg-primary hover:bg-primary/90 text-primary-foreground shadow-md group transition-all"
  >
- Mulai Tantangan <Play size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+ Mulai Tantangan <PlayCircle size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
  </Button>
  </div>
 
@@ -181,7 +181,7 @@ function SurvivalContent() {
  <ChevronLeft size={14} className="mr-2" /> Keluar ke Setup
  </Button>
  <Badge variant="outline" className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 h-auto bg-destructive/10 border-destructive/30 text-primary">
- <Gamepad2 size={16} />
+ <Gamepad size={16} />
  <span>Mode Bertahan Hidup • JLPT {level === "all" ? "Semua" : level}</span>
  </Badge>
  </header>
@@ -202,7 +202,7 @@ export default function SurvivalPage() {
  return (
  <Suspense fallback={
  <div className="flex-1 flex flex-col items-center justify-center px-4">
- <RefreshCw className="text-primary animate-spin mb-4" size={32} />
+ <Restart className="text-primary animate-spin mb-4" size={32} />
  <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs font-bold">
  Memuat Modul Tantangan...
  </p>

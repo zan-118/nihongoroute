@@ -9,7 +9,7 @@
 // ==========================================
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { Book, Sparkles } from "@/components/ui/icons";
+import { Book } from "@/components/ui/icons";
 import { buildLibraryCategories, buildLibraryStats } from "@/lib/constants/library";
 
 // Supporting Components
@@ -160,7 +160,7 @@ export default async function LibraryPage() {
  {/* Total Accumulated Banner Strip */}
  <div className="p-1 rounded-full bg-card/30 border border-border/40 dark:border-white/5 backdrop-blur-md">
  <div className="px-6 py-2.5 rounded-full bg-muted/20 flex flex-wrap items-center justify-center gap-3 text-center">
- <Sparkles size={14} className="text-primary animate-pulse shrink-0" />
+ 
  <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.25em] font-mono">
  {totalMateri.toLocaleString("id-ID")} TOTAL MATERI BELAJAR TERSEDIA LURING
  </span>

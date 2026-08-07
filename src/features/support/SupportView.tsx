@@ -16,18 +16,18 @@ import { useQuery } from "@tanstack/react-query";
 import { getSupporters, FormattedSupporter } from "@/actions/support.actions";
 import {
  Heart,
- Coffee,
+ Cup,
  Shield,
  Zap,
- Globe,
+ Global,
  ChevronDown,
  Trophy,
- Users,
- HelpCircle,
+ Team,
+ Question,
  ArrowUpRight,
  Server,
- Sparkles,
  Check,
+ Book,
 } from "@/components/ui/icons";
 
 // ======================
@@ -69,14 +69,14 @@ const TRANSPARENCY_METRICS: TransparencyItem[] = [
  allocated: "15%",
  percentage: 15,
  description: "Perpanjangan domain nihongoroute.com dan enkripsi sertifikat keamanan.",
- icon: Globe,
+ icon: Global,
  },
  {
  label: "Pengembangan Konten Murni",
  allocated: "10%",
  percentage: 10,
  description: "Penyusunan modul latihan JLPT N5–N1 baru dari tim kurasi editorial.",
- icon: Sparkles,
+ icon: Book,
  },
 ];
 
@@ -138,7 +138,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
  {/* Micro Eyebrow Badge */}
  <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.2em] text-primary shadow-sm">
- <Sparkles className="size-3.5" />
+ 
  <span>Platform Belajar 100% Bebas Iklan</span>
  </div>
 
@@ -182,7 +182,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  <div className="rounded-[calc(2rem-0.625rem)] border border-border/50 bg-card p-6 sm:p-8">
  <div className="flex items-center justify-between">
  <div className="flex size-12 items-center justify-center rounded-2xl border border-amber-500/20 bg-amber-500/10 text-amber-500">
- <Coffee className="size-6" />
+ <Cup className="size-6" />
  </div>
  <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
  Saweria • QRIS / E-Wallet
@@ -331,7 +331,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  </h2>
  </div>
  <div className="hidden sm:flex items-center gap-2 text-xs font-bold text-muted-foreground">
- <Users className="size-4 text-primary" />
+ <Team className="size-4 text-primary" />
  <span>Terima Kasih Banyak!</span>
  </div>
  </div>
@@ -413,7 +413,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  <div className="rounded-[calc(2rem-0.625rem)] border border-border/50 bg-card p-6 sm:p-10">
  <div className="text-center sm:text-left">
  <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-primary">
- <HelpCircle className="size-3.5" />
+ <Question className="size-3.5" />
  <span>Pertanyaan Umum</span>
  </div>
  <h2 className="mt-3 text-2xl font-black tracking-tight text-foreground sm:text-3xl">

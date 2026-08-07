@@ -7,7 +7,7 @@
 // Import & Dependencies
 // ==========================================
 import React from "react";
-import { Trash2, Eye, EyeOff, RefreshCcw, Zap, Check } from "@/components/ui/icons";
+import { DeleteBin, Eye, EyeOff, Refresh, Pulse, Check } from "@/components/ui/icons";
 import { AnimatedKanji } from "./AnimatedKanji";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -135,7 +135,7 @@ export function WritingCanvas({
  />
 
  <div className="absolute top-3 left-3 flex items-center gap-2 z-20">
- <Zap size={10} className="text-destructive animate-pulse" />
+ <Pulse size={10} className="text-destructive animate-pulse" />
  <span className="text-[7px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
  {totalStrokes > 0 ? `Guratan ${currentStrokeIndex + 1} / ${totalStrokes}` : "WRITING_ACTIVE"}
  </span>
@@ -163,7 +163,7 @@ export function WritingCanvas({
  onClick={handleReplay}
  className="flex flex-col items-center justify-center gap-1.5 h-auto py-2.5 rounded-xl bg-muted dark:bg-card/50 text-muted-foreground border border-border text-[8px] font-bold uppercase tracking-wider hover:text-primary hover:border-primary/20 transition-all"
  >
- <RefreshCcw size={16} />
+ <Refresh size={16} />
  <span>Replay</span>
  </Button>
  </>
@@ -174,7 +174,7 @@ export function WritingCanvas({
  onClick={clearCanvas}
  className={`flex flex-col items-center justify-center gap-1.5 h-auto py-2.5 rounded-xl bg-muted dark:bg-card/50 text-muted-foreground border border-border text-[8px] font-bold uppercase tracking-wider hover:text-destructive hover:border-destructive/20 transition-all ${!character ? 'col-span-3' : ''}`}
  >
- <Trash2 size={16} />
+ <DeleteBin size={16} />
  <span>Clear</span>
  </Button>
  </Card>

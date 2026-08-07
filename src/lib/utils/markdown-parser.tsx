@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { AlertTriangle } from "@/components/ui/icons";
+import { Alert } from "@/components/ui/icons";
 
 /**
  * Parses basic markdown syntax (bold, italic, code, links) into React nodes.
@@ -240,7 +240,7 @@ export function parseNotesToJSX(notes: string): React.ReactNode {
  key={`warning-${index}`} 
  className="p-3 md:p-4 rounded-xl border border-destructive/30 bg-destructive/10 text-foreground font-semibold my-4 text-xs md:text-sm flex gap-2.5 items-start select-text"
  >
- <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
+ <Alert size={16} className="text-destructive shrink-0 mt-0.5" />
  <div className="flex-1 leading-relaxed">
  {parseInlineStyles(trimmed.substring(2).trim())}
  </div>

@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { BookOpen, Headphones, LayoutGrid, Book, Zap } from "@/components/ui/icons";
+import { BookOpen, Headphone, LayoutGrid, Book, Zap } from "@/components/ui/icons";
 import { LibraryCounts } from "@/actions/library-counts.actions";
 
 export interface LibraryCategoryItem {
@@ -68,7 +68,7 @@ export function buildLibraryCategories(counts: LibraryCounts): LibraryCategoryIt
  href: "/library/listening",
  title: "Latihan Menyimak",
  desc: "Tingkatkan kepekaan pendengaran melalui modul audio interaktif, latihan soal pemahaman, dan dukungan transkrip.",
- icon: <Headphones size={28} />,
+ icon: <Headphone size={28} />,
  label: "Listening Lab",
  count: counts.listening,
  accentRgb: "6 182 212",

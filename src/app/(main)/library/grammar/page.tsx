@@ -8,7 +8,7 @@
 // IMPOR
 // ======================
 import { Suspense } from "react";
-import { RefreshCw } from "@/components/ui/icons";
+import { Restart } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
 import GrammarView from "@/features/library/grammar/GrammarView";
 import { getGrammarArticles } from "@/actions/library.actions";
@@ -75,7 +75,7 @@ export default async function GrammarArticlesPage() {
  {/* Suspense boundary handles loading state during client-side transitions */}
  <Suspense fallback={
  <div className="h-40 flex flex-col items-center justify-center text-muted-foreground gap-2">
- <RefreshCw className="text-primary animate-spin" size={24} />
+ <Restart className="text-primary animate-spin" size={24} />
  <p className="text-xs font-bold uppercase tracking-widest font-mono animate-pulse">Memuat tata bahasa…</p>
  </div>
  }>

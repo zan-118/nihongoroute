@@ -9,7 +9,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { m, AnimatePresence, useScroll, useSpring } from "framer-motion";
-import { Volume2, Loader2, Sparkles, Check, Bookmark } from "@/components/ui/icons";
+import { VolumeUp, Loader, Check, Bookmark } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FuriganaDisplay } from "@/components/ui/japanese";
@@ -118,7 +118,7 @@ function ReadingWorkspace({
  return;
  }
 
- // Pause other native audio players on the page
+ // PauseCircle other native audio players on the page
  window.dispatchEvent(new CustomEvent("nihongoroute_pause_native_audio"));
  isSelfPlayingRef.current = true;
  window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
@@ -236,9 +236,9 @@ function ReadingWorkspace({
  aria-label="Putar baris audio"
  >
  {isLoading ? (
- <Loader2 size={13} className="text-primary animate-spin" />
+ <Loader size={13} className="text-primary animate-spin" />
  ) : (
- <Volume2 size={13} className={cn(isSpeaking && "text-success animate-bounce")} />
+ <VolumeUp size={13} className={cn(isSpeaking && "text-success animate-bounce")} />
  )}
  </button>
  </div>

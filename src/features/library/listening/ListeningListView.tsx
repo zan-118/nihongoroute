@@ -8,7 +8,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Search, Headphones, Play, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2, Check, Radio, ArrowUpRight } from "@/components/ui/icons";
+import { Search, Headphone, PlayCircle, ChevronLeft, ChevronRight, DoubleLeft, DoubleRight, Loader, Check, Radio, ArrowUpRight } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -109,7 +109,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  <div className="flex flex-col gap-6">
  <div className="space-y-3">
  <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 text-cyan-400">
- <Headphones size={16} />
+ <Headphone size={16} />
  <span className="text-[10px] font-black uppercase tracking-[0.25em] font-mono">
  LISTENING LAB VAULT
  </span>
@@ -159,7 +159,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  <div className="relative">
  {isFetching && (
  <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-md rounded-3xl">
- <Loader2 className="size-10 animate-spin text-cyan-500" />
+ <Loader className="size-10 animate-spin text-cyan-500" />
  </div>
  )}
 
@@ -213,7 +213,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  </span>
 
  <div className="size-8 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center shrink-0 group-hover:bg-cyan-500 group-hover:text-white transition-colors duration-300">
- <Play size={12} className="ml-0.5 fill-current" />
+ <PlayCircle size={12} className="ml-0.5 fill-current" />
  </div>
  </div>
  </div>
@@ -238,7 +238,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  disabled={currentPage === 1}
  className="size-9 rounded-full bg-card border border-border/40 text-muted-foreground disabled:opacity-30"
  >
- <ChevronsLeft size={16} />
+ <DoubleLeft size={16} />
  </Button>
  <Button
  variant="ghost"
@@ -296,7 +296,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  disabled={currentPage === totalPages}
  className="size-9 rounded-full bg-card border border-border/40 text-muted-foreground disabled:opacity-30"
  >
- <ChevronsRight size={16} />
+ <DoubleRight size={16} />
  </Button>
  </div>
  </div>
@@ -305,7 +305,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  {tasks.length === 0 && !isFetching && (
  <div className="py-20 text-center space-y-4 rounded-[2.25rem] bg-card/20 border border-border/40 p-8">
  <div className="size-16 rounded-full bg-muted/30 border border-border/60 flex items-center justify-center mx-auto">
- <Headphones size={24} className="text-muted-foreground/50" />
+ <Headphone size={24} className="text-muted-foreground/50" />
  </div>
  <h3 className="text-base font-black text-foreground uppercase tracking-widest font-mono">Materi Audio Tidak Ditemukan</h3>
  <p className="text-muted-foreground text-xs max-w-sm mx-auto font-medium">Silakan coba dengan kata kunci lain atau pilih level JLPT yang berbeda.</p>

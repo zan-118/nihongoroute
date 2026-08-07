@@ -13,16 +13,16 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
- MessageSquare, 
+ Message, 
  Heart, 
- Send, 
- Flame, 
- Loader2, 
- AlertCircle,
- Trash2,
+ SendPlane, 
+ Fire, 
+ Loader, 
+ ErrorWarning,
+ DeleteBin,
  Trophy,
  Target,
- Calendar,
+ CalendarEvent,
  Filter
 } from "@/components/ui/icons";
 import { m, AnimatePresence } from "framer-motion";
@@ -145,9 +145,9 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
  aria-label="Hapus Postingan"
  >
  {isDeletingPost ? (
- <Loader2 className="animate-spin" size={14} />
+ <Loader className="animate-spin" size={14} />
  ) : (
- <Trash2 size={14} />
+ <DeleteBin size={14} />
  )}
  </button>
  )}
@@ -178,7 +178,7 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
  showComments ? "text-primary" : ""
  }`}
  >
- <MessageSquare size={16} />
+ <Message size={16} />
  <span>{post.comments_count} Diskusi</span>
  </button>
  </div>
@@ -196,7 +196,7 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
  <div className="space-y-3.5 max-h-60 overflow-y-auto pr-1">
  {isLoadingComments ? (
  <div className="flex items-center justify-center py-4 text-xs font-black uppercase tracking-wider text-muted-foreground/60 gap-2">
- <Loader2 className="animate-spin text-primary" size={14} /> Memuat komentar…
+ <Loader className="animate-spin text-primary" size={14} /> Memuat komentar…
  </div>
  ) : comments && comments.length > 0 ? (
  comments.map((comment: CommunityComment) => (
@@ -234,9 +234,9 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
  aria-label="Hapus Komentar"
  >
  {isDeletingComment ? (
- <Loader2 className="animate-spin" size={10} />
+ <Loader className="animate-spin" size={10} />
  ) : (
- <Trash2 size={12} />
+ <DeleteBin size={12} />
  )}
  </button>
  )}
@@ -270,9 +270,9 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
  aria-label="Kirim Komentar"
  >
  {isDeletingComment ? (
- <Loader2 className="animate-spin" size={14} />
+ <Loader className="animate-spin" size={14} />
  ) : (
- <Send size={14} />
+ <SendPlane size={14} />
  )}
  </Button>
  </form>
@@ -389,11 +389,11 @@ export default function CommunityFeed() {
  >
  {isCreatingPost ? (
  <>
- <Loader2 className="animate-spin" size={12} /> Mengirim…
+ <Loader className="animate-spin" size={12} /> Mengirim…
  </>
  ) : (
  <>
- <Send size={12} /> Kirim Diskusi
+ <SendPlane size={12} /> Kirim Diskusi
  </>
  )}
  </Button>
@@ -404,7 +404,7 @@ export default function CommunityFeed() {
  ) : (
  <Card className="bg-card border border-dashed border-border/80 p-6 rounded-2xl text-center flex flex-col items-center justify-center gap-3 shadow-sm">
  <div className="size-12 rounded-lg bg-muted/40 flex items-center justify-center text-muted-foreground/60 border border-border">
- <AlertCircle size={20} />
+ <ErrorWarning size={20} />
  </div>
  <div>
  <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Gabung Komunitas Diskusi</p>
@@ -417,7 +417,7 @@ export default function CommunityFeed() {
  {isFetchingProfile && (
  <div className="fixed inset-0 bg-background/40 -[1px] flex items-center justify-center z-50">
  <Card className="glass border-border p-5 rounded-lg flex items-center gap-3 shadow-lg">
- <Loader2 className="animate-spin text-primary" size={20} />
+ <Loader className="animate-spin text-primary" size={20} />
  <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">Memuat profil member…</span>
  </Card>
  </div>
@@ -453,7 +453,7 @@ export default function CommunityFeed() {
  ) : (
  <div className="text-center py-20 border border-dashed border-border/80 rounded-2xl bg-muted/5 flex flex-col items-center justify-center gap-3 select-none">
  <div className="size-16 rounded-lg bg-primary/5 border border-primary/10 text-primary/60 flex items-center justify-center">
- <MessageSquare size={28} />
+ <Message size={28} />
  </div>
  <p className="text-muted-foreground/60 font-black uppercase tracking-widest text-xs mt-2">Belum ada diskusi</p>
  <p className="text-[10px] text-muted-foreground/45">Jadilah yang pertama untuk bertanya atau membagikan sesuatu!</p>
@@ -503,7 +503,7 @@ export default function CommunityFeed() {
  {/* Streak */}
  <div className="p-4 bg-background/25 border border-border/80 rounded-lg flex items-center gap-3">
  <div className="size-8 rounded-lg bg-warning/10 border border-warning/20 text-warning flex items-center justify-center shrink-0">
- <Flame size={15} className="fill-current" />
+ <Fire size={15} className="fill-current" />
  </div>
  <div>
  <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-wider block">Streak</span>
@@ -525,7 +525,7 @@ export default function CommunityFeed() {
  {/* Hari Aktif Belajar */}
  <div className="p-4 bg-background/25 border border-border/80 rounded-lg flex items-center gap-3 col-span-2">
  <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0">
- <Calendar size={15} />
+ <CalendarEvent size={15} />
  </div>
  <div>
  <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-wider block">Hari Belajar Aktif</span>

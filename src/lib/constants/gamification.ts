@@ -10,17 +10,17 @@
 import React from "react";
 import { 
  Brain, 
- Flame, 
+ Fire, 
  Zap, 
  BookOpen, 
  Trophy, 
- Crown, 
+ VipCrown, 
  Target, 
  Award, 
  Book, 
  GraduationCap, 
  Star,
- Activity,
+ Pulse,
  Heart
 } from "@/components/ui/icons";
 import { UserProgress } from "@/store/types";
@@ -83,7 +83,7 @@ export const DAILY_QUESTS_POOL: Quest[] = [
  type: "review",
  target: 50,
  rewardXP: 100,
- icon: Flame,
+ icon: Fire,
  },
  {
  id: "q_review_100",
@@ -131,7 +131,7 @@ export const DAILY_QUESTS_POOL: Quest[] = [
  type: "streak",
  target: 3,
  rewardXP: 50,
- icon: Flame,
+ icon: Fire,
  },
  {
  id: "q_streak_7",
@@ -139,7 +139,7 @@ export const DAILY_QUESTS_POOL: Quest[] = [
  type: "streak",
  target: 7,
  rewardXP: 150,
- icon: Flame,
+ icon: Fire,
  },
  {
  id: "q_review_5",
@@ -179,7 +179,7 @@ export const DAILY_QUESTS_POOL: Quest[] = [
  type: "streak",
  target: 5,
  rewardXP: 100,
- icon: Flame,
+ icon: Fire,
  },
 ];
 
@@ -228,7 +228,7 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
  id: "vocab_titan",
  title: "Raja Leksikal",
  description: "Mempelajari 250 kosakata di kamus",
- icon: Crown,
+ icon: VipCrown,
  condition: (p) => (Object.keys(p.srs || {}).length / 250) * 100,
  threshold: 250
  },
@@ -246,7 +246,7 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
  id: "streak_bronze",
  title: "Korekan Api",
  description: "Pertahankan streak selama 3 hari",
- icon: Flame,
+ icon: Fire,
  condition: (p) => ((p.streak || 0) / 3) * 100,
  threshold: 3
  },
@@ -254,7 +254,7 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
  id: "streak_warrior",
  title: "Pejuang Streak",
  description: "Pertahankan streak selama 7 hari",
- icon: Flame,
+ icon: Fire,
  condition: (p) => ((p.streak || 0) / 7) * 100,
  threshold: 7
  },
@@ -262,7 +262,7 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
  id: "streak_silver",
  title: "Ksatria Rutin",
  description: "Pertahankan streak selama 15 hari",
- icon: Flame,
+ icon: Fire,
  condition: (p) => ((p.streak || 0) / 15) * 100,
  threshold: 15
  },
@@ -270,7 +270,7 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
  id: "streak_gold",
  title: "Legenda Abadi",
  description: "Pertahankan streak belajarmu selama 30 hari",
- icon: Crown,
+ icon: VipCrown,
  condition: (p) => ((p.streak || 0) / 30) * 100,
  threshold: 30
  },
@@ -330,7 +330,7 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
  id: "xp_gold",
  title: "Konglomerat XP",
  description: "Kumpulkan total 10.000 XP",
- icon: Crown,
+ icon: VipCrown,
  condition: (p) => ((p.xp || 0) / 10000) * 100,
  threshold: 10000
  },
@@ -340,7 +340,7 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
  id: "level_10",
  title: "Elit Nihongo",
  description: "Capai Level 10",
- icon: Crown,
+ icon: VipCrown,
  condition: (p) => ((p.level || 0) / 10) * 100,
  threshold: 10
  },

@@ -13,7 +13,7 @@ import { useNavbar } from "@/components/layout/navigation/useNavbar";
 import { 
  User, 
  Settings, 
- LogIn, 
+ LoginBox, 
  Shield,
  ChevronDown
 } from "@/components/ui/icons";
@@ -115,7 +115,7 @@ export default function UserNav() {
  onClick={handleLogout}
  className="rounded-xl cursor-pointer bg-destructive/5 hover:bg-destructive hover:text-destructive-foreground transition-all py-2.5 text-destructive"
  >
- <LogIn size={16} className="mr-3" />
+ <LoginBox size={16} className="mr-3" />
  <span className="text-xs font-black uppercase tracking-widest">Keluar Akun</span>
  </DropdownMenuItem>
  </div>

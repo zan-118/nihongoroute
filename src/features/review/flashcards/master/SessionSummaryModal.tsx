@@ -9,7 +9,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Trophy, Flame, RefreshCcw, Clock, Zap } from "@/components/ui/icons";
+import { Trophy, Fire, Refresh, Time, Zap } from "@/components/ui/icons";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 // ==========================================
@@ -168,7 +168,7 @@ export function SessionSummaryModal({
  </Card>
  <Card className="bg-card border border-border p-4 rounded-xl flex flex-col items-center shadow-none">
  <span className="text-lg md:text-xl font-black text-foreground flex items-center gap-1">
- <Clock size={14} className="text-primary" />
+ <Time size={14} className="text-primary" />
  {formatDuration(sessionStats.duration)}
  </span>
  <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider mt-1 text-center">
@@ -179,7 +179,7 @@ export function SessionSummaryModal({
 
  {/* XP Gained banner */}
  <Card className="bg-[hsl(var(--muted)/0.5)] dark:bg-[hsl(var(--background)/0.03)] py-4 rounded-xl border border-border mb-6 flex justify-center items-center gap-3 shadow-none">
- <Flame size={18} aria-hidden="true" className="text-primary" />
+ <Fire size={18} aria-hidden="true" className="text-primary" />
  <span className="text-foreground font-mono font-black text-base md:text-lg">
  +{sessionStats.xpGained} XP
  </span>
@@ -199,7 +199,7 @@ export function SessionSummaryModal({
  onClick={handleRestart}
  className={`w-full h-auto py-4 rounded-xl text-xs md:text-xs font-bold uppercase tracking-widest border-none bg-primary text-primary-foreground hover:bg-foreground hover:text-background transition-all shadow-lg`}
  >
- <RefreshCcw size={16} aria-hidden="true" className="mr-2" /> Ulangi Semua
+ <Refresh size={16} aria-hidden="true" className="mr-2" /> Ulangi Semua
  </Button>
  <Button
  variant="ghost"

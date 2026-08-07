@@ -11,7 +11,7 @@
 // Import & Dependencies
 // ==========================================
 import React from "react";
-import { AlertTriangle, PenTool, ArrowRight, Loader2, Sparkles, BookOpen, Target } from "@/components/ui/icons";
+import { Alert, Pencil, ArrowRight, Loader, BookOpen, Target, Check } from "@/components/ui/icons";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,7 @@ export default function WeakPointPanel() {
  if (loading) {
  return (
  <Card className="p-8 flex items-center justify-center bg-card/40 border-border rounded-lg glass">
- <Loader2 className="animate-spin text-primary" size={24} />
+ <Loader className="animate-spin text-primary" size={24} />
  </Card>
  );
  }
@@ -42,9 +42,9 @@ export default function WeakPointPanel() {
  <Card className="relative overflow-hidden bg-card/30 border border-border rounded-2xl p-6 md:p-8 transition-all duration-300 hover:shadow-[0_0_30px_hsl(var(--primary)/0.05)] shadow-none">
  <div className="absolute top-0 right-0 size-24 bg-success/5 blur-3xl rounded-full" />
  <div className="flex items-center gap-4">
- <div className="size-10 rounded-full bg-success/10 border border-success/20 flex items-center justify-center text-success shadow-[0_0_15px_hsl(var(--success)/0.2)]">
- <Sparkles size={20} className="animate-pulse" />
- </div>
+        <div className="size-10 rounded-full bg-success/10 border border-success/20 flex items-center justify-center text-success shadow-[0_0_15px_hsl(var(--success)/0.2)]">
+          <Check size={20} className="text-success" />
+        </div>
  <div>
  <h4 className="text-xs uppercase tracking-[0.2em] text-success">Status: Semua Sistem Optimal</h4>
  <p className="text-[10px] text-muted-foreground mt-1">
@@ -64,7 +64,7 @@ export default function WeakPointPanel() {
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
  <div>
  <h2 className="text-destructive uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
- <AlertTriangle size={14} className="text-destructive animate-pulse" />
+ <Alert size={14} className="text-destructive animate-pulse" />
  Diagnosis Titik Lemah (Kebocoran Memori)
  </h2>
  <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">
@@ -152,7 +152,7 @@ export default function WeakPointPanel() {
  title="Latih Menulis Kanji"
  aria-label={`Latih Menulis Kanji: ${item.display}`}
  >
- <PenTool size={16} />
+ <Pencil size={16} />
  </Button>
  </Link>
  ) : (

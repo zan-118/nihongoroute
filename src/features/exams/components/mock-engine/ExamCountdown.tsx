@@ -10,7 +10,7 @@
  */
 
 import { memo, useEffect, useRef, useState } from "react";
-import { Clock } from "@/components/ui/icons";
+import { Time } from "@/components/ui/icons";
 import { formatTime } from "@/lib/core/utils";
 
 interface ExamCountdownProps {
@@ -66,7 +66,7 @@ export const ExamCountdown = memo(function ExamCountdown({
  : "bg-background border-border text-muted-foreground"
  }`}
  >
- <Clock size={14} aria-hidden="true" />
+ <Time size={14} aria-hidden="true" />
  <span className="font-mono font-bold text-xs">{formatTime(secondsLeft)}</span>
  </div>
  </div>
@@ -82,7 +82,7 @@ export const ExamCountdown = memo(function ExamCountdown({
  }`}
  >
  <div className="flex items-center gap-2 mb-2 text-muted-foreground">
- <Clock size={16} />
+ <Time size={16} />
  <span className="text-[10px] font-bold uppercase tracking-wider">Sisa Waktu</span>
  </div>
  <div className="text-3xl font-black font-mono tracking-tight text-foreground">

@@ -10,7 +10,7 @@
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, ArrowRight, Check, Sparkles, X, AlertCircle } from "@/components/ui/icons";
+import { Brain, ArrowRight, Check, X, ErrorWarning } from "@/components/ui/icons";
 import { QuizQuestion } from "./types";
 import { Button } from "@/components/ui/button";
 import { QuizProgress } from "./QuizProgress";
@@ -222,7 +222,7 @@ export function QuizPlaying({
  : 'bg-destructive/5 border-l-destructive'
  }`}>
  <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-4">
- <AlertCircle size={16} className={`md:w-5 md:h-5 ${isCorrectAnswer ? 'text-success' : 'text-destructive'}`} />
+ <ErrorWarning size={16} className={`md:w-5 md:h-5 ${isCorrectAnswer ? 'text-success' : 'text-destructive'}`} />
  <span className={`text-[10px] md:text-xs font-bold uppercase tracking-widest ${isCorrectAnswer ? 'text-success' : 'text-destructive'}`}>Pembahasan</span>
  </div>
  <p className="text-muted-foreground text-sm md:text-lg leading-relaxed font-medium">

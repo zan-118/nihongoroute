@@ -13,7 +13,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Edit, Check, X, User, Loader2 } from "@/components/ui/icons";
+import { Edit, Check, X, User, Loader } from "@/components/ui/icons";
 import { useProfileEditor } from "@/features/user/useProfileEditor";
 
 /**
@@ -60,7 +60,7 @@ export default function ProfileEditor() {
  className="size-10 rounded-xl bg-success/10 text-success hover:bg-success hover:text-success-foreground transition-all"
  aria-label="Simpan Nama"
  >
- {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Check size={18} />}
+ {isLoading ? <Loader size={16} className="animate-spin" /> : <Check size={18} />}
  </Button>
  <Button
  size="icon"

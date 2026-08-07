@@ -6,7 +6,7 @@
  * Menampilkan ubin-ubin kanji interaktif berarsitektur Double-Bezel (Doppelrand).
  */
 
-import { Loader2, ArrowUpRight, Search } from "@/components/ui/icons";
+import { Loader, ArrowUpRight, Search } from "@/components/ui/icons";
 import Link from "next/link";
 
 export interface KanjiGridItem {
@@ -35,7 +35,7 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
  {/* Loading Overlay */}
  {isFetching && (
  <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-md rounded-3xl">
- <Loader2 className="size-10 animate-spin text-primary" />
+ <Loader className="size-10 animate-spin text-primary" />
  </div>
  )}
  

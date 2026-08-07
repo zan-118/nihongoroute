@@ -15,7 +15,7 @@
 // ==========================================
 import React from "react";
 import dynamic from "next/dynamic";
-import { Download, Loader2 } from "@/components/ui/icons";
+import { Download, Loader } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { usePdfGenerator } from "./usePdfGenerator";
 import { LessonPdfTemplate } from "./templates/LessonPdfTemplate";
@@ -41,7 +41,7 @@ const PDFDownloadLink = dynamic(
  disabled 
  className="bg-card border-border neo-inset shadow-none px-6 py-3 rounded-xl text-muted-foreground text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto h-auto"
  >
- <Loader2 size={14} aria-hidden="true" className="animate-spin text-primary" />
+ <Loader size={14} aria-hidden="true" className="animate-spin text-primary" />
  <span>Menyiapkan Engine…</span>
  </Button>
  ),
@@ -128,7 +128,7 @@ export default function PdfGenerator({
  className="bg-card border-border neo-card shadow-none hover:border-primary/50 hover:bg-primary/10 px-6 py-3 rounded-xl text-primary text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 w-full sm:w-auto active:scale-95 group h-auto"
  >
  {loading ? (
- <Loader2 size={14} className="animate-spin text-primary" />
+ <Loader size={14} className="animate-spin text-primary" />
  ) : (
  <Download
  size={14}

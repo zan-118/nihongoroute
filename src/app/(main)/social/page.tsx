@@ -9,7 +9,7 @@
 import { Metadata } from "next";
 import SocialView from "@/features/social/SocialView";
 import { Badge } from "@/components/ui/badge";
-import { Users } from "@/components/ui/icons";
+import { Team } from "@/components/ui/icons";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";
@@ -41,7 +41,7 @@ export default function SocialPage() {
  {/* Renders page icon, title, description, and status badges */}
  <div className="flex flex-col items-center text-center mb-10">
  <div className="size-16 bg-primary/10 rounded-lg flex items-center justify-center mb-6 border border-primary/20 shadow-lg">
- <Users className="text-primary" size={32} />
+ <Team className="text-primary" size={32} />
  </div>
  
  <h1 className="text-4xl sm:text-6xl text-foreground uppercase tracking-tighter italic mb-4">

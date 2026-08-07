@@ -5,11 +5,10 @@ import Link from "next/link";
 import {
  ArrowRight,
  Check,
- Flame,
- Hash,
- HelpCircle,
- RefreshCcw,
- Sparkles,
+ Fire,
+ NumberList,
+ Question,
+ Refresh,
  X,
 } from "@/components/ui/icons";
 import {
@@ -160,7 +159,7 @@ export default function CounterTrainerClient({
  <div className="flex flex-col gap-3">
  <div className="flex items-center gap-3">
  <div className="flex size-12 items-center justify-center rounded-lg border border-warning/20 bg-warning/10 text-warning">
- <Hash size={24} aria-hidden="true" />
+ <NumberList size={24} aria-hidden="true" />
  </div>
  <Badge className="w-fit rounded-xl px-3 py-1">Counter Trainer</Badge>
  </div>
@@ -239,12 +238,12 @@ export default function CounterTrainerClient({
  onClick={() => setShowHint((prev) => !prev)}
  className="rounded-xl"
  >
- <HelpCircle data-icon="inline-start" />
+ <Question data-icon="inline-start" />
  Hint
  </Button>
  <div className="flex flex-wrap gap-2">
  <Button type="button" variant="ghost" onClick={handleReset} className="rounded-xl">
- <RefreshCcw data-icon="inline-start" />
+ <Refresh data-icon="inline-start" />
  Reset
  </Button>
  <Button type="button" onClick={handleNext} className="rounded-xl">
@@ -258,15 +257,13 @@ export default function CounterTrainerClient({
  <div className="flex flex-col gap-6">
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
  <div className="mb-4 flex items-center gap-2">
- {hasAnswered ? (
- isCorrect ? (
- <Check size={16} className="text-success" aria-hidden="true" />
- ) : (
- <X size={16} className="text-warning" aria-hidden="true" />
- )
- ) : (
- <Sparkles size={16} className="text-primary" aria-hidden="true" />
- )}
+          {hasAnswered && (
+            isCorrect ? (
+              <Check size={16} className="text-success" aria-hidden="true" />
+            ) : (
+              <X size={16} className="text-warning" aria-hidden="true" />
+            )
+          )}
  <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
  Feedback
  </h2>

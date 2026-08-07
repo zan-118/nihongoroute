@@ -16,7 +16,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/store/useUserStore";
 import dynamic from "next/dynamic";
-import { Trophy, RefreshCw, ChevronRight, BarChart, Check, Skull, Share2, Loader2, FileText, Calendar, User, Award, AlertCircle, AlertTriangle } from "@/components/ui/icons";
+import { Trophy, Restart, ChevronRight, BarChart, Check, Share, Loader, FileText, CalendarEvent, User, Award, ErrorWarning, Alert } from "@/components/ui/icons";
 import Link from "next/link";
 import { ExamData, GameState } from "./types";
 import { SECTION_LABELS } from "./constants";
@@ -27,7 +27,7 @@ import { SECTION_LABELS } from "./constants";
  */
 const PdfGenerator = dynamic(() => import("@/features/pdf/PdfGenerator"), {
  ssr: false,
- loading: () => <Loader2 className="animate-spin text-primary" size={20} />
+ loading: () => <Loader className="animate-spin text-primary" size={20} />
 });
 
 // ======================
@@ -92,7 +92,7 @@ export function ExamResult({
  */
  const regNo = useMemo(() => {
  const prefix = exam.title.toLowerCase().includes("jft") ? "JFT" : "JLPT";
- // Hash deterministik murni dari userFullName + exam.title untuk memastikan rendering yang murni
+ // Hashtag deterministik murni dari userFullName + exam.title untuk memastikan rendering yang murni
  const str = `${userFullName}-${exam.title}`;
  let hash = 0;
  for (let i = 0; i < str.length; i++) {
@@ -370,7 +370,7 @@ export function ExamResult({
  </div>
  ) : (
  <div className="flex items-center gap-1.5 text-destructive font-extrabold text-2xl tracking-wider">
- <AlertCircle size={24} />
+ <ErrorWarning size={24} />
  不合格 (FAIL)
  </div>
  )}
@@ -553,7 +553,7 @@ export function ExamResult({
  {/* Peringatan mengenai Kegagalan Maiten */}
  {failedSection && finalScore >= exam.passingScore && (
  <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-[11px] font-sans font-bold flex items-center justify-center gap-2">
- <AlertCircle size={16} className="text-destructive" />
+ <ErrorWarning size={16} className="text-destructive" />
  <span>Total score meets passing bar, but candidate did not satisfy sectional minimum score criteria (Maiten failed).</span>
  </div>
  )}
@@ -580,7 +580,7 @@ export function ExamResult({
  size="sm"
  className="bg-transparent hover:bg-[#F3EFE3] text-stone-700 border-[#C8BFA7] font-bold text-xs h-9"
  >
- <Share2 size={14} className="mr-1.5 text-stone-500" /> Share Result
+ <Share size={14} className="mr-1.5 text-stone-500" /> Share Result
  </Button>
  </div>
  </div>
@@ -623,7 +623,7 @@ export function ExamResult({
  {isPassed ? (
  <Trophy size={64} aria-hidden="true" className="drop-shadow-[0_0_15px_hsl(var(--success)/0.5)]" />
  ) : (
- <Skull size={64} aria-hidden="true" className="drop-shadow-[0_0_15px_hsl(var(--destructive)/0.5)]" />
+ <ErrorWarning size={64} aria-hidden="true" className="drop-shadow-[0_0_15px_hsl(var(--destructive)/0.5)]" />
  )}
  </m.div>
 
@@ -636,7 +636,7 @@ export function ExamResult({
 
  {failedSection && finalScore >= exam.passingScore && (
  <div className="max-w-xl mx-auto mb-8 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-3 animate-pulse shadow-[0_0_15px_hsl(var(--destructive)/0.1)]">
- <AlertTriangle size={16} className="text-destructive shrink-0" />
+ <Alert size={16} className="text-destructive shrink-0" />
  <span>Skor Total Mencukupi, tetapi Gagal Batas Nilai Kategori (Maiten)</span>
  </div>
  )}
@@ -736,13 +736,13 @@ export function ExamResult({
  variant="ghost"
  className="w-full h-12 bg-[hsl(var(--background)/0.05)] border border-border text-xs font-black uppercase tracking-widest rounded-xl hover:bg-[hsl(var(--background)/0.1)] transition-all flex items-center justify-center gap-2"
  >
- <Share2 size={16} aria-hidden="true" /> Bagikan Pencapaian
+ <Share size={16} aria-hidden="true" /> Bagikan Pencapaian
  </Button>
  </div>
  </div>
  ) : (
  <div className="bg-[hsl(var(--muted)/0.3)] border border-border rounded-xl p-8 opacity-80 h-full flex flex-col justify-center">
- <Skull aria-hidden="true" className="text-muted-foreground/30 mb-6" size={40} />
+ <ErrorWarning aria-hidden="true" className="text-muted-foreground/30 mb-6" size={40} />
  <h4 className="text-lg uppercase tracking-tight text-muted-foreground mb-2">Terus Berlatih!</h4>
  <p className="text-xs font-medium text-muted-foreground mb-8 leading-relaxed">
  Dibutuhkan lebih banyak latihan untuk mencapai skor kelulusan. Pelajari kembali materi yang salah.

@@ -3,13 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
- AudioLines,
+ SoundModule,
  Mic,
- Play,
- RefreshCcw,
- Square,
- Volume2,
- Waves,
+ PlayCircle,
+ Refresh,
+ CheckboxBlank,
+ VolumeUp,
 } from "@/components/ui/icons";
 import {
  formatShadowingDuration,
@@ -158,7 +157,7 @@ export default function ShadowingRecorderClient({
  setError("");
  };
 
- /** Play target text using Web Speech API. */
+ /** PlayCircle target text using Web Speech API. */
  const speakTarget = () => {
  if (!speechSupported) {
  setError("Browser ini belum mendukung Web Speech API.");
@@ -172,7 +171,7 @@ export default function ShadowingRecorderClient({
  }
 
  setError("");
- // Pause other audio players
+ // PauseCircle other audio players
  window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
  window.dispatchEvent(new CustomEvent("nihongoroute_pause_native_audio"));
  window.speechSynthesis.cancel();
@@ -326,7 +325,7 @@ export default function ShadowingRecorderClient({
  <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
  <div className="mb-5 flex items-center gap-2">
- <AudioLines size={16} className="text-primary" aria-hidden="true" />
+ <SoundModule size={16} className="text-primary" aria-hidden="true" />
  <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
  Baris Preset
  </h2>
@@ -425,7 +424,7 @@ export default function ShadowingRecorderClient({
  ))}
  </div>
  <Button type="button" onClick={speakTarget} className="rounded-xl">
- {isSpeaking ? <Square data-icon="inline-start" /> : <Volume2 data-icon="inline-start" />}
+ {isSpeaking ? <CheckboxBlank data-icon="inline-start" /> : <VolumeUp data-icon="inline-start" />}
  {isSpeaking ? "Hentikan Target" : "Putar Target"}
  </Button>
  </div>
@@ -439,7 +438,7 @@ export default function ShadowingRecorderClient({
  </Button>
  ) : (
  <Button type="button" variant="destructive" onClick={stopRecording} className="rounded-xl">
- <Square data-icon="inline-start" />
+ <CheckboxBlank data-icon="inline-start" />
  Hentikan
  </Button>
  )}
@@ -450,7 +449,7 @@ export default function ShadowingRecorderClient({
  disabled={isRecording || !audioUrl}
  className="rounded-xl"
  >
- <RefreshCcw data-icon="inline-start" />
+ <Refresh data-icon="inline-start" />
  Ulang Rekaman
  </Button>
  </div>
@@ -465,7 +464,7 @@ export default function ShadowingRecorderClient({
 
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
  <div className="mb-4 flex items-center gap-2">
- <Waves size={16} className="text-success" aria-hidden="true" />
+ <SoundModule size={16} className="text-success" aria-hidden="true" />
  <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
  Playback Kamu
  </h2>
@@ -504,7 +503,7 @@ export default function ShadowingRecorderClient({
  ) : (
  <div className="rounded-lg border border-dashed border-border bg-muted/15 p-5">
  <div className="flex items-center gap-2 text-muted-foreground">
- <Play size={16} aria-hidden="true" />
+ <PlayCircle size={16} aria-hidden="true" />
  <p className="text-sm font-medium">
  Rekaman akan muncul di sini setelah kamu menekan Stop.
  </p>

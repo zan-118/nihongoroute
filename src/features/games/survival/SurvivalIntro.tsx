@@ -7,7 +7,7 @@
 // ======================
 // IMPOR
 // ======================
-import { Activity } from "@/components/ui/icons";
+import { Pulse } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -38,7 +38,7 @@ export function SurvivalIntro({ startGame }: SurvivalIntroProps) {
  
  {/* Icon container with custom shadow */}
  <Card className="w-20 h-20 md:w-28 md:h-28 mx-auto bg-[hsl(var(--muted)/0.5)] dark:bg-[hsl(var(--background)/0.4)] border border-border dark:border-primary/20 rounded-2xl md:rounded-3xl flex items-center justify-center mb-8 md:mb-12 neo-inset shadow-none group-hover:border-primary/40 transition-all duration-200">
- <Activity
+ <Pulse
  size={40}
  aria-hidden="true"
  className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_8px_hsl(var(--primary)/0.35)] md:w-12 md:h-12"

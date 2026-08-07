@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { AlertTriangle } from "@/components/ui/icons";
+import { Alert } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 // ======================
@@ -74,7 +74,7 @@ export default function ConfirmModal({
  ? 'bg-destructive/10 border-destructive/30 text-destructive shadow-lg shadow-destructive/10' 
  : 'bg-primary/10 border-primary/30 text-primary shadow-lg shadow-primary/10'
  }`}>
- <AlertTriangle size={32} aria-hidden="true" />
+ <Alert size={32} aria-hidden="true" />
  </div>
  
  <DialogPrimitive.Title className="text-[18px] font-semibold text-foreground tracking-normal mb-3">

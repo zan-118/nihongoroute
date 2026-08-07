@@ -10,7 +10,7 @@
 // Import & Dependencies
 // ==========================================
 import { m, Variants } from "framer-motion";
-import { Sparkles, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "@/components/ui/icons";
+import { ChevronLeft, ChevronRight, DoubleLeft, DoubleRight } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { LessonCard } from "./LessonCard";
 
@@ -99,7 +99,7 @@ export function LessonGrid({
  backgroundColor: "hsl(var(--background)/0.5)"
  }}
  >
- <Sparkles size={28} className="text-muted-foreground/60" aria-hidden="true" />
+ 
  </div>
 
  <h4 className="text-lg sm:text-xl md:text-2xl text-foreground tracking-tight mb-2 sm:mb-3 uppercase relative z-10">
@@ -133,7 +133,7 @@ export function LessonGrid({
  disabled={currentPage === 1}
  className="size-9 sm:size-10 rounded-lg sm:rounded-xl hover:bg-background transition-all disabled:opacity-20 border border-transparent hover:border-border"
  >
- <ChevronsLeft size={16} />
+ <DoubleLeft size={16} />
  </Button>
  <Button
  variant="ghost"
@@ -193,7 +193,7 @@ export function LessonGrid({
  disabled={currentPage === totalPages}
  className="size-9 sm:size-10 rounded-lg sm:rounded-xl hover:bg-background transition-all disabled:opacity-20 border border-transparent hover:border-border"
  >
- <ChevronsRight size={16} />
+ <DoubleRight size={16} />
  </Button>
  </div>
  </div>

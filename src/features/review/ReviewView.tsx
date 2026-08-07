@@ -9,7 +9,7 @@
 import React from "react";
 import { 
  Brain, 
- RefreshCw, 
+ Restart, 
  ChevronLeft, 
  Zap, 
 } from "@/components/ui/icons";
@@ -39,7 +39,7 @@ export function ReviewView() {
  if (loading) {
  return (
  <div className="flex-1 flex flex-col items-center justify-center px-4">
- <RefreshCw className="text-primary animate-spin mb-4" size={32} />
+ <Restart className="text-primary animate-spin mb-4" size={32} />
  <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs animate-pulse font-bold">
  Sinkronisasi data…
  </p>
@@ -93,7 +93,7 @@ export function ReviewView() {
  if (isFetching) {
  return (
  <div className="flex-1 flex flex-col items-center justify-center px-4">
- <RefreshCw className="text-primary animate-spin mb-4" size={32} />
+ <Restart className="text-primary animate-spin mb-4" size={32} />
  <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs animate-pulse font-bold">
  Menyiapkan sesi {mode === "srs" ? "Review" : "Latihan"}...
  </p>

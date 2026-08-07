@@ -9,7 +9,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { BookOpen, ArrowUpRight, GraduationCap, ChevronLeft, ChevronsLeft, ChevronsRight, ChevronRight, Search, Loader2, Clock, Check } from "@/components/ui/icons";
+import { BookOpen, ArrowUpRight, GraduationCap, ChevronLeft, DoubleLeft, DoubleRight, ChevronRight, Search, Loader, Time, Check } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -162,7 +162,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  <div className="relative">
  {isFetching && (
  <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-md rounded-3xl">
- <Loader2 className="size-10 animate-spin text-purple-500" />
+ <Loader className="size-10 animate-spin text-purple-500" />
  </div>
  )}
  
@@ -210,7 +210,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  <div className="flex items-center gap-4 shrink-0">
  {material.estimated_minutes && (
  <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-muted-foreground/70 uppercase">
- <Clock size={11} />
+ <Time size={11} />
  {material.estimated_minutes} MIN
  </span>
  )}
@@ -248,7 +248,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  disabled={currentPage === 1}
  className="size-9 rounded-full bg-card border border-border/40 text-muted-foreground disabled:opacity-30"
  >
- <ChevronsLeft size={16} />
+ <DoubleLeft size={16} />
  </Button>
  <Button
  variant="ghost"
@@ -306,7 +306,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  disabled={currentPage === totalPages}
  className="size-9 rounded-full bg-card border border-border/40 text-muted-foreground disabled:opacity-30"
  >
- <ChevronsRight size={16} />
+ <DoubleRight size={16} />
  </Button>
  </div>
  </div>

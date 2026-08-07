@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from "react";
-import { HelpCircle, ChevronDown } from "@/components/ui/icons";
+import { Question, ChevronDown } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 
@@ -53,7 +53,7 @@ export function LandingFaq() {
     <section className="relative my-20 md:my-28">
       <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
         <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em]">
-          <HelpCircle size={14} className="mr-1.5" />
+          <Question size={14} className="mr-1.5" />
           <span>Pertanyaan Umum</span>
         </Badge>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">

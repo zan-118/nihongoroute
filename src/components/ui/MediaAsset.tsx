@@ -10,7 +10,7 @@
 // ======================
 import React from "react";
 import Image from "next/image";
-import { Play, FileIcon } from "@/components/ui/icons";
+import { PlayCircle, File } from "@/components/ui/icons";
 
 // ======================
 // ANTARMUKA / TIPE DATA
@@ -70,7 +70,7 @@ export default function MediaAsset({
  Browser Anda tidak mendukung tag video.
  </video>
  <div className="absolute top-4 left-4 p-2 rounded-lg bg-background/40 border border-border opacity-0 group-hover:opacity-100 transition-opacity">
- <Play className="size-4 text-foreground" />
+ <PlayCircle className="size-4 text-foreground" />
  </div>
  </div>
  );
@@ -102,7 +102,7 @@ export default function MediaAsset({
  className={`flex items-center gap-4 p-6 rounded-lg bg-muted/30 border border-border hover:bg-muted/50 transition-all ${className}`}
  >
  <div className="p-3 rounded-xl bg-primary/10 text-primary">
- <FileIcon className="size-6" />
+ <File className="size-6" />
  </div>
  <div className="flex-1">
  {/* Get filename from URL end. */}

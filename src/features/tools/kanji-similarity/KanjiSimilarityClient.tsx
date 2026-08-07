@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Eye, PenTool, Search, Sparkles } from "@/components/ui/icons";
+import { ArrowRight, Eye, Pencil, Search } from "@/components/ui/icons";
 import { SIMILAR_KANJI_PAIRS, type SimilarKanjiPair } from "@/lib/kanji-similarity";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -57,7 +57,7 @@ function KanjiCompareCard({
  href={`/tools/writing?char=${encodeURIComponent(item.character)}`}
  aria-label={`Latihan menulis ${item.character}`}
  >
- <PenTool size={16} />
+ <Pencil size={16} />
  </Link>
  </Button>
  </div>
@@ -131,7 +131,7 @@ export default function KanjiSimilarityClient() {
  <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-4 shadow-xl">
  <div className="mb-4 flex items-center gap-2 px-2">
- <Sparkles size={16} className="text-primary" aria-hidden="true" />
+ 
  <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
  Pasangan
  </h2>

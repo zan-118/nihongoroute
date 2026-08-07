@@ -18,9 +18,9 @@ import { fullyDecode } from "@/lib/utils";
 import { 
  ChevronLeft, 
  GraduationCap,
- Hash,
- Layers,
- ListChecks
+ Hashtag,
+ Stack,
+ ListCheck
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
@@ -264,19 +264,19 @@ export default async function VocabDetailPage({
  <div className="flex flex-wrap gap-2">
  <Button asChild variant="outline" className="rounded-lg gap-2">
  <Link href={`/tools/jlpt-drill?level=${encodeURIComponent(vocabLevel)}&kind=vocab&source=vocab&slug=${encodeURIComponent(vocabSlug)}`}>
- <ListChecks size={16} aria-hidden="true" />
+ <ListCheck size={16} aria-hidden="true" />
  JLPT Drill
  </Link>
  </Button>
  <Button asChild variant="outline" className="rounded-lg gap-2">
  <Link href={`/tools/counter-trainer?level=${encodeURIComponent(vocabLevel)}&source=vocab&slug=${encodeURIComponent(vocabSlug)}`}>
- <Hash size={16} aria-hidden="true" />
+ <Hashtag size={16} aria-hidden="true" />
  Counter
  </Link>
  </Button>
  <Button asChild variant="outline" className="rounded-lg gap-2">
  <Link href={`/tools/flashcards?category=${encodeURIComponent(vocabLevel.toLowerCase())}&mode=vocab&amount=10`}>
- <Layers size={16} aria-hidden="true" />
+ <Stack size={16} aria-hidden="true" />
  Flashcard
  </Link>
  </Button>

@@ -11,7 +11,7 @@
 import React from "react";
 import Link from "next/link";
 import { m } from "framer-motion";
-import { LogIn } from "@/components/ui/icons";
+import { LoginBox } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
@@ -104,7 +104,7 @@ export function UserStatusSection({
  onClick={handleLogout}
  className="w-full h-11 rounded-xl text-xs font-black uppercase tracking-widest border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground"
  >
- <LogIn size={16} className="mr-2" /> Keluar
+ <LoginBox size={16} className="mr-2" /> Keluar
  </Button>
  </m.div>
  </div>

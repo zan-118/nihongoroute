@@ -10,17 +10,17 @@ import type { ComponentType } from "react";
 import { useCallback, useMemo, useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import {
- AlertTriangle,
+ Alert,
  ArrowRight,
  Brain,
  Check,
  ChevronLeft,
- Flame,
+ Fire,
  Book,
- Gauge,
- Loader2,
- Play,
- RefreshCcw,
+ DashboardSpeed,
+ Loader,
+ PlayCircle,
+ Refresh,
  Shield,
  Target,
 } from "@/components/ui/icons";
@@ -185,7 +185,7 @@ export default function WeakPointTrainerClient() {
  if (isFetching) {
  return (
  <main className="flex min-h-[calc(100vh-5rem)] flex-col items-center justify-center px-4">
- <Loader2 className="mb-4 animate-spin text-primary" size={34} />
+ <Loader className="mb-4 animate-spin text-primary" size={34} />
  <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
  Menyusun latihan titik lemah...
  </p>
@@ -241,7 +241,7 @@ export default function WeakPointTrainerClient() {
  variant="outline"
  className="h-auto rounded-full border-destructive/25 bg-destructive/10 px-4 py-1.5 text-destructive"
  >
- <AlertTriangle size={13} />
+ <Alert size={13} />
  Pelatih Titik Lemah
  </Badge>
  <Badge variant="outline" className="h-auto rounded-full bg-muted/45 px-4 py-1.5 text-muted-foreground">
@@ -269,7 +269,7 @@ export default function WeakPointTrainerClient() {
  disabled={candidates.length === 0}
  className="h-12 rounded-lg px-6 text-xs font-black uppercase tracking-widest"
  >
- <Play size={15} />
+ <PlayCircle size={15} />
  Mulai Latihan
  </Button>
  </div>
@@ -308,9 +308,9 @@ export default function WeakPointTrainerClient() {
  </div>
 
  <div className="grid grid-cols-2 gap-3">
- <SummaryTile label="Kritis" value={summary.critical} icon={AlertTriangle} />
- <SummaryTile label="Jatuh Tempo" value={summary.due} icon={RefreshCcw} />
- <SummaryTile label="Rentan" value={summary.fragile} icon={Gauge} />
+ <SummaryTile label="Kritis" value={summary.critical} icon={Alert} />
+ <SummaryTile label="Jatuh Tempo" value={summary.due} icon={Refresh} />
+ <SummaryTile label="Rentan" value={summary.fragile} icon={DashboardSpeed} />
  <SummaryTile label="Belajar" value={summary.learning} icon={Brain} />
  </div>
  </div>

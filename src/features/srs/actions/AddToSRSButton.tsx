@@ -10,7 +10,7 @@
 // Import & Dependencies
 // ==========================================
 import React, { useState, useEffect, useCallback } from "react";
-import { Plus, Check, Star } from "@/components/ui/icons";
+import { Add, Check, Star } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { useSRSStore } from "@/store/useSRSStore";
 import { cn } from "@/lib/utils";
@@ -123,7 +123,7 @@ export function AddToSRSButton({
  className
  )}
  >
- <Plus size={18} />
+ <Add size={18} />
  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-popover text-xs font-bold px-3 py-1 rounded-lg border border-primary/30 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none text-primary z-10">
  Mulai Hafalkan Kata Ini
  </span>

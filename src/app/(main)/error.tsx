@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, RefreshCw, LayoutDashboard } from "@/components/ui/icons";
+import { Alert, Restart, Dashboard } from "@/components/ui/icons";
 
 // ======================
 // EKSEKUSI UTAMA
@@ -52,7 +52,7 @@ export default function MainError({
  <div className="absolute top-0 right-0 size-24 blur-md rounded-tr-[2.5rem] pointer-events-none" />
 
  <div className="size-20 mx-auto bg-destructive/10 rounded-lg flex items-center justify-center mb-6 border border-destructive/20 shadow-[0_0_20px_hsl(var(--destructive)/0.15)] animate-pulse">
- <AlertTriangle className="text-destructive" size={36} />
+ <Alert className="text-destructive" size={36} />
  </div>
  
  <h1 className="text-2xl md:text-3xl text-foreground uppercase tracking-tight mb-3 leading-tight font-japanese">
@@ -79,7 +79,7 @@ export default function MainError({
  onClick={() => reset()}
  className="rounded-xl h-12 px-6 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest text-xs duration-300 shadow-[0_0_15px_hsl(var(--destructive)/0.15)] active:scale-[0.98] w-full sm:w-auto"
  >
- <RefreshCw size={14} className="mr-2 animate-spin-slow" /> Coba Lagi
+ <Restart size={14} className="mr-2 animate-spin-slow" /> Coba Lagi
  </Button>
  
  {/* Navigation fallback to dashboard. */}
@@ -89,7 +89,7 @@ export default function MainError({
  className="rounded-xl h-12 px-6 border border-border/80 hover:bg-muted text-muted-foreground hover:text-foreground font-black uppercase tracking-widest text-xs duration-300 w-full sm:w-auto"
  >
  <Link href="/dashboard">
- <LayoutDashboard size={14} className="mr-2" /> Ke Dashboard
+ <Dashboard size={14} className="mr-2" /> Ke Dashboard
  </Link>
  </Button>
  </div>

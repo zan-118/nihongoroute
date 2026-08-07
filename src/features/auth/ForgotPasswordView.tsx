@@ -11,7 +11,7 @@
 // ==========================================
 import React, { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Mail, ArrowLeft, KeyRound } from "@/components/ui/icons";
+import { Mail, ArrowLeft, Key } from "@/components/ui/icons";
 import Link from "next/link";
 import { toast } from "sonner";
 
@@ -96,7 +96,7 @@ export default function ForgotPasswordView() {
 
  <div className="text-center mb-6">
  <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-[0_0_20px_hsl(var(--primary)/0.15)] animate-pulse">
- <KeyRound className="text-primary" size={32} />
+ <Key className="text-primary" size={32} />
  </div>
  <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2 uppercase tracking-tight font-japanese">
  Lupa Kata Sandi?

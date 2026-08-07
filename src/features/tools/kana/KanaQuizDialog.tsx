@@ -8,7 +8,7 @@
 // ==========================================
 import React, { useEffect, useCallback } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Heart, Trophy, Volume2 } from "@/components/ui/icons";
+import { Heart, Trophy, VolumeUp } from "@/components/ui/icons";
 import {
  Dialog,
  DialogContent,
@@ -97,7 +97,7 @@ export function KanaQuizDialog({
  // METODE & EFEK SAMPING (EFFECTS)
  // ==========================================
  /**
- * Play audio pronunciation of current kana character using SpeechSynthesis API.
+ * PlayCircle audio pronunciation of current kana character using SpeechSynthesis API.
  */
  const speakActiveKana = useCallback(() => {
  if (typeof window === "undefined" || !window.speechSynthesis || !char?.char) return;
@@ -184,7 +184,7 @@ export function KanaQuizDialog({
  aria-label="Putar Suara Aksara"
  className="w-20 h-20 rounded-full flex items-center justify-center bg-warning/10 border border-warning/45 hover:bg-warning/20 shadow-[0_0_25px_hsl(var(--warning)/0.25)] hover:shadow-[0_0_35px_hsl(var(--warning)/0.4)] transition-all duration-300 text-warning"
  >
- <Volume2 size={36} className="animate-pulse" />
+ <VolumeUp size={36} className="animate-pulse" />
  </m.button>
  ) : (
  <m.span

@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import { Suspense } from "react";
-import { RefreshCw } from "@/components/ui/icons";
+import { Restart } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
 import VocabView from "@/features/library/vocab/VocabView";
 import { getPaginatedVocab } from "@/actions/library.actions";
@@ -76,7 +76,7 @@ export default async function VocabLibraryPage() {
  {/* Stream client component with initial server-fetched data */}
  <Suspense fallback={
  <div className="h-40 flex flex-col items-center justify-center text-muted-foreground gap-2">
- <RefreshCw className="text-primary animate-spin" size={24} />
+ <Restart className="text-primary animate-spin" size={24} />
  <p className="text-xs font-bold uppercase tracking-widest font-mono animate-pulse">Memuat kamus kosakata…</p>
  </div>
  }>

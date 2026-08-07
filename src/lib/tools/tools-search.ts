@@ -1,5 +1,5 @@
 import type { ElementType } from "react";
-import { BookOpen, FileText, Hash, Wrench, Headphones } from "@/components/ui/icons";
+import { BookOpen, FileText, Hashtag, Wrench, Headphone } from "@/components/ui/icons";
 import { toHiragana } from "wanakana";
 import { createClient } from "@/lib/supabase/client";
 import { tools } from "@/lib/constants/tools";
@@ -237,7 +237,7 @@ export async function searchToolDictionary(
  title: item.character,
  description: item.meaning || "Kanji",
  href: `/library/kanji/${item.slug || item.character || item.id}`,
- icon: Hash,
+ icon: Hashtag,
  category: "kanji" as const,
  jlptLevel: item.jlpt_level,
  reading: [item.onyomi, item.kunyomi].filter(Boolean).join(" / "),
@@ -375,7 +375,7 @@ export async function analyzeTextWithDictionary(text: string) {
  title: item.character,
  description: item.meaning || "Kanji",
  href: `/library/kanji/${item.slug || item.character || item.id}`,
- icon: Hash,
+ icon: Hashtag,
  category: "kanji" as const,
  jlptLevel: item.jlpt_level,
  reading: [item.onyomi, item.kunyomi].filter(Boolean).join(" / "),
@@ -486,7 +486,7 @@ export async function searchGlobal(
  title: item.character,
  description: item.meaning || "Kanji",
  href: `/library/kanji/${item.slug || item.character || item.id}`,
- icon: Hash,
+ icon: Hashtag,
  category: "kanji" as const,
  jlptLevel: item.jlpt_level,
  })),
@@ -529,7 +529,7 @@ export async function searchGlobal(
  title: item.title,
  description: item.difficulty || item.jlpt_level || "Menyimak",
  href: `/library/listening/${item.slug}`,
- icon: Headphones,
+ icon: Headphone,
  category: "listening" as const,
  jlptLevel: item.jlpt_level,
  })),

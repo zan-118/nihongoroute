@@ -12,7 +12,7 @@
 // ======================
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Shield, Zap, Info } from "@/components/ui/icons";
+import { Shield, Zap, Information } from "@/components/ui/icons";
 import { toast } from "sonner";
 import { useUserStore, STREAK_FREEZE_COST } from "@/store/useUserStore";
 
@@ -97,7 +97,7 @@ export default function StreakFreezeCard() {
  </Button>
  
  <div className="flex items-center gap-1.5 justify-center opacity-40">
- <Info size={10} className="text-muted-foreground" />
+ <Information size={10} className="text-muted-foreground" />
  <span className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">Otomatis Terpakai</span>
  </div>
  </div>

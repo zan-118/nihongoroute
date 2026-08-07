@@ -10,7 +10,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Search, X, Command, BookOpen, Trophy, Layers, Brain, Heart, Settings, Share2, ArrowRight, Zap, Loader2, FileText, Hash } from "@/components/ui/icons";
+import { Search, X, CommandLine, BookOpen, Trophy, Stack, Brain, Heart, Settings, Share, ArrowRight, Zap, Loader, FileText, Hashtag } from "@/components/ui/icons";
 import { useRouter } from "next/navigation";
 
 // ==========================================
@@ -38,12 +38,12 @@ const SEARCH_ITEMS: SearchItem[] = [
  { id: "dash", title: "Dasbor", description: "Ringkasan progres dan statistikmu", href: "/dashboard", icon: Zap, category: "Platform" },
  { id: "materi", title: "Materi", description: "Jalur belajar JLPT dan Topik Umum", href: "/courses", icon: BookOpen, category: "Platform" },
  { id: "ujian", title: "Ujian", description: "Simulasi JLPT dan Test Mandiri", href: "/exams", icon: Trophy, category: "Platform" },
- { id: "pustaka", title: "Pustaka", description: "Daftar kata benda, kata kerja, dan kanji", href: "/library", icon: Layers, category: "Belajar" },
+ { id: "pustaka", title: "Pustaka", description: "Daftar kata benda, kata kerja, dan kanji", href: "/library", icon: Stack, category: "Belajar" },
  { id: "hafalan", title: "Peninjauan", description: "Latihan SRS untuk ingatan jangka panjang", href:ROUTES.REVIEW, icon: Brain, category: "Belajar" },
  { id: "sosial", title: "Papan Skor", description: "Peringkat global dan komunitas", href:ROUTES.SOCIAL, icon: Trophy, category: "Belajar" },
  { id: "dukungan", title: "Dukungan", description: "Bantuan dan panduan penggunaan", href: "/support", icon: Heart, category: "Sistem" },
  { id: "pengaturan", title: "Pengaturan", description: "Kelola profil dan preferensi aplikasi", href:ROUTES.SETTINGS, icon: Settings, category: "Sistem" },
- { id: "bagikan", title: "Bagikan", description: "Ajak teman belajar bersama di NihongoRoute", href:ROUTES.SHARE, icon: Share2, category: "Sistem" },
+ { id: "bagikan", title: "Bagikan", description: "Ajak teman belajar bersama di NihongoRoute", href:ROUTES.SHARE, icon: Share, category: "Sistem" },
  { id: "quick-review", title: "Review Sekarang", description: "Mulai sesi review SRS yang tertunda", href:ROUTES.REVIEW, icon: Zap, category: "Aksi Cepat" },
  { id: "quick-kana", title: "Belajar Kana", description: "Latihan dasar Hiragana & Katakana", href:ROUTES.TOOLS.KANA, icon: BookOpen, category: "Aksi Cepat" },
 ];
@@ -194,9 +194,9 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
  <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-background/60 " onClick={onClose} />
  <m.div initial={{ opacity: 0, scale: 0.95, y: -20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: -20 }} className="w-full max-w-2xl bg-card/85 border border-border shadow-2xl rounded-2xl md:rounded-3xl overflow-hidden relative z-10">
  <div className="p-6 border-b border-border flex items-center gap-4">
- {showSearching ? <Loader2 className="text-primary animate-spin" size={24} /> : <Search className="text-primary animate-pulse" size={24} />}
+ {showSearching ? <Loader className="text-primary animate-spin" size={24} /> : <Search className="text-primary animate-pulse" size={24} />}
  <input autoFocus placeholder="Cari kosakata, tata bahasa, atau navigasi..." className="flex-1 bg-transparent border-none outline-none text-lg md:text-xl font-bold text-foreground placeholder:text-muted-foreground/40" value={query} onChange={e => { setQuery(e.target.value); setActiveIndex(0); if (e.target.value.trim() === "") setIsSearching(false); }} />
- <div className="hidden md:flex items-center gap-1 px-2 py-1 bg-muted border border-border rounded-lg text-xs font-black text-muted-foreground uppercase tracking-widest"><Command size={10} /> K</div>
+ <div className="hidden md:flex items-center gap-1 px-2 py-1 bg-muted border border-border rounded-lg text-xs font-black text-muted-foreground uppercase tracking-widest"><CommandLine size={10} /> K</div>
  <button onClick={onClose} aria-label="Tutup pencarian" className="p-2 hover:bg-muted rounded-xl text-muted-foreground transition-all"><X size={20} /></button>
  </div>
  <div className="max-h-[60vh] overflow-y-auto p-4 custom-scrollbar">
@@ -228,7 +228,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
  <div className="p-4 bg-muted/30 border-t border-border flex items-center justify-between text-xs font-black uppercase tracking-widest text-muted-foreground">
  <div className="flex items-center gap-4">
  <span className="flex items-center gap-1.5"><ArrowRight size={10} className="rotate-90" /> Navigasi</span>
- <span className="flex items-center gap-1.5"><Command size={10} className="rotate-90" /> Pilih</span>
+ <span className="flex items-center gap-1.5"><CommandLine size={10} className="rotate-90" /> Pilih</span>
  </div>
  <span className="opacity-50">Pencarian Global v2.0</span>
  </div>

@@ -13,7 +13,7 @@
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Info } from "@/components/ui/icons";
+import { Loader, Information } from "@/components/ui/icons";
 import { useKanjiProgressQuery } from "./useKanjiProgressQuery";
 import { useAddToSRSInternal } from "@/features/srs/actions/AddToSRSButton";
 
@@ -79,7 +79,7 @@ export default function KanjiProgressGrid() {
  if (isLoading) {
  return (
  <Card className="p-8 flex items-center justify-center bg-card/50 border-border">
- <Loader2 className="animate-spin text-primary" size={24} />
+ <Loader className="animate-spin text-primary" size={24} />
  </Card>
  );
  }
@@ -138,7 +138,7 @@ export default function KanjiProgressGrid() {
 
  {/* TIPS HARI INI */}
  <div className="mt-8 flex items-center gap-2 text-muted-foreground">
- <Info size={12} />
+ <Information size={12} />
  <p className="text-xs font-bold uppercase tracking-widest">
  Tip: Dekatkan kursor ke kotak kanji abu-abu dan klik tombol (+) untuk memasukkannya ke antrean SRS.
  </p>

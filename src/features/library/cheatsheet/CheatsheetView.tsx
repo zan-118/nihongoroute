@@ -9,14 +9,13 @@
 import { useState, useMemo } from "react";
 import {
  Search,
- Hash,
- Clock,
+ NumberList,
+ Time,
  BookOpen,
- Activity,
+ Pulse,
  Database,
- Users,
- MessageSquare,
- Sparkles,
+ Team,
+ Message,
  ArrowUpRight,
  Filter,
 } from "@/components/ui/icons";
@@ -85,7 +84,7 @@ export default function CheatsheetView({
  <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 lg:gap-12">
  <div className="flex flex-col gap-3">
  <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-amber-500/20 bg-amber-500/10 text-amber-400 w-fit">
- <Activity size={16} className="animate-pulse" />
+ <Pulse size={16} className="animate-pulse" />
  <span className="text-[10px] font-black uppercase tracking-[0.25em] font-mono">
  QUICK REFERENCE VAULT
  </span>
@@ -240,10 +239,10 @@ export default function CheatsheetView({
 
 function getIconForCategory(cat: string) {
  const c = cat?.toLowerCase() || "";
- if (c.includes("bilangan") || c.includes("angka") || c.includes("counter")) return <Hash size={22} />;
- if (c.includes("waktu") || c.includes("hari") || c.includes("tanggal") || c.includes("jam")) return <Clock size={22} />;
+ if (c.includes("bilangan") || c.includes("angka") || c.includes("counter")) return <NumberList size={22} />;
+ if (c.includes("waktu") || c.includes("hari") || c.includes("tanggal") || c.includes("jam")) return <Time size={22} />;
  if (c.includes("grammar") || c.includes("partikel") || c.includes("aturan") || c.includes("tata bahasa")) return <BookOpen size={22} />;
- if (c.includes("keluarga") || c.includes("relasi") || c.includes("hubungan")) return <Users size={22} />;
- if (c.includes("topik") || c.includes("sosial") || c.includes("sapaan") || c.includes("percakapan")) return <MessageSquare size={22} />;
- return <Sparkles size={22} />;
+ if (c.includes("keluarga") || c.includes("relasi") || c.includes("hubungan")) return <Team size={22} />;
+ if (c.includes("topik") || c.includes("sosial") || c.includes("sapaan") || c.includes("percakapan")) return <Message size={22} />;
+ return ;
 }

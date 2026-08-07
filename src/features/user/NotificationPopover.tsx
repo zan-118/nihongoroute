@@ -11,7 +11,7 @@
 // IMPOR
 // ======================
 import { m, AnimatePresence } from "framer-motion";
-import { Bell, X, Trash2, Info, Trophy, AlertTriangle, Zap } from "@/components/ui/icons";
+import { Notification, X, DeleteBin, Information, Trophy, Alert, Zap } from "@/components/ui/icons";
 import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
@@ -45,8 +45,8 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
  switch (type) {
  case "achievement": return <Trophy size={16} className="text-warning" />;
  case "success": return <Zap size={16} className="text-primary" />;
- case "warning": return <AlertTriangle size={16} className="text-destructive" />;
- default: return <Info size={16} className="text-primary" />;
+ case "warning": return <Alert size={16} className="text-destructive" />;
+ default: return <Information size={16} className="text-primary" />;
  }
  };
 
@@ -83,7 +83,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
  <div className="p-5 border-b border-border flex items-center justify-between bg-muted/50">
  <div className="flex items-center gap-3">
  <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
- <Bell size={18} />
+ <Notification size={18} />
  </div>
  <div>
  <h3 className="text-[10px] uppercase tracking-[0.2em] text-foreground leading-none mb-1">Notifikasi</h3>
@@ -98,7 +98,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
  className="size-8 flex items-center justify-center rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all"
  title="Hapus Semua"
  >
- <Trash2 size={14} />
+ <DeleteBin size={14} />
  </button>
  <button type="button" 
  onClick={onClose}
@@ -150,7 +150,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
  ) : (
  <div className="py-16 px-8 text-center">
  <div className="size-16 rounded-xl bg-muted/50 flex items-center justify-center mx-auto mb-4 border border-border/50 rotate-6 group-hover:rotate-0 transition-transform">
- <Bell className="text-muted-foreground/20" size={24} />
+ <Notification className="text-muted-foreground/20" size={24} />
  </div>
  <h4 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60">Hening Sekali…</h4>
  <p className="text-[9px] font-medium text-muted-foreground/40 mt-1 uppercase tracking-widest">Belum ada notifikasi untukmu</p>

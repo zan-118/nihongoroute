@@ -12,7 +12,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Timer, Zap, Shield, AlertTriangle, Target, BatteryMedium } from "@/components/ui/icons";
+import { Timer, Zap, Shield, Alert, Target, BatteryLow } from "@/components/ui/icons";
 import { CardData } from "./types";
 import { toHiragana } from "wanakana";
 import { SmartJapanese } from "@/components/ui/japanese";
@@ -86,7 +86,7 @@ export function SurvivalPlaying({
  <div className="flex gap-1 md:gap-4 items-center">
  {/* Render health battery icons */}
  {[...Array(MAX_HP)].map((_, i) => (
- <BatteryMedium
+ <BatteryLow
  key={`hp-${i}`}
  size={18}
  aria-hidden="true"
@@ -142,7 +142,7 @@ export function SurvivalPlaying({
  >
  {isDangerTime ? (
  <span className="flex items-center gap-1">
- <AlertTriangle size={12} aria-hidden="true" className="animate-premium-bounce md:w-4 md:h-4" /> KEJAR WAKTU!
+ <Alert size={12} aria-hidden="true" className="animate-premium-bounce md:w-4 md:h-4" /> KEJAR WAKTU!
  </span>
  ) : (
  <span className="flex items-center gap-1">

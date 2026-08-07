@@ -11,7 +11,7 @@ import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trophy, RefreshCcw, Home, Award, Shield } from "@/components/ui/icons";
+import { Trophy, Refresh, Home, Award, Shield } from "@/components/ui/icons";
 import { SurvivalGameState } from "./types";
 
 // ======================
@@ -103,7 +103,7 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
  variant="ghost"
  className="flex items-center justify-center gap-4 md:gap-6 w-full h-auto py-6 md:py-8 relative z-10 font-bold uppercase tracking-widest text-xs md:text-xs border border-border neo-card shadow-none bg-[hsl(var(--muted)/0.5)] dark:bg-[hsl(var(--background)/0.4)] hover:bg-primary hover:text-primary-foreground transition-all rounded-2xl md:rounded-3xl group"
  >
- <RefreshCcw size={20} aria-hidden="true" className="group-hover:-rotate-90 transition-transform duration-200 md:w-6 md:h-6" /> COBA LAGI
+ <Refresh size={20} aria-hidden="true" className="group-hover:-rotate-90 transition-transform duration-200 md:w-6 md:h-6" /> COBA LAGI
  </Button>
  </Card>
  </m.div>

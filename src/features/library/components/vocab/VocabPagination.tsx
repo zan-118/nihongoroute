@@ -9,7 +9,7 @@
 // ==========================================
 // IMPOR UTAMA
 // ==========================================
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "@/components/ui/icons";
+import { ChevronLeft, ChevronRight, DoubleLeft, DoubleRight } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 // ==========================================
@@ -72,7 +72,7 @@ export function VocabPagination({ currentPage, totalPages, loading, onPageChange
  aria-label="Kembali ke halaman pertama"
  className="w-10 h-10 md:w-12 md:h-12 p-0 rounded-xl bg-muted border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 disabled:opacity-30 transition-all"
  >
- <ChevronsLeft size={16} aria-hidden="true" />
+ <DoubleLeft size={16} aria-hidden="true" />
  </Button>
 
  {/* Tombol Halaman Sebelumnya */}
@@ -123,7 +123,7 @@ export function VocabPagination({ currentPage, totalPages, loading, onPageChange
  aria-label="Lanjut ke halaman terakhir"
  className="w-10 h-10 md:w-12 md:h-12 p-0 rounded-xl bg-muted border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 disabled:opacity-30 transition-all"
  >
- <ChevronsRight size={16} aria-hidden="true" />
+ <DoubleRight size={16} aria-hidden="true" />
  </Button>
  </div>
  </div>

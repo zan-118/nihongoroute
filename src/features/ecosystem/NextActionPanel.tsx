@@ -7,9 +7,8 @@ import {
  Brain,
  ChevronRight,
  Compass,
- Play,
- RefreshCcw,
- Sparkles,
+ PlayCircle,
+ Refresh,
 } from "@/components/ui/icons";
 import { buildEcosystemRecommendations } from "@/lib/learning-ecosystem";
 import { useUIStore } from "@/store/useUIStore";
@@ -23,12 +22,12 @@ import { cn } from "@/lib/utils";
 const CATEGORY_META = {
  continue: {
  label: "Lanjut",
- icon: Play,
+ icon: PlayCircle,
  className: "border-primary/25 bg-primary/10 text-primary",
  },
  review: {
  label: "Review",
- icon: RefreshCcw,
+ icon: Refresh,
  className: "border-warning/25 bg-warning/10 text-warning",
  },
  tool: {
@@ -154,7 +153,7 @@ export default function NextActionPanel({
  ) : (
  <div className="relative z-10 rounded-lg border border-dashed border-border bg-muted/15 p-5">
  <div className="flex items-center gap-2 text-muted-foreground">
- <Sparkles size={16} aria-hidden="true" />
+ 
  <p className="text-sm font-bold">{emptyTitle}</p>
  </div>
  <Button asChild variant="outline" size="sm" className="mt-4 rounded-xl">

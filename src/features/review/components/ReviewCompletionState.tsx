@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import React from "react";
-import { Sparkles, Trophy } from "@/components/ui/icons";
+import { Trophy } from "@/components/ui/icons";
 import EmptyState from "@/components/ui/EmptyState";
 
 // ======================
@@ -29,7 +29,7 @@ export function ReviewCompletionState({ mode, onBack }: ReviewCompletionStatePro
  return (
  <div className="flex-1 flex flex-col items-center justify-center px-4 w-full">
  <EmptyState 
- icon={mode === "srs" ? Sparkles : Trophy}
+ icon={Trophy}
  title={mode === "srs" ? "Review Selesai!" : "Latihan Selesai!"}
  description={mode === "srs" 
  ? "Keren! Semua materi hari ini sudah kamu review. Terus semangat belajarnya ya!" 

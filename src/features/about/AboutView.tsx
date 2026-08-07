@@ -7,7 +7,6 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { 
-  Sparkles, 
   WifiOff, 
   Brain, 
   Shield, 
@@ -57,7 +56,7 @@ export default function AboutView() {
         {/* Header Section */}
         <div className="text-center space-y-6 max-w-3xl mx-auto">
           <Badge variant="outline" className="bg-card border-border text-primary px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2">
-            <Sparkles size={14} className="text-primary" />
+            
             <span>Tentang NihongoRoute</span>
           </Badge>
 

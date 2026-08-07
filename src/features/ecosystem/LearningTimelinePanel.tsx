@@ -4,17 +4,17 @@ import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
 import {
- Activity,
+ Pulse,
  ArrowRight,
  BookOpen,
  Check,
  GraduationCap,
- Hash,
- Headphones,
+ Hashtag,
+ Headphone,
  LayoutGrid,
- ListChecks,
+ ListCheck,
  Mic,
- Play,
+ PlayCircle,
  X,
  type IconType,
 } from "@/components/ui/icons";
@@ -52,7 +52,7 @@ const EVENT_META: Record<
  listening_started: {
  label: "Listening",
  description: "Mulai menyimak materi audio.",
- icon: Headphones,
+ icon: Headphone,
  className: "border-primary/25 bg-primary/10 text-primary",
  },
  listening_completed: {
@@ -64,7 +64,7 @@ const EVENT_META: Record<
  jlpt_drill_answered: {
  label: "Drill",
  description: "Menjawab soal JLPT mini drill.",
- icon: ListChecks,
+ icon: ListCheck,
  className: "border-warning/25 bg-warning/10 text-warning",
  },
  jlpt_drill_completed: {
@@ -76,7 +76,7 @@ const EVENT_META: Record<
  counter_answered: {
  label: "Counter",
  description: "Menjawab latihan counter.",
- icon: Hash,
+ icon: Hashtag,
  className: "border-warning/25 bg-warning/10 text-warning",
  },
  counter_completed: {
@@ -164,7 +164,7 @@ function getOutcome(event: LearningEvent) {
 
  // Default active state
  return {
- icon: Play,
+ icon: PlayCircle,
  label: "Aktif",
  className: "border-border bg-muted/20 text-muted-foreground",
  };
@@ -269,7 +269,7 @@ export default function LearningTimelinePanel({
  <div className="mb-5 flex items-center justify-between gap-4">
  <div className="flex items-center gap-3">
  <div className="flex size-10 items-center justify-center rounded-lg border border-secondary/20 bg-secondary/10 text-secondary">
- <Activity size={18} aria-hidden="true" />
+ <Pulse size={18} aria-hidden="true" />
  </div>
  <div>
  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">

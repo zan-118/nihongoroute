@@ -12,7 +12,7 @@ import XPPop from "@/features/gamification/XPPop";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Target, RefreshCw, ArrowRight } from "@/components/ui/icons";
+import { Trophy, Target, Restart, ArrowRight } from "@/components/ui/icons";
 
 // ======================
 // ANTARMUKA / TIPE DATA
@@ -113,7 +113,7 @@ export function QuizFinished({
  variant="ghost"
  className="w-full sm:w-auto h-auto px-10 py-5 bg-muted dark:bg-background/40 text-muted-foreground font-bold rounded-lg hover:bg-foreground hover:text-background dark:hover:bg-background dark:hover:text-foreground transition-all uppercase tracking-widest text-xs border border-border neo-inset shadow-none"
  >
- <RefreshCw size={18} className="mr-3" /> Ulangi Latihan
+ <Restart size={18} className="mr-3" /> Ulangi Latihan
  </Button>
  <Button
  onClick={() => {

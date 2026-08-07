@@ -8,10 +8,9 @@ import {
   Check,
   ChevronRight,
   Compass,
-  Flame,
-  Play,
-  RefreshCcw,
- Sparkles,
+  Fire,
+  PlayCircle,
+  Refresh,
  Target,
  Wrench,
  type IconType,
@@ -38,17 +37,17 @@ const CATEGORY_META: Record<
 > = {
  warmup: {
  label: "Warmup",
- icon: Flame,
+ icon: Fire,
  className: "border-secondary/25 bg-secondary/10 text-secondary",
  },
  continue: {
  label: "Lanjut",
- icon: Play,
+ icon: PlayCircle,
  className: "border-primary/25 bg-primary/10 text-primary",
  },
  review: {
  label: "Review",
- icon: RefreshCcw,
+ icon: Refresh,
  className: "border-warning/25 bg-warning/10 text-warning",
  },
  tool: {
@@ -213,7 +212,7 @@ export default function DailyRoutePanel({ compact = false, className, courseMeta
  ) : (
  <div className="mt-5 rounded-lg border border-dashed border-border bg-muted/15 p-4">
  <div className="flex items-center gap-2 text-muted-foreground">
- <Sparkles size={15} aria-hidden="true" />
+ 
  <p className="text-sm font-bold">Belum ada titik lemah yang menonjol.</p>
  </div>
  </div>

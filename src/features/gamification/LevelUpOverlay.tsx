@@ -14,7 +14,7 @@ import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Award, Sparkles, Trophy, Shield, ArrowRight, Star, Zap } from "@/components/ui/icons";
+import { Award, Trophy, Shield, ArrowRight, Star, Zap } from "@/components/ui/icons";
 import { useLevelUpOverlay } from "./useLevelUpOverlay";
 
 // ======================

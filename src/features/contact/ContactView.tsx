@@ -6,14 +6,13 @@
 import React from "react";
 import Link from "next/link";
 import { 
-  MessageSquare, 
+  Message, 
   Facebook,
   Github, 
   Instagram, 
   Threads, 
   Heart, 
-  Sparkles, 
-  HelpCircle 
+  Question 
 } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -61,7 +60,7 @@ export default function ContactView() {
         {/* Header Section */}
         <div className="text-center space-y-4 max-w-2xl mx-auto">
           <Badge variant="outline" className="bg-card border-border text-primary px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2">
-            <MessageSquare size={14} className="text-primary" />
+            <Message size={14} className="text-primary" />
             <span>Hubungi Kami</span>
           </Badge>
 
@@ -80,11 +79,11 @@ export default function ContactView() {
             <ContactForm />
           </div>
 
-          {/* Quick Links & Info Sidebar (Cols 8-12) */}
+          {/* Quick Links & Information Sidebar (Cols 8-12) */}
           <div className="lg:col-span-5 space-y-6">
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-                <Sparkles size={18} className="text-primary" />
+                
                 <span>Kanal Resmi Komunitas</span>
               </h2>
 
@@ -133,7 +132,7 @@ export default function ContactView() {
                 href="/support"
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline pt-1"
               >
-                <HelpCircle size={14} />
+                <Question size={14} />
                 <span>Kunjungi Halaman Dukungan & FAQ</span>
               </Link>
             </Card>

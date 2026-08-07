@@ -11,7 +11,7 @@
 // ==========================================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Flame, Brain, BarChart, Trophy, Zap, Shield, Sparkles, AlertTriangle } from "@/components/ui/icons";
+import { Fire, Brain, BarChart, Trophy, Zap, Shield, Alert } from "@/components/ui/icons";
 import { useSRSAnalytics } from "./useSRSAnalytics";
 
 // ==========================================
@@ -30,7 +30,7 @@ export default function SRSAnalytics() {
 
  // Assign icon based on category.
  const data = rawData.map((item) => {
- let icon = <AlertTriangle size={14} />;
+ let icon = <Alert size={14} />;
  if (item.label === "Fragile") icon = <Zap size={14} />;
  if (item.label === "Stable") icon = <BarChart size={14} />;
  if (item.label === "Master") icon = <Shield size={14} />;

@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import { m } from "framer-motion";
-import { Coffee, IconType } from "@/components/ui/icons";
+import { Cup, IconType } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -20,7 +20,7 @@ import Link from "next/link";
  * Props for EmptyState component.
  */
 interface EmptyStateProps {
- /** Icon component. Default is Coffee. */
+ /** Icon component. Default is Cup. */
  icon?: IconType;
  /** Main heading text. */
  title: string;
@@ -41,7 +41,7 @@ interface EmptyStateProps {
  * Render animated empty state UI. Show icon, text, optional action button.
  */
 export default function EmptyState({
- icon: Icon = Coffee,
+ icon: Icon = Cup,
  title,
  description,
  actionText,

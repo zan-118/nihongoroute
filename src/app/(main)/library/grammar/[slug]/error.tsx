@@ -10,7 +10,7 @@
 // ======================
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, RefreshCcw } from "@/components/ui/icons";
+import { Alert, Refresh } from "@/components/ui/icons";
 
 // ======================
 // EKSEKUSI UTAMA
@@ -45,13 +45,13 @@ export default function GrammarError({
  
  {/* Elemen Dekoratif Jepang/Alert di Latar Belakang */}
  <div className="absolute top-0 right-0 p-6 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-700">
- <AlertTriangle size={150} />
+ <Alert size={150} />
  </div>
 
  {/* Ikon Utama */}
  <div className="flex justify-center mb-2 relative z-10">
  <div className="p-4 bg-destructive/10 rounded-lg text-destructive neo-inset shadow-none">
- <AlertTriangle size={32} strokeWidth={2} />
+ <Alert size={32} strokeWidth={2} />
  </div>
  </div>
  
@@ -77,7 +77,7 @@ export default function GrammarError({
  variant="default" 
  className="rounded-lg px-8 h-12 shadow-sm font-bold tracking-widest uppercase text-xs md:text-sm bg-destructive hover:bg-destructive/90 text-destructive-foreground"
  >
- <RefreshCcw size={16} className="mr-2" />
+ <Refresh size={16} className="mr-2" />
  Coba Lagi
  </Button>
  </div>

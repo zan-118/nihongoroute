@@ -11,7 +11,7 @@
 // ======================
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { Mic, ScanText } from "@/components/ui/icons";
+import { Mic, Scan } from "@/components/ui/icons";
 import { ListeningTaskData } from "@/features/library/listening/types";
 import ListeningWorkspace from "@/features/library/listening/components/ListeningWorkspace";
 import { useListeningSync } from "@/features/library/listening/hooks/useListeningSync";
@@ -144,7 +144,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
  </Button>
  <Button asChild variant="outline" size="sm" className="rounded-lg text-[10px] font-bold h-8">
  <Link href={`/tools/text-analyzer?${toolParams}`}>
- <ScanText size={12} className="mr-1 text-primary" aria-hidden="true" />
+ <Scan size={12} className="mr-1 text-primary" aria-hidden="true" />
  Analyzer
  </Link>
  </Button>

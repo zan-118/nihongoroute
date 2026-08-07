@@ -8,7 +8,7 @@
 // ==========================================
 import { Button } from "@/components/ui/button";
 import { m, AnimatePresence } from "framer-motion";
-import { Check, X, Info, Search } from "@/components/ui/icons";
+import { Check, X, Information, Search } from "@/components/ui/icons";
 import { StudyMode } from "./types";
 
 // ==========================================
@@ -116,7 +116,7 @@ export function FlashcardActions({
  }}
  className="flex flex-col h-auto py-3 border-warning/20 bg-warning/5 text-warning hover:bg-warning hover:text-warning-foreground rounded-xl transition-all"
  >
- <Info size={16} className="mb-1" />
+ <Information size={16} className="mb-1" />
  <span className="text-[10px] font-bold uppercase tracking-tight">Sulit</span>
  <span className="text-[8px] opacity-60">Susah</span>
  </Button>
@@ -173,7 +173,7 @@ export function FlashcardActions({
  exit={{ opacity: 0 }}
  className="flex items-center justify-center gap-2 text-muted-foreground py-4 md:py-6"
  >
- <Info size={14} className="opacity-50" />
+ <Information size={14} className="opacity-50" />
  <span className="text-xs md:text-xs font-bold uppercase tracking-widest opacity-60">
  Ketuk kartu untuk melihat jawaban
  </span>

@@ -9,7 +9,7 @@
 // Import & Dependencies
 // ==========================================
 import { useState, useEffect } from "react";
-import { Search, Bell, Menu, Cloud, RefreshCw, ChevronLeft, BookOpen, Eye, EyeOff, Share2 } from "@/components/ui/icons";
+import { Search, Notification, Menu, Cloud, Restart, ChevronLeft, BookOpen, Eye, EyeOff, Share } from "@/components/ui/icons";
 import { m, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -150,7 +150,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
  exit={{ opacity: 0, x: -10 }}
  className="flex items-center"
  >
- <RefreshCw size={12} className="animate-spin text-primary" aria-hidden="true" />
+ <Restart size={12} className="animate-spin text-primary" aria-hidden="true" />
  <span className="sr-only">Sinkronisasi…</span>
  </m.div>
  ) : syncError ? (
@@ -253,7 +253,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
  aria-label="Bagikan Halaman Ini"
  className="size-11 flex items-center justify-center rounded-xl action-icon text-muted-foreground hover:text-primary transition-all"
  >
- <Share2 size={18} />
+ <Share size={18} />
  </m.button>
 
  <div className="flex items-center gap-2 relative">
@@ -269,7 +269,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
  : 'action-icon text-muted-foreground hover:text-primary'
  }`}
  >
- <Bell size={18} />
+ <Notification size={18} />
  {unreadNotifications > 0 && (
  <span className="absolute top-3 right-3 size-1.5 bg-destructive rounded-full" />
  )}

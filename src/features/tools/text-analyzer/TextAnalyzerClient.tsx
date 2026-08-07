@@ -6,11 +6,10 @@ import {
  BookOpen,
  Clipboard,
  FileText,
- Hash,
+ Hashtag,
  LayoutGrid,
- Loader2,
+ Loader,
  Search,
- Sparkles,
 } from "@/components/ui/icons";
 import { analyzeTextWithDictionary, type ToolSearchItem } from "@/lib/tools-search";
 import { Badge } from "@/components/ui/badge";
@@ -335,7 +334,7 @@ export default function TextAnalyzerClient({
  className="rounded-xl"
  >
  {isPending ? (
- <Loader2 data-icon="inline-start" className="animate-spin" />
+ <Loader data-icon="inline-start" className="animate-spin" />
  ) : (
  <Search data-icon="inline-start" />
  )}
@@ -347,7 +346,7 @@ export default function TextAnalyzerClient({
  <div className="flex flex-col gap-6">
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl md:p-6">
  <div className="mb-5 flex items-center gap-2">
- <Sparkles size={16} className="text-primary" aria-hidden="true" />
+ 
  <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
  Ringkasan
  </h2>
@@ -409,7 +408,7 @@ export default function TextAnalyzerClient({
  />
  <ResultPanel
  title="Kanji"
- icon={Hash}
+ icon={Hashtag}
  items={analysis?.results.kanji || []}
  empty="Belum ada hasil kanji dari database."
  />

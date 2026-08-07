@@ -12,7 +12,7 @@
 import React, { useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import Link from "next/link";
-import { Bookmark, Clock, Gauge, LayoutGrid, MapPin, Mic, Minimize2, ScanText, Sparkles, Zap, BarChart } from "@/components/ui/icons";
+import { Bookmark, Time, DashboardSpeed, LayoutGrid, MapPin, Mic, FullscreenExit, Scan, Zap, BarChart } from "@/components/ui/icons";
 import { ReadingProvider } from "@/features/library/reading/components/ReadingContext";
 import { cn } from "@/lib/utils";
 import { useReadingLogic } from "@/features/library/reading/hooks/useReadingLogic";
@@ -335,7 +335,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
  onClick={() => setIsZenMode(false)}
  aria-label="Keluar Mode Zen"
  >
- <Minimize2
+ <FullscreenExit
  size={24}
  className="text-muted-foreground group-hover:text-primary transition-colors"
  />
@@ -380,7 +380,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
  onClick={() => setShowVisuals(!showVisuals)}
  className="w-full py-4 rounded-lg border-dashed border-primary/20 hover:border-primary/50 bg-primary/5 hover:bg-primary/10 transition-all flex items-center justify-center gap-2 group"
  >
- <Sparkles size={14} className={cn("text-primary transition-transform duration-300", showVisuals && "rotate-45")} />
+ 
  <span className="text-xs font-black uppercase tracking-wider">
  {showVisuals ? "Sembunyikan Ilustrasi Cerita" : "Lihat Ilustrasi Cerita (AI Generated)"}
  </span>
@@ -425,7 +425,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
  {/* Sisi Tengah: Ramping Stats Row */}
  <div className="hidden md:flex items-center gap-4 text-xs font-mono border-x border-border/40 px-4 py-1">
  <span className="flex items-center gap-1.5 text-muted-foreground">
- <Clock size={14} className="text-primary" /> <span>{formatReadingDuration(readingSnapshot.elapsedSeconds)}</span>
+ <Time size={14} className="text-primary" /> <span>{formatReadingDuration(readingSnapshot.elapsedSeconds)}</span>
  </span>
  <span className="flex items-center gap-1.5 text-muted-foreground">
  <Zap size={14} className="text-warning" /> <span>{readingPace || "-"} <span className="text-[9px] text-muted-foreground font-sans">u/m</span></span>
@@ -557,7 +557,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
  >
  <div className="flex items-center justify-between border-b border-border/40 pb-4 mb-4">
  <div className="flex items-center gap-2">
- <Sparkles size={16} className="text-primary animate-pulse" />
+ 
  <span className="text-xs font-black uppercase tracking-widest text-foreground">
  Kosakata Terkumpul
  </span>

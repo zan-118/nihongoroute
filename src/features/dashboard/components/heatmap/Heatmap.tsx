@@ -13,7 +13,7 @@
 import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Activity } from "@/components/ui/icons";
+import { Pulse } from "@/components/ui/icons";
 import { useHeatmap, getBoxStyle } from "./useHeatmap";
 
 // ==========================================
@@ -50,7 +50,7 @@ export default function Heatmap({ studyDays }: Props) {
  <header className="flex items-center justify-between mb-8 md:mb-10 relative z-10">
  <div className="flex items-center gap-3 md:gap-4">
  <Card className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center neo-inset shadow-none shrink-0">
- <Activity size={20} className="text-primary md:w-6 md:h-6" />
+ <Pulse size={20} className="text-primary md:w-6 md:h-6" />
  </Card>
  <div className="text-left">
  <h3 className="text-foreground uppercase tracking-widest text-xs md:text-sm">

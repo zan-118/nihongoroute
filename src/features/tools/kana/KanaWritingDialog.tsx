@@ -7,7 +7,7 @@
 // Import & Dependencies
 // ==========================================
 import { m, AnimatePresence } from "framer-motion";
-import { PenTool, Sparkles } from "@/components/ui/icons";
+import { Pencil } from "@/components/ui/icons";
 import {
  Dialog,
  DialogContent,
@@ -77,7 +77,7 @@ export function KanaWritingDialog({
  <div
  className={`w-10 h-10 shrink-0 rounded-xl ${isHira ? "bg-primary/10" : "bg-secondary/10"} border ${themeBorder} flex items-center justify-center shadow-sm`}
  >
- <PenTool size={18} className={themeColor} />
+ <Pencil size={18} className={themeColor} />
  </div>
  <DialogHeader className="p-0">
  <span
@@ -119,7 +119,7 @@ export function KanaWritingDialog({
  </div>
 
  <p className="text-center text-xs text-muted-foreground font-bold uppercase tracking-[0.2em] mt-4 shrink-0">
- <Sparkles size={10} className="inline mr-1 text-primary" />{" "}
+ {" "}
  Yuk, coba tulis huruf ini di kanvas!
  </p>
  </div>

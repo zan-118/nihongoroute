@@ -17,14 +17,13 @@ import {
  ChevronLeft, 
  Book, 
  Lightbulb, 
- Volume2, 
- VolumeX, 
- Sparkles,
+ VolumeUp, 
+ VolumeMute,
  ArrowRight,
- Share2,
+ Share,
  Check,
- ListChecks,
- AlertTriangle
+ ListCheck,
+ Alert
 } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -233,7 +232,7 @@ function parseNotesToJSX(notes: string): React.ReactNode {
  key={`warning-${index}`} 
  className="p-4 md:p-5 rounded-[1.2rem] border border-destructive/20 bg-[hsl(var(--destructive)/0.05)] text-foreground/90 font-semibold my-5 text-xs md:text-sm flex gap-3 items-start shadow-[0_0_20px_hsl(var(--destructive)/0.05)] select-text"
  >
- <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
+ <Alert size={16} className="text-destructive shrink-0 mt-0.5" />
  <div className="flex-1 leading-relaxed">
  {parseInlineStyles(trimmed.substring(2).trim())}
  </div>
@@ -339,7 +338,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
  JLPT {jlptLevel}
  </span>
  <div className="flex items-center gap-2 text-muted-foreground/60 text-xs tracking-wider font-semibold">
- <Sparkles size={12} className="text-primary animate-pulse" />
+ 
  <span>Modul Tata Bahasa Resmi</span>
  </div>
  </div>
@@ -357,7 +356,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
  <div className="flex flex-wrap items-center gap-3">
  <Button asChild variant="outline" className="rounded-lg py-6 gap-2">
  <Link href={`/tools/jlpt-drill?level=${encodeURIComponent(jlptLevel)}&kind=grammar&source=grammar&slug=${encodeURIComponent(String(article.slug || article.id || article._id || ""))}`}>
- <ListChecks size={16} aria-hidden="true" />
+ <ListCheck size={16} aria-hidden="true" />
  <span className="text-xs font-black uppercase tracking-wider">Latih</span>
  </Link>
  </Button>
@@ -380,7 +379,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
  </>
  ) : (
  <>
- <Share2 size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
+ <Share size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
  <span className="text-xs font-black uppercase tracking-wider">Bagikan</span>
  </>
  )}
@@ -504,9 +503,9 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
  aria-label={isActive ? "Hentikan pengucapan kalimat" : "Dengarkan pengucapan kalimat"}
  >
  {isActive ? (
- <VolumeX size={20} className="scale-110" />
+ <VolumeMute size={20} className="scale-110" />
  ) : (
- <Volume2 size={20} className="group-hover/btn:scale-110 transition-transform" />
+ <VolumeUp size={20} className="group-hover/btn:scale-110 transition-transform" />
  )}
  </button>
  </div>

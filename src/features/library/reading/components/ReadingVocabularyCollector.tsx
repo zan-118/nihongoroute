@@ -6,7 +6,7 @@
  */
 
 import Link from "next/link";
-import { Book, ExternalLink, Trash2 } from "@/components/ui/icons";
+import { Book, ExternalLink, DeleteBin } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -69,7 +69,7 @@ export function ReadingVocabularyCollector({ sourceId }: ReadingVocabularyCollec
  onClick={() => clearReadingVocabulary(sourceId)}
  className="rounded-xl"
  >
- <Trash2 data-icon="inline-start" />
+ <DeleteBin data-icon="inline-start" />
  Bersihkan
  </Button>
  </div>
@@ -120,7 +120,7 @@ export function ReadingVocabularyCollector({ sourceId }: ReadingVocabularyCollec
  onClick={() => removeReadingVocabulary(entry.id)}
  className="rounded-xl"
  >
- <Trash2 data-icon="inline-start" />
+ <DeleteBin data-icon="inline-start" />
  Hapus
  </Button>
  </div>

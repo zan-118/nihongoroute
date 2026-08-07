@@ -14,7 +14,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, Activity, Flame, Sprout, BookOpen, PenTool, Database } from "@/components/ui/icons";
+import { Trophy, Pulse, Fire, Plant, BookOpen, Pencil, Database } from "@/components/ui/icons";
 import { useMemoryStats } from "@/features/dashboard/components/srs/stats/useMemoryStats";
 
 /**
@@ -40,21 +40,21 @@ export default function MemoryStats() {
  count: stats.intermediate,
  color: "text-primary",
  indicatorColor: "bg-primary shadow-[0_0_15px_hsl(var(--primary)/0.5)]",
- icon: <Activity size={16} />,
+ icon: <Pulse size={16} />,
  },
  {
  label: "Fase Belajar",
  count: stats.learning,
  color: "text-warning",
  indicatorColor: "bg-warning shadow-[0_0_15px_hsl(var(--warning)/0.5)]",
- icon: <Flame size={16} />,
+ icon: <Fire size={16} />,
  },
  {
  label: "Materi Baru",
  count: stats.new,
  color: "text-muted-foreground",
  indicatorColor: "bg-muted-foreground/30 shadow-none",
- icon: <Sprout size={16} />,
+ icon: <Plant size={16} />,
  },
  ];
 
@@ -115,7 +115,7 @@ export default function MemoryStats() {
  className="group relative p-4 md:p-5 bg-muted rounded-lg md:rounded-xl border border-border text-xs md:text-xs font-bold text-center uppercase tracking-widest text-muted-foreground transition-all neo-card shadow-none active:translate-y-1 hover:text-primary hover:border-primary/30 hover:bg-primary/5"
  >
  <div className="flex flex-col items-center gap-2 md:gap-3">
- <PenTool size={18} className="md:w-5 md:h-5 group-hover:scale-110 transition-transform duration-300" />
+ <Pencil size={18} className="md:w-5 md:h-5 group-hover:scale-110 transition-transform duration-300" />
  <span>Daftar Kanji</span>
  </div>
  </Link>

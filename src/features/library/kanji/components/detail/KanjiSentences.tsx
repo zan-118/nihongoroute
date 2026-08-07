@@ -11,7 +11,7 @@
 // ==========================================
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Volume2, VolumeX, BookOpen } from "@/components/ui/icons";
+import { VolumeUp, VolumeMute, BookOpen } from "@/components/ui/icons";
 import { TTS_VOICES, type TtsVoice } from "@/lib/tts";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import type { SentenceRow } from "@/actions/sentences.actions";
@@ -105,9 +105,9 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
  aria-label={playingIndex === i ? "Hentikan pengucapan" : "Dengarkan pengucapan"}
  >
  {playingIndex === i ? (
- <VolumeX size={20} className="scale-110" />
+ <VolumeMute size={20} className="scale-110" />
  ) : (
- <Volume2 size={20} />
+ <VolumeUp size={20} />
  )}
  </button>
  </div>

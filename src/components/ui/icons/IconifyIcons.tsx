@@ -2,9 +2,8 @@
 
 /**
  * @file IconifyIcons.tsx
- * @description Clean Full-Color HD Icon Library powered by @iconify/react using Fluent Emoji Flat (fluent-emoji-flat:*),
- * Flat Color Icons (flat-color-icons:*), Remix Icons (ri:*), and official brand logos (logos:*, skill-icons:*).
- * All unused icon exports and redundant alias mappings have been completely removed.
+ * @description Clean, Unified Icon Library powered by @iconify/react using 100% Remix Icons (ri:*).
+ * All icon exports use Remix Icon naming conventions (no legacy lucide-react names).
  */
 
 import React from "react";
@@ -38,167 +37,148 @@ function createIcon(iconName: string): IconType {
 }
 
 /* =========================================================================
-   1. OFFICIAL BRAND LOGOS
+   1. OFFICIAL BRAND LOGOS & SOCIAL
    ========================================================================= */
-export const Facebook = createIcon("logos:facebook");
+export const Facebook = createIcon("ri:facebook-fill");
 export const Github = createIcon("ri:github-fill");
-export const Instagram = createIcon("skill-icons:instagram");
+export const Instagram = createIcon("ri:instagram-line");
 export const Threads = createIcon("ri:threads-fill");
 
 /* =========================================================================
    2. UI CONTROLS & NAVIGATION
    ========================================================================= */
-export const ArrowDown = createIcon("fluent-emoji-flat:down-arrow");
-export const ArrowLeft = createIcon("fluent-emoji-flat:left-arrow");
-export const ArrowRight = createIcon("fluent-emoji-flat:right-arrow");
-export const ArrowUpRight = createIcon("fluent-emoji-flat:up-arrow");
-export const ArrowRightLeft = createIcon("fluent-emoji-flat:clockwise-vertical-arrows");
-export const ChevronDown = createIcon("fluent-emoji-flat:down-arrow");
-export const ChevronLeft = createIcon("fluent-emoji-flat:left-arrow");
-export const ChevronRight = createIcon("fluent-emoji-flat:right-arrow");
-export const ChevronUp = createIcon("fluent-emoji-flat:up-arrow");
-export const ChevronsLeft = createIcon("fluent-emoji-flat:left-arrow");
-export const ChevronsRight = createIcon("fluent-emoji-flat:right-arrow");
-export const CornerDownLeft = createIcon("fluent-emoji-flat:left-arrow");
-export const ExternalLink = createIcon("fluent-emoji-flat:right-arrow");
+export const ArrowDown = createIcon("ri:arrow-down-line");
+export const ArrowLeft = createIcon("ri:arrow-left-line");
+export const ArrowRight = createIcon("ri:arrow-right-line");
+export const ArrowUpRight = createIcon("ri:arrow-up-right-line");
+export const ArrowLeftRight = createIcon("ri:arrow-left-right-line");
+export const ChevronDown = createIcon("ri:chevron-down-line");
+export const ChevronLeft = createIcon("ri:chevron-left-line");
+export const ChevronRight = createIcon("ri:chevron-right-line");
+export const ChevronUp = createIcon("ri:chevron-up-line");
+export const DoubleLeft = createIcon("ri:double-left-line");
+export const DoubleRight = createIcon("ri:double-right-line");
+export const ExternalLink = createIcon("ri:external-link-line");
 
-export const Command = createIcon("fluent-emoji-flat:gear");
-export const GitCompare = createIcon("fluent-emoji-flat:clockwise-vertical-arrows");
-export const Loader2 = createIcon("line-md:loading-twotone-loop");
-export const Maximize2 = createIcon("fluent-emoji-flat:up-arrow");
-export const Menu = createIcon("flat-color-icons:menu");
-export const Minimize2 = createIcon("fluent-emoji-flat:down-arrow");
-export const RefreshCcw = createIcon("fluent-emoji-flat:counterclockwise-arrows-button");
-export const RefreshCw = createIcon("fluent-emoji-flat:clockwise-vertical-arrows");
-export const Search = createIcon("fluent-emoji-flat:magnifying-glass-tilted-left");
-export const Settings = createIcon("fluent-emoji-flat:gear");
-export const Share2 = createIcon("fluent-emoji-flat:right-arrow");
-export const Sliders = createIcon("fluent-emoji-flat:gear");
-export const X = createIcon("fluent-emoji-flat:cross-mark-button");
+export const CommandLine = createIcon("ri:command-line");
+export const GitCompare = createIcon("ri:git-compare-line");
+export const Loader = createIcon("ri:loader-4-line");
+export const Menu = createIcon("ri:menu-line");
+export const FullscreenExit = createIcon("ri:fullscreen-exit-line");
+export const Refresh = createIcon("ri:refresh-line");
+export const Restart = createIcon("ri:restart-line");
+export const Search = createIcon("ri:search-line");
+export const Settings = createIcon("ri:settings-4-line");
+export const Share = createIcon("ri:share-line");
+export const Sliders = createIcon("ri:sliders-line");
+export const Close = createIcon("ri:close-line");
+export const X = createIcon("ri:close-line");
 
 /* =========================================================================
    3. CONTENT & LEARNING FEATURES
    ========================================================================= */
-export const Activity = createIcon("fluent-emoji-flat:chart-increasing");
-export const AlertCircle = createIcon("fluent-emoji-flat:information");
-export const AlertOctagon = createIcon("fluent-emoji-flat:stop-sign");
-export const AlertTriangle = createIcon("fluent-emoji-flat:warning");
-export const AudioLines = createIcon("fluent-emoji-flat:studio-microphone");
-export const Award = createIcon("fluent-emoji-flat:sports-medal");
-export const BadgeCheck = createIcon("fluent-emoji-flat:check-mark-button");
-export const BarChart = createIcon("fluent-emoji-flat:bar-chart");
-export const BatteryMedium = createIcon("fluent-emoji-flat:battery");
-export const Bell = createIcon("fluent-emoji-flat:bell");
-export const BellOff = createIcon("fluent-emoji-flat:bell-with-slash");
-export const BellRing = createIcon("fluent-emoji-flat:bell");
+export const Pulse = createIcon("ri:pulse-line");
+export const ErrorWarning = createIcon("ri:error-warning-line");
+export const AlarmWarning = createIcon("ri:alarm-warning-line");
+export const Alert = createIcon("ri:alert-line");
+export const SoundModule = createIcon("ri:sound-module-line");
+export const Award = createIcon("ri:award-line");
+export const CheckboxCircle = createIcon("ri:checkbox-circle-line");
+export const BarChart = createIcon("ri:bar-chart-fill");
+export const BatteryLow = createIcon("ri:battery-low-line");
+export const Notification = createIcon("ri:notification-3-line");
+export const NotificationOff = createIcon("ri:notification-off-line");
+export const NotificationRing = createIcon("ri:notification-4-line");
 
-export const Book = createIcon("fluent-emoji-flat:open-book");
-export const BookOpen = createIcon("fluent-emoji-flat:open-book");
-export const Bookmark = createIcon("fluent-emoji-flat:bookmark");
-export const Brain = createIcon("fluent-emoji-flat:brain");
+export const Book = createIcon("ri:book-2-line");
+export const BookOpen = createIcon("ri:book-open-line");
+export const Bookmark = createIcon("ri:bookmark-line");
+export const Brain = createIcon("ri:brain-line");
 
-export const Briefcase = createIcon("fluent-emoji-flat:briefcase");
-export const Calendar = createIcon("fluent-emoji-flat:tear-off-calendar");
-export const Check = createIcon("fluent-emoji-flat:check-mark-button");
-export const Circle = createIcon("fluent-emoji-flat:red-circle");
-export const CircleHelp = createIcon("fluent-emoji-flat:question-mark");
-export const Clipboard = createIcon("fluent-emoji-flat:clipboard");
-export const ClipboardPenLine = createIcon("fluent-emoji-flat:memo");
-export const Clock = createIcon("fluent-emoji-flat:three-o-clock");
-export const Cloud = createIcon("fluent-emoji-flat:cloud");
-export const Coffee = createIcon("fluent-emoji-flat:hot-beverage");
-export const Compass = createIcon("fluent-emoji-flat:compass");
-export const Crown = createIcon("fluent-emoji-flat:crown");
-export const Database = createIcon("fluent-emoji-flat:file-cabinet");
-export const Download = createIcon("fluent-emoji-flat:inbox-tray");
-export const Edit = createIcon("fluent-emoji-flat:pencil");
-export const Eye = createIcon("fluent-emoji-flat:eye");
-export const EyeOff = createIcon("fluent-emoji-flat:eyes");
-export const FileIcon = createIcon("fluent-emoji-flat:page-facing-up");
-export const FileText = createIcon("fluent-emoji-flat:page-with-curl");
-export const Filter = createIcon("fluent-emoji-flat:funnel");
-export const Flag = createIcon("fluent-emoji-flat:triangular-flag");
-export const Flame = createIcon("fluent-emoji-flat:fire");
-export const Gamepad2 = createIcon("fluent-emoji-flat:video-game");
-export const Gauge = createIcon("fluent-emoji-flat:speedometer");
-export const Globe = createIcon("fluent-emoji-flat:globe-showing-asia-australia");
-export const GraduationCap = createIcon("fluent-emoji-flat:graduation-cap");
+export const Briefcase = createIcon("ri:briefcase-line");
+export const CalendarEvent = createIcon("ri:calendar-event-line");
+export const Check = createIcon("ri:check-line");
+export const Circle = createIcon("ri:checkbox-blank-circle-line");
+export const Question = createIcon("ri:question-line");
+export const Clipboard = createIcon("ri:clipboard-line");
+export const Draft = createIcon("ri:draft-line");
+export const Time = createIcon("ri:time-line");
+export const Cloud = createIcon("ri:cloud-line");
+export const Cup = createIcon("ri:cup-line");
+export const Compass = createIcon("ri:compass-3-line");
+export const VipCrown = createIcon("ri:vip-crown-fill");
+export const Database = createIcon("ri:database-2-line");
+export const Download = createIcon("ri:download-2-line");
+export const Edit = createIcon("ri:edit-line");
+export const Eye = createIcon("ri:eye-line");
+export const EyeOff = createIcon("ri:eye-off-line");
+export const File = createIcon("ri:file-line");
+export const FileText = createIcon("ri:file-text-line");
+export const Filter = createIcon("ri:filter-3-line");
+export const Flag = createIcon("ri:flag-line");
+export const Fire = createIcon("ri:fire-line");
+export const Gamepad = createIcon("ri:gamepad-line");
+export const DashboardSpeed = createIcon("ri:dashboard-3-line");
+export const Global = createIcon("ri:global-line");
+export const GraduationCap = createIcon("ri:graduation-cap-line");
 
-export const LayoutGrid = createIcon("flat-color-icons:alphabetical-sorting-az");
-export const Hash = createIcon("flat-color-icons:numerical-sorting-12");
-export const Headphones = createIcon("fluent-emoji-flat:headphone");
-export const Heart = createIcon("fluent-emoji-flat:red-heart");
-export const HelpCircle = createIcon("fluent-emoji-flat:question-mark");
-export const Home = createIcon("fluent-emoji-flat:house");
-export const Hourglass = createIcon("fluent-emoji-flat:hourglass-done");
-export const Info = createIcon("fluent-emoji-flat:information");
-export const KeyRound = createIcon("fluent-emoji-flat:key");
-export const Keyboard = createIcon("fluent-emoji-flat:keyboard");
-export const Layers = createIcon("fluent-emoji-flat:books");
-export const LayoutDashboard = createIcon("fluent-emoji-flat:shinto-shrine");
-export const Lightbulb = createIcon("fluent-emoji-flat:light-bulb");
-export const Link = createIcon("fluent-emoji-flat:link");
-export const ListChecks = createIcon("flat-color-icons:todo-list");
-export const Lock = createIcon("fluent-emoji-flat:locked");
-export const LogIn = createIcon("fluent-emoji-flat:door");
-export const Mail = createIcon("fluent-emoji-flat:envelope");
-export const MapPin = createIcon("fluent-emoji-flat:round-pushpin");
-export const Medal = createIcon("fluent-emoji-flat:sports-medal");
-export const MessageSquare = createIcon("fluent-emoji-flat:speech-balloon");
-export const Mic = createIcon("fluent-emoji-flat:microphone");
-export const Monitor = createIcon("fluent-emoji-flat:desktop-computer");
-export const Moon = createIcon("fluent-emoji-flat:crescent-moon");
-export const MousePointer2 = createIcon("fluent-emoji-flat:backhand-index-pointing-up");
-export const Pause = createIcon("fluent-emoji-flat:pause-button");
-export const PenTool = createIcon("fluent-emoji-flat:pencil");
-export const Plane = createIcon("fluent-emoji-flat:airplane");
-export const Play = createIcon("fluent-emoji-flat:play-button");
-export const Plus = createIcon("fluent-emoji-flat:plus");
-export const Puzzle = createIcon("fluent-emoji-flat:puzzle-piece");
-export const Radio = createIcon("fluent-emoji-flat:radio");
-export const Repeat2 = createIcon("fluent-emoji-flat:repeat-single-button");
-export const Save = createIcon("fluent-emoji-flat:floppy-disk");
-export const ScanText = createIcon("fluent-emoji-flat:magnifying-glass-tilted-right");
-export const Send = createIcon("fluent-emoji-flat:paper-airplane");
-export const Server = createIcon("fluent-emoji-flat:computer-disk");
-export const Shield = createIcon("fluent-emoji-flat:shield");
-export const Shuffle = createIcon("fluent-emoji-flat:shuffle-tracks-button");
-export const Skull = createIcon("fluent-emoji-flat:skull");
-export const Sparkles = createIcon("fluent-emoji-flat:sparkles");
-export const Sprout = createIcon("fluent-emoji-flat:seedling");
-export const Square = createIcon("fluent-emoji-flat:white-square-button");
-export const Star = createIcon("fluent-emoji-flat:star");
-export const Sun = createIcon("fluent-emoji-flat:sun");
-export const Swords = createIcon("fluent-emoji-flat:crossed-swords");
-export const Target = createIcon("fluent-emoji-flat:bullseye");
-export const Timer = createIcon("fluent-emoji-flat:stopwatch");
-export const TimerReset = createIcon("fluent-emoji-flat:hourglass-not-done");
-export const Trash2 = createIcon("fluent-emoji-flat:wastebasket");
-export const Trophy = createIcon("fluent-emoji-flat:trophy");
-export const Tv = createIcon("fluent-emoji-flat:television");
-export const Upload = createIcon("fluent-emoji-flat:outbox-tray");
-export const User = createIcon("fluent-emoji-flat:bust-in-silhouette");
-export const Users = createIcon("fluent-emoji-flat:busts-in-silhouette");
-export const Volume2 = createIcon("fluent-emoji-flat:speaker-high-volume");
-export const VolumeX = createIcon("fluent-emoji-flat:muted-speaker");
-export const Wand2 = createIcon("fluent-emoji-flat:magic-wand");
-export const Waves = createIcon("fluent-emoji-flat:water-wave");
-export const WifiOff = createIcon("fluent-emoji-flat:no-signal");
-export const Wrench = createIcon("fluent-emoji-flat:wrench");
-export const Zap = createIcon("fluent-emoji-flat:high-voltage");
+export const LayoutGrid = createIcon("ri:layout-grid-line");
+export const Hashtag = createIcon("ri:hashtag");
+export const NumberList = createIcon("ri:list-ordered-2");
+export const Headphone = createIcon("ri:headphone-line");
+export const Heart = createIcon("ri:heart-line");
+export const Home = createIcon("ri:home-4-line");
+export const Hourglass = createIcon("ri:hourglass-line");
+export const Information = createIcon("ri:information-line");
+export const Key = createIcon("ri:key-2-line");
+export const Keyboard = createIcon("ri:keyboard-line");
+export const Stack = createIcon("ri:stack-line");
+export const Dashboard = createIcon("ri:dashboard-line");
+export const Lightbulb = createIcon("ri:lightbulb-line");
+export const Link = createIcon("ri:link");
+export const ListCheck = createIcon("ri:list-check");
+export const Lock = createIcon("ri:lock-line");
+export const LoginBox = createIcon("ri:login-box-line");
+export const Mail = createIcon("ri:mail-line");
+export const MapPin = createIcon("ri:map-pin-line");
+export const Medal = createIcon("ri:medal-line");
+export const Message = createIcon("ri:message-3-line");
+export const Mic = createIcon("ri:mic-line");
+export const Computer = createIcon("ri:computer-line");
+export const Moon = createIcon("ri:moon-line");
+export const Cursor = createIcon("ri:cursor-line");
+export const PauseCircle = createIcon("ri:pause-circle-line");
+export const Pencil = createIcon("ri:pencil-line");
+export const Plane = createIcon("ri:plane-line");
+export const PlayCircle = createIcon("ri:play-circle-line");
+export const Add = createIcon("ri:add-line");
+export const Puzzle = createIcon("ri:puzzle-line");
+export const Radio = createIcon("ri:radio-line");
+export const Repeat = createIcon("ri:repeat-line");
+export const Save = createIcon("ri:save-line");
+export const Scan = createIcon("ri:scan-2-line");
+export const SendPlane = createIcon("ri:send-plane-line");
+export const Server = createIcon("ri:server-line");
+export const Shield = createIcon("ri:shield-line");
+export const Shuffle = createIcon("ri:shuffle-line");
+export const Plant = createIcon("ri:plant-line");
+export const CheckboxBlank = createIcon("ri:checkbox-blank-line");
+export const Star = createIcon("ri:star-line");
+export const Sun = createIcon("ri:sun-line");
+export const Sword = createIcon("ri:sword-line");
+export const Target = createIcon("ri:target-line");
+export const Timer = createIcon("ri:timer-line");
+export const History = createIcon("ri:history-line");
+export const DeleteBin = createIcon("ri:delete-bin-line");
+export const Trophy = createIcon("ri:trophy-line");
+export const Tv = createIcon("ri:tv-2-line");
+export const Upload = createIcon("ri:upload-2-line");
+export const User = createIcon("ri:user-line");
+export const Team = createIcon("ri:team-line");
+export const VolumeUp = createIcon("ri:volume-up-line");
+export const VolumeMute = createIcon("ri:volume-mute-line");
+export const WifiOff = createIcon("ri:wifi-off-line");
+export const Wrench = createIcon("ri:wrench-line");
+export const Zap = createIcon("ri:zap-line");
 
-/* =========================================================================
-   4. JAPANESE SIGNATURE ALIAS & NAVIGATION BRAND ICONS
-   ========================================================================= */
-export const CustomDashboardIcon = createIcon("fluent-emoji-flat:shinto-shrine");
-export const CustomCoursesIcon = createIcon("fluent-emoji-flat:graduation-cap");
-export const CustomSRSIcon = createIcon("fluent-emoji-flat:brain");
-export const CustomLibraryIcon = createIcon("fluent-emoji-flat:books");
-export const CustomUserIcon = createIcon("fluent-emoji-flat:bust-in-silhouette");
-export const CustomLoginIcon = createIcon("fluent-emoji-flat:door");
-export const CustomToolsIcon = createIcon("fluent-emoji-flat:wrench");
-export const CustomExamsIcon = createIcon("fluent-emoji-flat:memo");
-export const CustomCommunityIcon = createIcon("fluent-emoji-flat:busts-in-silhouette");
-export const CustomSettingsIcon = createIcon("fluent-emoji-flat:gear");
-export const CustomShareIcon = createIcon("fluent-emoji-flat:handshake");
-export const CustomHelpIcon = createIcon("fluent-emoji-flat:red-question-mark");
+

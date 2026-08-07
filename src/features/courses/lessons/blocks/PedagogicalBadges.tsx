@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { AlertTriangle, BookOpen, Globe, Info, BarChart, Hourglass } from "@/components/ui/icons";
+import { Alert, BookOpen, Global, Information, BarChart, Hourglass } from "@/components/ui/icons";
 import { ContentBlock } from "@/types/database";
 
 /**
@@ -21,19 +21,19 @@ export function PedagogicalBadges({ block }: { block: ContentBlock }) {
  },
  practical_scenario: {
  label: "Skenario Praktis",
- icon: Globe,
+ icon: Global,
  className: "text-success",
  style: { backgroundColor: "hsl(var(--success)/0.1)", borderColor: "hsl(var(--success)/0.2)", borderWidth: "1px" },
  },
  pitfall_alert: {
  label: "Tips & Perangkap",
- icon: AlertTriangle,
+ icon: Alert,
  className: "text-destructive",
  style: { backgroundColor: "hsl(var(--destructive)/0.1)", borderColor: "hsl(var(--destructive)/0.2)", borderWidth: "1px" },
  },
  cultural_note: {
  label: "Catatan Budaya",
- icon: Info,
+ icon: Information,
  className: "text-warning",
  style: { backgroundColor: "hsl(var(--warning)/0.1)", borderColor: "hsl(var(--warning)/0.2)", borderWidth: "1px" },
  },

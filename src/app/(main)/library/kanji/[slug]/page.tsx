@@ -17,9 +17,9 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { fullyDecode } from "@/lib/utils";
 import { 
  ChevronLeft, 
- Layers,
- ListChecks,
- PenTool
+ Stack,
+ ListCheck,
+ Pencil
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
@@ -203,19 +203,19 @@ export default async function KanjiDetailPage({
  <div className="flex flex-wrap gap-2">
  <Button asChild variant="outline" className="rounded-lg gap-2">
  <Link href={`/tools/jlpt-drill?level=${encodeURIComponent(kanjiLevel)}&kind=kanji&source=kanji&slug=${encodeURIComponent(kanjiCharacter)}`}>
- <ListChecks size={16} aria-hidden="true" />
+ <ListCheck size={16} aria-hidden="true" />
  JLPT Drill
  </Link>
  </Button>
  <Button asChild variant="outline" className="rounded-lg gap-2">
  <Link href={`/tools/writing?char=${encodeURIComponent(kanjiCharacter)}`}>
- <PenTool size={16} aria-hidden="true" />
+ <Pencil size={16} aria-hidden="true" />
  Menulis
  </Link>
  </Button>
  <Button asChild variant="outline" className="rounded-lg gap-2">
  <Link href={`/tools/flashcards?category=${encodeURIComponent(kanjiLevel.toLowerCase())}&mode=kanji&amount=10`}>
- <Layers size={16} aria-hidden="true" />
+ <Stack size={16} aria-hidden="true" />
  Flashcard
  </Link>
  </Button>

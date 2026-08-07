@@ -10,7 +10,7 @@
 // IMPOR
 // ======================
 import { useState, useEffect } from "react";
-import { Bell, BellOff, BellRing, Settings } from "@/components/ui/icons";
+import { Notification as BellIcon, NotificationOff, NotificationRing, Settings } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -101,14 +101,14 @@ export default function NotificationManager() {
  return (
  <Card className="p-6 rounded-lg bg-card border border-border shadow-lg relative overflow-hidden group">
  <div className="absolute -top-4 -right-4 text-primary/5 rotate-12 pointer-events-none group-hover:scale-110 transition-transform duration-700">
- <Bell size={100} />
+ <BellIcon size={100} />
  </div>
 
  <div className="relative z-10 flex flex-col gap-6">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${isEnabled ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
- {isEnabled ? <BellRing size={20} /> : <BellOff size={20} />}
+ {isEnabled ? <NotificationRing size={20} /> : <NotificationOff size={20} />}
  </div>
  <div>
  <h4 className="text-xs text-primary uppercase tracking-widest mb-0.5">Retensi PWA</h4>

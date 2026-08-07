@@ -6,15 +6,15 @@ import {
   GraduationCap,
   Puzzle,
   GitCompare,
-  ListChecks,
-  Hash,
+  ListCheck,
+  Hashtag,
   Mic,
-  Headphones,
+  Headphone,
   Brain,
-  Flame,
+  Fire,
   Target,
   Search,
-  PenTool,
+  Pencil,
 } from "@/components/ui/icons";
 
 export interface ToolItem {
@@ -85,7 +85,7 @@ export const tools: ToolItem[] = [
   {
     title: "JLPT Mini Drill",
     description: "Generate sesi cepat vocab, kanji, dan grammar dari N5 sampai N1.",
-    icon: ListChecks,
+    icon: ListCheck,
     href: ROUTES.TOOLS.JLPT_DRILL,
     color: "text-primary",
     bgColor: "bg-primary/10",
@@ -94,7 +94,7 @@ export const tools: ToolItem[] = [
   {
     title: "Counter Trainer",
     description: "Latih counter 人, 本, 枚, 匹, 台, 冊, 杯, 個, 階, dan 歳 dari konteks benda.",
-    icon: Hash,
+    icon: Hashtag,
     href: ROUTES.TOOLS.COUNTER_TRAINER,
     color: "text-warning",
     bgColor: "bg-warning/10",
@@ -112,7 +112,7 @@ export const tools: ToolItem[] = [
   {
     title: "Dikte Kalimat (Dictation)",
     description: "Dengarkan kalimat contoh audio asli lalu ketik ejaannya untuk melatih pendengaran.",
-    icon: Headphones,
+    icon: Headphone,
     href: ROUTES.TOOLS.DICTATION,
     color: "text-success",
     bgColor: "bg-success/10",
@@ -130,7 +130,7 @@ export const tools: ToolItem[] = [
   {
     title: "Mode Bertahan Hidup",
     description: "Kuis kilat berbatas waktu. Tebak arti kata sebelum kehabisan nyawa dan waktu!",
-    icon: Flame,
+    icon: Fire,
     href: ROUTES.TOOLS.SURVIVAL,
     color: "text-destructive",
     bgColor: "bg-destructive/10",
@@ -157,7 +157,7 @@ export const tools: ToolItem[] = [
   {
     title: "Latihan Menulis",
     description: "Kanvas digital kosong untuk melatih guratan kanji, kana, atau coretan belajar.",
-    icon: PenTool,
+    icon: Pencil,
     href: ROUTES.TOOLS.WRITING,
     color: "text-success",
     bgColor: "bg-success/10",

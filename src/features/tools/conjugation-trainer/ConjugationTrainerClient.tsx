@@ -3,14 +3,13 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
- AlertTriangle,
+ Alert,
  Check,
  Clipboard,
- Flame,
+ Fire,
  GraduationCap,
- Loader2,
- RefreshCcw,
- Sparkles,
+ Loader,
+ Refresh,
  X,
 } from "@/components/ui/icons";
 import { toRomaji } from "wanakana";
@@ -281,7 +280,7 @@ export default function ConjugationTrainerClient({
  </div>
  {groupWarning && (
  <p className="mt-2 text-xs font-bold text-destructive flex items-center gap-1.5 animate-in fade-in slide-in-">
- <AlertTriangle size={14} className="shrink-0" />
+ <Alert size={14} className="shrink-0" />
  {groupWarning}
  </p>
  )}
@@ -412,19 +411,17 @@ export default function ConjugationTrainerClient({
 
  <div className="mt-5 flex flex-wrap gap-2">
  <Button type="button" variant="outline" onClick={handleReset} className="rounded-xl">
- <RefreshCcw data-icon="inline-start" />
+ <Refresh data-icon="inline-start" />
  Reset
  </Button>
  </div>
  </Card>
 
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl md:p-6">
- <div className="mb-4 flex items-center gap-2">
- {conjugation.result ? (
- <Sparkles size={16} className="text-primary" aria-hidden="true" />
- ) : (
- <Loader2 size={16} className="text-muted-foreground" aria-hidden="true" />
- )}
+ <div className="mb-4 flex items-center">
+            {!conjugation.result && (
+              <Loader size={16} className="text-muted-foreground" aria-hidden="true" />
+            )}
  <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
  Tabel Bentuk
  </h2>

@@ -10,7 +10,7 @@
 // IMPOR UTAMA
 // ==========================================
 import { Card } from "@/components/ui/card";
-import { ArrowRightLeft } from "@/components/ui/icons";
+import { ArrowLeftRight } from "@/components/ui/icons";
 
 /**
  * Map database conjugation keys to Indonesian/English labels.
@@ -136,7 +136,7 @@ export function VocabConjugation({
  return (
  <Card className="p-6 md:p-8 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative font-sans glass shadow-[0_0_20px_hsl(var(--primary)/0.02)]">
  <div className="flex items-center gap-3 mb-6">
- <ArrowRightLeft size={18} aria-hidden="true" className="text-primary" />
+ <ArrowLeftRight size={18} aria-hidden="true" className="text-primary" />
  <h2 className="text-sm uppercase tracking-[0.2em] text-foreground">
  {isAdjective ? "Konjugasi Kata Sifat" : "Konjugasi Kata Kerja"}
  </h2>

@@ -14,7 +14,7 @@ import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getPaginatedKanji, PaginatedKanjiResponse } from "@/actions/library.actions";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { Search, Loader2 } from "@/components/ui/icons";
+import { Search, Loader } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/useUIStore";
 
@@ -178,7 +178,7 @@ export default function KanjiListView({ initialData }: KanjiListViewProps) {
  {/* Loading overlay during data fetch */}
  {isFetching && (
  <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 rounded-4xl">
- <Loader2 className="size-10 animate-spin text-primary" />
+ <Loader className="size-10 animate-spin text-primary" />
  </div>
  )}
 

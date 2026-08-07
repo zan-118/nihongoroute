@@ -16,10 +16,11 @@ import {
  BookOpen, 
  Sun, 
  Moon, 
- Monitor, 
- LayoutGrid, 
- Sparkles,
- Sliders
+ Computer, 
+ LayoutGrid,
+ Stack,
+ Sliders,
+ Target
 } from "@/components/ui/icons";
 
 interface PreferencesSectionProps {
@@ -139,7 +140,7 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-lg bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm">
  <div className="flex items-center gap-4">
  <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
- {theme === "light" ? <Sun size={18} /> : theme === "dark" ? <Moon size={18} /> : <Monitor size={18} />}
+ {theme === "light" ? <Sun size={18} /> : theme === "dark" ? <Moon size={18} /> : <Computer size={18} />}
  </div>
  <div>
  <h4 className="text-xs uppercase tracking-wider text-foreground">Tema Aplikasi</h4>
@@ -178,7 +179,7 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
  : "text-muted-foreground hover:text-foreground"
  }`}
  >
- <Monitor size={12} /> Sistem
+ <Computer size={12} /> Sistem
  </button>
  </div>
  </div>
@@ -188,8 +189,8 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
  <div className="p-5 rounded-lg bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm space-y-4">
  <div className="flex items-center gap-4">
  <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
- <Sparkles size={18} />
- </div>
+              <Target size={18} />
+            </div>
  <div>
  <h4 className="text-xs uppercase tracking-wider text-foreground">Target Ulasan Harian</h4>
  <p className="text-[9px] text-muted-foreground font-semibold">Target review hafalan (SRS) per hari</p>

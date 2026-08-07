@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from "react";
-import { Send, Check, Loader2 } from "@/components/ui/icons";
+import { SendPlane, Check, Loader } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { submitContactFormAction } from "@/actions/contact.actions";
@@ -149,12 +149,12 @@ export function ContactForm() {
         >
           {loading ? (
             <span className="flex items-center gap-2">
-              <Loader2 size={16} className="animate-spin" />
+              <Loader size={16} className="animate-spin" />
               <span>Mengirim Pesan...</span>
             </span>
           ) : (
             <span className="flex items-center gap-2">
-              <Send size={16} />
+              <SendPlane size={16} />
               <span>Kirim Pesan</span>
             </span>
           )}

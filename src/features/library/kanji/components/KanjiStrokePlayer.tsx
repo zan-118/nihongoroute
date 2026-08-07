@@ -11,13 +11,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { 
- Play, 
- Pause, 
- RefreshCcw, 
+ PlayCircle, 
+ PauseCircle, 
+ Refresh, 
  ChevronLeft, 
  ChevronRight, 
  Zap, 
- Hash 
+ Hashtag 
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { useKanjiSvg } from "./hooks/useKanjiSvg";
@@ -269,10 +269,10 @@ export default function KanjiStrokePlayer({
  variant="ghost"
  size="icon" 
  onClick={togglePlay}
- aria-label={status === "playing" ? "Pause animation" : "Play animation"}
+ aria-label={status === "playing" ? "PauseCircle animation" : "PlayCircle animation"}
  className="rounded-xl bg-primary/10 text-primary hover:bg-primary/20 col-span-1"
  >
- {status === "playing" ? <Pause size={20} aria-hidden="true" /> : <Play size={20} aria-hidden="true" className="ml-0.5" />}
+ {status === "playing" ? <PauseCircle size={20} aria-hidden="true" /> : <PlayCircle size={20} aria-hidden="true" className="ml-0.5" />}
  </Button>
 
  <Button
@@ -292,7 +292,7 @@ export default function KanjiStrokePlayer({
  aria-label="Reset animation"
  className="rounded-xl hover:bg-background/10"
  >
- <RefreshCcw size={18} aria-hidden="true" />
+ <Refresh size={18} aria-hidden="true" />
  </Button>
 
  <Button
@@ -302,11 +302,11 @@ export default function KanjiStrokePlayer({
  aria-label={showNumbers ? "Hide stroke numbers" : "Show stroke numbers"}
  className={`rounded-xl transition-colors ${showNumbers ? "text-primary bg-primary/5" : "text-muted-foreground"}`}
  >
- <Hash size={18} aria-hidden="true" />
+ <Hashtag size={18} aria-hidden="true" />
  </Button>
  </div>
 
- {/* Info Kecepatan & Progres */}
+ {/* Information Kecepatan & Progres */}
  <div className="flex items-center justify-between px-2">
  <div className="flex gap-1">
  {[0.5, 1, 1.5, 2].map((s) => (

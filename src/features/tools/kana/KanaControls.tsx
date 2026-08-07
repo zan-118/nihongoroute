@@ -7,7 +7,7 @@
 // Import & Dependencies
 // ==========================================
 import { Button } from "@/components/ui/button";
-import { Swords } from "@/components/ui/icons";
+import { Sword } from "@/components/ui/icons";
 import { KanaType, KanaCategory } from "./kana-data";
 
 // ==========================================
@@ -106,7 +106,7 @@ export function KanaControls({
  onClick={startQuiz}
  className={`w-full md:w-auto px-6 py-3 h-auto rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all duration-300 ${themeAccent} text-foreground shadow-lg hover:opacity-90 border-none`}
  >
- <Swords size={16} className="mr-2" /> Latihan
+ <Sword size={16} className="mr-2" /> Latihan
  </Button>
  </div>
  </div>

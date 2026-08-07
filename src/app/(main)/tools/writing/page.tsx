@@ -10,7 +10,7 @@
 // IMPOR
 // ======================
 import React, { Suspense } from "react";
-import { ChevronLeft, Download, Share2 } from "@/components/ui/icons";
+import { ChevronLeft, Download, Share } from "@/components/ui/icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import WritingCanvas from "@/features/tools/stroke-canvas/WritingCanvas";
@@ -107,7 +107,7 @@ function FreeWritingContent() {
  </Card>
  <Card className="p-6 rounded-lg border border-border bg-muted/30 text-center">
  <div className="w-10 h-10 bg-background rounded-xl border border-border flex items-center justify-center mx-auto mb-3">
- <Share2 size={18} className="text-muted-foreground" />
+ <Share size={18} className="text-muted-foreground" />
  </div>
  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Bagikan Karya</p>
  </Card>

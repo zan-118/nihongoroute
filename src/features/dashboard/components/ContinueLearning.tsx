@@ -13,7 +13,7 @@
 import { useUserStore } from "@/store/useUserStore";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Play, ArrowRight, BookOpen, Check } from "@/components/ui/icons";
+import { PlayCircle, ArrowRight, BookOpen, Check } from "@/components/ui/icons";
 import Link from "next/link";
 import { useMemo } from "react";
 import { m } from "framer-motion";
@@ -215,7 +215,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
  <Link href={`/courses/${activeData.courseSlug}/${activeData.lessonSlug}`} className="flex items-center justify-between gap-4">
  <span>{activeData.isNew ? "Mulai" : "Lanjut"}</span>
  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-background/20 group-hover:bg-primary-foreground/20 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:rotate-12">
- <Play size={14} fill="currentColor" />
+ <PlayCircle size={14} fill="currentColor" />
  </span>
  </Link>
  </Button>

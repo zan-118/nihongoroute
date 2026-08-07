@@ -10,11 +10,11 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { m, Variants } from "framer-motion";
 import {
- Activity,
- Clock,
+ Pulse,
+ Time,
  Target,
  ChevronRight,
- AlertTriangle,
+ Alert,
 } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -107,7 +107,7 @@ export function ExamsView({ exams }: ExamsViewProps) {
  <m.div variants={itemVariants} className="mb-12">
  <Card className="p-5 md:p-6 border-warning/30 bg-warning/5 flex items-start gap-4 rounded-lg shadow-lg">
  <div className="size-10 rounded-xl bg-warning/10 border border-warning/20 flex items-center justify-center shrink-0">
- <AlertTriangle className="text-warning" size={20} />
+ <Alert className="text-warning" size={20} />
  </div>
  <div>
  <h4 className="text-warning uppercase tracking-widest text-xs md:text-xs mb-1">
@@ -263,7 +263,7 @@ export function ExamsView({ exams }: ExamsViewProps) {
  })()}
  </div>
  <div className="w-10 h-10 md:w-11 md:h-11 bg-muted border border-border/80 rounded-lg flex items-center justify-center text-muted-foreground group-hover:bg-destructive group-hover:text-destructive-foreground group-hover:border-none transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
- <Activity size={18} />
+ <Pulse size={18} />
  </div>
  </div>
 
@@ -280,7 +280,7 @@ export function ExamsView({ exams }: ExamsViewProps) {
  <div className="mt-auto relative z-10">
  <div className="grid grid-cols-2 gap-3 mb-8 md:mb-10">
  <div className="p-4 flex flex-col gap-1 items-center text-center rounded-lg bg-muted border border-border/60 group-hover:border-destructive/20 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
- <Clock size={16} className="text-destructive mb-1" />
+ <Time size={16} className="text-destructive mb-1" />
  <span className="text-[8px] md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
  Waktu
  </span>

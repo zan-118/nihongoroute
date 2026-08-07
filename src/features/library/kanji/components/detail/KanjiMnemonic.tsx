@@ -7,7 +7,6 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { Card } from "@/components/ui/card";
-import { Sparkles } from "@/components/ui/icons";
 import { MnemonicEditor } from "@/features/srs/mnemonic/MnemonicEditor";
 
 // ==========================================
@@ -38,7 +37,7 @@ export function KanjiMnemonic({ mnemonics, wordId }: KanjiMnemonicProps) {
  {mnemonics && (
  <div className="mb-6 relative z-10">
  <div className="flex items-center gap-3 mb-6">
- <Sparkles size={20} className="text-warning" aria-hidden="true" />
+ 
  <h2 className="text-sm uppercase tracking-[0.2em] text-foreground">Memory Mnemonic</h2>
  </div>
  <div className="prose dark:prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-p:text-warning italic font-medium">

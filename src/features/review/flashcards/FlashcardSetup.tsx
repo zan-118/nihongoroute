@@ -8,7 +8,7 @@
 // ==========================================
 import React, { useState } from "react";
 import { m } from "framer-motion";
-import { Zap, Flame, PenTool, Hash, LayoutGrid, Layers, Play, Mic, BookOpen } from "@/components/ui/icons";
+import { Zap, Fire, Pencil, Hashtag, LayoutGrid, Stack, PlayCircle, Mic, BookOpen } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 // ==========================================
@@ -42,9 +42,9 @@ const JLPT_LEVELS = [
 /** Study mode options with icons and descriptions. */
 const MODES = [
  { id: "vocab" as const, label: "Kosakata", icon: <Zap size={18} />, desc: "Latihan bacaan & makna kata" },
- { id: "kanji" as const, label: "Kanji", icon: <PenTool size={18} />, desc: "Hafalkan bentuk & On/Kun" },
+ { id: "kanji" as const, label: "Kanji", icon: <Pencil size={18} />, desc: "Hafalkan bentuk & On/Kun" },
  { id: "sentence" as const, label: "Kalimat", icon: <BookOpen size={18} />, desc: "Pahami kalimat contoh" },
- { id: "survival" as const, label: "Survival", icon: <Flame size={18} />, desc: "Tantangan berbatas waktu" },
+ { id: "survival" as const, label: "Survival", icon: <Fire size={18} />, desc: "Tantangan berbatas waktu" },
  { id: "pronunciation" as const, label: "Pelafalan", icon: <Mic size={18} />, desc: "Uji akurasi bicaramu" }
 ];
 
@@ -95,7 +95,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
  {/* Level Selection */}
  <div className="space-y-4">
  <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-muted-foreground mb-2">
- <Layers size={16} />
+ <Stack size={16} />
  <h2>JLPT Level</h2>
  </div>
  <div className="flex flex-wrap gap-3">
@@ -152,7 +152,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
  {/* Amount Selection */}
  <div className="space-y-4">
  <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-muted-foreground mb-2">
- <Hash size={16} />
+ <Hashtag size={16} />
  <h2>Jumlah Kartu</h2>
  </div>
  <div className="flex flex-wrap gap-3">
@@ -179,7 +179,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
  onClick={() => onStart(level, mode, amount)}
  className="w-full py-6 rounded-lg text-lg font-black uppercase tracking-widest bg-primary hover:bg-primary/90 text-primary-foreground shadow-md group transition-all"
  >
- Mulai Sesi <Play size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+ Mulai Sesi <PlayCircle size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
  </Button>
  </div>
 

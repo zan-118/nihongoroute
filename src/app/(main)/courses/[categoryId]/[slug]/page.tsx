@@ -12,7 +12,7 @@ import React from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { FileText, Book, Edit, MessageSquare, BookOpen, Lightbulb, GraduationCap } from "@/components/ui/icons";
+import { FileText, Book, Edit, Message, BookOpen, Lightbulb, GraduationCap } from "@/components/ui/icons";
 
 import QuizEngine from "@/features/exams/components/quiz-engine/QuizEngine";
 import ContentBlockRenderer from "@/features/courses/lessons/ContentBlockRenderer";
@@ -191,7 +191,7 @@ export default async function LessonPage({ params }: Props) {
  { href: "#article-content", label: "Artikel", icon: FileText, show: !!lesson.articles },
  { href: "#vocabulary", label: "Kosakata", icon: Book, show: vocabList.length > 0 },
  { href: "#kanji", label: "Kanji", icon: GraduationCap, show: kanjiList.length > 0 },
- { href: "#scenario", label: "Dialog", icon: MessageSquare, show: listeningList.length > 0 },
+ { href: "#scenario", label: "Dialog", icon: Message, show: listeningList.length > 0 },
  { href: "#quiz", label: "Kuis", icon: Edit, show: formattedQuizzes.length > 0 },
  ].filter((l) => l.show);
  if (jumpLinks.length === 0) return null;

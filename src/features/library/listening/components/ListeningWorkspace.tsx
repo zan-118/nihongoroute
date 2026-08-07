@@ -11,23 +11,22 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import {
  Mic,
- ScanText,
- Volume2,
+ Scan,
+ VolumeUp,
  Check,
  X,
  Eye,
  EyeOff,
- RefreshCcw,
- Sparkles,
+ Refresh,
  ChevronLeft,
  ChevronRight,
- ClipboardPenLine,
+ Draft,
  Target,
  LayoutGrid,
- Play,
- Pause,
- Headphones,
- PenTool
+ PlayCircle,
+ PauseCircle,
+ Headphone,
+ Pencil
 } from "@/components/ui/icons";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -259,7 +258,7 @@ export default function ListeningWorkspace({
  activeTab === "study" && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
  )}
  >
- <Headphones size={14} />
+ <Headphone size={14} />
  <span><span className="hidden sm:inline">Belajar & </span>Transkrip</span>
  </Button>
  <Button
@@ -271,7 +270,7 @@ export default function ListeningWorkspace({
  activeTab === "dictation" && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
  )}
  >
- <PenTool size={14} />
+ <Pencil size={14} />
  <span><span className="hidden sm:inline">Latihan </span>Dikte</span>
  </Button>
  {quiz.length > 0 && (
@@ -283,7 +282,7 @@ export default function ListeningWorkspace({
  activeTab === "quiz" && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
  )}
  >
- <ClipboardPenLine size={14} />
+ <Draft size={14} />
  <span><span className="hidden sm:inline">Kuis </span>Pemahaman</span>
  </Button>
  )}
@@ -380,7 +379,7 @@ export default function ListeningWorkspace({
  </p>
  )}
 
- {/* Play button per line */}
+ {/* PlayCircle button per line */}
  <button
  onClick={(e) => {
  e.stopPropagation();
@@ -393,7 +392,7 @@ export default function ListeningWorkspace({
  className="absolute top-4 right-4 p-1 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
  aria-label="Putar baris audio"
  >
- <Volume2 size={14} className={cn(isSpeaking && "text-success animate-bounce")} />
+ <VolumeUp size={14} className={cn(isSpeaking && "text-success animate-bounce")} />
  </button>
  </m.div>
  </div>
@@ -480,7 +479,7 @@ export default function ListeningWorkspace({
  }}
  className="rounded-xl h-8 text-[10px] font-bold"
  >
- <Volume2 size={12} className="mr-1" /> Putar Audio
+ <VolumeUp size={12} className="mr-1" /> Putar Audio
  </Button>
  </div>
 
@@ -676,9 +675,9 @@ export default function ListeningWorkspace({
  size="icon"
  onClick={() => isPlayingPlaylist ? pausePlaylist() : playPlaylist(transcript, currentActiveIndex >= 0 ? currentActiveIndex : 0)}
  className="rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all duration-300 active:scale-90 w-10 h-10 flex items-center justify-center shrink-0"
- aria-label={isPlayingPlaylist ? "Pause Playlist" : "Putar Playlist"}
+ aria-label={isPlayingPlaylist ? "PauseCircle Playlist" : "Putar Playlist"}
  >
- {isPlayingPlaylist ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" className="ml-0.5" />}
+ {isPlayingPlaylist ? <PauseCircle size={20} fill="currentColor" /> : <PlayCircle size={20} fill="currentColor" className="ml-0.5" />}
  </Button>
  <div className="flex flex-col">
  <span className="text-[10px] font-black uppercase tracking-widest text-primary/70 mb-0.5">

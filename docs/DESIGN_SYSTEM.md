@@ -34,24 +34,24 @@
 
 ### Light Mode — "Hiru" (昼, siang)
 
-| Token | Nama Tradisional | Hex / HSL | Peran |
-|---|---|---|---|
-| `--background` | Washi (和紙) | `#F7F3EA` (`40 25% 95%`) | Background utama |
-| `--foreground` | Sumi (墨) | `#0D0D0D` (`0 0% 5%`) | Teks utama |
-| `--card`, `--surface` | Gofun (胡粉) | `#FDFBF6` (`40 30% 98%`) | Permukaan card hangat |
-| `--primary` | Ai-iro (藍色) | `#22456B` (`215 80% 32%`) | Tombol/struktur utama |
-| `--accent` | Shu-iro (朱色) | `#BF4326` (`11 80% 48%`) | Aksen tunggal / CTA utama |
-| `--border`, `--input` | Washi-border | `35 15% 82%` | Garis batas hangat (harmonis dengan krem) |
-| `--muted-foreground` | Sumi-soft | `35 12% 40%` | Teks sekunder hangat & tenang |
+| Token                 | Nama Tradisional | Hex / HSL                 | Peran                                     |
+| --------------------- | ---------------- | ------------------------- | ----------------------------------------- |
+| `--background`        | Washi (和紙)     | `#F7F3EA` (`40 25% 95%`)  | Background utama                          |
+| `--foreground`        | Sumi (墨)        | `#0D0D0D` (`0 0% 5%`)     | Teks utama                                |
+| `--card`, `--surface` | Gofun (胡粉)     | `#FDFBF6` (`40 30% 98%`)  | Permukaan card hangat                     |
+| `--primary`           | Ai-iro (藍色)    | `#22456B` (`215 80% 32%`) | Tombol/struktur utama                     |
+| `--accent`            | Shu-iro (朱色)   | `#BF4326` (`11 80% 48%`)  | Aksen tunggal / CTA utama                 |
+| `--border`, `--input` | Washi-border     | `35 15% 82%`              | Garis batas hangat (harmonis dengan krem) |
+| `--muted-foreground`  | Sumi-soft        | `35 12% 40%`              | Teks sekunder hangat & tenang             |
 
 ### Dark Mode — "Yoru" (夜, malam)
 
-| Token | Nama Tradisional | Hex | Peran |
-|---|---|---|---|
-| `--background` | Kuro-washi (黒和紙) | `#141413` | Background utama |
-| `--card`, `--surface` | Kuro-sumi (黒墨) | `#1D1C1B` | Permukaan card |
-| `--primary` | Ai-iro terang | `#4C7AA8` | Tombol/struktur utama |
-| `--accent` | Shu-iro terang | `#D8583B` | Aksen tunggal / CTA utama |
+| Token                 | Nama Tradisional    | Hex       | Peran                     |
+| --------------------- | ------------------- | --------- | ------------------------- |
+| `--background`        | Kuro-washi (黒和紙) | `#141413` | Background utama          |
+| `--card`, `--surface` | Kuro-sumi (黒墨)    | `#1D1C1B` | Permukaan card            |
+| `--primary`           | Ai-iro terang       | `#4C7AA8` | Tombol/struktur utama     |
+| `--accent`            | Shu-iro terang      | `#D8583B` | Aksen tunggal / CTA utama |
 
 ---
 

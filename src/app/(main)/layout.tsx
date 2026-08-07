@@ -13,7 +13,6 @@ import { ProgressProvider } from "@/components/providers/ProgressProvider";
 import NavWrapper from "@/components/layout/NavWrapper";
 
 const AppClientAddons = dynamic(() => import("@/components/providers/AppClientAddons"));
-const DeferredOnboardingTour = dynamic(() => import("@/components/providers/DeferredOnboardingTour"));
 
 // ==========================================
 // Main Layout Component
@@ -36,8 +35,6 @@ export default function MainLayout({ children }: { children: ReactNode }) {
  </NavWrapper>
  {/* AppClientAddons mounts global client utilities */}
  <AppClientAddons />
- {/* DeferredOnboardingTour triggers user onboarding flow */}
- <DeferredOnboardingTour />
  </ProgressProvider>
  );
 }

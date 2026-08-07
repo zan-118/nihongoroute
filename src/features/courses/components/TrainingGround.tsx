@@ -12,7 +12,7 @@
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { m, Variants } from "framer-motion";
-import { Layers, PenTool, Flame, Sparkles, ChevronRight } from "@/components/ui/icons";
+import { Stack, Pencil, Fire, ChevronRight } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 
 // ==========================================
@@ -168,7 +168,7 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
  {
  title: "Kosakata",
  desc: "Flashcard & Sistem SRS",
- icon: Layers,
+ icon: Stack,
  colorClass: "text-primary",
  rgb: "var(--primary)",
  href: `/tools/flashcards?category=${categoryId}&mode=vocab`,
@@ -176,7 +176,7 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
  {
  title: "Laboratorium Kanji",
  desc: "Urutan Goresan & Pengenalan",
- icon: PenTool,
+ icon: Pencil,
  colorClass: "text-secondary",
  rgb: "var(--secondary)",
  href: `/tools/flashcards?category=${categoryId}&mode=kanji`,
@@ -184,7 +184,7 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
  {
  title: "Game Bertahan Hidup",
  desc: "Tantangan Kecepatan & Akurasi",
- icon: Flame,
+ icon: Fire,
  colorClass: "text-destructive",
  rgb: "var(--destructive)",
  href: `/tools/flashcards?category=${categoryId}&mode=survival`,
@@ -196,7 +196,7 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
  <div className="flex items-center gap-4 mb-5 md:mb-8">
  <div className="space-y-0.5">
  <h3 className="text-base sm:text-lg md:text-xl uppercase tracking-tight text-foreground flex items-center gap-2">
- <Sparkles size={16} className={themeColor} /> Area Latihan
+  Area Latihan
  </h3>
  <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground/60">
  Optimalkan Hafalan & Keterampilan

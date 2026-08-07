@@ -9,7 +9,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { PenTool, ExternalLink } from "@/components/ui/icons";
+import { Pencil, ExternalLink } from "@/components/ui/icons";
 import { TTSReader } from "@/features/media";
 import { FlashcardThemeContext } from "./types";
 import Link from "next/link";
@@ -221,7 +221,7 @@ export function FlashcardBack({
  aria-label="Latih menulis kanji"
  className="flex-1 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-black uppercase tracking-widest h-7 rounded-lg text-[8px] md:text-[10px]"
  >
- <PenTool size={10} className="mr-1" aria-hidden="true" />
+ <Pencil size={10} className="mr-1" aria-hidden="true" />
  <span>Tulis</span>
  </Button>
  )}

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Lock as LockIcon, AlertTriangle } from "@/components/ui/icons";
+import { Lock as LockIcon, Alert } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { SECTION_LABELS } from "../constants";
 import { ExamCountdown } from "../ExamCountdown";

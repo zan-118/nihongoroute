@@ -1,5 +1,5 @@
 import React from "react";
-import { Info } from "@/components/ui/icons";
+import { Information } from "@/components/ui/icons";
 import { ContentBlock } from "@/types/database";
 import { parseInlineStyles } from "@/lib/utils/markdown-parser";
 
@@ -11,7 +11,7 @@ export function CalloutBlock({ block }: CalloutBlockProps) {
  return (
  <div className="flex gap-4 p-6 rounded-2xl shadow-sm bg-card border border-border/50 dark:border-white/10 relative overflow-hidden group hover:border-primary/45 transition-all duration-500">
  <div className="absolute top-0 left-0 w-1.5 h-full bg-primary" />
- <Info className="size-5 text-primary flex-shrink-0 mt-0.5" />
+ <Information className="size-5 text-primary flex-shrink-0 mt-0.5" />
  <div className="space-y-2">
  {block.title && (
  <p className="text-xs font-black uppercase tracking-wider text-primary">{block.title}</p>

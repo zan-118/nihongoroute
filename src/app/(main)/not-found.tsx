@@ -6,7 +6,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { MapPin, ArrowLeft, LayoutDashboard } from "@/components/ui/icons";
+import { MapPin, ArrowLeft, Dashboard } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 
 /**
@@ -68,7 +68,7 @@ export default function MainNotFound() {
  <div className="flex flex-col sm:flex-row items-center gap-3 w-full justify-center">
  <Button asChild size="lg" className="w-full sm:w-auto font-black uppercase tracking-widest text-xs h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_15px_hsl(var(--primary)/0.15)] hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)] duration-300">
  <Link href="/dashboard" className="flex items-center justify-center gap-2">
- <LayoutDashboard size={14} />
+ <Dashboard size={14} />
  Dashboard
  </Link>
  </Button>

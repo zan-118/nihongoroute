@@ -10,7 +10,7 @@
 // ==========================================
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Volume2, AudioLines } from "@/components/ui/icons";
+import { VolumeUp, SoundModule } from "@/components/ui/icons";
 import { useTTSReader } from "./useTTSReader";
 
 // ==========================================
@@ -60,9 +60,9 @@ export function TTSReader({ text, minimal = false, speaker, small = false, audio
  aria-label={isPlaying ? "Berhenti mendengarkan" : "Dengarkan pengucapan"}
  >
  {isPlaying ? (
- <AudioLines size={small ? 14 : minimal ? 24 : 16} className="animate-pulse" />
+ <SoundModule size={small ? 14 : minimal ? 24 : 16} className="animate-pulse" />
  ) : (
- <Volume2 size={small ? 14 : minimal ? 24 : 16} />
+ <VolumeUp size={small ? 14 : minimal ? 24 : 16} />
  )}
  {!minimal && !small && (isPlaying ? "Hentikan" : "Dengar")}
  </Button>

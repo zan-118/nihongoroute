@@ -9,7 +9,7 @@
 
 import React, { useState, useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, MessageSquare, RefreshCcw, Play } from "@/components/ui/icons";
+import { ChevronLeft, ChevronRight, Message, Refresh, PlayCircle } from "@/components/ui/icons";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -164,7 +164,7 @@ export function StickerScene({
  {/* Header Overlay */}
  <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-30">
  <div className="px-3 py-1.5 rounded-xl bg-background/80 border border-border/60 flex items-center gap-1.5 shadow-sm">
- <MessageSquare size={13} className="text-primary" />
+ <Message size={13} className="text-primary" />
  <span className="text-[10px] font-black uppercase tracking-wider text-foreground">{title}</span>
  </div>
  <div className="text-[10px] font-black text-white px-2.5 py-1 rounded-lg bg-black/60 border border-white/10 shadow-sm">
@@ -250,7 +250,7 @@ export function StickerScene({
  title="Putar dialog baris ini"
  aria-label="Putar dialog baris ini"
  >
- <Play size={10} fill="currentColor" />
+ <PlayCircle size={10} fill="currentColor" />
  <span>Putar</span>
  </button>
  )}
@@ -260,7 +260,7 @@ export function StickerScene({
  title="Reset"
  aria-label="Reset"
  >
- <RefreshCcw size={13} />
+ <Refresh size={13} />
  </button>
  <button
  onClick={handlePrev}

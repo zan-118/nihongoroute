@@ -12,18 +12,17 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { m, AnimatePresence } from "framer-motion";
 import {
- Volume2,
- VolumeX,
+ VolumeUp,
+ VolumeMute,
  ChevronLeft,
  ChevronRight,
-  Headphones,
-  RefreshCw,
-  Sparkles,
+  Headphone,
+  Restart,
   Check,
   X,
- HelpCircle,
+ Question,
  BookOpen,
- Play,
+ PlayCircle,
  Trophy,
 } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
@@ -109,7 +108,7 @@ export default function DictationClient() {
  };
 
  /**
- * Play TTS audio for given text. Fallback to Web Speech API if fetch fails.
+ * PlayCircle TTS audio for given text. Fallback to Web Speech API if fetch fails.
  * @param text Japanese text to speak.
  */
  const speakSentence = async (text: string) => {
@@ -327,11 +326,11 @@ export default function DictationClient() {
  >
  {loading ? (
  <>
- <RefreshCw className="animate-spin size-4" /> Memuat Kalimat...
+ <Restart className="animate-spin size-4" /> Memuat Kalimat...
  </>
  ) : (
  <>
- Mulai Latihan <Play size={16} className="group-hover:translate-x-0.5 transition-transform" />
+ Mulai Latihan <PlayCircle size={16} className="group-hover:translate-x-0.5 transition-transform" />
  </>
  )}
  </Button>
@@ -395,12 +394,12 @@ export default function DictationClient() {
  >
  {audioPlaying ? (
  <>
- <VolumeX size={32} />
+ <VolumeMute size={32} />
  <span className="text-[8px] font-black uppercase tracking-widest">Hentikan</span>
  </>
  ) : (
  <>
- <Volume2 size={32} />
+ <VolumeUp size={32} />
  <span className="text-[8px] font-black uppercase tracking-widest">Putar Suara</span>
  </>
  )}
@@ -494,7 +493,7 @@ export default function DictationClient() {
  onClick={() => setIsRevealed(true)}
  className="flex-1 py-6 rounded-xl text-xs font-bold uppercase tracking-widest border-border bg-card/20 hover:bg-card/40 gap-2"
  >
- <HelpCircle size={16} /> Buka Jawaban
+ <Question size={16} /> Buka Jawaban
  </Button>
  <Button
  onClick={handleCheck}

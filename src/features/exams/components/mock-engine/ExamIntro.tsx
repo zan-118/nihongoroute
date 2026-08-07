@@ -9,7 +9,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, Loader2 } from "@/components/ui/icons";
+import { ErrorWarning, Loader } from "@/components/ui/icons";
 import Link from "next/link";
 import { ExamData } from "./types";
 
@@ -51,7 +51,7 @@ export function ExamIntro({
  <div className="absolute top-0 right-0 size-[300px] bg-destructive/5 blur-[60px] rounded-full pointer-events-none ambient-glow will-change-transform" />
 
  <Card className="size-24 mx-auto neo-inset flex items-center justify-center rounded-2xl mb-8 bg-[hsl(var(--muted)/0.5)] border border-border shadow-none">
- <AlertCircle
+ <ErrorWarning
  size={40}
  aria-hidden="true"
  className="text-warning drop-shadow-sm dark:drop-shadow-[0_0_15px_hsl(var(--warning)/0.5)]"
@@ -108,7 +108,7 @@ export function ExamIntro({
  disabled={isStarting}
  className="w-full bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest h-auto py-5 px-10 rounded-xl transition-all shadow-lg active:scale-95 text-xs sm:text-xs border-none"
  >
- {isStarting && <Loader2 size={16} aria-hidden="true" className="mr-2 animate-spin" />}
+ {isStarting && <Loader size={16} aria-hidden="true" className="mr-2 animate-spin" />}
  {isStarting ? "Menyiapkan Sesi" : "Mulai Sekarang"}
  </Button>
  </div>

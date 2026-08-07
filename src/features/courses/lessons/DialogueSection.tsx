@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import React from "react";
-import { MessageSquare, Play, Pause } from "@/components/ui/icons";
+import { Message, PlayCircle, PauseCircle } from "@/components/ui/icons";
 import { SmartJapanese } from "@/components/ui/japanese";
 import { TTSReader, OfflineAudio } from "@/features/media";
 import MediaAsset from "@/components/ui/MediaAsset";
@@ -174,7 +174,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
  <div>
  <h3 className="text-lg md:text-xl uppercase tracking-tight mb-2">{l.title}</h3>
  <p className="text-xs text-muted-foreground font-medium flex items-center gap-2">
- <MessageSquare size={12} className="text-secondary" /> Dengarkan dan pelajari percakapan di bawah ini
+ <Message size={12} className="text-secondary" /> Dengarkan dan pelajari percakapan di bawah ini
  </p>
  </div>
  <div className="flex flex-wrap items-center gap-3 w-full">
@@ -201,9 +201,9 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
  )}
  >
  {isCurrentPlaying ? (
- <Pause size={13} className="animate-pulse" />
+ <PauseCircle size={13} className="animate-pulse" />
  ) : (
- <Play size={13} />
+ <PlayCircle size={13} />
  )}
  <span>
  {isCurrentPlaying ? "Jeda Dialog (AI)" : "Putar Dialog (AI)"}

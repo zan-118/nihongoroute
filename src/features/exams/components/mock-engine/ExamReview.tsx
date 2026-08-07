@@ -11,7 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import {
- AlertTriangle,
+ Alert,
  ArrowLeft,
  ArrowRight,
  BookOpen,
@@ -20,7 +20,7 @@ import {
  Clipboard,
  Filter,
  Target,
- Volume2,
+ VolumeUp,
  X,
  Star,
  type IconType,
@@ -58,7 +58,7 @@ type ReviewFilter = "mistakes" | "all";
 const ACTION_ICONS: Record<ExamReviewAction["id"], IconType> = {
  "weak-points": Target,
  flashcards: Clipboard,
- listening: Volume2,
+ listening: VolumeUp,
  reading: BookOpen,
  grammar: Brain,
  vocab: BookOpen,
@@ -91,7 +91,7 @@ function getQuestionStatus(insight: ExamReviewQuestionInsight) {
   if (!insight.isAnswered) {
     return {
       label: "Kosong",
-      icon: AlertTriangle,
+      icon: Alert,
       className: "bg-warning/10 text-warning border-warning/20",
     };
   }
@@ -261,7 +261,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
  label: "Kosong",
  value: analysis.unansweredCount,
  detail: "belum dijawab",
- icon: AlertTriangle,
+ icon: Alert,
  className: "text-warning border-warning/25 bg-warning/10",
  },
  ];
@@ -580,7 +580,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
  {q.audioUrl && (
  <div className="mb-8 flex flex-col gap-4 rounded-lg border border-border bg-[hsl(var(--muted)/0.2)] p-5 shadow-none dark:bg-[hsl(var(--background)/0.3)]">
  <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
- <Volume2 size={16} aria-hidden="true" className="text-primary" />
+ <VolumeUp size={16} aria-hidden="true" className="text-primary" />
  Audio Track (Review)
  </p>
  <audio
@@ -655,7 +655,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
 
  {!insight.isAnswered && (
  <div className="mt-6 flex items-start gap-3 rounded-lg border border-warning/20 bg-warning/10 p-4 text-warning">
- <AlertTriangle size={18} aria-hidden="true" className="mt-0.5 shrink-0" />
+ <Alert size={18} aria-hidden="true" className="mt-0.5 shrink-0" />
  <p className="text-xs font-bold leading-relaxed">
  Soal ini belum dijawab saat ujian, jadi dihitung sebagai bagian dari review kesalahan.
  </p>

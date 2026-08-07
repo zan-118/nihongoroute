@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowDown, Check, RefreshCcw, Shuffle, Sparkles, X } from "@/components/ui/icons";
+import { ArrowDown, Check, Refresh, Shuffle, X, Pencil } from "@/components/ui/icons";
 import {
  isBuiltSentenceCorrect,
  SENTENCE_BUILDER_PROMPTS,
@@ -137,9 +137,9 @@ export default function SentenceBuilderClient() {
  </Button>
  <div className="flex flex-col gap-3">
  <div className="flex items-center gap-3">
- <div className="flex size-12 items-center justify-center rounded-lg border border-success/20 bg-success/10 text-success">
- <Sparkles size={24} aria-hidden="true" />
- </div>
+            <div className="flex size-12 items-center justify-center rounded-lg border border-success/20 bg-success/10 text-success">
+              <Pencil size={22} className="text-success" />
+            </div>
  <Badge className="w-fit rounded-xl px-3 py-1">Sentence Builder</Badge>
  </div>
  <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
@@ -274,7 +274,7 @@ export default function SentenceBuilderClient() {
  Acak
  </Button>
  <Button type="button" variant="ghost" onClick={handleReset} className="rounded-xl">
- <RefreshCcw data-icon="inline-start" />
+ <Refresh data-icon="inline-start" />
  Reset
  </Button>
  </div>
@@ -345,16 +345,14 @@ export default function SentenceBuilderClient() {
  </Card>
 
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
- <div className="mb-4 flex items-center gap-2">
- {hasChecked ? (
- isCorrect ? (
- <Check size={16} className="text-success" />
- ) : (
- <X size={16} className="text-warning" />
- )
- ) : (
- <Sparkles size={16} className="text-primary" />
- )}
+        <div className="mb-4 flex items-center gap-2">
+          {hasChecked && (
+            isCorrect ? (
+              <Check size={16} className="text-success" />
+            ) : (
+              <X size={16} className="text-warning" />
+            )
+          )}
  <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
  Feedback
  </h2>

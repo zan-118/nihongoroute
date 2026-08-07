@@ -9,7 +9,7 @@
 import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Cloud, Check, RefreshCw } from "@/components/ui/icons";
+import { Cloud, Check, Restart } from "@/components/ui/icons";
 
 interface SyncStatusSectionProps {
  dirtySrsCount: number;
@@ -66,7 +66,7 @@ export default function SyncStatusSection({
  : 'bg-background/10 text-muted-foreground border border-border/80 opacity-50 cursor-not-allowed'
  }`}
  >
- <RefreshCw size={18} className={`mr-3 ${isSyncing ? 'animate-spin' : ''}`} />
+ <Restart size={18} className={`mr-3 ${isSyncing ? 'animate-spin' : ''}`} />
  {isSyncing ? "Menyinkronkan..." : "Sinkronkan Sekarang"}
  </Button>
  </div>

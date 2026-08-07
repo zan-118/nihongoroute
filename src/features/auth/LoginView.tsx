@@ -10,7 +10,7 @@
 // Import & Dependencies
 // ==========================================
 import React, { Suspense } from "react";
-import { User, LogIn, ChevronRight, Sparkles, Mail, Lock, ArrowLeft } from "@/components/ui/icons";
+import { User, LoginBox, ChevronRight, Mail, Lock, ArrowLeft } from "@/components/ui/icons";
 import Link from "next/link";
 import { useAuth } from "@/features/user/useAuth";
 import { Card } from "@/components/ui/card";
@@ -70,7 +70,7 @@ function LoginContent() {
 
  <div className="text-center mb-6">
  <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-[0_0_20px_hsl(var(--primary)/0.15)]">
- <Sparkles className="text-primary" size={32} />
+ 
  </div>
  <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2 uppercase tracking-tight font-japanese">
  {isRegistering ? "Yuk, bikin akun baru!" : "Siap lanjut belajar?"}
@@ -202,7 +202,7 @@ function LoginContent() {
  <div className="font-bold">Coba Intip Dulu (Mode Tamu)</div>
  </div>
  </div>
- <LogIn size={16} className="text-muted-foreground" />
+ <LoginBox size={16} className="text-muted-foreground" />
  </button>
  </div>
  </Card>

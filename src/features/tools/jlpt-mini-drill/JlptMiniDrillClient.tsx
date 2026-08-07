@@ -6,12 +6,11 @@ import {
   ArrowRight,
   Check,
   Clipboard,
-  Flame,
-  HelpCircle,
-  ListChecks,
-  RefreshCcw,
+  Fire,
+  Question,
+  ListCheck,
+  Refresh,
   Shuffle,
-  Sparkles,
   Trophy,
   X,
 } from "@/components/ui/icons";
@@ -213,7 +212,7 @@ export default function JlptMiniDrillClient({
  <div className="flex flex-col gap-3">
  <div className="flex items-center gap-3">
  <div className="flex size-12 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
- <ListChecks size={24} aria-hidden="true" />
+ <ListCheck size={24} aria-hidden="true" />
  </div>
  <Badge className="w-fit rounded-xl px-3 py-1">Latihan Mini JLPT</Badge>
  </div>
@@ -395,7 +394,7 @@ export default function JlptMiniDrillClient({
 
  <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
  <Button type="button" variant="ghost" onClick={() => resetSession(seed)} className="rounded-xl">
- <RefreshCcw data-icon="inline-start" />
+ <Refresh data-icon="inline-start" />
  Reset
  </Button>
  <Button type="button" onClick={handleNext} disabled={!hasAnswered} className="rounded-xl">
@@ -408,16 +407,14 @@ export default function JlptMiniDrillClient({
  </Card>
 
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
- <div className="mb-4 flex items-center gap-2">
- {hasAnswered ? (
- isCorrect ? (
- <Check size={16} className="text-success" aria-hidden="true" />
- ) : (
- <X size={16} className="text-warning" aria-hidden="true" />
- )
- ) : (
- <Sparkles size={16} className="text-primary" aria-hidden="true" />
- )}
+        <div className="mb-4 flex items-center gap-2">
+          {hasAnswered && (
+            isCorrect ? (
+              <Check size={16} className="text-success" aria-hidden="true" />
+            ) : (
+              <X size={16} className="text-warning" aria-hidden="true" />
+            )
+          )}
  <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
  Feedback
  </h2>

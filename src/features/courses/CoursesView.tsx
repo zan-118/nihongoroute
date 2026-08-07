@@ -13,7 +13,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Sparkles, Trophy } from "@/components/ui/icons";
+import { Trophy } from "@/components/ui/icons";
 
 const containerVariants = {
  hidden: { opacity: 0 },
@@ -118,7 +118,7 @@ export function CoursesView({ categories }: CoursesViewProps) {
  <div className="space-y-4 max-w-2xl">
  <div className="flex items-center gap-3">
  <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-3.5 py-1 rounded-[4px] text-[9px] font-black uppercase tracking-[0.2em] shadow-none">
- <Sparkles size={10} className="mr-1.5 text-primary animate-pulse" /> Direktori Belajar
+  Direktori Belajar
  </Badge>
  </div>
  <h1 className="text-3xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] text-foreground font-bold">

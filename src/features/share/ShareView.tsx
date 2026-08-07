@@ -14,7 +14,7 @@ import { useSearchParams } from "next/navigation";
 import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy, Skull, Share2, Award, ArrowLeft, Target, Calendar } from "@/components/ui/icons";
+import { Trophy, ErrorWarning, Share, Award, ArrowLeft, Target, CalendarEvent } from "@/components/ui/icons";
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "sonner";
@@ -64,7 +64,7 @@ function ShareContent() {
  <div className="absolute inset-0 ] pointer-events-none" />
  <Card className="p-8 sm:p-12 max-w-md w-full glass border-border rounded-[3rem] shadow-[0_20px_50px_hsl(var(--primary)/0.15)] relative z-10">
  <div className="size-20 mx-auto rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-6">
- <Share2 size={40} className="text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]" />
+ <Share size={40} className="text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]" />
  </div>
  <h1 className="text-2xl uppercase tracking-wide mb-3 text-foreground">Bagikan NihongoRoute</h1>
  <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
@@ -101,7 +101,7 @@ function ShareContent() {
  <div className="absolute inset-0 ] pointer-events-none" />
  <Card className="p-8 sm:p-12 max-w-md w-full glass border-destructive/25 rounded-[3rem] shadow-[0_20px_50px_hsl(var(--destructive)/0.15)] relative z-10">
  <div className="size-20 mx-auto rounded-xl bg-destructive/10 border border-destructive/25 flex items-center justify-center mb-6">
- <Skull size={40} className="text-destructive drop-shadow-[0_0_8px_hsl(var(--destructive)/0.4)]" />
+ <ErrorWarning size={40} className="text-destructive drop-shadow-[0_0_8px_hsl(var(--destructive)/0.4)]" />
  </div>
  <h1 className="text-2xl uppercase tracking-wide mb-3">Tautan Tidak Valid</h1>
  <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
@@ -158,7 +158,7 @@ function ShareContent() {
  : 'bg-destructive/10 border-destructive/35 text-destructive shadow-[0_15px_30px_hsl(var(--destructive)/0.15)]'
  }`}
  >
- {data.passed ? <Trophy size={48} className="animate-pulse" /> : <Skull size={48} />}
+ {data.passed ? <Trophy size={48} className="animate-pulse" /> : <ErrorWarning size={48} />}
  </m.div>
  
  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-background/40 border border-border/60 text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground/80 mb-4 select-none">
@@ -206,7 +206,7 @@ function ShareContent() {
 
  {/* Date Accomplished */}
  <div className="flex items-center justify-center gap-2 mb-10 text-[10px] sm:text-xs font-black uppercase tracking-wider text-muted-foreground/60 select-none">
- <Calendar size={14} className="text-primary/70" />
+ <CalendarEvent size={14} className="text-primary/70" />
  Diselesaikan Pada: <span className="text-foreground/80 font-mono font-black">{formattedDate}</span>
  </div>
 
@@ -229,7 +229,7 @@ function ShareContent() {
  className="h-14 px-10 border border-border bg-background/15 hover:bg-background/25 text-foreground font-black uppercase tracking-widest text-xs rounded-lg transition-all hover:-translate-y-0.5"
  aria-label="Salin Tautan Sertifikat"
  >
- <Share2 size={16} className="mr-2 text-primary" /> Salin Tautan
+ <Share size={16} className="mr-2 text-primary" /> Salin Tautan
  </Button>
  </div>
  </div>

@@ -9,7 +9,7 @@
 import { useState } from "react";
 import LeaderboardClient from "./LeaderboardClient";
 import CommunityFeed from "./CommunityFeed";
-import { MessageSquare, Trophy } from "@/components/ui/icons";
+import { Message, Trophy } from "@/components/ui/icons";
 import { m, AnimatePresence } from "framer-motion";
 
 /**
@@ -34,7 +34,7 @@ export function SocialView() {
  : "text-muted-foreground hover:text-foreground"
  }`}
  >
- <MessageSquare size={14} />
+ <Message size={14} />
  Diskusi Komunitas
  </button>
  <button

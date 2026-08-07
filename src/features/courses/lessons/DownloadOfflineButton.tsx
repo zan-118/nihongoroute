@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import React, { useState, useEffect, useCallback } from "react";
-import { Download, Loader2, Check, Cloud } from "@/components/ui/icons";
+import { Download, Loader, Check, Cloud } from "@/components/ui/icons";
 import { sounds } from "@/lib/audio";
 import { cn } from "@/lib/utils";
 
@@ -127,7 +127,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
 
  {status === "downloading" && (
  <>
- <Loader2 size={14} className="animate-spin text-primary" />
+ <Loader size={14} className="animate-spin text-primary" />
  <span className="font-mono">{progress}% Mengunduh…</span>
  </>
  )}

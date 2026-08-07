@@ -9,7 +9,7 @@
 // ==========================================
 import { Suspense } from "react";
 import { ReviewView } from "@/features/review/ReviewView";
-import { RefreshCw } from "@/components/ui/icons";
+import { Restart } from "@/components/ui/icons";
 import type { Metadata } from "next";
 import { createPageMetadata } from "@/lib/seo";
 
@@ -44,7 +44,7 @@ export default function ReviewPage() {
  <Suspense fallback={
  /* Render loading spinner while client bundle loads */
  <div className="flex-1 flex flex-col items-center justify-center px-4">
- <RefreshCw className="text-primary animate-spin mb-4" size={32} />
+ <Restart className="text-primary animate-spin mb-4" size={32} />
  <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs animate-pulse font-bold">
  Menyiapkan antarmuka…
  </p>

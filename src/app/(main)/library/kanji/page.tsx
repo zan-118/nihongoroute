@@ -7,7 +7,7 @@
 // IMPOR
 // ======================
 import { Suspense } from "react";
-import { RefreshCw } from "@/components/ui/icons";
+import { Restart } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getPaginatedKanji } from "@/actions/library.actions";
 import KanjiListView from "@/features/library/kanji/KanjiListView";
@@ -76,7 +76,7 @@ export default async function KanjiListPage() {
  {/* Stream client component with loading fallback while rendering */}
  <Suspense fallback={
  <div className="h-40 flex flex-col items-center justify-center text-muted-foreground gap-2">
- <RefreshCw className="text-primary animate-spin" size={24} />
+ <Restart className="text-primary animate-spin" size={24} />
  <p className="text-xs font-bold uppercase tracking-widest font-mono animate-pulse">Memuat pustaka kanji…</p>
  </div>
  }>

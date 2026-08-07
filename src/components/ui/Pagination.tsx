@@ -8,7 +8,7 @@
 // ======================
 // IMPOR
 // ======================
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "@/components/ui/icons";
+import { ChevronLeft, ChevronRight, DoubleLeft, DoubleRight } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 // ======================
@@ -58,7 +58,7 @@ export function Pagination({
  aria-label="Ke halaman pertama"
  className="action-icon size-10 disabled:opacity-30"
  >
- <ChevronsLeft size={18} />
+ <DoubleLeft size={18} />
  </Button>
  <Button
  variant="ghost"
@@ -120,7 +120,7 @@ export function Pagination({
  aria-label="Ke halaman terakhir"
  className="action-icon size-10 disabled:opacity-30"
  >
- <ChevronsRight size={18} />
+ <DoubleRight size={18} />
  </Button>
  </div>
  </div>

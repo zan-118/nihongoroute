@@ -11,7 +11,7 @@
 // ==========================================
 import { useMemo } from "react";
 import { m, Variants } from "framer-motion";
-import { Sparkles, Brain, Target, Book, Zap } from "@/components/ui/icons";
+import { Brain, Target, Book, Zap, Lightbulb } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { useUserStore } from "@/store/useUserStore";
 import ProfileEditor from "@/features/user/ProfileEditor";
-import { Trophy, Flame, Star, ArrowRight } from "@/components/ui/icons";
+import { Trophy, Fire, Star, ArrowRight } from "@/components/ui/icons";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { getLevelProgressPercent } from "@/lib/level";
 
@@ -148,7 +148,7 @@ export default function DashboardHero({
  : 'bg-primary/5 text-primary border-primary/20'
  }`}
  >
- <Sparkles size={12} className={isAuthenticated ? 'text-success' : 'text-primary'} /> 
+  
  {isAuthenticated ? 'PELAJAR' : 'TAMU'} — {guestId}
  </Badge>
  <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-60 ml-1">
@@ -222,7 +222,7 @@ export default function DashboardHero({
  <div className="grid grid-cols-3 gap-2 md:gap-5.25 mb-8.5 md:mb-13.75 w-full max-w-sm">
  <div className="flex flex-col items-center gap-1 md:gap-2">
  <div className="flex items-center gap-1 md:gap-1.5 text-warning transition-transform hover:scale-105">
- <Flame size={14} className="fill-current md:w-4 md:h-4" />
+ <Fire size={14} className="fill-current md:w-4 md:h-4" />
  <span className="text-sm md:text-lg font-black font-mono">
  <AnimatedCounter value={streak} />
  </span>
@@ -298,7 +298,7 @@ export default function DashboardHero({
  >
  <div className="p-5 rounded-lg bg-card border border-border/50 dark:border-white/10 flex gap-5.25 items-center group shadow-[0_2px_12px_rgba(0,0,0,0.01)]">
  <div className="shrink-0 size-8.5 rounded-lg bg-primary/10 flex items-center justify-center text-primary transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
- <Sparkles size={16} />
+ <Lightbulb size={16} className="text-primary" />
  </div>
  <div>
  <h4 className="text-[10px] text-primary uppercase tracking-[0.2em] mb-1 font-bold">Tips Hari Ini</h4>

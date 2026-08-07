@@ -8,7 +8,7 @@
 // ==========================================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MousePointer2, Check, X, Sprout, Flame, Award } from "@/components/ui/icons";
+import { Cursor, Check, X, Plant, Fire, Award } from "@/components/ui/icons";
 import { FlashcardThemeContext } from "./types";
 import { Input } from "@/components/ui/input";
 import { toHiragana } from "wanakana";
@@ -68,9 +68,9 @@ export function FlashcardFront({
  * @param interval - Days until next review.
  */
  const getMastery = (interval: number = 0) => {
- if (interval <= 1) return { icon: Sprout, label: "Belajar" };
- if (interval <= 5) return { icon: Sprout, label: "Akrab" };
- if (interval <= 14) return { icon: Flame, label: "Kuat" };
+ if (interval <= 1) return { icon: Plant, label: "Belajar" };
+ if (interval <= 5) return { icon: Plant, label: "Akrab" };
+ if (interval <= 14) return { icon: Fire, label: "Kuat" };
  return { icon: Award, label: "Mahir" };
  };
 
@@ -166,7 +166,7 @@ export function FlashcardFront({
 
  {!isChallenge && (
  <div className="absolute bottom-6 md:bottom-8 flex flex-col items-center gap-1.5">
- <MousePointer2 size={16} className={`${themeColor} opacity-40 animate-premium-bounce`} />
+ <Cursor size={16} className={`${themeColor} opacity-40 animate-premium-bounce`} />
  <p className={`${themeColor} opacity-40 text-xs font-bold uppercase tracking-widest`}>
  Ketuk untuk Melihat Arti
  </p>

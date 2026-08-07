@@ -9,7 +9,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, Square, AlertCircle, RefreshCcw, Loader2, Gauge } from "@/components/ui/icons";
+import { PlayCircle, PauseCircle, CheckboxBlank, ErrorWarning, Refresh, Loader, DashboardSpeed } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useCachedAudio } from "@/hooks/useCachedAudio";
@@ -300,7 +300,7 @@ export default function AudioController({
  const text = cleanText(textToSpeak || "");
  if (!text) { setError("Tidak ada teks untuk dibaca."); return; }
 
- // Pause / resume TTS audio yang sudah ada
+ // PauseCircle / resume TTS audio yang sudah ada
  if (isTTS && ttsAudioRef.current) {
  if (isPlaying) { ttsAudioRef.current.pause(); setIsPlaying(false); }
  else { ttsAudioRef.current.play().then(() => setIsPlaying(true)).catch(() => {}); }
@@ -369,7 +369,7 @@ export default function AudioController({
  }
  };
 
- // ── Play/Pause dispatch ────────────────────────────────
+ // ── PlayCircle/PauseCircle dispatch ────────────────────────────────
  /** Dispatches play/pause action. */
  const handlePlayPause = () => {
  if (onPlayPause) {
@@ -403,10 +403,10 @@ export default function AudioController({
  const isPlayingActive = isPlayingOverride !== undefined ? isPlayingOverride : isPlaying;
  const iconSize = compact ? 20 : header ? 20 : 28;
  const PlayIcon = isLoading
- ? <Loader2 size={compact ? 18 : 24} className="animate-spin" />
+ ? <Loader size={compact ? 18 : 24} className="animate-spin" />
  : isPlayingActive
- ? <Pause size={iconSize} fill="currentColor" />
- : <Play size={iconSize} fill="currentColor" className={!compact ? "ml-1" : undefined} />;
+ ? <PauseCircle size={iconSize} fill="currentColor" />
+ : <PlayCircle size={iconSize} fill="currentColor" className={!compact ? "ml-1" : undefined} />;
 
  // ============================================================
  // RENDER
@@ -421,7 +421,7 @@ export default function AudioController({
  {/* Error toast */}
  {error && (
  <div className="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-xs whitespace-nowrap animate-in fade-in slide-in-">
- <AlertCircle size={14} />
+ <ErrorWarning size={14} />
  {error}
  </div>
  )}
@@ -435,13 +435,13 @@ export default function AudioController({
  ? "rounded-lg px-4 py-3 gap-3" 
  : !compact ? "rounded-2xl md:rounded-3xl px-4 py-3 justify-between gap-4" : ""
  )}>
- {/* Play / Pause */}
+ {/* PlayCircle / PauseCircle */}
  <Button
  variant="ghost"
  size="icon"
  disabled={isLoading}
  onClick={handlePlayPause}
- aria-label={isLoading ? "Memuat..." : isPlayingActive ? "Pause" : "Putar"}
+ aria-label={isLoading ? "Memuat..." : isPlayingActive ? "PauseCircle" : "Putar"}
  className={cn(
  "rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all duration-300 active:scale-90 shrink-0",
  compact ? "w-10 h-10" : header ? "w-10 h-10" : "w-14 h-14",
@@ -537,7 +537,7 @@ export default function AudioController({
  title={`Kecepatan: ${playbackSpeed}×`}
  className="size-10 rounded-full hover:bg-background/5 text-muted-foreground/60 hover:text-primary transition-all"
  >
- <Gauge size={16} />
+ <DashboardSpeed size={16} />
  </Button>
  {showSpeedMenu && (
  <div className="absolute bottom-full mb-2 right-0 flex flex-col gap-1 p-2 rounded-lg bg-card border border-border shadow-2xl z-50 min-w-[80px]">
@@ -573,7 +573,7 @@ export default function AudioController({
  aria-label="Ulangi dari awal"
  className="size-10 rounded-full hover:bg-background/5 text-muted-foreground/60 hover:text-primary transition-all"
  >
- <RefreshCcw size={18} />
+ <Refresh size={18} />
  </Button>
 
  {/* Stop */}
@@ -584,7 +584,7 @@ export default function AudioController({
  aria-label="Stop"
  className="size-10 rounded-full hover:bg-background/5 text-muted-foreground/60 hover:text-destructive transition-all"
  >
- <Square size={18} fill="currentColor" />
+ <CheckboxBlank size={18} fill="currentColor" />
  </Button>
  </div>
  )}

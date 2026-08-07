@@ -12,7 +12,7 @@
 import { m, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { BookOpen, Briefcase, Plane, Tv, ChevronRight, Check, Loader2, Sparkles, ArrowLeft } from "@/components/ui/icons";
+import { BookOpen, Briefcase, Plane, Tv, ChevronRight, Check, Loader, ArrowLeft } from "@/components/ui/icons";
 import { useOnboardingWizard } from "@/features/auth/onboarding/useOnboardingWizard";
 
 // ==========================================
@@ -83,7 +83,7 @@ export default function OnboardingView() {
  >
  <div className="space-y-4">
  <div className="size-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-primary/20 shadow-[0_0_20px_hsl(var(--primary)/0.15)] animate-pulse">
- <Sparkles className="text-primary" size={40} />
+ 
  </div>
  <h1 className="text-6xl md:text-8xl font-black text-primary font-japanese tracking-tight">
  ようこそ!
@@ -251,7 +251,7 @@ export default function OnboardingView() {
  >
  {isSubmitting ? (
  <>
- <Loader2 className="mr-2 size-4 animate-spin" /> Menyimpan…
+ <Loader className="mr-2 size-4 animate-spin" /> Menyimpan…
  </>
  ) : (
  <>
