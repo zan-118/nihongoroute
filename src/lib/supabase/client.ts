@@ -26,24 +26,13 @@ export function createClient() {
   // Return existing instance if already created.
   if (cachedClient) return cachedClient;
 
-  let url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  let key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  let url = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").trim();
+  const key = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "").trim();
 
-  if (url && key) {
-    url = url.trim();
-    if (!/^https?:\/\//i.test(url)) {
-      url = `https://${url}`;
-    }
-    try {
-      new URL(url);
-      cachedClient = createBrowserClient(url, key);
-      return cachedClient;
-    } catch {
-      // Ignore URL parse error and fall back below
-    }
+  if (url && !/^https?:\/\//i.test(url)) {
+    url = `https://${url}`;
   }
 
-  // Fallback to valid dummy credentials during build time prerender shell to prevent ERR_INVALID_URL crash
-  console.error("Variabel lingkungan Supabase tidak ditemukan atau tidak valid saat inisialisasi browser client!");
-  return createBrowserClient("https://example.supabase.co", "ci-anon-key");
+  cachedClient = createBrowserClient(url, key);
+  return cachedClient;
 }

@@ -14,25 +14,15 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 // Supabase Server Client Initializer
 // ==========================================
 
-const FALLBACK_SUPABASE_URL = "https://example.supabase.co";
-const FALLBACK_SUPABASE_KEY = "ci-anon-key";
-
 /**
- * Returns formatted and validated Supabase URL and Key for server clients.
+ * Returns formatted Supabase URL and Key for server clients.
  */
 function getValidServerCredentials() {
-  let url = process.env.NEXT_PUBLIC_SUPABASE_URL || FALLBACK_SUPABASE_URL;
-  let key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || FALLBACK_SUPABASE_KEY;
+  let url = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").trim();
+  const key = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "").trim();
 
-  url = url.trim();
-  if (!/^https?:\/\//i.test(url)) {
+  if (url && !/^https?:\/\//i.test(url)) {
     url = `https://${url}`;
-  }
-
-  try {
-    new URL(url);
-  } catch {
-    url = FALLBACK_SUPABASE_URL;
   }
 
   return { url, key };
