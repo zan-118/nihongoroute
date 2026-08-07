@@ -93,8 +93,16 @@ export const noIndexRobots = {
 
 /** Get base site URL. Use env var or fallback. Strip trailing slash. */
 export function getSiteUrl() {
- // Remove trailing slash to prevent double slashes in paths
- return (process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL).replace(/\/+$/, "");
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  if (envUrl) {
+    try {
+      const parsed = new URL(envUrl);
+      return parsed.origin.replace(/\/+$/, "");
+    } catch {
+      // Fallback if envUrl is relative (e.g. "/") or invalid URL
+    }
+  }
+  return DEFAULT_SITE_URL.replace(/\/+$/, "");
 }
 
 /** Convert relative path to absolute URL. Return exact if already absolute. */
