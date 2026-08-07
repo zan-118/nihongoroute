@@ -49,10 +49,9 @@ Otomatisasi pengujian, verifikasi build, dan deployment dikelola via `.github/wo
 
 ### Job: Deploy to Vercel (Prebuilt)
 - Membutuhkan suksesnya job `App Quality` & `Database Guard` pada push branch `main`.
-- `rm -rf .vercel && mkdir -p .vercel` + buat `.vercel/project.json` berisi `orgId` & `projectId`.
-- `vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}`
-- `vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}`
-- `vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}`
+- `vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }} --project=${{ secrets.VERCEL_PROJECT_ID }} --scope=${{ secrets.VERCEL_ORG_ID }}`
+- `vercel build --prod --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }}`
+- `vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }}`
 
 > **Prasyarat Konfigurasi Deployment**:
 > 1. **GitHub Secrets**: Daftarkan `VERCEL_TOKEN`, `VERCEL_ORG_ID`, dan `VERCEL_PROJECT_ID` di Settings Repository ➔ Secrets and variables ➔ Actions.
