@@ -1,7 +1,7 @@
 # Overview Proyek NihongoRoute
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Terakhir Diperbarui**: 12 Agustus 2026  
 > **Ruang Lingkup**: Visi Produk, Masalah yang Diselesaikan, Target Pengguna, & Tech Stack  
 > **Rujukan Utama**: [README.md](../README.md) | [ARCHITECTURE.md](ARCHITECTURE.md) | [GETTING_STARTED.md](GETTING_STARTED.md)
 

@@ -1,8 +1,8 @@
 # Referensi API & Route Handlers
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 2 Agustus 2026 — Diverifikasi 100% dari `src/app/api/` & `src/actions/`  
-> **Ruang Lingkup**: Spesifikasi 7 API Route Handlers Active & 18 Server Action Files  
+> **Terakhir Diperbarui**: 12 Agustus 2026 — Diverifikasi 100% dari `src/app/api/` & `src/actions/`  
+> **Ruang Lingkup**: Spesifikasi 6 API Route Handlers Active & Server Action Files  
 > **Rujukan Utama**: [README.md](../README.md) | [ARCHITECTURE.md](ARCHITECTURE.md) | [SECURITY.md](SECURITY.md)
 
 ---
@@ -85,7 +85,7 @@ Seluruh Server Action tersimpan di `src/actions/` dan bertindak sebagai layer ti
 | 07 | `cheatsheets.actions.ts` | Lembar rangkuman & cheatsheet |
 | 08 | `sentences.actions.ts` | Pencarian contoh kalimat terjemahan |
 | 09 | `expressions.actions.ts` | Query ungkapan & frasa harian |
-| 10 | `dictionary.actions.ts` | Pencarian terpadu kamus (multi-category search) |
+| 10 | `dictionary.actions.ts` | Pencarian terpadu kamus (multi-category search) + `lookupDictionaryWordAction` (lookup detail kata per entri, dipakai `DictionaryPopup` & `WordPopover`) |
 | 11 | `flashcard.actions.ts` | Resolusi kartu flashcard & custom mnemonics |
 | 12 | `exams.actions.ts` | Eksekusi & evaluasi sesi ujian JLPT |
 | 13 | `jlpt-exams.actions.ts` | Catalog & template ujian JLPT |

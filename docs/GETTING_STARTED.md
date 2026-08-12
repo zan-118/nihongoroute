@@ -1,7 +1,7 @@
 # Panduan Memulai (Getting Started)
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Terakhir Diperbarui**: 12 Agustus 2026  
 > **Ruang Lingkup**: Prasyarat, Setup Lingkungan Lokal, Scripts, & Verification  
 > **Rujukan Utama**: [README.md](../README.md) | [CONFIGURATION.md](CONFIGURATION.md) | [CONTRIBUTING.md](CONTRIBUTING.md)
 
@@ -96,8 +96,9 @@ npm run db:migrations:check
 
 | Perintah | Deskripsi |
 |---|---|
-| `npm run typecheck` | Validasi tipe TypeScript secara ketat |
-| `npm run lint` | Pengecekan ESLint rule compliance |
+| `npm run typecheck` | Validasi tipe TypeScript pada `src/` secara ketat |
+| `npm run typecheck:tests` | Validasi tipe TypeScript pada `__tests__/` (via `tsconfig.tests.json`) |
+| `npm run lint` | Pengecekan ESLint rule compliance (0 error) |
 | `npm run lint:fix` | Perbaikan otomatis error linter |
 | `npm run test` | Eksekusi unit test berbasis Vitest |
 | `npm run test:watch` | Vitest mode interaktif watch |

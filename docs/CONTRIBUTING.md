@@ -1,7 +1,7 @@
 # Panduan Kontribusi Teknis (Technical Contributing Guide)
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Terakhir Diperbarui**: 12 Agustus 2026  
 > **Ruang Lingkup**: Standar TypeScript, CSS & Token UI, Git Workflow, Siklus Migrasi SQL, & Commit Convention  
 > **Rujukan Utama**: [README.md](../README.md) | [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | [DATA_MODEL.md](DATA_MODEL.md)
 
@@ -22,8 +22,11 @@
 
 ### TypeScript Rules
 - **Dilarang keras** menggunakan tipe `any`. Gunakan tipe domain dari `src/types/database.ts` atau `src/types/library.ts`.
+- Minimalkan `as unknown as`; hanya diperbolehkan di boundary library (Supabase `Json`, react-pdf, PortableText, window APIs).
 - Hook kustom baru wajib menyertakan JSDoc: `@param`, `@returns`, side-effects, dan stores yang diakses.
 - Komentar inline wajib untuk menjelaskan bagian logika kompleks.
+- **Data fetching**: komponen client tidak boleh query Supabase langsung — wajib melalui Server Actions di `src/actions/*.actions.ts`.
+- **Komponen besar**: file komponen > 600 baris sebaiknya dipecah (logika murni → modul `.ts` yang di-test; view → komponen terpisah; barrel agar API publik tidak berubah).
 
 ### CSS & Design Tokens
 - Warna **WAJIB** melalui token semantik di `src/app/globals.css` (`hsl(var(--primary))`). Dilarang memakai hex/warna mentah.
@@ -39,10 +42,12 @@
 
 1. Buat branch dari `main`: `feat/nama-fitur` atau `fix/nama-bug`.
 2. Tulis kode + unit test di `__tests__/`.
-3. Jalankan pengujian wajib sebelum commit:
+3. Jalankan pengujian wajib sebelum commit (sama dengan quality gates CI):
    ```bash
    npm run lint
    npm run typecheck
+   npm run typecheck:tests
+   npm run test
    ```
 
 ---

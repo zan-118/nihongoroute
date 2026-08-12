@@ -16,7 +16,7 @@
   <img src="https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
   <img src="https://img.shields.io/badge/Cloudflare_R2-Zero_Egress-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Cloudflare R2" />
   <img src="https://img.shields.io/badge/TypeScript-5.3-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Vitest-357_Tests_Passed-6E9F18?style=for-the-badge&logo=vitest&logoColor=white" alt="Vitest" />
+  <img src="https://img.shields.io/badge/Vitest-389_Tests_Passed-6E9F18?style=for-the-badge&logo=vitest&logoColor=white" alt="Vitest" />
 </p>
 
 <p align="center">
@@ -101,7 +101,7 @@ graph TD
 - **Styling & Motion**: Tailwind CSS v4, Framer Motion, Radix UI Primitives, Iconify.
 - **Data & Storage**: Supabase (PostgreSQL 28 Tabel, RLS Policies), Cloudflare R2 (S3 API Storage), IndexedDB (`idb-keyval`).
 - **Media & AI**: MsEdgeTTS (`msedge-tts`), Google Generative AI (Gemini 2.5/3.x), Kuroshiro & Kuromoji Parser.
-- **Testing & Quality**: Vitest (357 Unit Tests), ESLint, TypeScript Strict Mode, Migration Integrity Checkers.
+- **Testing & Quality**: Vitest (389 Unit Tests), ESLint, TypeScript Strict Mode (+ typecheck untuk `__tests__/`), Migration Integrity Checkers.
 
 ---
 
@@ -168,7 +168,7 @@ Proyek ini menerapkan *Quality Gate* ketat yang wajib lolos sebelum rilis produk
 ```bash
 npm run typecheck             # Validasi tipe ketat TypeScript (0 error)
 npm run lint                  # Pengecekan standar linter ESLint
-npm run test:unit             # Eksekusi 357 unit tests via Vitest
+npm run test:unit             # Eksekusi 389 unit tests via Vitest
 npm run db:migrations:check   # Validasi stempel berkas migrasi database
 npm run build                 # Kompilasi build rilis produksi Next.js
 ```

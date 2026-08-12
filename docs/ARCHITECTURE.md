@@ -1,8 +1,8 @@
 # Arsitektur Sistem NihongoRoute
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 2 Agustus 2026 — Diverifikasi 100% dari `src/features/` & `src/lib/`  
-> **Ruang Lingkup**: Diagram Komponen, Alur Data 3-Tier, State Management, ISR Caching, & 20 Modul Feature Domains  
+> **Terakhir Diperbarui**: 12 Agustus 2026 — Diverifikasi 100% dari `src/features/` & `src/lib/`  
+> **Ruang Lingkup**: Diagram Komponen, Alur Data 3-Tier, State Management, ISR Caching, 20 Modul Feature Domains, & Struktur Modul Inti  
 > **Rujukan Utama**: [README.md](../README.md) | [DATA_MODEL.md](DATA_MODEL.md) | [API_REFERENCE.md](API_REFERENCE.md) | [SECURITY.md](SECURITY.md)
 
 ---
@@ -185,6 +185,27 @@ Halaman konten library menggunakan ISR dengan `generateStaticParams()` untuk pre
 - **Legacy exam adapter**: Komponen `MockExamEngine` membaca format data lama. Adapter `src/lib/exams/supabase-adapter.ts` (`toLegacyExamData`) memetakan data relasional baru ke format lama.
 - **Optimasi bundle**: `optimizePackageImports` di `next.config.ts` untuk Radix UI, Iconify, Framer Motion, Date-fns, Sonner, Wanakana.
 - **Custom Markdown Renderer**: Proyek menggunakan `LessonBlockRegistry` untuk menginjeksi komponen interaktif, dengan ekstensi Regex di `lesson-hydration-engine.ts` yang mendukung elemen struktural standar (Headings, Tables) serta ekstensi modern (Fenced Code Blocks & Horizontal Rules).
+
+### 5a. Data Fetching via Server Actions (Bukan Query Client)
+
+Seluruh kueri data konten **wajib** melalui Server Actions di `src/actions/*.actions.ts` — komponen client tidak boleh query Supabase langsung:
+
+- `lookupDictionaryWordAction` (di `dictionary.actions.ts`) menggantikan query langsung di `DictionaryPopup` & `WordPopover`.
+- Pola ini menjaga RLS, satu titik validasi, dan perilaku identik antar komponen.
+
+### 5b. Struktur Modul Inti (`src/lib/`) & Pemecahan God Files
+
+Beberapa modul domain besar dipecah menjadi folder kohesif dengan barrel re-export agar API publik tetap identik:
+
+| Modul | Struktur Baru | Konsumen Tetap Tidak Berubah |
+|---|---|---|
+| `lib/learning/learning-ecosystem.ts` | `lib/learning/ecosystem/` → `types.ts`, `urls.ts`, `recommendations.ts`, `weak-points.ts`, `daily-route.ts` + barrel | ✅ Ya |
+| `features/social/LeaderboardClient.tsx` | `hooks/useLeaderboard.ts` (logika data) + komponen UI murni | ✅ Ya |
+| `features/exams/.../ExamResult.tsx` | `examResultData.ts` (logika skor) + `OfficialCertificateView.tsx` + `ModernBreakdownView.tsx` | ✅ Ya |
+| `features/library/listening/.../ListeningWorkspace.tsx` | `workspace/` → `WorkspaceTabs.tsx`, `StudyPanel.tsx`, `DictationPanel.tsx`, `QuizPanel.tsx`, `MediaControlBar.tsx` | ✅ Ya |
+
+> [!NOTE]
+> **Prinsip pemecahan**: (1) ekstrak logika murni ke modul `.ts` yang bisa di-unit-test; (2) ekstrak view raksasa ke komponen terpisah; (3) pertahankan API publik identik lewat barrel agar konsumen tanpa perubahan; (4) untuk komponen dengan state yang harus bertahan antar tab, panel tetap di-*mount* dan disembunyikan via CSS (`hidden`) — bukan unmount bersyarat.
 
 ---
 

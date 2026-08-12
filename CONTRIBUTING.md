@@ -54,7 +54,7 @@ Gunakan format [Conventional Commits](https://www.conventionalcommits.org/):
 
 ## 🛠️ Standar Pengkodean
 
-- **Linting & Typecheck**: Pastikan `npm run lint` dan `npm run typecheck` lolos tanpa error.
+- **Linting & Typecheck**: Pastikan `npm run lint`, `npm run typecheck`, dan `npm run typecheck:tests` (typecheck `__tests__/`) lolos tanpa error.
 - **Design System**: Selalu gunakan token dan kelas utility yang sudah ditentukan di [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
 - **JSDoc**: Tambahkan JSDoc singkat pada custom hook atau helper function kompleks.
 
@@ -72,7 +72,7 @@ Jika tugas Anda mengubah skema database Supabase:
 
 ## 📬 Proses Pull Request (PR)
 
-1. Pastikan seluruh pengujian lokal (`npm run test` & `npm run typecheck`) lulus.
+1. Pastikan seluruh pengujian lokal (`npm run test`, `npm run typecheck`, & `npm run typecheck:tests`) lulus.
 2. Gunakan [Template Pull Request](.github/PULL_REQUEST_TEMPLATE.md) saat membuka PR.
 3. Sertakan tangkapan layar (screenshot) jika perubahan berdampak pada tampilan UI.
 

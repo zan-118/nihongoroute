@@ -1,7 +1,7 @@
 # Indeks Dokumentasi Teknis NihongoRoute
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Terakhir Diperbarui**: 12 Agustus 2026  
 > **Ruang Lingkup**: Arsitektur, Skema Database, API, Keamanan, UI Design System, dan Operational Runbook
 
 ---
