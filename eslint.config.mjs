@@ -50,7 +50,8 @@ export default [
       "build/*",
       "scripts/*",
       "scratch/*",
-      "legacy_studio_backup/*"
+      "legacy_studio_backup/*",
+      "coverage/*"
     ],
   },
 ];

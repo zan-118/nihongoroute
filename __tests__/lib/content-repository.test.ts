@@ -81,8 +81,8 @@ describe("Content Repository Unit Tests", () => {
       const result = await getContentBySlugOrId<VocabTable>("vocab", "test-slug");
 
       expect(result).not.toBeNull();
-      expect(result.id).toBe("uuid-123");
-      expect(result.slug).toBe("test-slug");
+      expect(result?.id).toBe("uuid-123");
+      expect(result?.slug).toBe("test-slug");
     });
 
     it("harus mengambil data berdasarkan UUID", async () => {

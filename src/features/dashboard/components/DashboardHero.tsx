@@ -37,11 +37,13 @@ interface DashboardHeroProps {
  itemVariants: Variants;
  /** Course structure metadata */
  courseMetadata: Array<{
- _id: string;
+ id?: string;
+ _id?: string;
  title: string;
  slug: string;
  lessons: Array<{
- _id: string;
+ id?: string;
+ _id?: string;
  title: string;
  slug: string;
  }>;
@@ -76,6 +78,10 @@ export default function DashboardHero({
  const streak = useUserStore(s => s.streak);
  const completedLessons = useUserStore(s => s.completedLessons);
 
+ // Resolve stable lesson key (prefer _id, fallback to id or slug).
+ const getLessonKey = (lesson: { id?: string; _id?: string; slug: string }): string =>
+  lesson._id || lesson.id || lesson.slug;
+
  // Compute active course and next lesson.
  const activeData = useMemo(() => {
  if (!courseMetadata || courseMetadata.length === 0) return null;
@@ -83,7 +89,7 @@ export default function DashboardHero({
  const stats = courseMetadata.map(cat => {
  const lessons = cat.lessons || [];
  const completedInCat = lessons.filter(lesson => {
- const record = completedLessons[lesson._id];
+ const record = completedLessons[getLessonKey(lesson)];
  return record && record.completedAt;
  });
  
@@ -93,7 +99,7 @@ export default function DashboardHero({
  : 0;
  
  const lastUpdate = lessons.reduce((max, lesson) => {
- const ts = completedLessons[lesson._id]?.updatedAt || 0;
+ const ts = completedLessons[getLessonKey(lesson)]?.updatedAt || 0;
  return ts > max ? ts : max;
  }, 0);
 
@@ -110,7 +116,7 @@ export default function DashboardHero({
 
  if (!active || !active.lessons || active.lessons.length === 0) return null;
 
- const nextLessonIndex = active.lessons.findIndex(l => !completedLessons[l._id]?.completedAt);
+ const nextLessonIndex = active.lessons.findIndex(l => !completedLessons[getLessonKey(l)]?.completedAt);
  const nextLesson = active.lessons[nextLessonIndex] || active.lessons[0];
 
  if (!nextLesson) return null;

@@ -35,15 +35,11 @@ describe("AddToSRSButton", () => {
           srs: {
             ...state.srs,
             [wordId]: {
-              id: wordId,
-              word: wordId,
-              reading: "",
-              meaning: "",
-              level: 1,
               interval: 1,
               repetition: 0,
               easeFactor: 2.5,
-              nextReview: new Date().toISOString(),
+              nextReview: Date.now(),
+              updatedAt: Date.now(),
             },
           },
         });

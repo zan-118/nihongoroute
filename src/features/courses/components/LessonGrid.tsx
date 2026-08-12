@@ -39,7 +39,7 @@ interface LessonGridProps {
  onPageChange: (page: number) => void;
  categoryId: string;
  isSideQuest: boolean;
- completedLessons: Record<string, { isDeleted?: boolean; [key: string]: unknown }>;
+ completedLessons: Record<string, { isDeleted?: boolean }>;
  itemVariants: Variants;
 }
 

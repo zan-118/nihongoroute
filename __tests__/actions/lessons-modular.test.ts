@@ -61,8 +61,9 @@ describe('Lessons Actions - Modular Content and Dialogue Schema', () => {
     expect(result?.title).toBe('Bab 1: Perkenalan');
     expect(result?.content).toBe('# Judul Materi\n\nPenjelasan singkat materi modular.');
     expect(result?.content_blocks).toHaveLength(2); // Heading 1 + Text block parsed from markdown content
-    expect(result?.listeningList).toHaveLength(1);
-    expect(result?.listeningList?.[0]?.transcript?.[0]?.jp).toBe('こんにちは');
+    const listeningList = result?.listeningList as Array<{ transcript: Array<{ jp: string }> }> | undefined;
+    expect(listeningList).toHaveLength(1);
+    expect(listeningList?.[0]?.transcript?.[0]?.jp).toBe('こんにちは');
   });
 
   it('harus menangani data pelajaran dengan content kosong', async () => {

@@ -8,6 +8,7 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { SupporterTable } from "@/types/database";
+import { logger } from "@/lib/core/logger";
 
 export interface FormattedSupporter {
  id: string;
@@ -34,7 +35,7 @@ export async function getSupporters(): Promise<FormattedSupporter[]> {
  .limit(30);
 
  if (error || !data) {
- console.error("Gagal mengambil donatur dari Supabase:", error?.message);
+ logger.error("Gagal mengambil donatur dari Supabase:", error?.message);
  return [];
  }
 
@@ -74,7 +75,7 @@ export async function getSupporters(): Promise<FormattedSupporter[]> {
  };
  });
  } catch (err) {
- console.error("Error di getSupporters action:", err);
+ logger.error("Error di getSupporters action:", err);
  return [];
  }
 }

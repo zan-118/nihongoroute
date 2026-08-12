@@ -10,6 +10,7 @@
 // Import & Dependencies
 // ==========================================
 import { getRandomExpressionData } from "@/lib/services/content-repository";
+import { logger } from "@/lib/core/logger";
 
 // ======================
 // TYPES
@@ -51,7 +52,7 @@ export async function getRandomExpression(): Promise<RandomExpression | null> {
  jlpt_level: (data.jlpt_level as string | null) ?? null,
  };
  } catch (error) {
- console.error("[getRandomExpression] error:", error);
+ logger.error("[getRandomExpression] error:", error);
  return null;
  }
 }

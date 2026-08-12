@@ -110,3 +110,36 @@ export function fullyDecode(str: string): string {
  }
  return current;
 }
+
+/**
+ * Search parameters shape shared by tool pages.
+ * Next.js passes query strings as string, array, or undefined.
+ */
+export type ToolSearchParams = Record<string, string | string[] | undefined>;
+
+/**
+ * Extract first string value from a search parameter.
+ * Handles array fallback (Next.js may pass repeated keys as arrays).
+ *
+ * @param value - Raw query parameter value.
+ * @returns First string value or undefined.
+ */
+export function firstParam(value: string | string[] | undefined): string | undefined {
+ // Return first element if array, else return value directly.
+ return Array.isArray(value) ? value[0] : value;
+}
+
+/**
+ * Build user-friendly label for tool source context.
+ * Formats source name and slug into a readable label.
+ *
+ * @param source - Optional source name (e.g. "vocab", "reading").
+ * @param slug - Optional content slug.
+ * @returns Context label or undefined when no source/slug given.
+ */
+export function buildContextLabel(source?: string, slug?: string): string | undefined {
+ if (!source && !slug) return undefined;
+ // Capitalize first letter of source name.
+ const sourceLabel = source ? source.charAt(0).toUpperCase() + source.slice(1) : "Library";
+ return slug ? `Konteks dari ${sourceLabel}: ${decodeURIComponent(slug)}` : `Konteks dari ${sourceLabel}`;
+}

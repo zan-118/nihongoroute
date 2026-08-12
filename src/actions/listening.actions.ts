@@ -17,6 +17,7 @@ import {
  getStaticSlugs,
  getRandomListeningPool
 } from "@/lib/services/content-repository";
+import { logger } from "@/lib/core/logger";
 
 // ======================
 // SERVER ACTIONS
@@ -64,7 +65,7 @@ export async function getPaginatedListening(
  total: response.total,
  };
  } catch (error) {
- console.error("Gagal mengambil data paginasi menyimak dari Supabase:", error);
+ logger.error("Gagal mengambil data paginasi menyimak dari Supabase:", error);
  return { data: [], total: 0 };
  }
 }
@@ -91,7 +92,7 @@ export async function getRandomListeningTask(level: string = "N5"): Promise<List
  transcript: randomItem.body ? String(randomItem.body) : ''
  };
  } catch (error) {
- console.error("Gagal mengambil tugas menyimak acak dari Supabase:", error);
+ logger.error("Gagal mengambil tugas menyimak acak dari Supabase:", error);
  return null;
  }
 }
@@ -203,7 +204,7 @@ export async function getLibraryListeningDetail(slug: string): Promise<LibraryIt
 
  return data as LibraryItem;
  } catch (error) {
- console.error("Gagal mengambil detail menyimak dari Supabase:", error);
+ logger.error("Gagal mengambil detail menyimak dari Supabase:", error);
  return null;
  }
 }
@@ -219,7 +220,7 @@ export async function getListeningStaticSlugs(): Promise<{ slug: string }[]> {
  const data = await getStaticSlugs("listening", { limit: 1000, select: "slug" });
  return data.map((item) => ({ slug: String(item.slug) })).filter((x) => x.slug);
  } catch (error) {
- console.error("Gagal mengambil static slugs listening:", error);
+ logger.error("Gagal mengambil static slugs listening:", error);
  return [];
  }
 }

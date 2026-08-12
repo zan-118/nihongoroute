@@ -7,6 +7,7 @@
 
 import { createStaticClient } from "@/lib/supabase/server";
 import { toHiragana } from "wanakana";
+import { logger } from "@/lib/core/logger";
 
 export interface SerializedSearchItem {
  id: string;
@@ -27,6 +28,77 @@ export interface SerializedSearchResult {
  vocab: SerializedSearchItem[];
  grammar: SerializedSearchItem[];
  kanji: SerializedSearchItem[];
+}
+
+/**
+ * Hasil lookup satu kata untuk popup dictionary (Smart Jisho / WordPopover).
+ */
+export interface DictionaryLookupResult {
+ id?: string;
+ slug?: string | null;
+ word: string;
+ furigana?: string | null;
+ romaji?: string | null;
+ meaning: string;
+ jlpt?: string | null;
+ hinshi?: string[] | null;
+}
+
+/**
+ * Server action untuk mencari satu kata di tabel vocab.
+ * Exact match dulu (word/furigana), lalu fallback ke substring (ilike).
+ *
+ * @param text - Kata Jepang yang dipilih pengguna.
+ * @returns Hasil lookup pertama atau null jika tidak ditemukan.
+ */
+export async function lookupDictionaryWordAction(text: string): Promise<DictionaryLookupResult | null> {
+ const normalized = text?.trim();
+ if (!normalized || normalized.length > 30) return null;
+
+ const supabase = createStaticClient();
+
+ // 1. Cari kecocokan eksak pada word atau furigana.
+ let { data, error } = await supabase
+  .from("vocab")
+  .select("id, slug, word, furigana, romaji, meaning_id, jlpt_level, hinshi")
+  .or(`word.eq.${normalized},furigana.eq.${normalized}`)
+  .limit(1)
+  .maybeSingle();
+
+ if (error) {
+  logger.error("[lookupDictionaryWordAction] Query exact match gagal:", error);
+  return null;
+ }
+
+ // 2. Jika tidak ditemukan, coba substring (ilike).
+ if (!data) {
+  const safeQuery = escapePostgrestLike(normalized);
+  const term = `%${safeQuery}%`;
+  const { data: list, error: listError } = await supabase
+   .from("vocab")
+   .select("id, slug, word, furigana, romaji, meaning_id, jlpt_level, hinshi")
+   .or(`word.ilike."${term}",furigana.ilike."${term}"`)
+   .limit(1);
+
+  if (listError) {
+   logger.error("[lookupDictionaryWordAction] Query substring gagal:", listError);
+   return null;
+  }
+  data = list?.[0] || null;
+ }
+
+ if (!data) return null;
+
+ return {
+  id: data.id,
+  slug: data.slug || data.word || data.id,
+  word: data.word,
+  furigana: data.furigana,
+  romaji: data.romaji,
+  meaning: data.meaning_id || "",
+  jlpt: data.jlpt_level,
+  hinshi: Array.isArray(data.hinshi) ? data.hinshi : null,
+ };
 }
 
 /**
@@ -128,7 +200,7 @@ export async function searchToolDictionaryAction(
  })),
  };
  } catch (error) {
- console.error("[searchToolDictionaryAction] Gagal mencari di database:", error);
+ logger.error("[searchToolDictionaryAction] Gagal mencari di database:", error);
  return { vocab: [], grammar: [], kanji: [] };
  }
 }

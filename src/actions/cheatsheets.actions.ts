@@ -14,6 +14,25 @@ import {
 } from "@/lib/services/content-repository";
 import { CheatsheetTable } from "@/types/database";
 import type { SheetItem } from "@/features/library/cheatsheet/CheatsheetView";
+import { logger } from "@/lib/core/logger";
+
+/**
+ * Normalisasi items cheatsheet dari JSONB (Record<string, unknown>) ke SheetItem.
+ * Item yang tidak punya field label/jp/romaji valid akan dilewati.
+ */
+function normalizeSheetItems(items: unknown): SheetItem[] {
+ if (!Array.isArray(items)) return [];
+ return items
+  .filter((item): item is Record<string, unknown> =>
+   typeof item === "object" && item !== null
+  )
+  .map((item) => ({
+   label: String(item.label || ""),
+   jp: String(item.jp || ""),
+   romaji: String(item.romaji || ""),
+  }))
+  .filter((item) => item.label || item.jp);
+}
 
 // ======================
 // SERVER ACTIONS
@@ -37,13 +56,13 @@ export async function getCheatsheets() {
  title: s.title,
  category: s.category || "",
  // Fallback to empty array if items column is null
- items: (s.items || []) as unknown as SheetItem[],
+ items: normalizeSheetItems(s.items),
  // Compatibility field for vocabulary relations
  linkedVocab: []
  }));
  } catch (error) {
  // Log error and return empty array to prevent UI crashes
- console.error("Gagal mengambil daftar cheatsheet:", error);
+ logger.error("Gagal mengambil daftar cheatsheet:", error);
  return [];
  }
 }
@@ -68,13 +87,13 @@ export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
  title: sheet.title,
  category: sheet.category || "",
  // Fallback to empty array if items column is null
- items: (sheet.items || []) as unknown as SheetItem[],
+ items: normalizeSheetItems(sheet.items),
  // Compatibility field for vocabulary relations
  linkedVocab: []
  };
  } catch (error) {
  // Log error and return null to indicate fetch failure
- console.error("Gagal mengambil detail cheatsheet:", error);
+ logger.error("Gagal mengambil detail cheatsheet:", error);
  return null;
  }
 }
@@ -94,7 +113,7 @@ export async function getCheatsheetStaticParams(): Promise<{ id: string }[]> {
  return results;
  });
  } catch (error) {
- console.error("Gagal mengambil static params cheatsheet:", error);
+ logger.error("Gagal mengambil static params cheatsheet:", error);
  return [];
  }
 }

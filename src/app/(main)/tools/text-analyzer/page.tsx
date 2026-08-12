@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getLibraryTextForTool } from "@/actions/tools-integration.actions";
 import TextAnalyzerClient from "@/features/tools/text-analyzer/TextAnalyzerClient";
 import { createPageMetadata } from "@/lib/seo";
+import { firstParam, type ToolSearchParams } from "@/lib/core/utils";
 
 import { ROUTES } from "@/lib/core/routes";
 /**
@@ -20,22 +21,6 @@ export const metadata: Metadata = {
  * Force dynamic rendering. Ensure fresh data on request.
  */
 export const dynamic = "force-dynamic";
-
-/**
- * Search parameters shape. Handle query strings.
- */
-type ToolSearchParams = Record<string, string | string[] | undefined>;
-
-/**
- * Extract first parameter value. Handle array or single string.
- * 
- * @param value - Raw query parameter value.
- * @returns First string value or undefined.
- */
-function firstParam(value: string | string[] | undefined) {
- // Extract first item if array. Otherwise return value.
- return Array.isArray(value) ? value[0] : value;
-}
 
 /**
  * Text analyzer page component. Fetch initial text from library if source and slug provided. Render client component.

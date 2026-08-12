@@ -29,6 +29,7 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { createClient } from "@supabase/supabase-js";
+import { isR2Configured, uploadToR2Storage } from "./utils/r2-helper.mjs";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const BUCKET_NAME = "asset";
@@ -192,7 +193,7 @@ const REQUIRED_PREFIX =
 const MAX_PROMPT_LEN = 600;
 const REFUSAL_PATTERN = /\b(i can(?:no|')t|i cannot|i'm sorry|i am sorry|unable to (?:help|generate|create)|as an ai)\b/i;
 const POLICY_BLOCK_PATTERN = /\b(content policy|safety system|blocked|flagged|moderation|violat(e|ion))\b/i;
-const LOGO = "public\logo-branding.svg"
+const LOGO = "public/logo-branding.svg";
 /**
  * Membersihkan & memvalidasi teks prompt hasil LLM sebelum dipakai untuk generate gambar.
  * Menolak (throw) jika terindikasi penolakan/refusal dari model.
@@ -372,7 +373,10 @@ Aturan prompt gambar:
     }
   };
 
-  const requestImage = async (prompt, label) =>
+  const primaryModel = process.env.AI_IMAGE_MODEL || "cf/@cf/black-forest-labs/flux-1-schnell";
+  const fallbackModel = "cf/@cf/black-forest-labs/flux-1-schnell";
+
+  const requestImageWithModel = async (modelToUse, prompt, label) =>
     withRetry(
       async () => {
         const response = await fetch(`${imgBaseUrl}/images/generations?response_format=binary`, {
@@ -382,10 +386,10 @@ Aturan prompt gambar:
             ...(imgApiKey ? { Authorization: `Bearer ${imgApiKey}` } : {}),
           },
           body: JSON.stringify({
-            model: process.env.AI_IMAGE_MODEL || "cf/@cf/black-forest-labs/flux-2-klein-9b",
+            model: modelToUse,
             prompt,
-            size: "1024x768"
-          })
+            size: "1024x768",
+          }),
         });
 
         if (!response.ok) {
@@ -395,7 +399,7 @@ Aturan prompt gambar:
               `Images API menolak prompt (status ${response.status}, kemungkinan diblokir oleh moderasi konten)`
             );
           }
-          throw new Error(`Images API gagal: ${response.status}`);
+          throw new Error(`Images API gagal (${modelToUse}): ${response.status}`);
         }
 
         const buf = Buffer.from(await response.arrayBuffer());
@@ -406,6 +410,19 @@ Aturan prompt gambar:
       },
       { retries: options.retries, label }
     );
+
+  const requestImage = async (prompt, label) => {
+    try {
+      return await requestImageWithModel(primaryModel, prompt, label);
+    } catch (err) {
+      if (err instanceof NonRetryableError) throw err;
+      if (primaryModel !== fallbackModel) {
+        console.warn(`   ⚠️ Model utama (${primaryModel}) gagal (${err.message}). Mencoba model cadangan (${fallbackModel})...`);
+        return await requestImageWithModel(fallbackModel, prompt, `${label} [fallback-model]`);
+      }
+      throw err;
+    }
+  };
 
   const SAFE_FALLBACK_PROMPT = `${REQUIRED_PREFIX}Students studying together happily in a bright, welcoming classroom`;
 

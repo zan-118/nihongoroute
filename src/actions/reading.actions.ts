@@ -16,6 +16,7 @@ import {
  getContentBySlugOrId,
  getStaticSlugs
 } from "@/lib/services/content-repository";
+import { logger } from "@/lib/core/logger";
 
 // ======================
 // SERVER ACTIONS
@@ -65,7 +66,7 @@ export async function getPaginatedReading(
  total: response.total,
  };
  } catch (error) {
- console.error("Gagal mengambil data paginasi bacaan dari Supabase:", error);
+ logger.error("Gagal mengambil data paginasi bacaan dari Supabase:", error);
  return { data: [], total: 0 };
  }
 }
@@ -92,7 +93,7 @@ export async function getLibraryReadingDetail(slug: string): Promise<LibraryItem
  videoUrl: data.video_url
  } as LibraryItem;
  } catch (error) {
- console.error("Gagal mengambil detail bacaan dari Supabase:", error);
+ logger.error("Gagal mengambil detail bacaan dari Supabase:", error);
  return null;
  }
 }
@@ -107,7 +108,7 @@ export async function getReadingStaticSlugs(): Promise<{ slug: string }[]> {
  const data = await getStaticSlugs("reading", { limit: 1000, select: "slug" });
  return data.map((item) => ({ slug: String(item.slug) })).filter((x) => x.slug);
  } catch (error) {
- console.error("Gagal mengambil static slugs reading:", error);
+ logger.error("Gagal mengambil static slugs reading:", error);
  return [];
  }
 }

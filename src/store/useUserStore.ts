@@ -9,10 +9,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { get, set as idbSet, del } from "idb-keyval";
-import { Inventory, LessonProgress, UserProgress } from "./types";
+import { Inventory, LessonProgress } from "./types";
 import { calculateLevel } from "@/lib/level";
 import { useUIStore } from "./useUIStore";
-import { ACHIEVEMENTS_LIST } from "@/lib/constants/gamification";
+import { ACHIEVEMENTS_LIST, type AchievementProgressState } from "@/lib/constants/gamification";
 
 // ==========================================
 // State & Actions Interface
@@ -254,27 +254,25 @@ export const useUserStore = create<UserState>()(
  },
  completedLessons: {},
  dirtyLessons: new Set<string>()
- }),
+ }), checkAchievements: async () => {
+  // Skip in Vitest environment.
+  if (typeof process !== "undefined" && process.env?.VITEST) {
+   return;
+  }
 
- checkAchievements: () => {
- // Skip in Vitest environment.
- if (typeof process !== "undefined" && process.env?.VITEST) {
- return;
- }
+  // Prevent concurrent checks.
+  if (get().isCheckingAchievements) return;
+  set({ isCheckingAchievements: true });
 
- // Prevent concurrent checks.
- if (get().isCheckingAchievements) return;
- set({ isCheckingAchievements: true });
+  try {
 
- try {
+   const state = get();
+   const achievements = state.inventory?.achievements || [];
+   const unlockedIds = new Set(achievements.map((a) => a.id));
 
- const state = get();
- const achievements = state.inventory?.achievements || [];
- const unlockedIds = new Set(achievements.map((a) => a.id));
-
- // Get SRS store dynamically to avoid circular import.
- const srsStore = typeof window !== "undefined" ? (window as unknown as Record<string, { getState: () => { srs: Record<string, { isDeleted?: boolean; repetition?: number }> } }>).useSRSStore : null;
- const srsState = srsStore ? srsStore.getState().srs || {} : {};
+   // Lazy-load SRS store to avoid circular import (useSRSStore imports this store).
+   const { useSRSStore } = await import("./useSRSStore");
+   const srsState = useSRSStore.getState().srs || {};
 
  const completedLessonsKeysObj: Record<string, boolean> = {};
  if (state.completedLessons) {
@@ -298,25 +296,15 @@ export const useUserStore = create<UserState>()(
  }
  }
  }
- }
-
- // Build payload for condition check.
- const progressPayload = {
- id: state.id,
- isGuest: state.isGuest,
- name: state.name,
- xp: state.xp,
- level: state.level,
- streak: state.streak,
- todayReviewCount: state.todayReviewCount,
- lastStudyDate: state.lastStudyDate,
- studyDays: state.studyDays,
- inventory: state.inventory,
- completedLessons: completedLessonsKeysObj,
- srs: srsKeysObj,
- notifications: [],
- settings: {}
- } as unknown as UserProgress;
+ } // Build payload for achievement condition check (only fields read by conditions).
+ const progressPayload: AchievementProgressState = {
+  xp: state.xp,
+  level: state.level,
+  streak: state.streak,
+  todayReviewCount: state.todayReviewCount,
+  completedLessons: completedLessonsKeysObj,
+  srs: srsKeysObj,
+ };
 
  // XP rewards map.
  const ACHIEVEMENT_XP_REWARDS: Record<string, number> = {

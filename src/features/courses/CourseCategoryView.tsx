@@ -184,7 +184,7 @@ export default function CourseCategoryView({
  onPageChange={handlePageChange}
  categoryId={categoryId}
  isSideQuest={isSideQuest}
- completedLessons={completedLessons as unknown as Record<string, { isDeleted?: boolean; [key: string]: unknown }>}
+ completedLessons={completedLessons}
  itemVariants={itemVariants}
  />
  </m.div>

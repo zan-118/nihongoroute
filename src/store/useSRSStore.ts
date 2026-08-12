@@ -314,8 +314,3 @@ export const useSRSStore = create<SRSStateStore>()(
  }
  )
 );
-
-// Expose store to window. Debugging helper.
-if (typeof window !== "undefined") {
- (window as unknown as Record<string, typeof useSRSStore>).useSRSStore = useSRSStore;
-}

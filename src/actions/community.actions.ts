@@ -14,6 +14,7 @@ import {
  buildCommentNotificationPayload,
  sendCommunityNotification,
 } from "@/lib/notifications/notification-engine";
+import { logger } from "@/lib/core/logger";
 /**
  * Author profile details for posts and comments.
  */
@@ -111,7 +112,7 @@ export async function getCommunityPosts(category?: string): Promise<CommunityPos
  author: profileMap.get(post.user_id) || { full_name: 'Unknown User', level: 1 }
  }));
  } catch (error) {
- console.error('Gagal mengambil postingan komunitas:', error);
+ logger.error('Gagal mengambil postingan komunitas:', error);
  return [];
  }
 }
@@ -146,7 +147,7 @@ export async function createCommunityPost(content: string, category: string = "U
  revalidatePath(ROUTES.SOCIAL);
  return { success: true };
  } catch (error: unknown) {
- console.error("Gagal membuat postingan:", error);
+ logger.error("Gagal membuat postingan:", error);
  return { success: false, error: error instanceof Error ? error.message : "Gagal membuat postingan." };
  }
 }
@@ -227,7 +228,7 @@ export async function toggleLikePost(postId: string): Promise<{ success: boolean
  revalidatePath(ROUTES.SOCIAL);
  return { success: true, likesCount: likesList.length, isLiked };
  } catch (error) {
- console.error("Gagal mengubah suka postingan:", error);
+ logger.error("Gagal mengubah suka postingan:", error);
  return { success: false, likesCount: 0, isLiked: false };
  }
 }
@@ -280,7 +281,7 @@ export async function getPostComments(postId: string): Promise<CommunityComment[
  };
  }) as CommunityComment[];
  } catch (error) {
- console.error("Gagal mengambil komentar:", error);
+ logger.error("Gagal mengambil komentar:", error);
  return [];
  }
 }
@@ -339,7 +340,7 @@ export async function addCommunityComment(postId: string, content: string): Prom
  revalidatePath(ROUTES.SOCIAL);
  return { success: true };
  } catch (error: unknown) {
- console.error("Gagal menambahkan komentar:", error);
+ logger.error("Gagal menambahkan komentar:", error);
  return { success: false, error: error instanceof Error ? error.message : "Gagal menambahkan komentar." };
  }
 }
@@ -374,7 +375,7 @@ export async function getPublicProfile(userId: string): Promise<{ success: boole
  if (error) throw error;
  return { success: true, profile: data as PublicProfile };
  } catch (error: unknown) {
- console.error("Gagal mengambil profil publik:", error);
+ logger.error("Gagal mengambil profil publik:", error);
  return { success: false, error: error instanceof Error ? error.message : "Gagal mengambil profil." };
  }
 }
@@ -401,7 +402,7 @@ export async function deleteCommunityPost(postId: string): Promise<{ success: bo
  revalidatePath(ROUTES.SOCIAL);
  return { success: true };
  } catch (error: unknown) {
- console.error("Gagal menghapus postingan:", error);
+ logger.error("Gagal menghapus postingan:", error);
  return { success: false, error: error instanceof Error ? error.message : "Gagal menghapus postingan." };
  }
 }
@@ -428,7 +429,7 @@ export async function deleteCommunityComment(commentId: string): Promise<{ succe
  revalidatePath(ROUTES.SOCIAL);
  return { success: true };
  } catch (error: unknown) {
- console.error("Gagal menghapus komentar:", error);
+ logger.error("Gagal menghapus komentar:", error);
  return { success: false, error: error instanceof Error ? error.message : "Gagal menghapus komentar." };
  }
 }
@@ -464,7 +465,7 @@ export async function getNotifications(): Promise<CommunityNotification[]> {
  if (error) throw error;
  return (data || []) as CommunityNotification[];
  } catch (error) {
- console.error("Gagal mengambil notifikasi:", error);
+ logger.error("Gagal mengambil notifikasi:", error);
  return [];
  }
 }
@@ -486,7 +487,7 @@ export async function markNotificationRead(notificationId: string): Promise<{ su
  if (error) throw error;
  return { success: true };
  } catch (error: unknown) {
- console.error("Gagal menandai notifikasi terbaca:", error);
+ logger.error("Gagal menandai notifikasi terbaca:", error);
  return { success: false, error: error instanceof Error ? error.message : "Gagal menandai notifikasi." };
  }
 }
@@ -505,7 +506,7 @@ export async function markAllNotificationsRead(): Promise<{ success: boolean; er
  if (error) throw error;
  return { success: true };
  } catch (error: unknown) {
- console.error("Gagal menandai semua notifikasi terbaca:", error);
+ logger.error("Gagal menandai semua notifikasi terbaca:", error);
  return { success: false, error: error instanceof Error ? error.message : "Gagal menandai semua notifikasi." };
  }
 }
@@ -524,7 +525,7 @@ export async function clearAllNotifications(): Promise<{ success: boolean; error
  if (error) throw error;
  return { success: true };
  } catch (error: unknown) {
- console.error("Gagal menghapus semua notifikasi:", error);
+ logger.error("Gagal menghapus semua notifikasi:", error);
  return { success: false, error: error instanceof Error ? error.message : "Gagal menghapus semua notifikasi." };
  }
 }

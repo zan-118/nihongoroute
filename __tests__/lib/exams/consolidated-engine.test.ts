@@ -1,22 +1,20 @@
 import { describe, it, expect } from "vitest";
 import { ConsolidatedExamSessionEngine } from "@/lib/exams/exam-session-engine";
-import type { ExamQuestion } from "@/features/exams/components/mock-engine/types";
-
-const MOCK_QUIZ_QUESTIONS: ExamQuestion[] = [
-  {
-    _key: "q1",
-    section: "vocabulary",
-    title: "Vocab 1",
-    options: ["A", "B"],
-    correctAnswer: 0,
-  },
-  {
-    _key: "q2",
-    section: "vocabulary",
-    title: "Vocab 2",
-    options: ["C", "D"],
-    correctAnswer: 1,
-  },
+import type { ExamQuestion } from "@/features/exams/components/mock-engine/types";const MOCK_QUIZ_QUESTIONS: ExamQuestion[] = [
+ {
+  _key: "q1",
+  section: "vocabulary",
+  questionText: "Vocab 1",
+  options: ["A", "B"],
+  correctAnswer: 0,
+ },
+ {
+  _key: "q2",
+  section: "vocabulary",
+  questionText: "Vocab 2",
+  options: ["C", "D"],
+  correctAnswer: 1,
+ },
 ];
 
 describe("ConsolidatedExamSessionEngine Seam", () => {

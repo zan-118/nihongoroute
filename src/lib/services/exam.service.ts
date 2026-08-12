@@ -25,6 +25,7 @@ import { toLegacyExamData, type SupabaseExamSection } from "@/lib/exams/supabase
 import { createClient, createStaticClient } from "@/lib/supabase/server";
 import { getR2PublicUrl } from "@/lib/storage/r2";
 import type { Json } from "@/types/supabase.generated";
+import { logger } from "@/lib/core/logger";
 
 /**
  * Input parameters for starting a JLPT mock session.
@@ -450,7 +451,7 @@ export async function getSupabaseExamTemplateBySlug(
 
  return maskLegacyExamAnswers(toLegacyExamData(examPackage));
  } catch (error) {
- console.error("Gagal mengambil template mock test Supabase:", error);
+ logger.error("Gagal mengambil template mock test Supabase:", error);
  return null;
  }
 }
@@ -488,7 +489,7 @@ export async function getSupabaseExamTemplatesList(input?: {
  toSupabaseExamListItem
  );
  } catch (error) {
- console.error("Gagal mengambil daftar template mock test Supabase:", error);
+ logger.error("Gagal mengambil daftar template mock test Supabase:", error);
  return [];
  }
 }

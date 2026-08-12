@@ -121,16 +121,7 @@ export function ProgressPanel({
  xpNeeded={xpNeeded} 
  xpProgress={xpProgress} 
  itemVariants={itemVariants} 
- courseMetadata={courseMetadata as unknown as Array<{
- _id: string;
- title: string;
- slug: string;
- lessons: Array<{
- _id: string;
- title: string;
- slug: string;
- }>;
- }>}
+ courseMetadata={courseMetadata}
  />
  
  {/* Detailed analysis section containing Kanji grid and weak points */}

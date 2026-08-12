@@ -78,13 +78,15 @@ describe('Listening and Reading Actions from Supabase', () => {
     expect(result).not.toBeNull();
     
     // Verifikasi Listening
-    expect(result?.listeningList).toHaveLength(1);
-    expect(result?.listeningList?.[0]?.transcript).toHaveLength(2);
-    expect(result?.listeningList?.[0]?.transcript?.[0]?.speaker).toBe('店員');
-    expect(result?.listeningList?.[0]?.transcript?.[0]?.text).toBe('いらっしゃいませ。');
+    const listeningList = result?.listeningList as Array<{ transcript: Array<{ speaker: string; text: string }> }> | undefined;
+    const readingList = result?.readingList as Array<{ title: string }> | undefined;
+    expect(listeningList).toHaveLength(1);
+    expect(listeningList?.[0]?.transcript).toHaveLength(2);
+    expect(listeningList?.[0]?.transcript?.[0]?.speaker).toBe('店員');
+    expect(listeningList?.[0]?.transcript?.[0]?.text).toBe('いらっしゃいませ。');
 
     // Verifikasi Reading
-    expect(result?.readingList).toHaveLength(1);
-    expect(result?.readingList?.[0]?.title).toBe('Membaca Surat');
+    expect(readingList).toHaveLength(1);
+    expect(readingList?.[0]?.title).toBe('Membaca Surat');
   });
 });

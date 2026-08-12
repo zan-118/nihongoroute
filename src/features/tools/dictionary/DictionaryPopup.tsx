@@ -15,7 +15,7 @@ import { X } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { TTSReader } from "@/features/media";
 import AddToSRSButton from "@/features/srs/actions/AddToSRSButton";
-import { createClient } from "@/lib/supabase/client";
+import { lookupDictionaryWordAction } from "@/actions/dictionary.actions";
 
 // ==========================================
 // Types & Interfaces
@@ -53,40 +53,15 @@ export default function DictionaryPopup() {
  const lookupWord = async (text: string) => {
  setLoading(true);
  try {
- const supabase = createClient();
- 
- // 1. Cari kecocokan eksak pada word atau furigana
- // Query exact match first.
- let { data, error } = await supabase
- .from("vocab")
- .select("id, word, furigana, romaji, meaning_id")
- .or(`word.eq.${text},furigana.eq.${text}`)
- .limit(1)
- .maybeSingle();
-
- if (error) throw error;
-
- // 2. Jika tidak ditemukan, coba cari substring (ilike)
- // Fallback to substring search if exact match fails.
- if (!data) {
- const { data: list, error: listError } = await supabase
- .from("vocab")
- .select("id, word, furigana, romaji, meaning_id")
- .or(`word.ilike.%${text}%,furigana.ilike.%${text}%`)
- .limit(1);
- 
- if (listError) throw listError;
- if (list && list.length > 0) {
- data = list[0];
- }
- }
+ // Query via server action (RLS-aware, server-side).
+ const data = await lookupDictionaryWordAction(text);
 
  if (data) {
  setResult({
  id: data.id,
  word: data.word,
  furigana: data.furigana || undefined,
- meaning: data.meaning_id || "",
+ meaning: data.meaning || "",
  romaji: data.romaji || undefined,
  });
  } else {

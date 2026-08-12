@@ -47,7 +47,7 @@ export async function getFlashcardsByMode(
 
  const { data, error } = await query;
  if (error) {
- console.error("Gagal mengambil kartu flash kanji:", error);
+ logger.error("Gagal mengambil kartu flash kanji:", error);
  return [];
  }
  
@@ -68,7 +68,7 @@ export async function getFlashcardsByMode(
 
  const { data, error } = await query;
  if (error) {
- console.error("Gagal mengambil kartu flash kalimat:", error);
+ logger.error("Gagal mengambil kartu flash kalimat:", error);
  return [];
  }
  return data || [];
@@ -87,7 +87,7 @@ export async function getFlashcardsByMode(
 
  const { data, error } = await query;
  if (error) {
- console.error("Gagal mengambil kartu flash kosakata:", error);
+ logger.error("Gagal mengambil kartu flash kosakata:", error);
  return [];
  }
  return data || [];
@@ -102,6 +102,7 @@ import {
  sortCardsByRequestedOrder,
  type FormattedCard,
 } from "@/lib/learning/flashcard-resolver";
+import { logger } from "@/lib/core/logger";
 
 /**
  * Fetch specific flashcards by list of IDs.
@@ -175,7 +176,7 @@ export async function getFlashcardsByIds(ids: string[]): Promise<FormattedCard[]
  const allCards = Array.from(uniqueFinalCardsMap.values());
  return sortCardsByRequestedOrder(allCards, ids);
  } catch (error) {
- console.error("[getFlashcardsByIds] Gagal mengambil data kartu:", error);
+ logger.error("[getFlashcardsByIds] Gagal mengambil data kartu:", error);
  return [];
  }
 }

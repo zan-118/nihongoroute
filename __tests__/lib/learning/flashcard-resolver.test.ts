@@ -133,8 +133,8 @@ describe("FlashcardResolver", () => {
   describe("sortCardsByRequestedOrder", () => {
     it("sorts cards based on requested ID order", () => {
       const cards: FormattedCard[] = [
-        { id: "id-b", word: "B", meaning: "b", category: "vocab", docType: "vocab" },
-        { id: "id-a", word: "A", meaning: "a", category: "vocab", docType: "vocab" },
+        { _id: "id-b", id: "id-b", word: "B", meaning: "b", category: "vocab", docType: "vocab" },
+        { _id: "id-a", id: "id-a", word: "A", meaning: "a", category: "vocab", docType: "vocab" },
       ];
 
       const sorted = sortCardsByRequestedOrder(cards, ["id-a", "id-b"]);

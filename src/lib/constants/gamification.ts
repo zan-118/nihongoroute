@@ -23,11 +23,24 @@ import {
  Pulse,
  Heart
 } from "@/components/ui/icons";
-import { UserProgress } from "@/store/types";
-
 // ==========================================
 // TIPE DATA & ANTARMUKA
 // ==========================================
+
+/**
+ * State minimal yang dibutuhkan untuk evaluasi kondisi achievement.
+ * Hanya berisi field yang benar-benar dibaca oleh condition di ACHIEVEMENTS_LIST.
+ */
+export interface AchievementProgressState {
+ /** Map SRS card IDs (value tidak dipakai, hanya key count). */
+ srs: Record<string, unknown>;
+ /** Map completed lesson IDs (value tidak dipakai, hanya key count). */
+ completedLessons: Record<string, unknown>;
+ xp: number;
+ level: number;
+ streak: number;
+ todayReviewCount: number;
+}
 
 /**
  * Quest structure. Define daily task parameters.
@@ -49,7 +62,7 @@ export interface Achievement {
  title: string;
  description: string;
  icon: React.ComponentType<{ size?: number; className?: string }>;
- condition: (progress: UserProgress) => number; // Mengembalikan persentase progres 0-100
+ condition: (progress: AchievementProgressState) => number; // Mengembalikan persentase progres 0-100
  threshold: number;
 }
 

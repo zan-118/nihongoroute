@@ -69,3 +69,63 @@ export const securityLogger = {
  error: (payload: LogPayload) => emitLog("error", payload),
  alert: (payload: LogPayload) => emitLog("alert", payload),
 };
+
+/**
+ * Context passthrough untuk logger umum.
+ * Nilai kompleks (objek/array) otomatis di-redact agar payload tetap kecil dan aman.
+ */
+type LogContext = Record<string, string | number | boolean | null | undefined>;
+
+interface LoggerOptions {
+ source?: string;
+ userId?: string;
+}
+
+/**
+ * Serialisasi error ke bentuk aman tanpa stack yang berlebihan di metadata.
+ */
+function toErrorMeta(error: unknown): Record<string, string | number | boolean | null> {
+ if (error instanceof Error) {
+ return {
+  name: error.name,
+  message: error.message,
+ };
+ }
+ if (typeof error === "string") {
+  return { message: error };
+ }
+ return { message: "Unknown error" };
+}
+
+/**
+ * Logger umum untuk seluruh aplikasi (server-side & client-side).
+ * Menyediakan API sederhana `logger.error(message, error?, context?)`
+ * dengan timestamp terstruktur, sanitasi metadata, dan redaction otomatis.
+ *
+ * @example
+ * logger.error("Gagal mengambil data", error, { table: "vocab", source: "server action" });
+ */
+export const logger = {
+ info: (message: string, context?: LogContext, options?: LoggerOptions) =>
+  emitLog("info", { event: message, source: options?.source, userId: options?.userId, metadata: context ? cleanContext(context) : undefined }),
+ warn: (message: string, context?: LogContext, options?: LoggerOptions) =>
+  emitLog("warn", { event: message, source: options?.source, userId: options?.userId, metadata: context ? cleanContext(context) : undefined }),
+ error: (message: string, error?: unknown, context?: LogContext, options?: LoggerOptions) =>
+  emitLog("error", {
+   event: message,
+   source: options?.source,
+   userId: options?.userId,
+   metadata: cleanContext({ ...(context || {}), ...(error !== undefined ? toErrorMeta(error) : {}) }),
+  }),
+};
+
+/**
+ * Hapus nilai undefined dari context agar cocok dengan tipe metadata logger.
+ */
+function cleanContext(context: LogContext): Record<string, string | number | boolean | null> {
+ const clean: Record<string, string | number | boolean | null> = {};
+ for (const [key, value] of Object.entries(context)) {
+  if (value !== undefined) clean[key] = value;
+ }
+ return clean;
+}

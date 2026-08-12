@@ -21,6 +21,7 @@ import {
  type HydrationKanjiRow,
  type HydrationGrammarRow,
 } from "@/lib/services/lesson-hydration-engine";
+import { logger } from "@/lib/core/logger";
 
 // ======================
 // SERVER ACTIONS
@@ -51,7 +52,7 @@ export async function getLessonDetail(slug: string) {
  if (artData) return { ...artData, category: artData.course_categories };
 
  if (error) {
- console.error("Gagal mengambil detail pelajaran:", error);
+ logger.error("Gagal mengambil detail pelajaran:", error);
  }
  return null;
  }
@@ -89,7 +90,7 @@ export async function getCourseCategories() {
  .order("order_number", { ascending: true });
 
  if (error) {
- console.error("Gagal mengambil kategori kursus:", error);
+ logger.error("Gagal mengambil kategori kursus:", error);
  return [];
  }
 
@@ -248,7 +249,7 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
 
  const { data: dbLesson, error: dbErr } = await query.maybeSingle();
  if (dbErr) {
- console.error(`[getLibraryLessonDetail] Supabase query error:`, dbErr);
+ logger.error(`[getLibraryLessonDetail] Supabase query error:`, dbErr);
  }
 
  let rawRow: RawLessonRow | null = null;
@@ -274,7 +275,7 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
  const fetcher = createSupabaseFetcher();
  return await hydrateLessonDetail(rawRow, fetcher);
  } catch (error) {
- console.error(`Gagal mengambil detail pelajaran:`, error);
+ logger.error(`Gagal mengambil detail pelajaran:`, error);
  return null;
  }
 }
@@ -392,7 +393,7 @@ export async function getLessonStaticParams(): Promise<{ categoryId: string; slu
 
  return results;
  } catch (error) {
- console.error("Gagal mengambil static params lessons:", error);
+ logger.error("Gagal mengambil static params lessons:", error);
  return [];
  }
 }

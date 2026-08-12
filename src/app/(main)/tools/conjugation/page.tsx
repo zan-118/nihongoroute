@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ConjugationTrainerClient from "@/features/tools/conjugation-trainer/ConjugationTrainerClient";
 import type { VerbFormId, VerbGroup } from "@/lib/verb-conjugation";
 import { createPageMetadata } from "@/lib/seo";
+import { firstParam, type ToolSearchParams } from "@/lib/core/utils";
 
 import { ROUTES } from "@/lib/core/routes";
 /** Page metadata. Define SEO tags for conjugation trainer. */
@@ -13,15 +14,6 @@ export const metadata: Metadata = {
  keywords: ["konjugasi verba Jepang", "verb conjugation Japanese", "latihan te form", "masu form"],
  }),
 };
-
-/** Search parameters for conjugation tool. */
-type ToolSearchParams = Record<string, string | string[] | undefined>;
-
-/** Extract first string value from parameter. */
-function firstParam(value: string | string[] | undefined) {
- // Return first element if array, else return value.
- return Array.isArray(value) ? value[0] : value;
-}
 
 /** Validate and normalize verb group string. */
 function normalizeGroup(value: string | undefined): VerbGroup {

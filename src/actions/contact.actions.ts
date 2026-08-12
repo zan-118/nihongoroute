@@ -6,6 +6,7 @@
  */
 
 import { createClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/core/logger";
 
 export interface ContactFormPayload {
   name: string;
@@ -47,7 +48,7 @@ export async function submitContactFormAction(payload: ContactFormPayload) {
       ]);
 
     if (dbError) {
-      console.error("[ContactAction] Database insert error:", dbError);
+      logger.error("[ContactAction] Database insert error:", dbError);
       return { success: false, error: "Gagal menyimpan pesan ke database." };
     }
 
@@ -109,14 +110,14 @@ export async function submitContactFormAction(payload: ContactFormPayload) {
           }),
         });
       } catch (emailErr) {
-        console.error("[ContactAction] Resend email dispatch failed:", emailErr);
+        logger.error("[ContactAction] Resend email dispatch failed:", emailErr);
         // Non-blocking error: submission remains saved in Supabase
       }
     }
 
     return { success: true };
   } catch (error) {
-    console.error("[ContactAction] Unexpected error:", error);
+    logger.error("[ContactAction] Unexpected error:", error);
     return { success: false, error: "Terjadi kesalahan pada server. Silakan coba lagi." };
   }
 }

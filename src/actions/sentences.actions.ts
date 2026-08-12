@@ -15,6 +15,7 @@ import {
  getSentencesContainingWord,
  getRandomSentencesPool
 } from "@/lib/services/content-repository";
+import { logger } from "@/lib/core/logger";
 
 // ======================
 // TYPES
@@ -66,7 +67,7 @@ export async function getSentencesByWord(
  return data as SentenceRow[];
  } catch (error) {
  const message = error instanceof Error ? error.message : String(error);
- console.error(`[getSentencesByWord] Gagal mengambil kalimat untuk "${word}":`, message);
+ logger.error(`[getSentencesByWord] Gagal mengambil kalimat untuk "${word}":`, message);
  return [];
  }
 }
@@ -107,7 +108,7 @@ export async function getRandomSentencesForDrill(
  }));
  } catch (error) {
  const message = error instanceof Error ? error.message : String(error);
- console.error("[getRandomSentencesForDrill] Gagal mengambil kalimat:", message);
+ logger.error("[getRandomSentencesForDrill] Gagal mengambil kalimat:", message);
  return [];
  }
 }
@@ -131,7 +132,7 @@ export async function getSentencesByGrammarPattern(
  return data as SentenceRow[];
  } catch (error) {
  const message = error instanceof Error ? error.message : String(error);
- console.error(`[getSentencesByGrammarPattern] Gagal mengambil kalimat untuk "${pattern}":`, message);
+ logger.error(`[getSentencesByGrammarPattern] Gagal mengambil kalimat untuk "${pattern}":`, message);
  return [];
  }
 }
@@ -155,7 +156,7 @@ export async function getSentencesByKanji(
  return data as SentenceRow[];
  } catch (error) {
  const message = error instanceof Error ? error.message : String(error);
- console.error(`[getSentencesByKanji] Gagal mengambil kalimat untuk "${character}":`, message);
+ logger.error(`[getSentencesByKanji] Gagal mengambil kalimat untuk "${character}":`, message);
  return [];
  }
 }

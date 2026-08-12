@@ -8,6 +8,7 @@
 // ==========================================
 import React from "react";
 import Link from "next/link";
+import { parseInlineStyles } from "@/lib/utils/markdown-parser";
 
 // ==========================================
 // ANTARMUKA & KATA KUNCI
@@ -35,47 +36,6 @@ const COMMON_KEYWORDS: KeywordLink[] = [
  { keyword: "Hiragana", href: "/tools/kana#hiragana", description: "Suku kata dasar dalam penulisan bahasa Jepang." },
  { keyword: "Katakana", href: "/tools/kana#katakana", description: "Suku kata untuk kata serapan asing." },
 ];
-
-// ==========================================
-// PENDUKUNG DESAIN & MARKDOWN PARSER
-// ==========================================
-
-/**
- * Parse markdown syntax for bold, italic, and code blocks.
- * @param text Raw text input.
- * @returns Array of React nodes with applied styles.
- */
-function parseInlineStyles(text: string): React.ReactNode[] {
- // Split text by markdown delimiters: bold (**), code (`), italic (*)
- const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*)/g);
- return parts.map((part, index) => {
- // Match bold syntax
- if (part.startsWith("**") && part.endsWith("**")) {
- return (
- <strong key={index} className="text-foreground font-black">
- {part.slice(2, -2)}
- </strong>
- );
- }
- // Match inline code syntax
- if (part.startsWith("`") && part.endsWith("`")) {
- return (
- <code key={index} className="px-1.5 py-0.5 rounded bg-primary/5 border border-primary/10 text-primary font-mono text-xs md:text-sm font-bold mx-0.5">
- {part.slice(1, -1)}
- </code>
- );
- }
- // Match italic syntax
- if (part.startsWith("*") && part.endsWith("*")) {
- return (
- <em key={index} className="italic text-muted-foreground/90 font-medium">
- {part.slice(1, -1)}
- </em>
- );
- }
- return part;
- });
-}
 
 // ==========================================
 // FUNGSI UTAMA UTILITY

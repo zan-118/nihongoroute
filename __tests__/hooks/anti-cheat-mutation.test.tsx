@@ -51,8 +51,10 @@ describe('Anti-Cheat Integration (useCloudMutation)', () => {
       todayReviewCount: 0,
       lastStudyDate: null,
       studyDays: {},
-      inventory: { streakFreeze: 0, freezeActive: false },
-      settings: { theme: 'dark', dailyGoal: 10, soundEnabled: true, ttsVoice: 'ja-JP-NanamiNeural', fontSize: 'md' } as const
+      inventory: { streakFreeze: 0 },
+      settings: { notificationsEnabled: false },
+      srs: {},
+      completedLessons: {},
     };
 
     result.current.mutate({
@@ -81,7 +83,6 @@ describe('Anti-Cheat Integration (useCloudMutation)', () => {
     const session = { user: { id: 'test-user' } } as unknown as Parameters<typeof useCloudMutation>[0];
     const { result } = renderHook(() => useCloudMutation(session), { wrapper });
 
-    let errorCaught: Error | null = null;
     vi.useFakeTimers();
     result.current.mutate({
       progress: {
@@ -91,22 +92,16 @@ describe('Anti-Cheat Integration (useCloudMutation)', () => {
         todayReviewCount: 0,
         lastStudyDate: null,
         studyDays: {},
-        inventory: { streakFreeze: 0, freezeActive: false },
-        settings: { theme: 'dark', dailyGoal: 10, soundEnabled: true, ttsVoice: 'ja-JP-NanamiNeural', fontSize: 'md' } as const
+        inventory: { streakFreeze: 0 },
+        settings: { notificationsEnabled: false },
+        srs: {},
+        completedLessons: {},
       },
       dirtySrs: new Set(),
       dirtyLessons: new Set(),
-    }, {
-      onError: (error) => {
-        errorCaught = error as Error;
-      }
     });
 
     await vi.runAllTimersAsync();
-
-    expect(errorCaught).toBeTruthy();
-    expect(errorCaught?.message).toContain('Negative XP delta');
-
     vi.useRealTimers();
 
     expect(result.current.error?.message).toContain('Negative XP delta');
@@ -141,11 +136,13 @@ describe('Anti-Cheat Integration (useCloudMutation)', () => {
       todayReviewCount: 1,
       lastStudyDate: null,
       studyDays: {},
-      inventory: { streakFreeze: 0, freezeActive: false },
-      settings: { theme: 'dark', dailyGoal: 10, soundEnabled: true, ttsVoice: 'ja-JP-NanamiNeural', fontSize: 'md' } as const
+      inventory: { streakFreeze: 0 },
+      settings: { notificationsEnabled: false },
+      srs: {},
+      completedLessons: {},
     };
 
-    useSRSStore.setState({ items: { word1: { status: 'learning', interval: 1, ease_factor: 2.5, repetition: 0 } as never } });
+    useSRSStore.setState({ srs: { word1: { interval: 1, repetition: 0, easeFactor: 2.5, nextReview: Date.now(), updatedAt: Date.now() } } });
 
     vi.useFakeTimers();
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getIntegratedCounterQuestions } from "@/actions/tools-integration.actions";
 import CounterTrainerClient from "@/features/tools/counter-trainer/CounterTrainerClient";
 import { createPageMetadata } from "@/lib/seo";
+import { buildContextLabel, firstParam, type ToolSearchParams } from "@/lib/core/utils";
 
 import { ROUTES } from "@/lib/core/routes";
 /** Page metadata for SEO. */
@@ -16,23 +17,6 @@ export const metadata: Metadata = {
 
 /** Force dynamic rendering. Prevent static build caching. */
 export const dynamic = "force-dynamic";
-
-/** Search parameters for tool page. */
-type ToolSearchParams = Record<string, string | string[] | undefined>;
-
-/** Extract first string from query parameter value. */
-function firstParam(value: string | string[] | undefined) {
- // Return first element if array, else return value.
- return Array.isArray(value) ? value[0] : value;
-}
-
-/** Build label showing source context of questions. */
-function buildContextLabel(source?: string, slug?: string) {
- if (!source && !slug) return undefined;
- // Capitalize source name or default to Library.
- const sourceLabel = source ? source.charAt(0).toUpperCase() + source.slice(1) : "Library";
- return slug ? `Konteks dari ${sourceLabel}: ${decodeURIComponent(slug)}` : `Konteks dari ${sourceLabel}`;
-}
 
 /** Counter trainer page component. Fetch questions and render client trainer. */
 export default async function CounterTrainerPage({

@@ -19,6 +19,7 @@ import {
  getGrammarFamilyList,
  getRandomGrammarPool
 } from "@/lib/services/content-repository";
+import { logger } from "@/lib/core/logger";
 
 // ======================
 // SERVER ACTIONS
@@ -50,7 +51,7 @@ export async function getPaginatedGrammar(
  total: response.total
  };
  } catch (error) {
- console.error("Gagal mengambil data paginasi tata bahasa:", error);
+ logger.error("Gagal mengambil data paginasi tata bahasa:", error);
  return { data: [], total: 0 };
  }
 }
@@ -76,7 +77,7 @@ export async function getRandomGrammarArticle(level: string = "N5") {
  jlptLevel: randomItem.jlpt_level
  };
  } catch (error) {
- console.error("Gagal mengambil artikel tata bahasa acak:", error);
+ logger.error("Gagal mengambil artikel tata bahasa acak:", error);
  return null;
  }
 }
@@ -143,7 +144,7 @@ export async function getLibraryGrammarDetail(slugOrId: string): Promise<Library
 
  return data;
  } catch (error) {
- console.error("Gagal mengambil detail tata bahasa:", error);
+ logger.error("Gagal mengambil detail tata bahasa:", error);
  return null;
  }
 }
@@ -158,7 +159,7 @@ export async function getGrammarStaticSlugs(): Promise<{ slug: string }[]> {
  const data = await getStaticSlugs("grammar", { limit: 1000, select: "slug" });
  return data.map((item) => ({ slug: String(item.slug) })).filter((x) => x.slug);
  } catch (error) {
- console.error("Gagal mengambil static slugs grammar:", error);
+ logger.error("Gagal mengambil static slugs grammar:", error);
  return [];
  }
 }

@@ -94,17 +94,7 @@ export function HomePanel({
  dueCount={dueCount}
  itemVariants={itemVariants}
  isAuthenticated={isAuthenticated}
- // Cast metadata to match DashboardHero expected type structure.
- courseMetadata={courseMetadata as unknown as Array<{
- _id: string;
- title: string;
- slug: string;
- lessons: Array<{
- _id: string;
- title: string;
- slug: string;
- }>;
- }>}
+ courseMetadata={courseMetadata}
  />
  
  <NextActionPanel compact courseMetadata={courseMetadata} />

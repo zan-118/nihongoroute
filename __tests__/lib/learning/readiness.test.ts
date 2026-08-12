@@ -38,7 +38,7 @@ describe('Readiness & JLPT Detection', () => {
       
       const completedLessons: Record<string, LessonProgress> = {};
       for(let i=0; i<10; i++) {
-        completedLessons[`l${i}`] = { completedAt: Date.now(), isDeleted: false, mastery: 1, attempts: 1 };
+        completedLessons[`l${i}`] = { completedAt: Date.now(), updatedAt: Date.now(), isDeleted: false };
       }
 
       const srs: Record<string, SRSState> = {};
@@ -89,7 +89,7 @@ describe('Readiness & JLPT Detection', () => {
       }];
       
       const completedLessons: Record<string, LessonProgress> = {
-        'l1': { completedAt: Date.now(), isDeleted: false, mastery: 1, attempts: 1 }
+        'l1': { completedAt: Date.now(), updatedAt: Date.now(), isDeleted: false }
       };
 
       const srs: Record<string, SRSState> = {};

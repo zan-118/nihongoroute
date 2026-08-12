@@ -38,6 +38,7 @@ import {
  pushShadowingPresetsFromSource,
  type LibraryLineSource,
 } from "@/lib/services/tools/shadowing-helpers";
+import { logger } from "@/lib/core/logger";
 
 // Re-export types and interface for external consumers
 export type {
@@ -279,7 +280,7 @@ export async function getIntegratedMiniDrillQuestions(
  });
  }
  } catch (sentenceErr) {
- console.error("[tools integration] Gagal mengambil soal kalimat:", sentenceErr);
+ logger.error("[tools integration] Gagal mengambil soal kalimat:", sentenceErr);
  }
  }
 
@@ -290,7 +291,7 @@ export async function getIntegratedMiniDrillQuestions(
  context
  );
  } catch (error) {
- console.error("[tools integration] Gagal mengambil bank mini drill:", error);
+ logger.error("[tools integration] Gagal mengambil bank mini drill:", error);
  return [];
  }
 }
@@ -366,7 +367,7 @@ export async function getIntegratedCounterQuestions(
  return aRank - bRank;
  });
  } catch (error) {
- console.error("[tools integration] Gagal mengambil soal counter:", error);
+ logger.error("[tools integration] Gagal mengambil soal counter:", error);
  return [];
  }
 }
@@ -461,7 +462,7 @@ export async function getIntegratedShadowingPresets(
 
  return Array.from(new Map(presets.map((preset) => [preset.id, preset])).values()).slice(0, 16);
  } catch (error) {
- console.error("[tools integration] Gagal mengambil preset shadowing dari Supabase:", error);
+ logger.error("[tools integration] Gagal mengambil preset shadowing dari Supabase:", error);
  return [];
  }
 }
@@ -496,7 +497,7 @@ export async function getLibraryTextForTool(
  sourceHref: item.slug ? `/library/${source}/${item.slug}` : undefined,
  };
  } catch (error) {
- console.error("[tools integration] Gagal mengambil teks sumber dari Supabase:", error);
+ logger.error("[tools integration] Gagal mengambil teks sumber dari Supabase:", error);
  return null;
  }
 }

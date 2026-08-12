@@ -20,15 +20,11 @@ describe("useReviewSession", () => {
     useSRSStore.setState({
       srs: {
         item1: {
-          id: "item1",
-          word: "テスト",
-          reading: "",
-          meaning: "",
-          level: 1,
           interval: 1,
           repetition: 0,
           easeFactor: 2.5,
-          nextReview: new Date(Date.now() - 10000).toISOString(),
+          nextReview: Date.now() - 10000,
+          updatedAt: Date.now() - 10000,
         },
       },
     });

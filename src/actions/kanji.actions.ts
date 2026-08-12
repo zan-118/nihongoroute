@@ -18,6 +18,7 @@ import {
  getVocabByCharacter
 } from "@/lib/services/content-repository";
 import { createStaticClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/core/logger";
 
 // ======================
 // SERVER ACTIONS
@@ -49,7 +50,7 @@ export async function getPaginatedKanji(
  total: response.total
  };
  } catch (error) {
- console.error("Gagal mengambil data paginasi kanji:", error);
+ logger.error("Gagal mengambil data paginasi kanji:", error);
  return { data: [], total: 0 };
  }
 }
@@ -93,7 +94,7 @@ export async function getLibraryKanjiDetail(slugOrId: string): Promise<LibraryIt
 
  return data;
  } catch (error) {
- console.error("Gagal mengambil detail kanji:", error);
+ logger.error("Gagal mengambil detail kanji:", error);
  return null;
  }
 }
@@ -119,7 +120,7 @@ export async function getKanjiStaticSlugs(): Promise<{ slug: string }[]> {
       .map((item) => ({ slug: String(item.slug || item.character || "") }))
       .filter((x) => x.slug);
   } catch (error) {
-    console.error("Gagal mengambil static slugs kanji:", error);
+    logger.error("Gagal mengambil static slugs kanji:", error);
     return [];
   }
 }

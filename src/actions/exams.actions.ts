@@ -18,6 +18,7 @@ import {
 import type {
  ExamData,
 } from "@/features/exams/components/mock-engine/types";
+import { logger } from "@/lib/core/logger";
 
 // ======================
 // SERVER ACTIONS
@@ -65,15 +66,17 @@ export async function getCourseCategoryData(slug: string) {
  .from("articles")
  .select("id, title, slug, category_id, order_number, summary, image_url")
  .eq("category_id", category.id)
- .order("order_number", { ascending: true });
- dbLessons = (data || []) as unknown as DBLessonRow[];
+ .order("order_number", { ascending: true })
+ .returns<DBLessonRow[]>();
+ dbLessons = data || [];
  } else {
  const { data } = await supabase
  .from("lessons")
  .select("id, title, slug, category_id, order_number, summary, image_url")
  .eq("category_id", category.id)
- .order("order_number", { ascending: true });
- dbLessons = (data || []) as unknown as DBLessonRow[];
+ .order("order_number", { ascending: true })
+ .returns<DBLessonRow[]>();
+ dbLessons = data || [];
  }
 
  // Map database rows to normalized lesson objects
@@ -114,7 +117,7 @@ export async function getCourseCategoryData(slug: string) {
  mockExams: supabaseMockExams
  };
  } catch (error) {
- console.error("Gagal mengambil data kategori kursus:", error);
+ logger.error("Gagal mengambil data kategori kursus:", error);
  return { category: null, lessons: [], mockExams: [] };
  }
 }
@@ -130,7 +133,7 @@ export async function getExamsList() {
  try {
  return await getSupabaseExamTemplatesList();
  } catch (error) {
- console.error("Gagal mengambil daftar simulasi ujian dari Supabase:", error);
+ logger.error("Gagal mengambil daftar simulasi ujian dari Supabase:", error);
  return [];
  }
 }
@@ -147,7 +150,7 @@ export async function getExamByIdOrSlug(idOrSlug: string): Promise<ExamData | nu
  try {
  return await getSupabaseExamTemplateBySlug(idOrSlug);
  } catch (error) {
- console.error("Gagal mengambil detail simulasi ujian dari Supabase:", error);
+ logger.error("Gagal mengambil detail simulasi ujian dari Supabase:", error);
  return null;
  }
 }
@@ -165,21 +168,19 @@ export async function getLibraryExamDetail(slug: string): Promise<LibraryItem | 
  .from("jlpt_exam_templates")
  .select("*")
  .eq("slug", slug)
- .maybeSingle();
-
- if (!data) return null;
+ .maybeSingle(); if (!data) return null;
 
  return {
- id: data.id,
- title: data.title,
- slug: data.slug,
- description: data.description,
- status: data.is_published ? "published" : "draft",
- difficulty: data.jlpt_level,
- estimated_minutes: data.time_limit
- } as unknown as LibraryItem;
+  id: data.id,
+  title: data.title,
+  slug: data.slug,
+  description: data.description,
+  status: data.is_published ? "published" : "draft",
+  difficulty: data.jlpt_level,
+  estimated_minutes: data.time_limit
+ };
  } catch (error) {
- console.error("Gagal mengambil detail ujian dari Supabase:", error);
+ logger.error("Gagal mengambil detail ujian dari Supabase:", error);
  return null;
  }
 }

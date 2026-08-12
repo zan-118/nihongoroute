@@ -5,6 +5,7 @@
  */
 
 import { createStaticClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/core/logger";
 
 export interface PaginatedOptions<TFilter = any> { // eslint-disable-line @typescript-eslint/no-explicit-any
  page: number;
@@ -84,7 +85,7 @@ export async function getPaginatedContent<T>(
  totalPages,
  };
  } catch (error) {
- console.error(`Gagal mengambil data paginasi dari tabel ${table}:`, error);
+ logger.error(`Gagal mengambil data paginasi dari tabel ${table}:`, error);
  return {
  data: [],
  total: 0,
@@ -118,7 +119,7 @@ export async function getContentBySlugOrId<T>(
  .maybeSingle();
 
  if (error && error.code !== "PGRST116") {
- console.error(`[getContentBySlugOrId] Error loading ${table} by id:`, error.message);
+ logger.error(`[getContentBySlugOrId] Error loading ${table} by id:`, error.message);
  }
  return data as T | null;
  }
@@ -130,7 +131,7 @@ export async function getContentBySlugOrId<T>(
  .maybeSingle();
 
  if (slugErr && slugErr.code !== "PGRST116") {
- console.error(`[getContentBySlugOrId] Error loading ${table} by slug:`, slugErr.message);
+ logger.error(`[getContentBySlugOrId] Error loading ${table} by slug:`, slugErr.message);
  }
  if (bySlug) {
  return bySlug as T;
@@ -145,14 +146,14 @@ export async function getContentBySlugOrId<T>(
  .maybeSingle();
 
  if (charErr && charErr.code !== "PGRST116") {
- console.error(`[getContentBySlugOrId] Error loading kanji by character:`, charErr.message);
+ logger.error(`[getContentBySlugOrId] Error loading kanji by character:`, charErr.message);
  }
- return byChar as unknown as T;
+ return byChar as T;
  }
 
  return null;
  } catch (error) {
- console.error(`[getContentBySlugOrId] Exception in ${table}:`, error);
+ logger.error(`[getContentBySlugOrId] Exception in ${table}:`, error);
  return null;
  }
 }
@@ -181,7 +182,7 @@ export async function getStaticSlugs<T = Record<string, unknown>>(
 
  const { data, error } = await query.limit(options.limit);
  if (error) {
- console.error(`[getStaticSlugs] Gagal mengambil slugs dari ${table}:`, error);
+ logger.error(`[getStaticSlugs] Gagal mengambil slugs dari ${table}:`, error);
  return [];
  }
  return (data || []) as T[];
@@ -198,7 +199,7 @@ export async function getRelatedKanjis(characters: string[]) {
  .select("id, character, meaning, onyomi, kunyomi, slug")
  .in("character", characters);
  if (error) {
- console.error("[getRelatedKanjis] Error:", error);
+ logger.error("[getRelatedKanjis] Error:", error);
  return [];
  }
  return data || [];
@@ -214,7 +215,7 @@ export async function getRelatedVocabByWords(words: string[]) {
  .select("id, word, meaning_id, romaji, slug")
  .in("word", words);
  if (error) {
- console.error("[getRelatedVocabByWords] Error:", error);
+ logger.error("[getRelatedVocabByWords] Error:", error);
  return [];
  }
  return data || [];
@@ -231,7 +232,7 @@ export async function getSentencesContainingWord(word: string, limit: number) {
  .like("japanese", `%${word.trim()}%`)
  .limit(limit);
  if (error) {
- console.error("[getSentencesContainingWord] Error:", error);
+ logger.error("[getSentencesContainingWord] Error:", error);
  return [];
  }
  return data || [];
@@ -247,7 +248,7 @@ export async function getGrammarListBySlugs(slugs: string[]) {
  .select("id, title, slug, jlpt_level, meaning")
  .in("slug", slugs);
  if (error) {
- console.error("[getGrammarListBySlugs] Error:", error);
+ logger.error("[getGrammarListBySlugs] Error:", error);
  return [];
  }
  return data || [];
@@ -264,7 +265,7 @@ export async function getGrammarFamilyList(family: string, excludeId: string) {
  .eq("grammar_family", family)
  .neq("id", excludeId);
  if (error) {
- console.error("[getGrammarFamilyList] Error:", error);
+ logger.error("[getGrammarFamilyList] Error:", error);
  return [];
  }
  return data || [];
@@ -281,7 +282,7 @@ export async function getVocabByCharacter(character: string, limit: number) {
  .like("word", `%${character}%`)
  .limit(limit);
  if (error) {
- console.error("[getVocabByCharacter] Error:", error);
+ logger.error("[getVocabByCharacter] Error:", error);
  return [];
  }
  return data || [];
@@ -299,7 +300,7 @@ export async function getRandomListeningPool(level: string, limit: number) {
  .order("created_at", { ascending: false })
  .limit(limit);
  if (error) {
- console.error("[getRandomListeningPool] Error:", error);
+ logger.error("[getRandomListeningPool] Error:", error);
  return [];
  }
  return data || [];
@@ -316,7 +317,7 @@ export async function getRandomGrammarPool(level: string, limit: number) {
  .eq("jlpt_level", level.toUpperCase())
  .limit(limit);
  if (error) {
- console.error("[getRandomGrammarPool] Error:", error);
+ logger.error("[getRandomGrammarPool] Error:", error);
  return [];
  }
  return data || [];
@@ -333,7 +334,7 @@ export async function getCheatsheetsList() {
  .order("category", { ascending: true })
  .order("title", { ascending: true });
  if (error) {
- console.error("[getCheatsheetsList] Error:", error);
+ logger.error("[getCheatsheetsList] Error:", error);
  return [];
  }
  return data || [];
@@ -360,7 +361,7 @@ export async function getRandomExpressionData() {
  .single();
 
  if (error) {
- console.error("[getRandomExpressionData] Error:", error);
+ logger.error("[getRandomExpressionData] Error:", error);
  return null;
  }
  return data;
@@ -384,7 +385,7 @@ export async function getRandomSentencesPool(level: string, poolSize: number) {
 
  const { data, error } = await query.limit(poolSize);
  if (error) {
- console.error("[getRandomSentencesPool] Error:", error);
+ logger.error("[getRandomSentencesPool] Error:", error);
  return [];
  }
  return data || [];

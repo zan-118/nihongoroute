@@ -52,7 +52,9 @@ interface DashboardStatsProps {
  /** Course structure metadata. */
  courseMetadata: Array<{
  /** Course ID. */
- _id: string;
+ _id?: string;
+ /** Legacy course ID. */
+ id?: string;
  /** Course title. */
  title: string;
  /** Course slug. */
@@ -60,7 +62,9 @@ interface DashboardStatsProps {
  /** Lessons in course. */
  lessons: Array<{
  /** Lesson ID. */
- _id: string;
+ _id?: string;
+ /** Legacy lesson ID. */
+ id?: string;
  /** Lesson title. */
  title: string;
  /** Lesson slug. */
@@ -199,12 +203,12 @@ export default function DashboardStats({
  const lessons = cat.lessons || [];
  const total = lessons.length;
  // Count completed lessons.
- const completed = lessons.filter(l => completedLessons[l._id]?.completedAt).length;
+ const completed = lessons.filter(l => completedLessons[l._id || l.id || l.slug]?.completedAt).length;
  // Calculate progress percentage.
  const percentage = total > 0 ? (completed / total) * 100 : 0;
  
  return (
- <div key={cat._id} className="relative group">
+ <div key={cat._id || cat.id || cat.slug} className="relative group">
  {/* Tombou Register Mark */}
  <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
  <div className="absolute top-0 right-0 w-3.5 h-px bg-primary/20 group-hover:bg-primary transition-colors duration-500" />

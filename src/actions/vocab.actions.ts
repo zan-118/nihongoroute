@@ -20,6 +20,7 @@ import {
  getRelatedVocabByWords
 } from "@/lib/services/content-repository";
 import { createStaticClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/core/logger";
 
 // ======================
 // SERVER ACTIONS
@@ -55,7 +56,7 @@ export async function getPaginatedVocab(
  total: response.total,
  };
  } catch (error) {
- console.error("Gagal mengambil data paginasi vocab:", error);
+ logger.error("Gagal mengambil data paginasi vocab:", error);
  return { data: [], total: 0 };
  }
 }
@@ -149,7 +150,7 @@ export async function getLibraryVocabDetail(slugOrId: string): Promise<LibraryIt
 
  return data;
  } catch (error) {
- console.error("Gagal mengambil detail kosakata:", error);
+ logger.error("Gagal mengambil detail kosakata:", error);
  return null;
  }
 }
@@ -173,7 +174,7 @@ export async function getVocabStaticSlugs(): Promise<{ slug: string }[]> {
     
     return data.map((item) => ({ slug: String(item.slug) }));
   } catch (error) {
-    console.error("Gagal mengambil static slugs vocab:", error);
+    logger.error("Gagal mengambil static slugs vocab:", error);
     return [];
   }
 }

@@ -11,7 +11,7 @@
 
 import React, { useState, useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { createClient } from "@/lib/supabase/client";
+import { lookupDictionaryWordAction } from "@/actions/dictionary.actions";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -67,39 +67,31 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
  // ==========================================
  // QUERY & FETCH DATA (REAL-TIME)
  // ==========================================
- // Fetch word details from Supabase database.
+ // Fetch word details via server action.
  const { data: vocab, isLoading } = useQuery({
  queryKey: ["vocab-lookup", word, reading],
  queryFn: async () => {
  if (!word || word.length > 30) return null;
- const supabase = createClient();
- const { data, error } = await supabase
- .from("vocab")
- .select("id, slug, word, furigana, romaji, meaning_id, jlpt_level, hinshi")
- .or(`word.eq.${word},furigana.eq.${word}`)
- .limit(1)
- .single();
-
- if (error && error.code !== "PGRST116") throw error;
+ const data = await lookupDictionaryWordAction(word);
  if (!data) return null;
 
  return {
- _id: data.id,
- slug: data.slug || data.word || data.id,
+ _id: data.id || "",
+ slug: data.slug || data.word || data.id || "",
  word: data.word,
- furigana: data.furigana,
- romaji: data.romaji,
- meaning: data.meaning_id,
- jlpt: data.jlpt_level,
- hinshi: Array.isArray(data.hinshi) ? data.hinshi[0] : data.hinshi,
+ furigana: data.furigana || undefined,
+ romaji: data.romaji || undefined,
+ meaning: data.meaning,
+ jlpt: data.jlpt,
+ hinshi: Array.isArray(data.hinshi) ? data.hinshi[0] : data.hinshi || undefined,
  };
  },
  enabled: isOpen, // Only fetch when popover opens.
  staleTime: 1000 * 60 * 5, // 5 menit
  });
 
- const collectibleWord = vocab?.word || word;
- const collectibleReading = vocab?.furigana || reading;
+const collectibleWord = vocab?.word || word;
+const collectibleReading = vocab?.furigana || reading || undefined;
  // Unique key for local vocabulary bank storage.
  const bankId = [
  readingState.sourceId || "reading",

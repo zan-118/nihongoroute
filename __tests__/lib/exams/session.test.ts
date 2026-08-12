@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { 
-  calculateJlptExamSubmission, 
+import {
+  calculateJlptExamSubmission,
   buildJlptSrsUpsertRows,
-  type SupabaseExamPackage
 } from '@/lib/exams/jlpt-session';
+import type { SupabaseExamPackage } from '@/lib/exams/supabase-adapter';
 
 const MOCK_PACKAGE: SupabaseExamPackage = {
   id: 'pkg-1',

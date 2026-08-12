@@ -5,32 +5,31 @@ import {
   performScoreCalculation,
   getErrorMessage,
   ExamSessionAggregate,
-} from "@/lib/exams/mock-exam-engine";
-import type { ExamQuestion } from "@/components/features/exams/mock-engine/types";
+} from "@/lib/exams/mock-exam-engine";import type { ExamQuestion } from "@/features/exams/components/mock-engine/types";
 
 const MOCK_QUESTIONS: ExamQuestion[] = [
-  {
-    _key: "q1",
-    section: "vocabulary",
-    title: "Vocab 1",
-    options: ["A", "B"],
-    correctAnswer: 0,
-  },
-  {
-    _key: "q2",
-    section: "vocabulary",
-    title: "Vocab 2",
-    options: ["C", "D"],
-    correctAnswer: 1,
-  },
-  {
-    _key: "q3",
-    section: "listening",
-    title: "Listening 1",
-    options: ["E", "F"],
-    correctAnswer: 0,
-    audioUrl: "/audio/l1.mp3",
-  },
+ {
+  _key: "q1",
+  section: "vocabulary",
+  questionText: "Vocab 1",
+  options: ["A", "B"],
+  correctAnswer: 0,
+ },
+ {
+  _key: "q2",
+  section: "vocabulary",
+  questionText: "Vocab 2",
+  options: ["C", "D"],
+  correctAnswer: 1,
+ },
+ {
+  _key: "q3",
+  section: "listening",
+  questionText: "Listening 1",
+  options: ["E", "F"],
+  correctAnswer: 0,
+  audioUrl: "/audio/l1.mp3",
+ },
 ];
 
 describe("Mock Exam Engine Seam", () => {
