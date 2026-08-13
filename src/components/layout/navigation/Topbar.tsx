@@ -83,9 +83,8 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
  };
  document.addEventListener("keydown", down);
  return () => document.removeEventListener("keydown", down);
- }, []);
- 
- const readingMode = useUIStore((s) => s.readingState.mode);
+ }, []);  const readingMode = useUIStore((s) => s.readingState.mode);
+
 
  return (
  <>
@@ -240,8 +239,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
  >
  <disp.icon size={13} />
  </m.button>
- ))}
- </div>
+ ))}  </div>
 
  <div className="hidden sm:flex">
  <ThemeToggle />

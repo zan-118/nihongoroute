@@ -83,14 +83,14 @@ export default function CheatsheetView({
  <header className="mb-12 md:mb-16 space-y-6">
  <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 lg:gap-12">
  <div className="flex flex-col gap-3">
- <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-amber-500/20 bg-amber-500/10 text-amber-400 w-fit">
+ <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-accent-amber/20 bg-accent-amber/10 text-accent-amber w-fit">
  <Pulse size={16} className="animate-pulse" />
  <span className="text-[10px] font-black uppercase tracking-[0.25em] font-mono">
  QUICK REFERENCE VAULT
  </span>
  </div>
  <h1 className="text-4xl md:text-6xl lg:text-7xl text-foreground font-black tracking-tight leading-[0.92]">
- Catatan <span className="text-amber-400">Cepat</span>
+ Catatan <span className="text-accent-amber">Cepat</span>
  </h1>
  <p className="text-sm md:text-base text-muted-foreground font-medium max-w-xl leading-relaxed">
  Kumpulan materi referensi kilat untuk menghafal sistem angka, waktu, sapaan, dan tata bahasa penting secara interaktif.
@@ -104,7 +104,7 @@ export default function CheatsheetView({
  id="cheatsheet-search"
  type="text"
  placeholder="Cari materi referensi..."
- className="w-full bg-background/60 dark:bg-[#03060a]/60 border border-border/60 dark:border-white/10 pl-13 pr-6 py-4 h-14 rounded-2xl text-sm font-medium focus-visible:ring-amber-500/30"
+ className="w-full bg-background/60 dark:bg-surface-well/60 border border-border/60 dark:border-white/10 pl-13 pr-6 py-4 h-14 rounded-2xl text-sm font-medium focus-visible:ring-accent-amber/30"
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
  />
@@ -115,7 +115,7 @@ export default function CheatsheetView({
  {/* Category Filter Pills */}
  <nav className="mb-10 space-y-3" aria-label="Filter kategori cheatsheet">
  <div className="flex items-center gap-2 text-xs font-mono font-black uppercase tracking-widest text-muted-foreground/80">
- <Filter size={14} className="text-amber-400" /> TOPIK REFERENSI
+ <Filter size={14} className="text-accent-amber" /> TOPIK REFERENSI
  </div>
  <div className="flex flex-wrap gap-2 p-1.5 rounded-full border border-border/40 bg-card/30 backdrop-blur-md w-fit max-w-full">
  {categories.map((cat) => {
@@ -131,7 +131,7 @@ export default function CheatsheetView({
  size="sm"
  className={`rounded-full px-5 h-9 text-xs font-mono font-bold transition-all duration-300 ${
  isActive
- ? "bg-amber-500 text-amber-950 font-black shadow-md shadow-amber-500/20 scale-105"
+ ? "bg-accent-amber text-accent-amber-foreground font-black shadow-md shadow-accent-amber/20 scale-105"
  : "text-muted-foreground hover:text-foreground"
  }`}
  >
@@ -140,7 +140,7 @@ export default function CheatsheetView({
  <span
  className={`text-[9px] px-2 py-0.5 rounded-full font-mono font-bold ${
  isActive
- ? "bg-amber-950/20 text-amber-950"
+ ? "bg-accent-amber/30 text-accent-amber-foreground"
  : "bg-muted text-muted-foreground"
  }`}
  >
@@ -157,7 +157,7 @@ export default function CheatsheetView({
  <section className="flex flex-col gap-6">
  <div className="flex items-center justify-between border-b border-border/40 dark:border-white/5 pb-3">
  <h2 className="text-xs font-mono font-black uppercase tracking-[0.25em] text-muted-foreground flex items-center gap-2">
- <Database size={14} className="text-amber-400" /> {filteredSheets.length} PANDUAN TERSEDIA
+ <Database size={14} className="text-accent-amber" /> {filteredSheets.length} PANDUAN TERSEDIA
  </h2>
  </div>
 
@@ -178,20 +178,20 @@ export default function CheatsheetView({
  className="h-full group font-sans"
  >
  <Link href={`/library/cheatsheet/${sheet.slug || sheet.id || sheet._id}`} className="block h-full">
- <div className="w-full h-full p-6 rounded-2xl bg-card/70 dark:bg-card/30 backdrop-blur-md border border-border/60 dark:border-white/10 shadow-sm group-hover:border-amber-500/40 group-hover:shadow-md transition-all duration-300 flex flex-col justify-between gap-6 relative overflow-hidden group-active:scale-[0.99]">
+ <div className="w-full h-full p-6 rounded-2xl bg-card/70 dark:bg-card/30 backdrop-blur-md border border-border/60 dark:border-white/10 shadow-sm group-hover:border-accent-amber/40 group-hover:shadow-md transition-all duration-300 flex flex-col justify-between gap-6 relative overflow-hidden group-active:scale-[0.99]">
  {/* Top Header */}
  <div className="space-y-4">
  <div className="flex items-center justify-between">
- <div className="size-11 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+ <div className="size-11 rounded-2xl bg-accent-amber/10 border border-accent-amber/20 text-accent-amber flex items-center justify-center shrink-0">
  {getIconForCategory(sheet.category)}
  </div>
- <Badge className="px-2.5 py-0.5 text-[9px] font-mono font-bold uppercase rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
+ <Badge className="px-2.5 py-0.5 text-[9px] font-mono font-bold uppercase rounded-full bg-accent-amber/10 text-accent-amber border border-accent-amber/20">
  {sheet.category}
  </Badge>
  </div>
 
  <div className="space-y-1">
- <h3 className="text-xl sm:text-2xl font-black text-foreground leading-snug group-hover:text-amber-400 transition-colors line-clamp-2">
+ <h3 className="text-xl sm:text-2xl font-black text-foreground leading-snug group-hover:text-accent-amber transition-colors line-clamp-2">
  {sheet.title}
  </h3>
  <p className="text-xs text-muted-foreground font-medium leading-relaxed line-clamp-2">
@@ -206,7 +206,7 @@ export default function CheatsheetView({
  {(sheet.items || []).length} BARIS
  </span>
 
- <div className="size-7 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center shrink-0 group-hover:bg-amber-500 group-hover:text-amber-950 transition-colors duration-300">
+ <div className="size-7 rounded-full bg-accent-amber/10 text-accent-amber border border-accent-amber/20 flex items-center justify-center shrink-0 group-hover:bg-accent-amber group-hover:text-accent-amber-foreground transition-colors duration-300">
  <ArrowUpRight size={13} />
  </div>
  </div>

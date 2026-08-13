@@ -10,17 +10,16 @@
 /**
  * Reading display mode. Control text representation.
  */
-export type ReadingMode = "kanji" | "furigana" | "hiragana" | "romaji";
+export type ReadingMode = "kanji" | "furigana" | "hiragana";
 
 /**
  * State for reading interface. Track mode, translation, audio, source metadata.
  */
 export interface ReadingState {
  /** Active reading mode */
- mode: ReadingMode;
- /** Toggle translation visibility */
- showTranslation: boolean;
- /** Optional audio source URL */
+ mode: ReadingMode;  /** Toggle translation visibility */
+  showTranslation: boolean;
+  /** Optional audio source URL */
  audioUrl?: string;
  /** Text for text- engine */
  textToSpeak?: string;
@@ -81,12 +80,9 @@ export interface ReadingData {
  audioUrl?: string;
  isTTSDisabled?: boolean;
  /** Body text in kanji/mixed form */
- body: PortableTextContent;
- /** Body text in hiragana form */
- hiragana: PortableTextContent;
- /** Body text in romaji form */
- romaji?: PortableTextContent;
- /** Body text translation */
+ body: PortableTextContent;  /** Body text in hiragana form */
+  hiragana: PortableTextContent;
+  /** Body text translation */
  translation: PortableTextContent;
  quizzes?: unknown[];
  illustrations?: { title?: string; content: string }[];

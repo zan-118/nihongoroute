@@ -181,13 +181,13 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
     </div>
    </div>
 
-   <div className="w-full h-px bg-linear- mb-12 shadow-[0_0_20px_hsl(var(--primary)/0.1)]" />
+   <div className="w-full h-px bg-primary/20 mb-12 shadow-[0_0_20px_hsl(var(--primary)/0.1)]" />
 
    {/* Tata Letak Konten Responsif: Tumpukan Vertikal Kolom Tunggal */}
    <div className="space-y-12">
     {/* Bento Struktur */}
     {article.formation && (
-     <Card className="p-8 md:p-10 bg-linear- border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_hsl(var(--primary)/0.05)] transition-all duration-500 select-none glass">
+     <Card className="p-8 md:p-10 bg-card/60 border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_hsl(var(--primary)/0.05)] transition-all duration-500 select-none glass">
       <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-primary">
        <Book size={180} />
       </div>
@@ -222,7 +222,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
 
     {/* Bento Catatan Tambahan (Spacious Full Width) */}
     {article.notes && (
-     <Card className="p-8 md:p-10 bg-linear- border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-border transition-all duration-500 shadow-[0_0_30px_hsl(var(--primary)/0.02)] select-none glass">
+     <Card className="p-8 md:p-10 bg-card/60 border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-border transition-all duration-500 shadow-[0_0_30px_hsl(var(--primary)/0.02)] select-none glass">
       <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-muted-foreground">
        <Lightbulb size={180} />
       </div>

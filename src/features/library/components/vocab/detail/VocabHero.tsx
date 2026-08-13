@@ -43,7 +43,7 @@ export function VocabHero({ word, furigana, romaji, meaning, audioUrl }: VocabHe
  </div>
 
  {/* ── INNER CORE CONTAINER ── */}
- <div className="w-full h-full rounded-[1.875rem] p-8 sm:p-12 md:p-16 bg-linear- dark:from-[#080d14]/95 dark:to-[#05080e]/95 border border-border/30 dark:border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)] flex flex-col items-center text-center relative z-10">
+ <div className="w-full h-full rounded-[1.875rem] p-8 sm:p-12 md:p-16 border border-border/30 dark:border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)] flex flex-col items-center text-center relative z-10">
  
  {/* Action Buttons Top Right */}
  <div className="absolute top-6 right-6 z-20 flex items-center gap-3">
@@ -69,7 +69,7 @@ export function VocabHero({ word, furigana, romaji, meaning, audioUrl }: VocabHe
  )}
  
  {/* Glowing Divider Bar */}
- <div className="h-1.5 w-20 bg-linear- rounded-full mb-6 shadow-[0_0_20px_rgba(0,122,124,0.6)]" />
+ <div className="h-1.5 w-20 bg-primary rounded-full mb-6 shadow-[0_0_20px_hsl(var(--primary)/0.3)]" />
  
  {/* Main Meaning */}
  <p className="text-2xl sm:text-3xl md:text-4xl font-black text-foreground max-w-2xl leading-tight">

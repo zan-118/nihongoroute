@@ -3,6 +3,7 @@
 /**
  * @file LibraryCategoryCard.tsx
  * @description Library navigation category card component displaying clean, responsive bento grid items.
+ * Warna aksen memakai token tema-adaptif (`var(--accent-*)`) agar kontras terjaga di mode terang & gelap.
  * @module features/library/components
  */
 
@@ -26,8 +27,8 @@ interface LibraryCategoryCardProps {
  index: number;
  /** Optional count of items in category. */
  count?: number;
- /** Unique accent color based on RGB triplet string (e.g. "59 130 246"). */
- accentRgb?: string;
+ /** Nama token aksen (mis. "accent-blue") — tema-adaptif via CSS var. */
+ accent?: string;
  /** Opsional: Apakah kartu ini adalah kartu unggulan yang mengambil 2 kolom desktop */
  isFeatured?: boolean;
 }
@@ -40,10 +41,12 @@ export function LibraryCategoryCard({
  label,
  index,
  count,
- accentRgb = "0 122 124",
+ accent = "accent-blue",
  isFeatured = false,
 }: LibraryCategoryCardProps) {
  const [isHovered, setIsHovered] = useState(false);
+ const accentVar = `hsl(var(--${accent}))`;
+ const accentFgVar = `hsl(var(--${accent}-foreground))`;
 
  return (
  <Link 
@@ -64,18 +67,18 @@ export function LibraryCategoryCard({
  {/* Ambient Hover Accent */}
  <div 
  className="absolute -top-20 -right-20 size-48 rounded-full blur-[50px] opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none z-0"
- style={{ background: `rgb(${accentRgb})` }}
+ style={{ background: accentVar }}
  />
 
  {/* Tombou Corner Mark */}
  <div className="absolute top-3 right-3 w-3.5 h-3.5 pointer-events-none z-20">
  <div 
  className="absolute top-0 right-0 w-3 h-[1.5px] transition-colors duration-500" 
- style={{ backgroundColor: isHovered ? `rgb(${accentRgb})` : `rgba(${accentRgb}, 0.25)` }}
+ style={{ backgroundColor: isHovered ? accentVar : `hsl(var(--${accent}) / 0.25)` }}
  />
  <div 
  className="absolute top-0 right-0 w-[1.5px] h-3 transition-colors duration-500" 
- style={{ backgroundColor: isHovered ? `rgb(${accentRgb})` : `rgba(${accentRgb}, 0.25)` }}
+ style={{ backgroundColor: isHovered ? accentVar : `hsl(var(--${accent}) / 0.25)` }}
  />
  </div>
 
@@ -86,11 +89,11 @@ export function LibraryCategoryCard({
  <div className="flex items-center gap-2">
  <span 
  className="size-1.5 rounded-full"
- style={{ backgroundColor: `rgb(${accentRgb})` }}
+ style={{ backgroundColor: accentVar }}
  />
  <span
  className="text-[10px] font-black uppercase tracking-[0.2em] font-mono"
- style={{ color: `rgb(${accentRgb})` }}
+ style={{ color: accentVar }}
  >
  {label}
  </span>
@@ -109,8 +112,8 @@ export function LibraryCategoryCard({
  <div
  className="size-11 sm:size-13 md:size-14 shrink-0 rounded-2xl flex items-center justify-center border border-white/10 transition-transform duration-500 group-hover:scale-105"
  style={{
- background: `rgba(${accentRgb}, 0.1)`,
- color: `rgb(${accentRgb})`,
+ background: `hsl(var(--${accent}) / 0.1)`,
+ color: accentVar,
  }}
  >
  {icon}
@@ -122,7 +125,7 @@ export function LibraryCategoryCard({
  <div className="flex items-baseline gap-2 pt-1">
  <span
  className="text-3xl sm:text-4xl md:text-5xl font-black tabular-nums tracking-tighter leading-none"
- style={{ color: `rgb(${accentRgb})` }}
+ style={{ color: accentVar }}
  >
  {count.toLocaleString("id-ID")}
  </span>
@@ -131,8 +134,8 @@ export function LibraryCategoryCard({
  </span>
  </div>
  ) : (
- <div className="flex items-center gap-2 pt-1 text-[9px] font-bold text-amber-500 uppercase tracking-widest font-mono">
- <span className="size-1.5 rounded-full bg-amber-500 animate-ping" />
+ <div className="flex items-center gap-2 pt-1 text-[9px] font-bold uppercase tracking-widest font-mono" style={{ color: accentVar }}>
+ <span className="size-1.5 rounded-full animate-ping" style={{ backgroundColor: accentVar }} />
  Akses Harian
  </div>
  )}
@@ -148,9 +151,9 @@ export function LibraryCategoryCard({
  <div 
  className="inline-flex items-center gap-3 px-4 py-2 rounded-full border transition-all duration-300"
  style={{
- backgroundColor: isHovered ? `rgba(${accentRgb}, 0.12)` : `rgba(${accentRgb}, 0.05)`,
- borderColor: isHovered ? `rgba(${accentRgb}, 0.35)` : `rgba(${accentRgb}, 0.15)`,
- color: `rgb(${accentRgb})`
+ backgroundColor: isHovered ? `hsl(var(--${accent}) / 0.12)` : `hsl(var(--${accent}) / 0.05)`,
+ borderColor: isHovered ? `hsl(var(--${accent}) / 0.35)` : `hsl(var(--${accent}) / 0.15)`,
+ color: accentVar
  }}
  >
  <span className="text-[10px] font-black uppercase tracking-wider font-mono">
@@ -159,8 +162,8 @@ export function LibraryCategoryCard({
  <div 
  className="size-5 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:translate-x-1"
  style={{
- backgroundColor: `rgb(${accentRgb})`,
- color: '#ffffff'
+ backgroundColor: accentVar,
+ color: accentFgVar
  }}
  >
  <ArrowRight size={11} />

@@ -122,7 +122,7 @@ export default function WeakPointPanel() {
  </div>
  <div className="w-full bg-muted/50 h-1.5 rounded-full overflow-hidden border border-border/50">
  <div 
- className="bg-destructive h-full rounded-full shadow-[0_0_10px_hsl(var(--destructive)/0.6)] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before: before: before: before:" 
+ className="bg-destructive h-full rounded-full shadow-[0_0_10px_hsl(var(--destructive)/0.6)] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-white/30" 
  style={{ width: `${difficultyPercent}%` }}
  />
  </div>

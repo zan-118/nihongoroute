@@ -102,9 +102,9 @@ export default async function LibraryPage() {
  </span>
  </div>
 
- <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md">
- <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
- <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest font-mono">
+ <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-success/30 bg-success/10 backdrop-blur-md">
+ <span className="size-2 rounded-full bg-success animate-pulse" />
+ <span className="text-[10px] font-bold text-success uppercase tracking-widest font-mono">
  SINKRONISASI LURING: AKTIF
  </span>
  </div>
@@ -115,7 +115,7 @@ export default async function LibraryPage() {
  <div className="lg:col-span-8 space-y-6">
  <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-foreground leading-[0.92] drop-shadow-sm font-sans">
  PUSTAKA<br />
- <span className="bg-linear- bg-clip-text text-transparent">
+ <span className="bg-linear-to-r from-primary to-accent-cyan bg-clip-text text-transparent">
  MATERI
  </span>
  </h1>
@@ -141,12 +141,12 @@ export default async function LibraryPage() {
  >
  <div 
  className="absolute top-0 inset-x-0 h-0.5 opacity-60"
- style={{ backgroundColor: `rgb(${stat.accentRgb})` }}
+ style={{ backgroundColor: `hsl(var(--${stat.accent}))` }}
  />
 
  <span
  className="text-3xl sm:text-4xl md:text-5xl font-black tabular-nums tracking-tighter leading-none"
- style={{ color: `rgb(${stat.accentRgb})` }}
+ style={{ color: `hsl(var(--${stat.accent}))` }}
  >
  {stat.value.toLocaleString("id-ID")}
  </span>

@@ -26,9 +26,9 @@
     --accent-foreground: 0 0% 98%;
     --destructive: 0 75% 45%;
     --destructive-foreground: 0 0% 98%;
-    --success: 142 65% 32%;
+    --success: 142 66% 30%;
     --success-foreground: 0 0% 98%;
-    --warning: 38 85% 42%;
+    --warning: 38 80% 36%;
     --warning-foreground: 0 0% 5%;
     --border: 35 15% 82%;
     --input: 35 15% 82%;
@@ -36,6 +36,20 @@
     --sidebar: 40 20% 92%;
     --surface: 40 30% 98%;
     --surface-elevated: 40 25% 95%;
+
+    /* Palet aksen warna (generik — tema-adaptif: gelap di mode terang agar kontras teks) */
+    --accent-violet: 263 70% 50%;
+    --accent-violet-foreground: 0 0% 98%;
+    --accent-cyan: 194 70% 27%;
+    --accent-cyan-foreground: 0 0% 98%;
+    --accent-emerald: 163 94% 24%;
+    --accent-emerald-foreground: 0 0% 98%;
+    --accent-rose: 345 83% 41%;
+    --accent-rose-foreground: 0 0% 98%;
+    --accent-amber: 23 83% 31%;
+    --accent-amber-foreground: 0 0% 98%;
+    --accent-blue: 224 76% 48%;
+    --accent-blue-foreground: 0 0% 98%;
 
     --radius: 14px;
     --border-opacity: 1;
@@ -70,6 +84,21 @@
     --sidebar: 220 25% 9%;
     --surface: 220 24% 12%;
     --surface-elevated: 220 28% 7%;
+    --surface-well: 214 54% 3%;
+
+    /* Aksen di mode gelap: terang, dengan foreground gelap untuk teks di atas solid */
+    --accent-violet: 271 91% 68%;
+    --accent-violet-foreground: 261 73% 12%;
+    --accent-cyan: 189 94% 43%;
+    --accent-cyan-foreground: 197 79% 15%;
+    --accent-emerald: 160 84% 39%;
+    --accent-emerald-foreground: 166 91% 9%;
+    --accent-rose: 350 89% 60%;
+    --accent-rose-foreground: 343 88% 12%;
+    --accent-amber: 38 92% 50%;
+    --accent-amber-foreground: 21 92% 14%;
+    --accent-blue: 217 91% 60%;
+    --accent-blue-foreground: 226 57% 21%;
   }
 
   * {

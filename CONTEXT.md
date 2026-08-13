@@ -33,3 +33,15 @@ Dokumen ini mendefinisikan istilah domain utama yang digunakan dalam sistem Niho
 - **WorkspacePanel**: Komponen panel terpisah di `components/workspace/` — `StudyPanel` (visualizer + transkrip), `DictationPanel` (latihan dikte), `QuizPanel` (kuis pemahaman), `MediaControlBar` (sticky bottom bar), dan `WorkspaceTabs` (selector tab).
 - Semua panel tetap ter-*mount* dan disembunyikan via CSS `hidden` saat tab tidak aktif, sehingga state per-panel (progres dikte, jawaban kuis) bertahan saat pengguna berpindah tab.
 
+## Furigana & Reading Mode Domain (Domain Tampilan Teks Jepang)
+- **JapaneseText**: Komponen inti terpadu (`src/components/ui/japanese/JapaneseText.tsx`) untuk merender teks Jepang — mode `kanji` (full kanji murni, tanpa furigana), `furigana` (ruby `<ruby>/<rt>`), dan `hiragana` (teks diganti kana).
+- **SmartJapanese / FuriganaDisplay**: Facade kompatibilitas yang mendelegasikan ke `JapaneseText`; **tidak** men-default `mode` agar selalu jatuh ke mode global dari store.
+- **Global Mode (Satu Sumber Kebenaran)**: `useUIStore.readingState.mode` — toggle di Topbar & control bar reading menulis ke store, sehingga mode berlaku konsisten di seluruh halaman (vocab, kanji, grammar, cheatsheet, listening, games, review) dan preferensi ter-persist di IndexedDB.
+- **splitFurigana**: Algoritma pemetaan kanji → furigana dengan skor heuristik + LRU cache (1000 entri) di `src/components/ui/japanese/splitFurigana.ts`.
+- **Mode `romaji`**: Dihapus dari kontrol tampilan (bukan mode siklus) — romaji tetap tersedia sebagai data per kata (halaman vocab) dan per paragraf di data reading.
+
+## Reading Session Domain (Domain Sesi Membaca)
+- **ReadingPageClient**: Orkestrator tipis (`src/features/library/reading/ReadingPageClient.tsx`) yang menyimpan state bersama (progress, zen, vocab, font, mode) dan menyusun panel: `ReadingPageHeader`, `ReadingVisuals`, `ReadingControlBar`, `VocabularyDrawer`, `ReadingQuizSection` + util murni `utils/reading-metrics.ts`.
+- **useReadingLogic**: Hook pengelola parsing teks multi-format (Plain/Rich Text), ekstraksi varian (body/hiragana/translation), dan sinkronisasi metadata artikel ke `useUIStore`.
+- **ReadingContext**: Provider yang mengikat `mode` ke `useUIStore.readingState.mode` (satu sumber kebenaran), sedangkan `showTranslation` tetap lokal per halaman.
+

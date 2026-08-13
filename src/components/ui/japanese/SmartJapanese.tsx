@@ -14,19 +14,21 @@ export interface SmartJapaneseProps {
  word: string;
  furigana?: string;
  className?: string;
- mode?: "furigana" | "kanji" | "hiragana" | "romaji";
+ mode?: "furigana" | "kanji" | "hiragana";
  size?: "small" | "medium" | "large" | "xl";
 }
 
 /**
  * SmartJapanese wrapper component.
  * Delegasi langsung ke `JapaneseText` terpadu.
+ * Catatan: `mode` tidak di-default ke "furigana" — biarkan undefined agar `JapaneseText`
+ * jatuh ke mode global dari `useUIStore` (toggle Topbar/FAB berlaku di semua halaman).
  */
 export function SmartJapanese({
  word,
  furigana,
  className = "",
- mode = "furigana",
+ mode,
  size,
 }: SmartJapaneseProps) {
  return (

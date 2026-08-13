@@ -64,7 +64,6 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
     showTranslation,
     paragraphs,
     hiraganaParagraphs,
-    romajiParagraphs,
     translationParagraphs,
     modes,
     toggleTranslation,
@@ -365,7 +364,6 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
         <ReadingWorkspace
           paragraphs={paragraphs}
           hiraganaParagraphs={hiraganaParagraphs}
-          romajiParagraphs={romajiParagraphs}
           translationParagraphs={translationParagraphs}
           mode={mode}
           fontSize={fontSize}
@@ -397,7 +395,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
 
 /**
  * Komponen utama ReadingPageClient: Menyediakan modul pembaca graded reading interaktif
- * dengan fitur Furigana/Romaji switcher, popup kamus klik-kata, audio sinkronisasi, dan mode Zen.
+ * dengan fitur switcher Furigana, popup kamus klik-kata, audio sinkronisasi, dan mode Zen.
  *
  * @param {ReadingPageClientProps} props Properti komponen graded reading.
  * @returns {JSX.Element} Antarmuka graded reading terbungkus provider konteks.

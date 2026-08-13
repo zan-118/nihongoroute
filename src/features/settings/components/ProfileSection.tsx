@@ -86,7 +86,7 @@ export default function ProfileSection({
  <div className="flex flex-col items-center gap-4 shrink-0">
  <div className="relative group/avatar">
  <div className="w-32 h-32 md:w-36 md:h-36 rounded-2xl bg-card border border-border flex items-center justify-center text-foreground relative z-10 overflow-hidden shadow-sm">
- <div className="absolute inset-0 bg-linear- opacity-60" />
+ <div className="absolute inset-0 bg-primary/10 opacity-60" />
  <span className="text-6xl font-black italic text-primary drop-shadow-md select-none font-japanese">
  {(newName || "S").charAt(0).toUpperCase()}
  </span>

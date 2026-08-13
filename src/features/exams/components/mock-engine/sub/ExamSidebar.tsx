@@ -102,7 +102,7 @@ export function ExamSidebar() {
  <Button
  onClick={() => setPendingConfirm("finish")}
  disabled={isSubmittingSession}
- className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 rounded-lg shadow-sm transition-all"
+ className="w-full bg-success text-success-foreground hover:bg-success/90 text-xs font-bold py-2.5 rounded-lg shadow-sm transition-all"
  >
  {isSubmittingSession ? "Mengirim Jawaban..." : "Selesaikan & Kumpulkan Ujian"}
  </Button>

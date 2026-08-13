@@ -8,7 +8,7 @@
 // ==========================================
 import { useEffect, useMemo, type ElementType } from "react";
 import { useUIStore } from "@/store/useUIStore";
-import { BookOpen, Eye, EyeOff, LayoutGrid } from "@/components/ui/icons";
+import { BookOpen, Eye, EyeOff } from "@/components/ui/icons";
 import { ReadingData, ReadingMode, PortableTextContent, PortableTextBlock } from "../types";
 
 // ==========================================
@@ -71,16 +71,14 @@ export function useReadingLogic(data: ReadingData) {
  const content = useMemo(() => {
  const paragraphs = extractText(data.body);
  const hiraganaParagraphs = extractText(data.hiragana);
- const romajiParagraphs = extractText(data.romaji);
  const translationParagraphs = extractText(data.translation);
  
  return {
  paragraphs,
  hiraganaParagraphs,
- romajiParagraphs,
  translationParagraphs
  };
- }, [data.body, data.hiragana, data.romaji, data.translation]);
+ }, [data.body, data.hiragana, data.translation]);
 
  // ==========================================
  // LOGIKA PENGENDALI & METODE (HANDLERS)
@@ -92,7 +90,6 @@ export function useReadingLogic(data: ReadingData) {
  { id: "kanji", label: "Kanji", icon: BookOpen },
  { id: "furigana", label: "Furigana", icon: Eye },
  { id: "hiragana", label: "Hiragana", icon: EyeOff },
- { id: "romaji", label: "Romaji", icon: LayoutGrid },
  ];
 
  /**
@@ -119,7 +116,6 @@ export function useReadingLogic(data: ReadingData) {
  showTranslation,
  paragraphs: content.paragraphs,
  hiraganaParagraphs: content.hiraganaParagraphs,
- romajiParagraphs: content.romajiParagraphs,
  translationParagraphs: content.translationParagraphs,
  modes,
  toggleTranslation,

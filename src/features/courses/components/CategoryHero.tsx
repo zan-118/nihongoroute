@@ -114,7 +114,7 @@ export function CategoryHero({
  {/* Subtle Ambient Accent */}
  <div
  className="absolute top-0 right-0 size-16 blur-md rounded-full opacity-20 pointer-events-none transition-all duration-200 group-hover:scale-125"
- style={{ backgroundColor: `rgb(${themeRgb})` }}
+ style={{ backgroundColor: `hsl(${themeRgb})` }}
  />
 
  <div className="relative z-10 space-y-3 sm:space-y-4">
@@ -138,7 +138,7 @@ export function CategoryHero({
  background: isSideQuest
  ? "linear-gradient(90deg, hsl(var(--warning)) 0%, hsl(var(--warning)/0.6) 100%)"
  : "linear-gradient(90deg, hsl(var(--primary)) 0%, hsl(var(--primary)/0.6) 100%)",
- boxShadow: `0 0 10px rgba(${themeRgb}, 0.3)`,
+ boxShadow: `0 0 10px hsl(${themeRgb} / 0.3)`,
  }}
  />
  </div>

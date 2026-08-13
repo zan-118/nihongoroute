@@ -235,8 +235,8 @@ export default function GrammarView({ initialArticles = EMPTY_GRAMMAR_ARTICLES }
  </thead>
  <tbody className="divide-y divide-border/30 font-sans">
  {paginatedArticles.map((article) => (
- <tr key={article.id || article._id} className="hover:bg-emerald-500/5 transition-colors group">
- <td className="py-3.5 px-4 font-black font-japanese text-base text-foreground group-hover:text-emerald-500 transition-colors align-top">
+ <tr key={article.id || article._id} className="hover:bg-accent-emerald/5 transition-colors group">
+ <td className="py-3.5 px-4 font-black font-japanese text-base text-foreground group-hover:text-accent-emerald transition-colors align-top">
  {article.title}
  </td>
  <td className="py-3.5 px-4 text-xs sm:text-sm text-foreground/90 font-medium leading-relaxed align-top">
@@ -246,7 +246,7 @@ export default function GrammarView({ initialArticles = EMPTY_GRAMMAR_ARTICLES }
  {article.formation || "-"}
  </td>
  <td className="py-3.5 px-4 text-center align-top">
- <span className="text-[9px] font-mono font-bold bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-full border border-emerald-500/20 uppercase inline-block">
+ <span className="text-[9px] font-mono font-bold bg-accent-emerald/10 text-accent-emerald px-2 py-0.5 rounded-full border border-accent-emerald/20 uppercase inline-block">
  {article.jlptLevel || selectedLevel}
  </span>
  </td>
@@ -255,7 +255,7 @@ export default function GrammarView({ initialArticles = EMPTY_GRAMMAR_ARTICLES }
  <Button
  variant="ghost"
  size="sm"
- className="px-3 h-8 text-[10px] font-mono font-bold uppercase tracking-wider rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition-all"
+ className="px-3 h-8 text-[10px] font-mono font-bold uppercase tracking-wider rounded-full bg-accent-emerald/10 text-accent-emerald border border-accent-emerald/20 hover:bg-accent-emerald hover:text-accent-emerald-foreground transition-all"
  >
  Detail
  </Button>

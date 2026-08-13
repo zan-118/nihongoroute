@@ -122,8 +122,8 @@ function PreviewItem({
  className="flex items-center justify-between p-3 rounded-lg border transition-all duration-200 group/item shrink-0 min-w-[200px] sm:min-w-0 bg-card border-border/50 dark:border-white/10 relative overflow-hidden pl-4 shadow-sm"
  style={{
  // Apply dynamic glow background and border based on hover state
- backgroundColor: hovered ? `rgba(${glowColor}, 0.08)` : undefined,
- borderColor: hovered ? `rgba(${glowColor}, 0.45)` : undefined
+ backgroundColor: hovered ? `hsl(${glowColor} / 0.08)` : undefined,
+ borderColor: hovered ? `hsl(${glowColor} / 0.45)` : undefined
  }}
  aria-label={`Materi pelajaran: ${preview.title}`}
  >
@@ -131,7 +131,7 @@ function PreviewItem({
  <div
  className="absolute left-0 top-0 bottom-0 w-[3px] transition-all duration-200"
  style={{
- backgroundColor: `rgb(${glowColor})`,
+ backgroundColor: `hsl(${glowColor})`,
  opacity: hovered ? 1 : 0.4,
  height: hovered ? '100%' : '50%',
  top: hovered ? '0' : '25%'
@@ -143,7 +143,7 @@ function PreviewItem({
  <ArrowRight
  size={12}
  className="opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all shrink-0"
- style={{ color: `rgb(${glowColor})` }}
+ style={{ color: `hsl(${glowColor})` }}
  />
  </Link>
  );
@@ -189,11 +189,11 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
  <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
  <div 
  className="absolute top-0 right-0 w-[14px] h-[1px] transition-colors duration-500" 
- style={{ backgroundColor: isHovered ? `rgb(${theme.glowColor})` : `rgba(${theme.glowColor}, 0.2)` }}
+ style={{ backgroundColor: isHovered ? `hsl(${theme.glowColor})` : `hsl(${theme.glowColor} / 0.2)` }}
  />
  <div 
  className="absolute top-0 right-0 w-[1px] h-[14px] transition-colors duration-500" 
- style={{ backgroundColor: isHovered ? `rgb(${theme.glowColor})` : `rgba(${theme.glowColor}, 0.2)` }}
+ style={{ backgroundColor: isHovered ? `hsl(${theme.glowColor})` : `hsl(${theme.glowColor} / 0.2)` }}
  />
  </div>
 
@@ -202,7 +202,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
  onMouseLeave={() => setIsHovered(false)}
  className="flex flex-col h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl overflow-hidden group transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] relative shadow-[0_4px_25px_rgba(0,0,0,0.015)]"
  style={{
- borderColor: isHovered ? `rgba(${theme.glowColor}, 0.45)` : undefined
+ borderColor: isHovered ? `hsl(${theme.glowColor} / 0.45)` : undefined
  }}
  >
  {/* Japanese Geometric Texture Overlay - very subtle */}
@@ -214,7 +214,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
  <div className="flex justify-between items-start mb-5 sm:mb-8 relative z-10">
  <div className="space-y-1.5 sm:space-y-2.5 min-w-0 flex-1">
  <div className="flex items-center gap-2">
- <div className="w-5 sm:w-8 h-[1px]" style={{ backgroundColor: `rgba(${theme.glowColor}, 0.4)` }} />
+ <div className="w-5 sm:w-8 h-[1px]" style={{ backgroundColor: `hsl(${theme.glowColor} / 0.4)` }} />
  <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] ${theme.accentText}`}>
  {cat.lessonCount || 0} Pelajaran • {isJlpt ? "Jalur JLPT" : "Modul Spesialis"}
  </span>
@@ -228,8 +228,8 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
  <div
  className="w-10 h-10 sm:w-12 sm:h-12 rounded-[8px] flex items-center justify-center shadow-sm transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] shrink-0 border ml-3 bg-background"
  style={{
- borderColor: isHovered ? `rgba(${theme.glowColor}, 0.45)` : `hsl(var(--border)/0.55)`,
- color: `rgb(${theme.glowColor})`
+ borderColor: isHovered ? `hsl(${theme.glowColor} / 0.45)` : `hsl(var(--border)/0.55)`,
+ color: `hsl(${theme.glowColor})`
  }}
  role="img"
  aria-label={`Ikon Kategori ${cat.title}`}
@@ -267,9 +267,9 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
  className="inline-flex items-center gap-2.5 sm:gap-3 px-5 py-3 sm:px-7 py-3.5 rounded-lg rounded-br-none font-black uppercase tracking-widest text-[9px] sm:text-[10px] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-95 group/btn border shadow-sm"
  style={{
  // Dynamic button background and text color based on hover state
- backgroundColor: isHovered ? `rgb(${theme.glowColor})` : 'hsl(var(--foreground))',
+ backgroundColor: isHovered ? `hsl(${theme.glowColor})` : 'hsl(var(--foreground))',
  color: isHovered ? 'hsl(var(--primary-foreground))' : 'hsl(var(--background))',
- borderColor: isHovered ? `rgb(${theme.glowColor})` : 'transparent'
+ borderColor: isHovered ? `hsl(${theme.glowColor})` : 'transparent'
  }}
  aria-label={`Jelajahi Rute Kursus ${cat.title}`}
  >

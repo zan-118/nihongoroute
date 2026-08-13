@@ -462,7 +462,7 @@ export default function LeaderboardClient() {
  </div>
  <div>
  <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-wider block">Streak</span>
- <span className="text-sm font-black text-stone-900 dark:text-stone-100">{selectedUser.streak} Hari</span>
+ <span className="text-sm font-black text-foreground">{selectedUser.streak} Hari</span>
  </div>
  </div>
 

@@ -48,6 +48,31 @@ module.exports = {
   				DEFAULT: 'hsl(var(--success))',
   				foreground: 'hsl(var(--success-foreground))'
   			},
+  			'accent-violet': {
+  				DEFAULT: 'hsl(var(--accent-violet))',
+  				foreground: 'hsl(var(--accent-violet-foreground))'
+  			},
+  			'accent-cyan': {
+  				DEFAULT: 'hsl(var(--accent-cyan))',
+  				foreground: 'hsl(var(--accent-cyan-foreground))'
+  			},
+  			'accent-emerald': {
+  				DEFAULT: 'hsl(var(--accent-emerald))',
+  				foreground: 'hsl(var(--accent-emerald-foreground))'
+  			},
+  			'accent-rose': {
+  				DEFAULT: 'hsl(var(--accent-rose))',
+  				foreground: 'hsl(var(--accent-rose-foreground))'
+  			},
+  			'accent-amber': {
+  				DEFAULT: 'hsl(var(--accent-amber))',
+  				foreground: 'hsl(var(--accent-amber-foreground))'
+  			},
+  			'accent-blue': {
+  				DEFAULT: 'hsl(var(--accent-blue))',
+  				foreground: 'hsl(var(--accent-blue-foreground))'
+  			},
+  			'surface-well': 'hsl(var(--surface-well))',
   			warning: {
   				DEFAULT: 'hsl(var(--warning))',
   				foreground: 'hsl(var(--warning-foreground))'

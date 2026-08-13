@@ -78,11 +78,11 @@ export function ReviewModeCard({
  <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
  <div 
  className="absolute top-0 right-0 w-3.5 h-px transition-colors duration-500" 
- style={{ backgroundColor: isEnabled ? (isPrimary ? "var(--primary)" : "var(--warning)") : "var(--muted)" }}
+ style={{ backgroundColor: isEnabled ? (isPrimary ? "hsl(var(--primary))" : "hsl(var(--warning))") : "hsl(var(--muted))" }}
  />
  <div 
  className="absolute top-0 right-0 w-px h-3.5 transition-colors duration-500" 
- style={{ backgroundColor: isEnabled ? (isPrimary ? "var(--primary)" : "var(--warning)") : "var(--muted)" }}
+ style={{ backgroundColor: isEnabled ? (isPrimary ? "hsl(var(--primary))" : "hsl(var(--warning))") : "hsl(var(--muted))" }}
  />
  </div>
 

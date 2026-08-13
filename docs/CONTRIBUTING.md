@@ -1,7 +1,7 @@
 # Panduan Kontribusi Teknis (Technical Contributing Guide)
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 12 Agustus 2026  
+> **Terakhir Diperbarui**: 13 Agustus 2026  
 > **Ruang Lingkup**: Standar TypeScript, CSS & Token UI, Git Workflow, Siklus Migrasi SQL, & Commit Convention  
 > **Rujukan Utama**: [README.md](../README.md) | [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | [DATA_MODEL.md](DATA_MODEL.md)
 
@@ -30,6 +30,8 @@
 
 ### CSS & Design Tokens
 - Warna **WAJIB** melalui token semantik di `src/app/globals.css` (`hsl(var(--primary))`). Dilarang memakai hex/warna mentah.
+- Inline style berwarna **WAJIB** memakai wrapper lengkap `hsl(var(--token))` / `hsl(var(--token) / alpha)` — dilarang `var(--x)` mentah, `rgb(var(`, atau `rgba(var(` (CSS invalid setelah substitusi token).
+- Teks di atas solid `bg-<token>` **WAJIB** memakai `text-<token>-foreground` (bukan `text-white`).
 - Sebelum mengubah UI, konsultasikan [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
 - Class penolong yang sudah ada:
   - `.surface-card` — Card statis tanpa hover

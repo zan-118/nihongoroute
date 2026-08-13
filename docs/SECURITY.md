@@ -1,7 +1,7 @@
 # Kebijakan Keamanan & Proteksi Data
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Terakhir Diperbarui**: 13 Agustus 2026  
 > **Ruang Lingkup**: Kebijakan Secret Handling, Admin API Auth, Webhook Signature, RLS Matrix, & Anti-Cheat XP  
 > **Rujukan Utama**: [README.md](../README.md) | [DATA_MODEL.md](DATA_MODEL.md) | [CONFIGURATION.md](CONFIGURATION.md)
 

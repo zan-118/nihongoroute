@@ -89,7 +89,7 @@ export function VocabCard({ item, showRomaji }: VocabCardProps) {
  </span>
  )}
 
- <div className="size-6 rounded-full bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+ <div className="size-6 rounded-full bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
  <ArrowUpRight size={12} />
  </div>
  </div>

@@ -57,10 +57,10 @@ export default function PrivacyPage() {
  <div className="glass border border-border/60 rounded-xl p-6 sm:p-10 md:p-14 shadow-[0_0_50px_hsl(var(--primary)/0.05)] relative overflow-hidden">
  {/* Aksen Sudut Halus */}
  {/* Decorative corner borders */}
- <div className="absolute top-0 left-0 w-8 h-0.5 bg-linear- " />
- <div className="absolute top-0 left-0 w-0.5 h-8 bg-linear- " />
- <div className="absolute bottom-0 right-0 w-8 h-0.5 bg-linear- " />
- <div className="absolute bottom-0 right-0 w-0.5 h-8 bg-linear- " />
+ <div className="absolute top-0 left-0 w-8 h-0.5 bg-primary/50 " />
+ <div className="absolute top-0 left-0 w-0.5 h-8 bg-primary/50 " />
+ <div className="absolute bottom-0 right-0 w-8 h-0.5 bg-primary/50 " />
+ <div className="absolute bottom-0 right-0 w-0.5 h-8 bg-primary/50 " />
 
  {/* Header Jepang */}
  {/* Page header with Japanese title */}

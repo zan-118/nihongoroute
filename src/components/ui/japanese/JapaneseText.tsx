@@ -6,7 +6,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { isJapanese, toRomaji, isKanji } from "wanakana";
+import { isJapanese } from "wanakana";
 import { splitFurigana } from "./splitFurigana";
 import { useUIStore } from "@/store/useUIStore";
 import WordPopover from "@/features/library/reading/components/WordPopover";
@@ -16,14 +16,12 @@ export interface JapaneseTextProps {
  text: string;
  /** Bacaan furigana lengkap */
  furigana?: string;
- /** Representasi latin/romaji opsional */
- romaji?: string;
  /** Ukuran tampilan preset */
  size?: "small" | "medium" | "large" | "xl";
  /** Kelas CSS opsional */
  className?: string;
  /** Paksa mode tampilan tertentu (opsional, default mengikuti UI store) */
- mode?: "kanji" | "furigana" | "hiragana" | "romaji";
+ mode?: "kanji" | "furigana" | "hiragana";
  /** Aktifkan popover kamus interaktif pada kata kanji */
  interactive?: boolean;
 }
@@ -39,14 +37,12 @@ function isUsefulInteractivePart(text: string) {
 export const JapaneseText = React.memo(function JapaneseText({
  text,
  furigana = "",
- romaji,
  size = "medium",
  className = "",
  mode,
  interactive = false,
-}: JapaneseTextProps) {
- const globalMode = useUIStore((state) => state.readingState.mode);
- const currentMode = mode || globalMode || "furigana";
+}: JapaneseTextProps) {  const globalMode = useUIStore((state) => state.readingState.mode);
+  const currentMode = mode || globalMode || "furigana";
 
  const sizeConfig = {
  small: { furi: "text-[0.55em]", kanji: "text-sm" },
@@ -60,43 +56,27 @@ export const JapaneseText = React.memo(function JapaneseText({
  const parts = useMemo(() => {
  if (!text || !furigana) return [];
  return splitFurigana(text, furigana);
- }, [text, furigana]);
+ }, [text, furigana]);  if (!text) {
+    return <span className={className}>{furigana}</span>;
+  }
 
- if (!text) {
- return <span className={className}>{furigana}</span>;
- }
+  // Mode Hiragana
+  if (currentMode === "hiragana" && furigana) {
+    return (
+      <span className={`font-noto-serif leading-relaxed tracking-normal inline-block text-foreground ${kanjiSize} ${className}`}>
+        {furigana}
+      </span>
+    );
+  }
 
- // Mode Hiragana
- if (currentMode === "hiragana" && furigana) {
- return (
- <span className={`font-noto-serif leading-relaxed tracking-normal inline-block text-foreground ${kanjiSize} ${className}`}>
- {furigana}
- </span>
- );
- }
-
- // Mode Romaji
- if (currentMode === "romaji") {
- const romajiText = romaji
- ? romaji
- : furigana
- ? toRomaji(furigana)
- : toRomaji(text);
- return (
- <span className={`font-sans leading-relaxed tracking-wide inline-block text-foreground ${kanjiSize} ${className}`}>
- {romajiText}
- </span>
- );
- }
-
- // Mode Kanji murni tanpa furigana
- if (!furigana || text === furigana || currentMode === "kanji") {
- return (
- <span className={`font-japanese leading-relaxed text-foreground ${kanjiSize} ${className}`}>
- {text}
- </span>
- );
- }
+  // Mode Kanji murni tanpa furigana
+  if (!furigana || text === furigana || currentMode === "kanji") {
+    return (
+      <span className={`font-japanese leading-relaxed text-foreground inline-block ${kanjiSize} ${className}`}>
+        {text}
+      </span>
+    );
+  }
 
  const renderPart = (part: { text: string; furi?: string }, pos: number) => {
  const partContent = part.furi && currentMode === "furigana" ? (
@@ -133,8 +113,7 @@ export const JapaneseText = React.memo(function JapaneseText({
  <span 
  className={`font-noto-serif leading-relaxed tracking-normal inline-block ${className}`}
  style={{ rubyPosition: 'over', rubyAlign: 'space-around' } as React.CSSProperties}
- >
- {parts.map(renderPart)}
- </span>
- );
+ >      {parts.map(renderPart)}
+    </span>
+  );
 });

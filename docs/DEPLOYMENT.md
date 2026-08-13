@@ -1,7 +1,7 @@
 # Deployment & Ops Runbook
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Terakhir Diperbarui**: 13 Agustus 2026  
 > **Ruang Lingkup**: Configuration Build, CI/CD Pipeline, Release Checklist, & Matrix Cache  
 > **Rujukan Utama**: [README.md](../README.md) | [CONFIGURATION.md](CONFIGURATION.md) | [ARCHITECTURE.md](ARCHITECTURE.md)
 

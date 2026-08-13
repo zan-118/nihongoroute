@@ -73,18 +73,18 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
  <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
  <div 
  className="absolute top-0 right-0 w-[14px] h-[1px] transition-colors duration-500" 
- style={{ backgroundColor: isHovered ? `rgb(${themeRgb})` : `rgba(${themeRgb}, 0.2)` }}
+ style={{ backgroundColor: isHovered ? `hsl(${themeRgb})` : `hsl(${themeRgb} / 0.2)` }}
  />
  <div 
  className="absolute top-0 right-0 w-[1px] h-[14px] transition-colors duration-500" 
- style={{ backgroundColor: isHovered ? `rgb(${themeRgb})` : `rgba(${themeRgb}, 0.2)` }}
+ style={{ backgroundColor: isHovered ? `hsl(${themeRgb})` : `hsl(${themeRgb} / 0.2)` }}
  />
  </div>
 
  <Card
  className="p-6 sm:p-7 md:p-8 rounded-2xl transition-all duration-500 flex flex-col items-start gap-4 cursor-pointer h-full relative overflow-hidden bg-card border border-border/50 dark:border-white/10 shadow-[0_4px_25px_rgba(0,0,0,0.015)]"
  style={{
- borderColor: isHovered ? `rgba(${themeRgb}, 0.45)` : undefined
+ borderColor: isHovered ? `hsl(${themeRgb} / 0.45)` : undefined
  }}
  >
  {/* Wave/Sea Texture Overlay (Seigaiha) */}
@@ -98,9 +98,9 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
  <div
  className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-lg flex items-center justify-center font-black text-[10px] sm:text-xs font-mono transition-all duration-200 border"
  style={{
- backgroundColor: isHovered ? `rgb(${themeRgb})` : `hsl(var(--background)/0.5)`,
- borderColor: isHovered ? `rgb(${themeRgb})` : `hsl(var(--border)/0.5)`,
- color: isHovered ? `hsl(var(--background))` : `rgb(${themeRgb})`,
+ backgroundColor: isHovered ? `hsl(${themeRgb})` : `hsl(var(--background)/0.5)`,
+ borderColor: isHovered ? `hsl(${themeRgb})` : `hsl(var(--border)/0.5)`,
+ color: isHovered ? `hsl(var(--background))` : `hsl(${themeRgb})`,
  transform: isHovered ? 'rotate(4deg) scale(1.05)' : 'none'
  }}
  >
@@ -111,9 +111,9 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
  <div
  className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-[4px] border text-[8px] sm:text-[9px] font-black uppercase tracking-[0.15em] transition-all duration-300 shadow-sm"
  style={{
- backgroundColor: isHovered ? `rgba(${themeRgb}, 0.08)` : `hsl(var(--background)/0.5)`,
- borderColor: isHovered ? `rgba(${themeRgb}, 0.3)` : `hsl(var(--border)/0.5)`,
- color: isHovered ? `rgb(${themeRgb})` : 'hsl(var(--muted-foreground))'
+ backgroundColor: isHovered ? `hsl(${themeRgb} / 0.08)` : `hsl(var(--background)/0.5)`,
+ borderColor: isHovered ? `hsl(${themeRgb} / 0.3)` : `hsl(var(--border)/0.5)`,
+ color: isHovered ? `hsl(${themeRgb})` : 'hsl(var(--muted-foreground))'
  }}
  >
  {progress}% Selesai
@@ -138,7 +138,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
  <h4
  className="text-base sm:text-lg md:text-xl text-foreground transition-colors tracking-tight leading-snug text-balance font-bold"
  style={{
- color: isHovered ? `rgb(${themeRgb})` : 'hsl(var(--foreground))'
+ color: isHovered ? `hsl(${themeRgb})` : 'hsl(var(--foreground))'
  }}
  >
  {lesson.title}
@@ -154,7 +154,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
  <span
  className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-colors"
  style={{
- color: isHovered ? `rgb(${themeRgb})` : `rgba(${themeRgb}, 0.4)`
+ color: isHovered ? `hsl(${themeRgb})` : `hsl(${themeRgb} / 0.4)`
  }}
  >
  Mulai Belajar
@@ -162,8 +162,8 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
  <div
  className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-lg border flex items-center justify-center transition-all duration-200 shadow-sm"
  style={{
- backgroundColor: isHovered ? `rgb(${themeRgb})` : `hsl(var(--background)/0.5)`,
- borderColor: isHovered ? `rgb(${themeRgb})` : `hsl(var(--border)/0.5)`,
+ backgroundColor: isHovered ? `hsl(${themeRgb})` : `hsl(var(--background)/0.5)`,
+ borderColor: isHovered ? `hsl(${themeRgb})` : `hsl(var(--border)/0.5)`,
  color: isHovered ? `hsl(var(--background))` : 'hsl(var(--foreground))'
  }}
  >

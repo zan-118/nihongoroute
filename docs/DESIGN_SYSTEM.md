@@ -1,7 +1,7 @@
 # Design System & Token Visual NihongoRoute
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Terakhir Diperbarui**: 13 Agustus 2026  
 > **Ruang Lingkup**: Design Tokens, Hiru/Yoru Color Palettes, Typography, Anti-Pattern Checklist, & Signature UI  
 > **Rujukan Utama**: [README.md](../README.md) | [ARCHITECTURE.md](ARCHITECTURE.md) | [GETTING_STARTED.md](GETTING_STARTED.md)
 
@@ -52,6 +52,29 @@
 | `--card`, `--surface` | Kuro-sumi (黒墨)    | `#1D1C1B` | Permukaan card            |
 | `--primary`           | Ai-iro terang       | `#4C7AA8` | Tombol/struktur utama     |
 | `--accent`            | Shu-iro terang      | `#D8583B` | Aksen tunggal / CTA utama |
+
+### Palet Aksen Warna (Generik & Tema-Adaptif)
+
+Palet aksen dipusatkan sebagai token **bernama warna** (bukan nama fitur) sehingga bisa dipakai ulang di fitur mana pun. Setiap aksen bersifat **tema-adaptif** mengikuti pola `--success`/`--success-foreground`: di mode **terang** memakai shade gelap (kontras teks ≥ 4.5:1) dengan `*-foreground` putih untuk teks di atas solid; di mode **gelap** memakai shade terang dengan `*-foreground` gelap (shade 950).
+
+| Token | Nilai Terang | Nilai Gelap | Setara |
+| --- | --- | --- | --- |
+| `--accent-violet` (+`-foreground`) | `263 70% 50%` / putih | `271 91% 68%` / `261 73% 12%` | purple |
+| `--accent-cyan` (+`-foreground`) | `194 70% 27%` / putih | `189 94% 43%` / `197 79% 15%` | cyan |
+| `--accent-emerald` (+`-foreground`) | `163 94% 24%` / putih | `160 84% 39%` / `166 91% 9%` | emerald |
+| `--accent-rose` (+`-foreground`) | `345 83% 41%` / putih | `350 89% 60%` / `343 88% 12%` | rose |
+| `--accent-amber` (+`-foreground`) | `23 83% 31%` / putih | `38 92% 50%` / `21 92% 14%` | amber |
+| `--accent-blue` (+`-foreground`) | `224 76% 48%` / putih | `217 91% 60%` / `226 57% 21%` | blue |
+| `--surface-well` (dark) | — | `214 54% 3%` (`#03060a`) | Input well gelap |
+
+**Aturan pakai**: teks di atas solid selalu `text-accent-*-foreground` (bukan `text-white`). Badge/tint pakai `bg-accent-*/10 text-accent-*` — otomatis adaptif per mode. Komponen dengan inline-style (mis. `LibraryCategoryCard` & stats halaman library) memakai `hsl(var(--accent-*))` + `/ alpha` agar tetap tema-adaptif tanpa string RGB statis. Status semantik: `success` (badge SELESAI, tombol kumpulkan ujian, badge sinkronisasi) & `warning` (status pending/streak).
+
+### Kontras Wajib (Hasil Audit WCAG, Agustus 2026)
+
+- **Teks aksen**: mode terang memakai shade gelap (kontras ≥ 4.5:1), mode gelap shade terang (kontras ≥ 4.5:1) — naik dari 1.9–3.8:1 sebelumnya.
+- **Teks di atas solid aksen/primary**: `text-*-foreground` (bukan `text-white`) — kontras mode gelap naik dari 2.6:1 menjadi ≥ 7:1 (StickerScene, VocabCard, VocabView).
+- **Zero CSS invalid tersisa**: seluruh `src/` bebas dari `rgb(var(`, `rgba(var(`, raw `var(--x)` di inline style, class `bg-linear-` rusak, dan `before:`/`after:` kosong. Semua warna inline memakai wrapper `hsl(var(--token) / alpha)` (contoh: glow courses, mark sudut Tombou, shimmer `before:bg-white/30`).
+- **Konten read-only / sertifikat**: `OfficialCertificateView` memakai palet tetap (kertas/print) — dikecualikan dari token tema secara sengaja (didokumentasikan).
 
 ---
 

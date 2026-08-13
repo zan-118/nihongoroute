@@ -73,11 +73,11 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
  <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
  <div 
  className="absolute top-0 right-0 w-[14px] h-[1px] transition-colors duration-500" 
- style={{ backgroundColor: isHovered ? `rgb(${item.rgb})` : `rgba(${item.rgb}, 0.2)` }}
+ style={{ backgroundColor: isHovered ? `hsl(${item.rgb})` : `hsl(${item.rgb} / 0.2)` }}
  />
  <div 
  className="absolute top-0 right-0 w-[1px] h-[14px] transition-colors duration-500" 
- style={{ backgroundColor: isHovered ? `rgb(${item.rgb})` : `rgba(${item.rgb}, 0.2)` }}
+ style={{ backgroundColor: isHovered ? `hsl(${item.rgb})` : `hsl(${item.rgb} / 0.2)` }}
  />
  </div>
 
@@ -86,7 +86,7 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
  onMouseLeave={() => setIsHovered(false)}
  className="p-4 sm:p-5 md:p-6 rounded-2xl border border-border/50 dark:border-white/10 transition-all duration-500 h-full relative overflow-hidden bg-card shadow-[0_4px_25px_rgba(0,0,0,0.015)]"
  style={{
- borderColor: isHovered ? `rgba(${item.rgb}, 0.45)` : undefined
+ borderColor: isHovered ? `hsl(${item.rgb} / 0.45)` : undefined
  }}
  >
  {/* Motif Asanoha halus */}
@@ -95,7 +95,7 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
  {/* Kanji Watermark */}
  <div 
  className="absolute -bottom-4 -right-4 text-[7rem] sm:text-[9rem] font-black pointer-events-none select-none opacity-[0.01] group-hover:opacity-[0.03] transition-all duration-300 font-noto-serif-jp translate-y-4 translate-x-2"
- style={{ color: `rgb(${item.rgb})` }}
+ style={{ color: `hsl(${item.rgb})` }}
  >
  {kanjiWatermark}
  </div>
@@ -104,7 +104,7 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
  <div
  className="absolute inset-0 transition-opacity duration-200 pointer-events-none"
  style={{
- background: `linear-gradient(135deg, rgba(${item.rgb}, 0.04) 0%, transparent 100%)`,
+ background: `linear-gradient(135deg, hsl(${item.rgb} / 0.04) 0%, transparent 100%)`,
  opacity: isHovered ? 1 : 0
  }}
  />
@@ -113,8 +113,8 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
  <div
  className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center transition-all duration-200 shadow-sm border bg-background"
  style={{
- borderColor: isHovered ? `rgba(${item.rgb}, 0.4)` : "hsl(var(--border)/0.5)",
- color: `rgb(${item.rgb})`,
+ borderColor: isHovered ? `hsl(${item.rgb} / 0.4)` : "hsl(var(--border)/0.5)",
+ color: `hsl(${item.rgb})`,
  transform: isHovered ? "scale(1.05) rotate(4deg)" : "none"
  }}
  role="img"
@@ -127,7 +127,7 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
  <h4
  className="text-base sm:text-lg md:text-xl text-foreground tracking-tight uppercase transition-colors font-bold"
  style={{
- color: isHovered ? `rgb(${item.rgb})` : "hsl(var(--foreground))"
+ color: isHovered ? `hsl(${item.rgb})` : "hsl(var(--foreground))"
  }}
  >
  {item.title}
@@ -141,8 +141,8 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
  <div
  className="absolute bottom-4 right-4 sm:bottom-5 sm:right-5 size-8 sm:size-9 rounded-lg border flex items-center justify-center transition-all duration-200"
  style={{
- backgroundColor: isHovered ? `rgb(${item.rgb})` : "hsl(var(--background)/0.5)",
- borderColor: isHovered ? `rgb(${item.rgb})` : "hsl(var(--border)/0.5)",
+ backgroundColor: isHovered ? `hsl(${item.rgb})` : "hsl(var(--background)/0.5)",
+ borderColor: isHovered ? `hsl(${item.rgb})` : "hsl(var(--border)/0.5)",
  color: isHovered ? "hsl(var(--background))" : "hsl(var(--foreground))",
  opacity: isHovered ? 1 : 0,
  transform: isHovered ? "translateX(0)" : "translateX(-4px)"

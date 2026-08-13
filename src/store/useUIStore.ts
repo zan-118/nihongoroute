@@ -155,12 +155,10 @@ export const useUIStore = create<UIState>()(
  notificationsEnabled: false,
  showFurigana: true,
  layoutPreference: "grid",
- },
-
- readingState: {
- mode: "furigana",
- showTranslation: false,
- },
+ },  readingState: {
+    mode: "furigana",
+    showTranslation: false,
+  },
 
  readingVocabularyBank: {},
  readingProgressMap: {},
@@ -427,11 +425,10 @@ export const useUIStore = create<UIState>()(
  notificationsEnabled: false,
  showFurigana: true,
  layoutPreference: "grid",
- },
- readingState: { mode: "kanji", showTranslation: false },
- readingVocabularyBank: {},
- readingProgressMap: {},
- learningEvents: [],
+ },  readingState: { mode: "kanji", showTranslation: false },
+  readingVocabularyBank: {},
+  readingProgressMap: {},
+  learningEvents: [],
  listeningState: {
  currentTime: 0,
  activeIndex: -1,
@@ -447,12 +444,11 @@ export const useUIStore = create<UIState>()(
  // tidak disimpan karena bersifat sementara dan spesifik per halaman
  partialize: (state) => ({
  notifications: state.notifications,
- settings: state.settings,
- // Dari readingState: hanya mode dan showTranslation yang perlu diingat
- readingState: {
- mode: state.readingState.mode,
- showTranslation: state.readingState.showTranslation,
- },
+ settings: state.settings,    // Dari readingState: hanya mode dan showTranslation yang perlu diingat
+    readingState: {
+      mode: state.readingState.mode,
+      showTranslation: state.readingState.showTranslation,
+    },
  readingVocabularyBank: state.readingVocabularyBank,
  readingProgressMap: state.readingProgressMap,
  learningEvents: state.learningEvents,

@@ -110,7 +110,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  {/* Header Section */}
  <div className="space-y-6">
  <div className="space-y-3">
- <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-purple-500/20 bg-purple-500/10 text-purple-400">
+ <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-accent-violet/20 bg-accent-violet/10 text-accent-violet">
  <BookOpen size={16} />
  <span className="text-[10px] font-black uppercase tracking-[0.25em] font-mono">
  GRADED READING VAULT
@@ -130,7 +130,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground size-5" aria-hidden="true" />
  <Input 
  placeholder="Cari judul bacaan atau topik..." 
- className="pl-13 h-14 bg-background/60 dark:bg-[#03060a]/60 border border-border/60 dark:border-white/10 rounded-2xl text-sm font-medium focus-visible:ring-purple-500/30"
+ className="pl-13 h-14 bg-background/60 dark:bg-surface-well/60 border border-border/60 dark:border-white/10 rounded-2xl text-sm font-medium focus-visible:ring-accent-violet/30"
  value={search}
  onChange={(e) => setSearch(e.target.value)}
  />
@@ -147,7 +147,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  onClick={() => handleLevelChange(item)}
  className={`rounded-full px-5 h-9 text-xs font-mono font-bold transition-all duration-300 ${
  level === item
- ? "bg-purple-500 text-white shadow-md shadow-purple-500/20 scale-105"
+ ? "bg-accent-violet text-accent-violet-foreground shadow-md shadow-accent-violet/20 scale-105"
  : "text-muted-foreground hover:text-foreground"
  }`}
  >
@@ -162,7 +162,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  <div className="relative">
  {isFetching && (
  <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-md rounded-3xl">
- <Loader className="size-10 animate-spin text-purple-500" />
+ <Loader className="size-10 animate-spin text-accent-violet" />
  </div>
  )}
  
@@ -177,7 +177,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  return (
  <div
  key={material.slug}
- className="group font-sans border-b border-border/30 py-5 hover:border-purple-500/50 transition-colors"
+ className="group font-sans border-b border-border/30 py-5 hover:border-accent-violet/50 transition-colors"
  style={{ 
  contentVisibility: 'auto', 
  containIntrinsicSize: '0 100px',
@@ -188,7 +188,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  <div className="space-y-1.5 flex-1 min-w-0">
  <div className="flex flex-wrap items-center gap-2">
  {(material.jlpt_level || material.difficulty) && (
- <Badge className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">
+ <Badge className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase rounded-full bg-accent-violet/10 text-accent-violet border border-accent-violet/20">
  {material.jlpt_level || material.difficulty}
  </Badge>
  )}
@@ -196,13 +196,13 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  {material.category || "GENERAL READING"}
  </span>
  {isCompleted && (
- <span className="text-[9px] font-mono font-bold text-emerald-400 inline-flex items-center gap-1">
+ <span className="text-[9px] font-mono font-bold text-success inline-flex items-center gap-1">
  <Check size={10} /> SELESAI
  </span>
  )}
  </div>
 
- <h3 className="text-lg sm:text-xl font-black text-foreground leading-snug group-hover:text-purple-400 transition-colors truncate">
+ <h3 className="text-lg sm:text-xl font-black text-foreground leading-snug group-hover:text-accent-violet transition-colors truncate">
  {material.title}
  </h3>
  </div>
@@ -214,7 +214,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  {material.estimated_minutes} MIN
  </span>
  )}
- <ArrowUpRight size={16} className="text-muted-foreground/40 group-hover:text-purple-400 transition-colors" />
+ <ArrowUpRight size={16} className="text-muted-foreground/40 group-hover:text-accent-violet transition-colors" />
  </div>
  </div>
  </Link>
@@ -238,7 +238,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  {totalPages > 1 && (
  <div className="flex flex-col items-center gap-4 pt-8">
  <div className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">
- HALAMAN <span className="text-purple-400">{currentPage}</span> DARI {totalPages}
+ HALAMAN <span className="text-accent-violet">{currentPage}</span> DARI {totalPages}
  </div>
  <div className="flex items-center gap-2">
  <Button
@@ -280,7 +280,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  onClick={() => handlePageChange(pageNum)}
  className={`size-9 rounded-full font-mono text-xs font-bold transition-all ${
  currentPage === pageNum 
- ? "bg-purple-500 text-white shadow-md shadow-purple-500/20" 
+ ? "bg-accent-violet text-accent-violet-foreground shadow-md shadow-accent-violet/20" 
  : "bg-card border border-border/40 text-muted-foreground hover:text-foreground"
  }`}
  >

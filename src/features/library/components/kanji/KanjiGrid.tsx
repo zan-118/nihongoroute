@@ -51,17 +51,17 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
  className="group font-sans"
  >
  <Link href={`/library/kanji/${kanji.slug || kanji.id || kanji._id}`} className="block h-full">
- <div className="w-full aspect-square p-3 border-b border-r border-border/30 hover:border-rose-500/50 transition-colors flex flex-col items-center justify-between text-center relative group-active:scale-[0.98]">
+ <div className="w-full aspect-square p-3 border-b border-r border-border/30 hover:border-accent-rose/50 transition-colors flex flex-col items-center justify-between text-center relative group-active:scale-[0.98]">
  {/* Top Meta */}
  <div className="w-full flex justify-between items-center">
- <span className="text-[9px] font-mono font-bold text-rose-500 uppercase tracking-wider">
+ <span className="text-[9px] font-mono font-bold text-accent-rose uppercase tracking-wider">
  {kanji.jlpt || "KANJI"}
  </span>
- <ArrowUpRight size={12} className="text-muted-foreground/40 group-hover:text-rose-500 transition-colors" />
+ <ArrowUpRight size={12} className="text-muted-foreground/40 group-hover:text-accent-rose transition-colors" />
  </div>
 
  {/* Main Character */}
- <span className="text-4xl sm:text-5xl font-black text-foreground font-japanese tracking-tight group-hover:text-rose-500 group-hover:scale-110 transition-transform duration-300 my-auto">
+ <span className="text-4xl sm:text-5xl font-black text-foreground font-japanese tracking-tight group-hover:text-accent-rose group-hover:scale-110 transition-transform duration-300 my-auto">
  {kanji.character}
  </span>
  

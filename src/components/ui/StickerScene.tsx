@@ -192,7 +192,7 @@ export function StickerScene({
  className={cn(
  "relative w-[85px] sm:w-[120px] md:w-[170px] h-[95%] rounded-t-[2rem] border-x border-t bg-background/50 flex flex-col justify-end transition-all duration-300",
  isActive ? asset.color : "border-transparent",
- isActive && "shadow-[0_-10px_25px_rgba(var(--primary),0.1)]"
+ isActive && "shadow-[0_-10px_25px_hsl(var(--primary)_/_0.1)]"
  )}
  style={
  isActive
@@ -214,8 +214,8 @@ export function StickerScene({
  {/* Speaker Tag Name */}
  <div
  className={cn(
- "absolute bottom-0 inset-x-0 py-1 text-center text-[9px] font-black uppercase tracking-widest text-white transition-colors duration-300",
- isActive ? "bg-primary" : "bg-muted-foreground/30"
+ "absolute bottom-0 inset-x-0 py-1 text-center text-[9px] font-black uppercase tracking-widest transition-colors duration-300",
+ isActive ? "bg-primary text-primary-foreground" : "bg-muted-foreground/30 text-white"
  )}
  >
  {speakerKey}
@@ -232,10 +232,10 @@ export function StickerScene({
  {/* Label Pembicara */}
  <span
  className={cn(
- "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-sm self-start",
- activeSpeakerKey === "zundamon" ? "bg-success" :
- (activeSpeakerKey === "ayu" || activeSpeakerKey === "lala") ? "bg-secondary" :
- (activeSpeakerKey === "narrator" || activeSpeakerKey === "narator") ? "bg-muted-foreground" : "bg-primary"
+ "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm self-start",
+ activeSpeakerKey === "zundamon" ? "bg-success text-success-foreground" :
+ (activeSpeakerKey === "ayu" || activeSpeakerKey === "lala") ? "bg-secondary text-secondary-foreground" :
+ (activeSpeakerKey === "narrator" || activeSpeakerKey === "narator") ? "bg-muted-foreground text-background" : "bg-primary text-primary-foreground"
  )}
  >
  {rawSpeaker}
@@ -246,7 +246,7 @@ export function StickerScene({
  {typeof currentLine.startTime === "number" && seekToLine && (
  <button
  onClick={() => seekToLine(currentLine.startTime!)}
- className="px-2.5 py-1.5 rounded-lg bg-primary hover:bg-primary/95 text-white transition-all shadow-md flex items-center gap-1 font-bold text-[9px] uppercase tracking-wider"
+ className="px-2.5 py-1.5 rounded-lg bg-primary hover:bg-primary/95 text-primary-foreground transition-all shadow-md flex items-center gap-1 font-bold text-[9px] uppercase tracking-wider"
  title="Putar dialog baris ini"
  aria-label="Putar dialog baris ini"
  >
@@ -273,7 +273,7 @@ export function StickerScene({
  <button
  onClick={handleNext}
  disabled={currentIndex === dialogue.length - 1}
- className="px-3 py-1.5 rounded-lg bg-primary hover:bg-primary/95 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md flex items-center gap-0.5 font-bold text-[9px] uppercase tracking-wider"
+ className="px-3 py-1.5 rounded-lg bg-primary hover:bg-primary/95 text-primary-foreground disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md flex items-center gap-0.5 font-bold text-[9px] uppercase tracking-wider"
  aria-label="Lanjut"
  >
  <span>Lanjut</span>

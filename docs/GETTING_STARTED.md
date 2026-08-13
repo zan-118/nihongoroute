@@ -1,7 +1,7 @@
 # Panduan Memulai (Getting Started)
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 12 Agustus 2026  
+> **Terakhir Diperbarui**: 13 Agustus 2026  
 > **Ruang Lingkup**: Prasyarat, Setup Lingkungan Lokal, Scripts, & Verification  
 > **Rujukan Utama**: [README.md](../README.md) | [CONFIGURATION.md](CONFIGURATION.md) | [CONTRIBUTING.md](CONTRIBUTING.md)
 

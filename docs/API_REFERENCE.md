@@ -1,7 +1,7 @@
 # Referensi API & Route Handlers
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 12 Agustus 2026 — Diverifikasi 100% dari `src/app/api/` & `src/actions/`  
+> **Terakhir Diperbarui**: 13 Agustus 2026 — Diverifikasi 100% dari `src/app/api/` & `src/actions/`  
 > **Ruang Lingkup**: Spesifikasi 6 API Route Handlers Active & Server Action Files  
 > **Rujukan Utama**: [README.md](../README.md) | [ARCHITECTURE.md](ARCHITECTURE.md) | [SECURITY.md](SECURITY.md)
 
@@ -17,7 +17,7 @@
    - [4. `/api/webhooks/saweria` — Webhook Donasi Saweria](#4-apiwebhookssaweria--webhook-donasi-saweria)
    - [5. `/api/webhooks/trakteer` — Webhook Donasi Trakteer](#5-apiwebhookstrakteer--webhook-donasi-trakteer)
    - [6. `/auth/callback` — OAuth Callback](#6-authcallback--oauth-callback)
-3. [Daftar 18 Server Action Files (`src/actions/*.actions.ts`)](#3-daftar-18-server-action-files-srcactionsactionsts)
+3. [Daftar 19 Server Action Files (`src/actions/*.actions.ts`)](#3-daftar-19-server-action-files-srcactionsactionsts)
 
 ---
 
@@ -70,7 +70,7 @@ NihongoRoute memiliki **6 endpoint aktif**: 4 API Route Handlers di `src/app/api
 
 ---
 
-## 3. Daftar 18 Server Action Files (`src/actions/*.actions.ts`)
+## 3. Daftar 19 Server Action Files (`src/actions/*.actions.ts`)
 
 Seluruh Server Action tersimpan di `src/actions/` dan bertindak sebagai layer tipis validasi sebelum memanggil domain services:
 
@@ -94,3 +94,4 @@ Seluruh Server Action tersimpan di `src/actions/` dan bertindak sebagai layer ti
 | 16 | `tools-integration.actions.ts` | Data integrasi tools (drill, shadowing, counter) |
 | 17 | `library.actions.ts` | Pengambilan data agregat pustaka |
 | 18 | `library-counts.actions.ts` | Perhitungan jumlah item pustaka |
+| 19 | `contact.actions.ts` | Pengiriman pesan kontak (notifikasi via webhook/email admin) |

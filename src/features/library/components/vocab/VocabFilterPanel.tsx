@@ -54,7 +54,7 @@ export function VocabFilterPanel({
  return (
  <div className="mb-12 md:mb-16 p-2 rounded-[2.25rem] bg-card/40 dark:bg-card/20 backdrop-blur-xl border border-border/60 dark:border-white/10 shadow-sm font-sans">
  {/* ── INNER CORE ── */}
- <div className="w-full h-full rounded-[calc(2.25rem-0.5rem)] p-6 sm:p-8 dark:from-[#080d14]/90 dark:to-[#05080e]/95 border border-border/30 dark:border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] flex flex-col gap-6 md:gap-8">
+ <div className="w-full h-full rounded-[calc(2.25rem-0.5rem)] p-6 sm:p-8 border border-border/30 dark:border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] flex flex-col gap-6 md:gap-8">
  
  {/* Search Bar */}
  <div className="relative group w-full">
@@ -65,7 +65,7 @@ export function VocabFilterPanel({
  />
  <Input
  placeholder="Cari kanji, kana, romaji, atau arti kata..."
- className="w-full pl-12 pr-6 py-4 h-14 bg-background/60 dark:bg-[#03060a]/60 border-border/60 dark:border-white/10 rounded-2xl text-sm text-foreground placeholder:text-muted-foreground/60 font-medium focus-visible:ring-primary/30 font-sans shadow-inner transition-all duration-300"
+ className="w-full pl-12 pr-6 py-4 h-14 bg-background/60 dark:bg-surface-well/60 border-border/60 dark:border-white/10 rounded-2xl text-sm text-foreground placeholder:text-muted-foreground/60 font-medium focus-visible:ring-primary/30 font-sans shadow-inner transition-all duration-300"
  value={search}
  onChange={(e) => setSearch(e.target.value)}
  />
@@ -104,7 +104,7 @@ export function VocabFilterPanel({
  <select
  value={hinshi}
  onChange={(e) => setHinshi(e.target.value)}
- className="w-full px-4 py-3 h-11 bg-background/60 dark:bg-[#03060a]/60 border border-border/60 dark:border-white/10 rounded-2xl text-xs font-mono font-bold uppercase tracking-wider text-foreground outline-none focus:border-primary transition-colors cursor-pointer"
+ className="w-full px-4 py-3 h-11 bg-background/60 dark:bg-surface-well/60 border border-border/60 dark:border-white/10 rounded-2xl text-xs font-mono font-bold uppercase tracking-wider text-foreground outline-none focus:border-primary transition-colors cursor-pointer"
  >
  {HINSHI.map((h) => (
  <option key={h.value} value={h.value} className="bg-card py-2 font-sans font-bold">
@@ -118,7 +118,7 @@ export function VocabFilterPanel({
  {/* View Controls & Toggles Bar */}
  <div className="pt-4 border-t border-border/40 dark:border-white/5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
  {/* Romaji Toggle */}
- <div className="flex items-center justify-between gap-4 px-4 py-2.5 bg-background/40 dark:bg-[#03060a]/40 border border-border/40 rounded-2xl">
+ <div className="flex items-center justify-between gap-4 px-4 py-2.5 bg-background/40 dark:bg-surface-well/40 border border-border/40 rounded-2xl">
  <div className="flex flex-col">
  <span className="text-[10px] font-black uppercase tracking-wider font-mono text-foreground">Tampilkan Romaji</span>
  <span className="text-[9px] font-medium text-muted-foreground">Panduan abjad Latin</span>
@@ -127,7 +127,7 @@ export function VocabFilterPanel({
  </div>
 
  {/* Layout Preference Toggle */}
- <div className="flex items-center justify-between gap-4 px-4 py-2.5 bg-background/40 dark:bg-[#03060a]/40 border border-border/40 rounded-2xl">
+ <div className="flex items-center justify-between gap-4 px-4 py-2.5 bg-background/40 dark:bg-surface-well/40 border border-border/40 rounded-2xl">
  <span className="text-[10px] font-black uppercase tracking-wider font-mono text-foreground">Format Tampilan</span>
  <div className="flex p-1 bg-muted/60 rounded-xl border border-border/40">
  <Button

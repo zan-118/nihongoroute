@@ -374,7 +374,7 @@ export default function VocabView({
  <Button
  variant="ghost"
  size="sm"
- className="px-3 h-8 text-[10px] font-mono font-bold uppercase tracking-wider rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-white transition-all"
+ className="px-3 h-8 text-[10px] font-mono font-bold uppercase tracking-wider rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all"
  >
  Detail
  </Button>

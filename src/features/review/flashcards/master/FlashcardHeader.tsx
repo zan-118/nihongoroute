@@ -120,7 +120,7 @@ export function FlashcardHeader({
 
  {/* Show combo badge only when streak is active. */}
  {combo > 1 && (
- <div className="flex items-center gap-1.5 bg-warning text-warning-foreground px-3 py-2 rounded-xl animate-in zoom-in duration-300 shadow-lg shadow-orange-500/20">
+ <div className="flex items-center gap-1.5 bg-warning text-warning-foreground px-3 py-2 rounded-xl animate-in zoom-in duration-300 shadow-lg shadow-warning/20">
  <Fire size={14} className="text-orange-500 animate-pulse" />
  <span className="text-sm font-black">{combo}</span>
  </div>

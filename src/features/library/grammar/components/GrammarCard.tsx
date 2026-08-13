@@ -31,7 +31,7 @@ interface GrammarCardProps {
 export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps) {
  return (
  <div
- className="group font-sans border-b border-border/30 py-4 hover:border-emerald-500/50 transition-colors"
+ className="group font-sans border-b border-border/30 py-4 hover:border-accent-emerald/50 transition-colors"
  style={{ 
  contentVisibility: 'auto', 
  containIntrinsicSize: '0 80px',
@@ -44,17 +44,17 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
  #{String(index + 1).padStart(2, "0")}
  </span>
  <div className="min-w-0">
- <h2 className="text-base sm:text-lg text-foreground font-black font-japanese leading-snug group-hover:text-emerald-500 transition-colors truncate">
+ <h2 className="text-base sm:text-lg text-foreground font-black font-japanese leading-snug group-hover:text-accent-emerald transition-colors truncate">
  {article.title}
  </h2>
  </div>
  </div>
 
  <div className="flex items-center gap-3 shrink-0">
- <Badge className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+ <Badge className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider rounded-full bg-accent-emerald/10 text-accent-emerald border border-accent-emerald/20">
  {selectedLevel.toUpperCase()}
  </Badge>
- <ArrowUpRight size={14} className="text-muted-foreground/40 group-hover:text-emerald-500 transition-colors" />
+ <ArrowUpRight size={14} className="text-muted-foreground/40 group-hover:text-accent-emerald transition-colors" />
  </div>
  </div>
  </Link>

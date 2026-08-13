@@ -1,7 +1,7 @@
 # Panduan Troubleshooting & FAQ
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Terakhir Diperbarui**: 13 Agustus 2026  
 > **Ruang Lingkup**: Penanganan Masalah Kuroshiro, Edge TTS Timeout, Offline Sync Conflict, & Health Check  
 > **Rujukan Utama**: [README.md](../README.md) | [GETTING_STARTED.md](GETTING_STARTED.md) | [CONFIGURATION.md](CONFIGURATION.md)
 

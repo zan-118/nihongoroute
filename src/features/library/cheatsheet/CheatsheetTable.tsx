@@ -158,7 +158,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
  onClick={() => setViewMode("table")}
  className={cn(
  "rounded-full gap-2 text-xs font-mono font-bold px-4 h-9 transition-all",
- viewMode === "table" ? "bg-amber-500 text-amber-950 font-black shadow-sm" : "text-muted-foreground hover:text-foreground"
+ viewMode === "table" ? "bg-accent-amber text-accent-amber-foreground font-black shadow-sm" : "text-muted-foreground hover:text-foreground"
  )}
  aria-label="Tampilan Tabel"
  >
@@ -172,7 +172,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
  onClick={() => setViewMode("flashcard")}
  className={cn(
  "rounded-full gap-2 text-xs font-mono font-bold px-4 h-9 transition-all",
- viewMode === "flashcard" ? "bg-amber-500 text-amber-950 font-black shadow-sm" : "text-muted-foreground hover:text-foreground"
+ viewMode === "flashcard" ? "bg-accent-amber text-accent-amber-foreground font-black shadow-sm" : "text-muted-foreground hover:text-foreground"
  )}
  aria-label="Tampilan Flashcard Mode"
  >
@@ -181,7 +181,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
  </div>
 
  <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
- <Information size={14} className="text-amber-500" />
+ <Information size={14} className="text-accent-amber" />
  {viewMode === "table" && "Tabel data referensi ringkas & padat."}
  {viewMode === "flashcard" && "Uji hafalan dengan mode kuis interaktif."}
  </div>
@@ -212,7 +212,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
  {items.map((item, idx) => (
  <tr 
  key={`${item.jp}-${idx}`} 
- className="hover:bg-amber-500/5 transition-colors group"
+ className="hover:bg-accent-amber/5 transition-colors group"
  >
  {/* NO */}
  <td className="py-3.5 px-4 font-mono text-xs font-bold text-muted-foreground/60 text-center align-top">
@@ -220,12 +220,12 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
  </td>
 
  {/* JEPANG */}
- <td className="py-3.5 px-4 font-japanese font-black text-lg text-foreground group-hover:text-amber-400 transition-colors align-top">
+ <td className="py-3.5 px-4 font-japanese font-black text-lg text-foreground group-hover:text-accent-amber transition-colors align-top">
  {item.jp}
  </td>
 
  {/* ROMAJI */}
- <td className="py-3.5 px-4 text-xs font-mono font-bold text-amber-500 uppercase tracking-wider align-top">
+ <td className="py-3.5 px-4 text-xs font-mono font-bold text-accent-amber uppercase tracking-wider align-top">
  {item.romaji}
  </td>
 

@@ -108,7 +108,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  {/* Header Section */}
  <div className="flex flex-col gap-6">
  <div className="space-y-3">
- <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 text-cyan-400">
+ <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-accent-cyan/20 bg-accent-cyan/10 text-accent-cyan">
  <Headphone size={16} />
  <span className="text-[10px] font-black uppercase tracking-[0.25em] font-mono">
  LISTENING LAB VAULT
@@ -128,7 +128,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground size-5" />
  <Input 
  placeholder="Cari modul listening..." 
- className="pl-13 h-14 bg-background/60 dark:bg-[#03060a]/60 border border-border/60 dark:border-white/10 rounded-2xl text-sm font-medium focus-visible:ring-cyan-500/30"
+ className="pl-13 h-14 bg-background/60 dark:bg-surface-well/60 border border-border/60 dark:border-white/10 rounded-2xl text-sm font-medium focus-visible:ring-accent-cyan/30"
  value={search}
  onChange={(e) => setSearch(e.target.value)}
  />
@@ -144,7 +144,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  onClick={() => handleLevelChange(item)}
  className={`rounded-full px-5 h-9 text-xs font-mono font-bold transition-all duration-300 ${
  level === item
- ? "bg-cyan-500 text-white shadow-md shadow-cyan-500/20 scale-105"
+ ? "bg-accent-cyan text-accent-cyan-foreground shadow-md shadow-accent-cyan/20 scale-105"
  : "text-muted-foreground hover:text-foreground"
  }`}
  >
@@ -159,7 +159,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  <div className="relative">
  {isFetching && (
  <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-md rounded-3xl">
- <Loader className="size-10 animate-spin text-cyan-500" />
+ <Loader className="size-10 animate-spin text-accent-cyan" />
  </div>
  )}
 
@@ -174,7 +174,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  return (
  <div
  key={task.id}
- className="group font-sans border-b border-border/30 py-5 hover:border-cyan-500/50 transition-colors"
+ className="group font-sans border-b border-border/30 py-5 hover:border-accent-cyan/50 transition-colors"
  style={{ 
  contentVisibility: 'auto', 
  containIntrinsicSize: '0 100px',
@@ -185,7 +185,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  <div className="space-y-1.5 flex-1 min-w-0">
  <div className="flex flex-wrap items-center gap-2">
  {task.jlpt_level && (
- <Badge className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+ <Badge className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase rounded-full bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">
  {task.jlpt_level}
  </Badge>
  )}
@@ -195,24 +195,24 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  </span>
  )}
  {isCompleted && (
- <span className="text-[9px] font-mono font-bold text-emerald-400 inline-flex items-center gap-1">
+ <span className="text-[9px] font-mono font-bold text-success inline-flex items-center gap-1">
  <Check size={10} /> SELESAI
  </span>
  )}
  </div>
 
- <h3 className="text-lg sm:text-xl font-black text-foreground leading-snug group-hover:text-cyan-400 transition-colors truncate">
+ <h3 className="text-lg sm:text-xl font-black text-foreground leading-snug group-hover:text-accent-cyan transition-colors truncate">
  {task.title}
  </h3>
  </div>
 
  <div className="flex items-center gap-4 shrink-0">
  <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-muted-foreground/70 uppercase">
- <Radio size={11} className="text-cyan-400 animate-pulse" />
+ <Radio size={11} className="text-accent-cyan animate-pulse" />
  {task.audioUrl ? "AUDIO NATIVE" : "AI VOICE"}
  </span>
 
- <div className="size-8 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center shrink-0 group-hover:bg-cyan-500 group-hover:text-white transition-colors duration-300">
+ <div className="size-8 rounded-full bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20 flex items-center justify-center shrink-0 group-hover:bg-accent-cyan group-hover:text-accent-cyan-foreground transition-colors duration-300">
  <PlayCircle size={12} className="ml-0.5 fill-current" />
  </div>
  </div>
@@ -228,7 +228,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  {totalPages > 1 && (
  <div className="flex flex-col items-center gap-4 pt-8">
  <div className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">
- HALAMAN <span className="text-cyan-400">{currentPage}</span> DARI {totalPages}
+ HALAMAN <span className="text-accent-cyan">{currentPage}</span> DARI {totalPages}
  </div>
  <div className="flex items-center gap-2">
  <Button
@@ -270,7 +270,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  onClick={() => handlePageChange(pageNum)}
  className={`size-9 rounded-full font-mono text-xs font-bold transition-all ${
  currentPage === pageNum 
- ? "bg-cyan-500 text-white shadow-md shadow-cyan-500/20" 
+ ? "bg-accent-cyan text-accent-cyan-foreground shadow-md shadow-accent-cyan/20" 
  : "bg-card border border-border/40 text-muted-foreground hover:text-foreground"
  }`}
  >

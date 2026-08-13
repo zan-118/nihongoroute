@@ -23,12 +23,10 @@ interface ReadingWorkspaceProps {
  paragraphs: string[];
  /** Array of hiragana readings corresponding to each paragraph */
  hiraganaParagraphs: string[];
- /** Array of romaji readings corresponding to each paragraph */
- romajiParagraphs: string[];
  /** Array of translations corresponding to each paragraph */
  translationParagraphs: string[];
  /** Current display mode for Japanese text */
- mode: "kanji" | "furigana" | "romaji" | "hiragana";
+ mode: "kanji" | "furigana" | "hiragana";
  /** Font size configuration */
  fontSize: "standard" | "large" | "extra";
  /** Toggle to show or hide translations */
@@ -65,7 +63,6 @@ const FONT_SIZE_CLASSES = {
 function ReadingWorkspace({
  paragraphs,
  hiraganaParagraphs,
- romajiParagraphs,
  translationParagraphs,
  mode,
  fontSize,
@@ -202,7 +199,6 @@ function ReadingWorkspace({
  <FuriganaDisplay
  text={para}
  furigana={hiraganaParagraphs[idx] || ""}
- romaji={romajiParagraphs[idx] || ""}
  mode={mode}
  interactive={true}
  />
@@ -251,7 +247,7 @@ function ReadingWorkspace({
  <div className="max-w-3xl mx-auto mt-16 text-center border-t border-border/40 pt-10">
  <Button
  onClick={onComplete}
- className="rounded-lg px-12 py-6 bg-linear- text-white shadow-lg shadow-primary/20 font-black uppercase tracking-wider text-xs hover:scale-105 active:scale-95 transition-all"
+ className="rounded-lg px-12 py-6 bg-primary text-primary-foreground shadow-lg shadow-primary/20 font-black uppercase tracking-wider text-xs hover:bg-primary/90 hover:scale-105 active:scale-95 transition-all"
  >
  <Check className="mr-2 h-4 w-4" /> Tandai Selesai Membaca
  </Button>

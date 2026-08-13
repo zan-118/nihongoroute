@@ -1,7 +1,7 @@
 # Model Data & Database Supabase
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Terakhir Diperbarui**: 13 Agustus 2026  
 > **Ruang Lingkup**: 28 Tabel PostgreSQL, ERD Diagram, RPC Functions, Triggers, & Storage Buckets  
 > **Catatan Snapshot**: Jumlah baris (*row count*) pada tabel dinamis pengguna (`profiles`, `user_srs`, `user_lessons`, `community_posts`) merupakan snapshot data produksi per 2 Agustus 2026 dan bertambah sesuai aktivitas pengguna. Skema kolom, tipe data, dan RLS bersifat statis terverifikasi.  
 > **Rujukan Utama**: [README.md](../README.md) | [ARCHITECTURE.md](ARCHITECTURE.md) | [SECURITY.md](SECURITY.md)

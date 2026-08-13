@@ -71,7 +71,7 @@ export default function UserNav() {
  <DropdownMenu>
  <DropdownMenuTrigger asChild>
  <button type="button" className="min-h-11 flex items-center gap-1 sm:gap-3 p-1 pr-1 sm:pr-3 rounded-xl bg-card border border-border hover:border-primary/30 transition-all group outline-none">
- <div className="size-8 rounded-xl bg-linear- flex items-center justify-center text-primary-foreground text-xs font-black shadow-md group-hover:scale-105 transition-transform">
+ <div className="size-8 rounded-xl bg-linear-to-br from-primary to-accent-violet flex items-center justify-center text-primary-foreground text-xs font-black shadow-md group-hover:scale-105 transition-transform">
  {/* Get first letter for avatar fallback */}
  {userFullName ? userFullName.charAt(0).toUpperCase() : "U"}
  </div>

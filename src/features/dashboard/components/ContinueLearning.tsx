@@ -139,11 +139,11 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
  <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
  <div 
  className="absolute top-0 right-0 w-[14px] h-[1px] transition-colors duration-500" 
- style={{ backgroundColor: activeData.progress === 100 ? "var(--success)" : "var(--primary)" }}
+ style={{ backgroundColor: activeData.progress === 100 ? "hsl(var(--success))" : "hsl(var(--primary))" }}
  />
  <div 
  className="absolute top-0 right-0 w-[1px] h-[14px] transition-colors duration-500" 
- style={{ backgroundColor: activeData.progress === 100 ? "var(--success)" : "var(--primary)" }}
+ style={{ backgroundColor: activeData.progress === 100 ? "hsl(var(--success))" : "hsl(var(--primary))" }}
  />
  </div>
 
@@ -228,7 +228,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
  initial={{ width: 0 }}
  animate={{ width: `${activeData.progress}%` }}
  transition={{ duration: 1.5, ease: "easeOut" }}
- className={`h-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before: before: before: before: ${
+ className={`h-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-white/30 ${
  activeData.progress === 100
  ? "bg-success"
  : "bg-primary"

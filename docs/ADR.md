@@ -1,7 +1,7 @@
 # Architecture Decision Records (ADR)
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 12 Agustus 2026  
+> **Terakhir Diperbarui**: 13 Agustus 2026  
 > **Ruang Lingkup**: Catatan Keputusan Arsitektural, Arsitektur Informasi, & Trade-Off System Design  
 > **Rujukan Utama**: [README.md](../README.md) | [ARCHITECTURE.md](ARCHITECTURE.md)
 
@@ -14,6 +14,8 @@
 3. [ADR-003: Offline-First 3-Tier Sync Strategy](#adr-003-offline-first-3-tier-sync-strategy)
 4. [ADR-004: Data Fetching Konten via Server Actions](#adr-004-data-fetching-konten-via-server-actions)
 5. [ADR-005: Pemecahan God Files dengan Barrel Re-Export](#adr-005-pemecahan-god-files-dengan-barrel-re-export)
+6. [ADR-006: Mode Tampilan Baca Global via UI Store](#adr-006-mode-tampilan-baca-global-via-ui-store)
+7. [ADR-007: Token Warna Semantik Tema-Adaptif](#adr-007-token-warna-semantik-tema-adaptif)
 
 ---
 
@@ -104,3 +106,46 @@ Memecah god files dengan pola:
 - Ukuran file per modul turun ke < 250 baris, lebih mudah di-test & di-review.
 - Zero behavioral change untuk konsumen (verifikasi via typecheck + full test suite).
 - Total test suite bertambah (unit test `examResultData`, `dictionary-lookup`, `listening-workspace`).
+
+---
+
+## ADR-006: Mode Tampilan Baca Global via UI Store
+
+- **Tanggal**: Agustus 2026
+- **Status**: Disetujui (Accepted)
+
+### Konteks
+Toggle mode tampilan (Kanji/Furigana/Hiragana) di Topbar tidak berlaku di banyak halaman: `SmartJapanese` men-default `mode="furigana"` sehingga `JapaneseText` tidak pernah jatuh ke mode global; `ReadingContext` juga hardcode `useState("furigana")` tanpa sinkron store. Akibatnya "beberapa halaman berubah, yang lain tidak" saat pengguna mengganti mode.
+
+### Keputusan
+`useUIStore.readingState.mode` dijadikan **satu-satunya sumber kebenaran** mode tampilan teks Jepang:
+1. `SmartJapanese` menghapus default `mode` — `JapaneseText` jatuh ke `globalMode` dari store.
+2. `ReadingContext` mengikat `mode` ke store (`setMode` menulis via `setReadingState`).
+3. Toggle Topbar & control bar reading menulis balik ke store; preferensi ter-persist di IndexedDB.
+4. Mode `romaji` dihapus dari kontrol tampilan — romaji tetap tersedia sebagai data per kata (halaman vocab) & per paragraf (data reading), bukan mode siklus.
+
+### Konsekuensi
+- Perilaku konsisten lintas halaman (vocab, kanji, grammar, cheatsheet, listening, games, review, reading) dengan satu sumber kebenaran.
+- Default tetap `furigana`, sehingga tanpa perubahan visual sampai user men-toggle.
+- Ditutup dengan test regresi (`__tests__/components/ui/FuriganaText.test.tsx`): mengikuti store global, regresi toggle Topbar, dan prop eksplisit menimpa global.
+
+---
+
+## ADR-007: Token Warna Semantik Tema-Adaptif
+
+- **Tanggal**: Agustus 2026
+- **Status**: Disetujui (Accepted)
+
+### Konteks
+Warna aksen sebelumnya di-hardcode sebagai palet per-fitur (amber/cyan/purple/emerald/rose/slate/orange di 15 file), tidak tema-adaptif (kontras teks aksen hanya 1.9–3.8:1 di mode terang), dan beberapa pola inline (`rgb(var(--x))`, `var(--x)` tanpa wrapper `hsl()`) menghasilkan CSS invalid → elemen tak terlihat atau render warna salah (mustard).
+
+### Keputusan
+1. **Token generik bernama warna**: `--accent-violet/cyan/emerald/rose/amber/blue` (+`*-foreground`) & `--surface-well` di `globals.css` + `tailwind.config.js` — reusable lintas fitur, bukan terikat nama kategori.
+2. **Tema-adaptif**: mode terang memakai shade gelap + fg putih, mode gelap shade terang + fg 950 — kontras ≥ 4.5:1 (AA) di kedua mode.
+3. **Satu pola valid**: seluruh warna inline memakai `hsl(var(--token))` / `hsl(var(--token) / alpha)`; zero `rgb(var(`, `rgba(var(`, raw `var(--x)` color, class `bg-linear-` rusak, dan `before:`/`after:` kosong di `src/`.
+4. **Pengecualian terverifikasi**: `OfficialCertificateView` (palet tetap untuk print/PDF) & `AnimatedKanji` (warna kuas `#a855f7` — canvas tak bisa CSS var) didokumentasikan.
+
+### Konsekuensi
+- Kontras naik ke ≥ 4.5:1 (teks aksen) & ≥ 7:1 (teks di atas solid primary di mode gelap).
+- Token reusable & konsisten; audit digerakkan lintas area (library, courses, dashboard, tools, srs, review, games).
+- Diverifikasi via typecheck, lint, dan 441 unit test.

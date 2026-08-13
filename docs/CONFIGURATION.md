@@ -1,7 +1,7 @@
 # Konfigurasi Sistem & Environment
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 2 Agustus 2026  
+> **Terakhir Diperbarui**: 13 Agustus 2026  
 > **Ruang Lingkup**: Environment Variables Matrix (Public vs Server-Only) & Files System Config  
 > **Rujukan Utama**: [README.md](../README.md) | [SECURITY.md](SECURITY.md) | [GETTING_STARTED.md](GETTING_STARTED.md)
 

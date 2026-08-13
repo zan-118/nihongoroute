@@ -22,11 +22,11 @@ export function ReadingQuizSection({ quizzes, lessonId }: ReadingQuizSectionProp
   return (
     <div className="mt-16">
       <div className="flex items-center gap-4 mb-10">
-        <div className="flex-1 h-px bg-linear- " />
+        <div className="flex-1 h-px bg-border " />
         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 shrink-0">
           Kuis Pemahaman
         </span>
-        <div className="flex-1 h-px bg-linear- " />
+        <div className="flex-1 h-px bg-border " />
       </div>
       <div className="rounded-[2.5rem] border border-border/60 bg-card/30 p-6 shadow-2xl">
         <QuizEngine questions={quizzes} lessonId={lessonId} />

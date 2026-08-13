@@ -1,6 +1,6 @@
 /**
  * @file ReadingContext.tsx
- * @description React Context Provider untuk mengelola preferensi membaca pengguna (seperti mode tampilan furigana/romaji/hiragana dan visibilitas terjemahan).
+ * @description React Context Provider untuk mengelola preferensi membaca pengguna (seperti mode tampilan furigana/hiragana dan visibilitas terjemahan).
  */
 
 // ==========================================
@@ -8,6 +8,7 @@
 // ==========================================
 import React, { createContext, use, useState } from "react";
 import { ReadingMode } from "../types";
+import { useUIStore } from "@/store/useUIStore";
 
 // ==========================================
 // TIPE DATA / INTERFACE
@@ -43,8 +44,11 @@ const ReadingContext = createContext<ReadingContextType | undefined>(undefined);
  * @param props.children - Child nodes.
  */
 export function ReadingProvider({ children }: { children: React.ReactNode }) {
- // Default mode is furigana.
- const [mode, setMode] = useState<ReadingMode>("furigana");
+ // Mode terikat ke store global (satu sumber kebenaran): toggle Topbar/FAB dan kontrol
+ // mode di halaman reading saling tersinkron, dan preferensi pengguna bertahan lintas halaman.
+ const mode = useUIStore((s) => s.readingState.mode);
+ const setReadingState = useUIStore((s) => s.setReadingState);
+ const setMode = (next: ReadingMode) => setReadingState({ mode: next });
  // Default translation visibility is hidden.
  const [showTranslation, setShowTranslation] = useState(false);
 

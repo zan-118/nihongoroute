@@ -137,7 +137,7 @@ export default function DashboardStats({
  <Progress
  value={xpProgress}
  className="h-3 bg-muted border border-border relative overflow-hidden"
- indicatorClassName="bg-[linear-gradient(90deg,hsl(var(--primary)),hsl(var(--primary)))] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-linear- before: before: before:"
+ indicatorClassName="bg-[linear-gradient(90deg,hsl(var(--primary)),hsl(var(--primary)))] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-white/30"
  />
  <p className="mt-4 text-xs text-muted-foreground uppercase font-bold tracking-widest font-mono text-center md:text-right">
  Kumpulkan <span className="text-foreground">{xpNeeded} XP</span> lagi untuk naik level!
@@ -237,7 +237,7 @@ export default function DashboardStats({
  whileInView={{ width: `${percentage}%` }}
  transition={{ duration: 1, ease: "easeOut" }}
  viewport={{ once: true }}
- className={`h-full rounded-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-linear- before: before: before: ${
+ className={`h-full rounded-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-white/30 ${
  percentage === 100 
  ? 'bg-success shadow-[0_0_10px_hsl(var(--success)/0.5)]' 
  : 'bg-[linear-gradient(90deg,hsl(var(--primary)),hsl(var(--primary)))] shadow-[0_0_10px_hsl(var(--primary)/0.4)]'

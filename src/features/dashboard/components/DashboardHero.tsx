@@ -180,11 +180,11 @@ export default function DashboardHero({
  <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
  <div 
  className="absolute top-0 right-0 w-3.5 h-px transition-colors duration-500" 
- style={{ backgroundColor: dueCount > 0 ? "var(--primary)" : "var(--success)" }}
+ style={{ backgroundColor: dueCount > 0 ? "hsl(var(--primary))" : "hsl(var(--success))" }}
  />
  <div 
  className="absolute top-0 right-0 w-px h-3.5 transition-colors duration-500" 
- style={{ backgroundColor: dueCount > 0 ? "var(--primary)" : "var(--success)" }}
+ style={{ backgroundColor: dueCount > 0 ? "hsl(var(--primary))" : "hsl(var(--success))" }}
  />
  </div>
 

@@ -6,9 +6,10 @@ NihongoRoute membantu pembelajar menguasai kosakata (vocab), kanji, tata bahasa 
 
 ## Fitur Utama & Karakteristik Platform
 - **100% Gratis & Nirlaba**: Tidak memerlukan kartu kredit, tanpa paywall, dan bebas dari iklan.
-- **Offline-First & Tangguh**: Berbasis Progressive Web App (PWA) dengan sinkronisasi awan zero-latency (Zustand + Supabase).
+- **Offline-First & Tangguh**: Berbasis Progressive Web App (PWA) dengan sinkronisasi awan zero-latency (Zustand + Supabase + IndexedDB).
 - **Kurikulum Komprehensif**: Mencakup materi JLPT tingkat N5, N4, N3, N2, dan N1.
-- **Alat Bantu Pembelajaran**: Kamus kosakata dengan furigana, romaji, aksen nada (pitch accent), tata urutan goresan kanji (stroke order), mnemonic, dan bank soal simulasi JLPT.
+- **Mode Baca Global**: Tampilan teks Jepang dapat diubah Kanji (full kanji), Furigana (rubi di atas kanji), atau Hiragana — berlaku konsisten di semua halaman.
+- **Alat Bantu Pembelajaran**: Kamus kosakata dengan furigana, romaji (per kata), aksen nada (pitch accent), tata urutan goresan kanji (stroke order), mnemonic, dan bank soal simulasi JLPT.
 
 ## Halaman & Navigasi Utama
 - [Beranda & Dasbor](/): Halaman utama pelacakan progres belajar, streak, XP, dan sesi SRS harian.

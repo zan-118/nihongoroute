@@ -1,202 +1,120 @@
 <p align="center">
-  <a href="https://www.nihongoroute.my.id">
-    <img src="public/opengraph-image.png" alt="NihongoRoute Banner" width="100%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);" />
-  </a>
+  <img src="public/opengraph-image.png" alt="NihongoRoute" width="100%" style="border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.18);" />
 </p>
 
 <h1 align="center">🇯🇵 NihongoRoute</h1>
 
 <p align="center">
-  <strong>Platform Pembelajaran Bahasa Jepang Modern Berbasis <em>Offline-First</em> &amp; Zero-Egress Storage</strong>
+  <strong>Belajar Bahasa Jepang — Gratis, Offline-First, dan Menyenangkan.</strong><br />
+  Kurikulum lengkap <strong>JLPT N5 → N1</strong>: kosakata, kanji, tata bahasa, membaca, menyimak, dan simulasi ujian.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Next.js-16.2.12-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
-  <img src="https://img.shields.io/badge/React-19.2.8-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
-  <img src="https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
-  <img src="https://img.shields.io/badge/Cloudflare_R2-Zero_Egress-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Cloudflare R2" />
-  <img src="https://img.shields.io/badge/TypeScript-5.3-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Vitest-389_Tests_Passed-6E9F18?style=for-the-badge&logo=vitest&logoColor=white" alt="Vitest" />
+  <a href="https://nihongoroute.my.id">
+    <img src="https://img.shields.io/badge/Kunjungi_Situs-nihongoroute.my.id-22456B?style=for-the-badge" alt="Kunjungi Situs" />
+  </a>
+  <a href="#-fitur-unggulan">
+    <img src="https://img.shields.io/badge/✨_Fitur_Unggulan-141413?style=for-the-badge" alt="Fitur" />
+  </a>
+  <a href="docs/README.md">
+    <img src="https://img.shields.io/badge/📖_Dokumentasi-141413?style=for-the-badge" alt="Dokumentasi" />
+  </a>
 </p>
 
 <p align="center">
-  <a href="docs/README.md">📖 Dokumentasi Teknis</a> 
-  • 
-  <a href="#-memulai-cepat-quick-start">🚀 Panduan Instalasi</a> 
-  • 
-  <a href="#-arsitektur-sistem">🏛️ Arsitektur Sistem</a>
-  • 
-  <a href="CONTRIBUTING.md">🤝 Kontribusi</a>
-  • 
-  <a href="ROADMAP.md">🗺️ Roadmap</a>
+  <img src="https://img.shields.io/badge/Next.js_16-000000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white" alt="Supabase" />
+  <img src="https://img.shields.io/badge/Cloudflare_R2-FF9F0F?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare R2" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS_v4-38BDF8?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind" />
+  <img src="https://img.shields.io/badge/Vitest_441_Tests-6E9F18?style=flat-square&logo=vitest&logoColor=white" alt="Vitest" />
 </p>
 
 ---
 
-## ⚡ Ikhtisar Proyek
+## 📊 Dalam Satu Platform
 
-**NihongoRoute** adalah *self-study platform* modern yang didesain khusus untuk pembelajaran Bahasa Jepang mandiri yang tangguh, cepat, dan instan tanpa bergantung pada koneksi internet yang stabil. 
-
-Mengusung arsitektur **Offline-First 3-Tier Sync**, seluruh sesi belajar, kuis, dan review kartu *spaced repetition* (SRS) diproses secara lokal dengan latensi **0ms**, kemudian disinkronkan secara aman ke cloud Supabase secara *background*. Media dan audio disajikan secepat kilat melalui **Cloudflare R2 CDN** dengan **0 egress fees**.
-
----
-
-## 🔥 Fitur Utama
-
-| Fitur | Deskripsi |
-|---|---|
-| 🔋 **Offline-First Engine** | Sesi kuis & SRS kartu dapat diakses luring tanpa koneksi internet. Data tersimpan di browser via IndexedDB (`idb-keyval` & Zustand). |
-| ⚡ **Cloudflare R2 CDN Storage** | Seluruh aset media audio TTS dan gambar ujian disajikan via Cloudflare R2 Custom Domain CDN untuk latensi ultra-cepat dan **bebas batasan egress**. |
-| 🔄 **3-Tier Smart Progress Sync** | Engine sinkronisasi otomatis memantau status *dirty state*, melakukan *debouncing* 2000ms, dan menyiarkan pembaruan antar-tab via `BroadcastChannel`. |
-| 🛡️ **Anti-Cheat Gamification** | Perhitungan XP, Level, dan Streak divalidasi ketat di server PostgreSQL via RPC `sync_user_progress` untuk mencegah kecurangan klien. |
-| 🔊 **Smart Neural TTS Audio** | Pelafalan bahasa Jepang MsEdgeTTS neural voices dengan sistem *cache-first* otomatis di R2 & `CacheStorage` browser. |
-| 📝 **JLPT CBT Mock Exam Simulator** | Simulasi ujian JLPT N5 hingga N1 yang realistis dengan penentuan skor otomatis & analisis hasil terperinci. |
+|                                       |                                           |                                           |
+| :-----------------------------------: | :---------------------------------------: | :---------------------------------------: |
+| **22.000+**<br/>Kosakata ber-furigana | **13.000+**<br/>Kanji dengan stroke order | **26.000+**<br/>Kalimat contoh terjemahan |
+|     **700+**<br/>Pola tata bahasa     |     **3.400+**<br/>Soal simulasi JLPT     |     **N5 → N1**<br/>Kurikulum lengkap     |
 
 ---
 
-## 🏛️ Arsitektur Sistem
+## ✨ Fitur Unggulan
 
-```mermaid
-graph TD
-    subgraph Client ["Client Browser (Offline-First)"]
-        UI["React UI Components<br/>(Tailwind CSS + Framer Motion)"]
-        Store["Zustand State Stores<br/>useUserStore, useSRSStore, useUIStore"]
-        IDB[("IndexedDB Local Cache<br/>idb-keyval")]
-        SyncEngine["Sync Pipeline Engine<br/>useCloudMutation + Debounce"]
-    end
+| 📚 **Pustaka Lengkap**                                                                                   | 🔁 **SRS Flashcards**                                                                                 | 📝 **Simulasi Ujian JLPT**                                                        |
+| :------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------- |
+| Kosakata, kanji, tata bahasa, kalimat & ungkapan — lengkap dengan furigana, pitch accent, dan audio TTS. | _Spaced repetition_ cerdas dengan jadwal review otomatis, mnemonic pribadi, dan sinkronisasi progres. | CBT JLPT N5–N1 realistis dengan penilaian otomatis dan analisis hasil terperinci. |
 
-    subgraph CDN ["Media & Storage Layer"]
-        R2[("Cloudflare R2 CDN<br/>Zero-Egress Object Storage<br/>(tts-cache, exam-assets, asset)")]
-    end
-
-    subgraph Server ["Next.js Server Layer"]
-        Actions["Server Actions / Services<br/>src/actions & src/lib/services"]
-        TTS["EdgeTTS Engine<br/>MsEdgeTTS Neural Synthesis"]
-        Gemini["Google Gemini AI Engine"]
-    end
-
-    subgraph Database ["Supabase Cloud"]
-        Auth["Supabase Auth"]
-        DB[("PostgreSQL Database<br/>28 Tabel + RLS Policies")]
-        RPC["RPC sync_user_progress<br/>(Server Validation)"]
-    end
-
-    UI <--> Store
-    Store <-->|Persist 0ms| IDB
-    Store -->|Track dirty state| SyncEngine
-    SyncEngine -->|Debounced RPC Call| RPC
-    RPC -->|Validate XP & Sync| DB
-
-    UI -->|Fetch Media & Audio| R2
-    Actions -->|Query Lexical & User Data| DB
-    Actions -->|Synthesize Audio| TTS
-    TTS -->|Cache Audio| R2
-```
+| 📖 **Mode Baca Global**                                                                      | 🎮 **Gamifikasi & Minigame**                                                        | 📴 **Offline-First**                                                                    |
+| :------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------- |
+| Tampilkan teks Jepang sebagai Kanji, Furigana, atau Hiragana — konsisten di seluruh halaman. | XP, level, streak, leaderboard, shadowing, dikte, dan pelatih konjugasi & partikel. | Semua sesi belajar berjalan 0ms latency di browser dan tersinkron otomatis saat online. |
 
 ---
 
-## 🛠️ Tech Stack & Ekosistem
+## 🖼️ Galeri
 
-- **Frontend Core**: Next.js 16 (App Router), React 19, TypeScript 5, Zustand 5, React Query v5.
-- **Styling & Motion**: Tailwind CSS v4, Framer Motion, Radix UI Primitives, Iconify.
-- **Data & Storage**: Supabase (PostgreSQL 28 Tabel, RLS Policies), Cloudflare R2 (S3 API Storage), IndexedDB (`idb-keyval`).
-- **Media & AI**: MsEdgeTTS (`msedge-tts`), Google Generative AI (Gemini 2.5/3.x), Kuroshiro & Kuromoji Parser.
-- **Testing & Quality**: Vitest (389 Unit Tests), ESLint, TypeScript Strict Mode (+ typecheck untuk `__tests__/`), Migration Integrity Checkers.
+### ☀️ Mode Terang
+
+| 🏠 Beranda | 📚 Pustaka | 📖 Kosakata |
+|:---:|:---:|:---:|
+| <img src="public/screenshots/home.webp" alt="Beranda NihongoRoute" width="100%" style="border-radius: 10px; border: 1px solid #e5e2da;" /><br/><sub>Beranda — tagline & statistik platform</sub> | <img src="public/screenshots/library.webp" alt="Pustaka NihongoRoute" width="100%" style="border-radius: 10px; border: 1px solid #e5e2da;" /><br/><sub>Pustaka — kosakata, kanji, tata bahasa, bacaan</sub> | <img src="public/screenshots/vocab.webp" alt="Pustaka Kosakata" width="100%" style="border-radius: 10px; border: 1px solid #e5e2da;" /><br/><sub>Kosakata — daftar N5 ber-furigana & audio</sub> |
+
+| 🈁 Kanji | 🔍 Kamus | 🎮 Minigame Survival |
+|:---:|:---:|:---:|
+| <img src="public/screenshots/kanji.webp" alt="Detail Kanji" width="100%" style="border-radius: 10px; border: 1px solid #e5e2da;" /><br/><sub>Kanji — stroke order, makna & contoh</sub> | <img src="public/screenshots/dictionary.webp" alt="Kamus Jepang" width="100%" style="border-radius: 10px; border: 1px solid #e5e2da;" /><br/><sub>Kamus — cari kata Jepang dengan cepat</sub> | <img src="public/screenshots/survival.webp" alt="Minigame Survival" width="100%" style="border-radius: 10px; border: 1px solid #e5e2da;" /><br/><sub>Minigame Survival — latihan kosakata seru</sub> |
+
+| 💬 Komunitas | 🏆 Leaderboard | 📊 Dashboard |
+|:---:|:---:|:---:|
+| <img src="public/screenshots/social.webp" alt="Komunitas NihongoRoute" width="100%" style="border-radius: 10px; border: 1px solid #e5e2da;" /><br/><sub>Komunitas — diskusi sesama pembelajar</sub> | <img src="public/screenshots/leaderboard.webp" alt="Leaderboard NihongoRoute" width="100%" style="border-radius: 10px; border: 1px solid #e5e2da;" /><br/><sub>Leaderboard — papan peringkat global</sub> | <img src="public/screenshots/dashboard.webp" alt="Dashboard Pengguna" width="100%" style="border-radius: 10px; border: 1px solid #e5e2da;" /><br/><sub>Dashboard — progres & statistik harian</sub> |
+
+| ⚙️ Pengaturan | 📝 Simulasi Ujian JLPT | 🗺️ Rute Kursus |
+|:---:|:---:|:---:|
+| <img src="public/screenshots/settings.webp" alt="Pengaturan NihongoRoute" width="100%" style="border-radius: 10px; border: 1px solid #e5e2da;" /><br/><sub>Pengaturan — preferensi tampilan & belajar</sub> | <img src="public/screenshots/exams.webp" alt="Simulasi Ujian JLPT" width="100%" style="border-radius: 10px; border: 1px solid #e5e2da;" /><br/><sub>Simulasi Ujian — CBT JLPT N5–N1</sub> | <img src="public/screenshots/courses.webp" alt="Rute Kursus JLPT" width="100%" style="border-radius: 10px; border: 1px solid #e5e2da;" /><br/><sub>Rute Kursus — kurikulum terstruktur N5→N1</sub> |
+
+### 🌙 Mode Gelap
+
+| 🏠 Beranda | 📚 Pustaka | 📖 Kosakata |
+|:---:|:---:|:---:|
+| <img src="public/screenshots/home-dark.webp" alt="Beranda NihongoRoute (Gelap)" width="100%" style="border-radius: 10px; border: 1px solid #3f3f46;" /><br/><sub>Beranda — tagline & statistik platform</sub> | <img src="public/screenshots/library-dark.webp" alt="Pustaka NihongoRoute (Gelap)" width="100%" style="border-radius: 10px; border: 1px solid #3f3f46;" /><br/><sub>Pustaka — kosakata, kanji, tata bahasa, bacaan</sub> | <img src="public/screenshots/vocab-dark.webp" alt="Pustaka Kosakata (Gelap)" width="100%" style="border-radius: 10px; border: 1px solid #3f3f46;" /><br/><sub>Kosakata — daftar N5 ber-furigana & audio</sub> |
+
+| 🈁 Kanji | 🔍 Kamus | 🎮 Minigame Survival |
+|:---:|:---:|:---:|
+| <img src="public/screenshots/kanji-dark.webp" alt="Detail Kanji (Gelap)" width="100%" style="border-radius: 10px; border: 1px solid #3f3f46;" /><br/><sub>Kanji — stroke order, makna & contoh</sub> | <img src="public/screenshots/dictionary-dark.webp" alt="Kamus Jepang (Gelap)" width="100%" style="border-radius: 10px; border: 1px solid #3f3f46;" /><br/><sub>Kamus — cari kata Jepang dengan cepat</sub> | <img src="public/screenshots/survival-dark.webp" alt="Minigame Survival (Gelap)" width="100%" style="border-radius: 10px; border: 1px solid #3f3f46;" /><br/><sub>Minigame Survival — latihan kosakata seru</sub> |
+
+| 💬 Komunitas | 🏆 Leaderboard | 📊 Dashboard |
+|:---:|:---:|:---:|
+| <img src="public/screenshots/social-dark.webp" alt="Komunitas NihongoRoute (Gelap)" width="100%" style="border-radius: 10px; border: 1px solid #3f3f46;" /><br/><sub>Komunitas — diskusi sesama pembelajar</sub> | <img src="public/screenshots/leaderboard-dark.webp" alt="Leaderboard NihongoRoute (Gelap)" width="100%" style="border-radius: 10px; border: 1px solid #3f3f46;" /><br/><sub>Leaderboard — papan peringkat global</sub> | <img src="public/screenshots/dashboard-dark.webp" alt="Dashboard Pengguna (Gelap)" width="100%" style="border-radius: 10px; border: 1px solid #3f3f46;" /><br/><sub>Dashboard — progres & statistik harian</sub> |
+
+| ⚙️ Pengaturan | 📝 Simulasi Ujian JLPT | 🗺️ Rute Kursus |
+|:---:|:---:|:---:|
+| <img src="public/screenshots/settings-dark.webp" alt="Pengaturan NihongoRoute (Gelap)" width="100%" style="border-radius: 10px; border: 1px solid #3f3f46;" /><br/><sub>Pengaturan — preferensi tampilan & belajar</sub> | <img src="public/screenshots/exams-dark.webp" alt="Simulasi Ujian JLPT (Gelap)" width="100%" style="border-radius: 10px; border: 1px solid #3f3f46;" /><br/><sub>Simulasi Ujian — CBT JLPT N5–N1</sub> | <img src="public/screenshots/courses-dark.webp" alt="Rute Kursus JLPT (Gelap)" width="100%" style="border-radius: 10px; border: 1px solid #3f3f46;" /><br/><sub>Rute Kursus — kurikulum terstruktur N5→N1</sub> |
 
 ---
 
-## 🚀 Memulai Cepat (Quick Start)
+## 🚀 Coba Sekarang
 
-### 1. Prasyarat System
-- Node.js versi **`>= 20.x`** (direkomendasikan Node.js 22.x LTS).
-- npm atau pnpm.
-
-### 2. Kloning & Instalasi Dependensi
 ```bash
 git clone https://github.com/zan-118/nihongoroute.git
 cd nihongoroute
 npm install
-```
-
-### 3. Konfigurasi Environment Variables
-Salin file template `.env.example` ke `.env.local`:
-```bash
-cp .env.example .env.local
-```
-
-Isi variabel utama di `.env.local`:
-```env
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_SUPABASE_URL=https://<your-supabase-ref>.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-key>
-SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
-
-# Cloudflare R2 CDN Storage Configuration
-NEXT_PUBLIC_R2_PUBLIC_URL=https://pub-56cdfeb1d4f44bb9aa5b26f7758b52f1.r2.dev
-R2_ACCOUNT_ID=<your-cloudflare-account-id>
-R2_ACCESS_KEY_ID=<your-r2-access-key>
-R2_SECRET_ACCESS_KEY=<your-r2-secret-key>
-R2_BUCKET_NAME=nihongoroute
-```
-
-### 4. Menjalankan Server Development
-```bash
 npm run dev
 ```
-Buka [http://localhost:3000](http://localhost:3000) pada browser Anda.
 
----
-
-## 📦 Migrasi Storage (Supabase ➔ Cloudflare R2)
-
-Proyek ini menyediakan skrip CLI otomatis untuk mentransfer seluruh aset media (`tts-cache`, `exam-assets`, `asset`) dari Supabase Storage ke Cloudflare R2 secara rekursif:
-
-```bash
-# 1. Tes simulasi migrasi tanpa mengunggah (Dry Run)
-node scripts/migrate-supabase-to-r2.mjs --dry-run
-
-# 2. Jalankan migrasi massal otomatis
-node scripts/migrate-supabase-to-r2.mjs
-```
-
----
-
-## 🧪 Validasi & Quality Gate
-
-Proyek ini menerapkan *Quality Gate* ketat yang wajib lolos sebelum rilis produksi:
-
-```bash
-npm run typecheck             # Validasi tipe ketat TypeScript (0 error)
-npm run lint                  # Pengecekan standar linter ESLint
-npm run test:unit             # Eksekusi 389 unit tests via Vitest
-npm run db:migrations:check   # Validasi stempel berkas migrasi database
-npm run build                 # Kompilasi build rilis produksi Next.js
-```
-
----
-
-## 📂 Peta Dokumentasi Teknis (`docs/`)
-
-Dokumentasi arsitektur, model data, dan standar keamanan tersimpan lengkap di folder [`docs/`](docs/README.md):
-
-| Dokumen | Deskripsi |
-|---|---|
-| 📖 **[docs/README.md](docs/README.md)** | Indeks utama & navigasi dokumentasi teknis |
-| 🗺️ **[docs/OVERVIEW.md](docs/OVERVIEW.md)** | Gambaran umum proyek, visi, & target pengguna |
-| 🏛️ **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** | Arsitektur 3-Tier, alur data offline, & diagram komponen |
-| 📦 **[docs/GETTING_STARTED.md](docs/GETTING_STARTED.md)** | Panduan penyiapan lingkungan lokal dari awal |
-| ⚙️ **[docs/CONFIGURATION.md](docs/CONFIGURATION.md)** | Matriks variabel lingkungan (Public vs Server-Only) |
-| 🔌 **[docs/API_REFERENCE.md](docs/API_REFERENCE.md)** | Spesifikasi Server Actions & API Route Handlers |
-| 💾 **[docs/DATA_MODEL.md](docs/DATA_MODEL.md)** | Spesifikasi 28 tabel PostgreSQL, RLS, & Storage Buckets |
-| 🚢 **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** | Runbook deployment Vercel, strategi cache, & health check |
-| 🔒 **[docs/SECURITY.md](docs/SECURITY.md)** | Panduan keamanan secrets, RLS policies, & audit checklist |
-| 🎨 **[docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)** | Token warna, tipografi, radius, & anti-pattern UI |
-| 🛠️ **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** | Riwayat masalah umum dan panduan penyelesaiannya |
-| 🤝 **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)** | Workflow Git, commit convention, & siklus migrasi SQL |
-| 📜 **[docs/ADR.md](docs/ADR.md)** | Architecture Decision Records (ADR) keputusan teknis |
+Panduan lengkap (env variables, testing, deployment) tersedia di [`docs/GETTING_STARTED.md`](docs/GETTING_STARTED.md).
 
 ---
 
 <p align="center">
-  <sub>Dikelola oleh tim pengembang NihongoRoute • Rilis terakhir diperbarui pada 6 Agustus 2026.</sub>
+  <a href="LICENSE">MIT License</a>
+  •
+  <a href="CONTRIBUTING.md">Kontribusi</a>
+  •
+  <a href="ROADMAP.md">Roadmap</a>
+  •
+  <a href="CHANGELOG.md">Changelog</a>
+  •
+  <a href="docs/README.md">Dokumentasi Teknis</a>
 </p>

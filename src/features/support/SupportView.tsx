@@ -158,7 +158,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  {/* Metrik Cepat */}
  <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs font-semibold text-muted-foreground">
  <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/30 px-3.5 py-1.5">
- <Check className="size-4 text-emerald-500" />
+ <Check className="size-4 text-success" />
  <span>Tanpa Paywall</span>
  </div>
  <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/30 px-3.5 py-1.5">
@@ -166,7 +166,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  <span>Transparansi 100%</span>
  </div>
  <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/30 px-3.5 py-1.5">
- <Heart className="size-4 text-rose-500" />
+ <Heart className="size-4 text-accent-rose" />
  <span>Ditenagai Komunitas</span>
  </div>
  </div>
@@ -181,10 +181,10 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  <div className="group rounded-[2rem] border border-border/70 bg-muted/40 p-2.5 shadow-sm transition-all duration-300 hover:border-primary/40">
  <div className="rounded-[calc(2rem-0.625rem)] border border-border/50 bg-card p-6 sm:p-8">
  <div className="flex items-center justify-between">
- <div className="flex size-12 items-center justify-center rounded-2xl border border-amber-500/20 bg-amber-500/10 text-amber-500">
+ <div className="flex size-12 items-center justify-center rounded-2xl border border-accent-amber/20 bg-accent-amber/10 text-accent-amber">
  <Cup className="size-6" />
  </div>
- <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+ <span className="rounded-full border border-accent-amber/30 bg-accent-amber/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-accent-amber">
  Saweria • QRIS / E-Wallet
  </span>
  </div>
@@ -202,10 +202,10 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  href="https://saweria.co/nihongoroute"
  target="_blank"
  rel="noopener noreferrer"
- className="group/btn flex w-full items-center justify-between gap-4 rounded-full bg-amber-500 px-6 py-3.5 font-extrabold text-amber-950 transition-all duration-300 ease-out hover:bg-amber-400 hover:shadow-lg hover:shadow-amber-500/20 active:scale-[0.98]"
+ className="group/btn flex w-full items-center justify-between gap-4 rounded-full bg-accent-amber px-6 py-3.5 font-extrabold text-accent-amber-foreground transition-all duration-300 ease-out hover:bg-accent-amber/85 hover:shadow-lg hover:shadow-accent-amber/20 active:scale-[0.98]"
  >
  <span>Kirim Dukungan Saweria</span>
- <div className="flex size-9 items-center justify-center rounded-full bg-amber-950/15 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-0.5">
+ <div className="flex size-9 items-center justify-center rounded-full bg-accent-amber/25 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-0.5">
  <ArrowUpRight className="size-4 stroke-[2.5]" />
  </div>
  </a>
@@ -217,10 +217,10 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  <div className="group rounded-[2rem] border border-border/70 bg-muted/40 p-2.5 shadow-sm transition-all duration-300 hover:border-primary/40">
  <div className="rounded-[calc(2rem-0.625rem)] border border-border/50 bg-card p-6 sm:p-8">
  <div className="flex items-center justify-between">
- <div className="flex size-12 items-center justify-center rounded-2xl border border-rose-500/20 bg-rose-500/10 text-rose-500">
+ <div className="flex size-12 items-center justify-center rounded-2xl border border-accent-rose/20 bg-accent-rose/10 text-accent-rose">
  <Heart className="size-6" />
  </div>
- <span className="rounded-full border border-rose-500/30 bg-rose-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400">
+ <span className="rounded-full border border-accent-rose/30 bg-accent-rose/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-accent-rose">
  Trakteer • Karya Cendol
  </span>
  </div>
@@ -238,7 +238,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  href="https://trakteer.id/nihongoroute"
  target="_blank"
  rel="noopener noreferrer"
- className="group/btn flex w-full items-center justify-between gap-4 rounded-full bg-rose-500 px-6 py-3.5 font-extrabold text-white transition-all duration-300 ease-out hover:bg-rose-600 hover:shadow-lg hover:shadow-rose-500/20 active:scale-[0.98]"
+ className="group/btn flex w-full items-center justify-between gap-4 rounded-full bg-accent-rose px-6 py-3.5 font-extrabold text-accent-rose-foreground transition-all duration-300 ease-out hover:bg-accent-rose/85 hover:shadow-lg hover:shadow-accent-rose/20 active:scale-[0.98]"
  >
  <span>Traktir di Trakteer</span>
  <div className="flex size-9 items-center justify-center rounded-full bg-white/20 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-0.5">
@@ -322,7 +322,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  <div className="rounded-[calc(2rem-0.625rem)] border border-border/50 bg-card p-6 sm:p-10">
  <div className="flex items-center justify-between">
  <div>
- <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/25 bg-amber-500/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+ <div className="inline-flex items-center gap-2 rounded-full border border-accent-amber/25 bg-accent-amber/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-accent-amber">
  <Trophy className="size-3.5" />
  <span>Pendukung Setia Komunitas</span>
  </div>
@@ -364,10 +364,10 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  <span
  className={`rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider ${
  supporter.tier === "gold"
- ? "bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30"
+ ? "bg-accent-amber/15 text-accent-amber border border-accent-amber/30"
  : supporter.tier === "silver"
- ? "bg-slate-400/15 text-slate-700 dark:text-slate-300 border border-slate-400/30"
- : "bg-orange-600/15 text-orange-700 dark:text-orange-400 border border-orange-600/30"
+ ? "bg-muted/15 text-muted-foreground border border-border/30"
+ : "bg-warning/15 text-warning border border-warning/30"
  }`}
  >
  {supporter.tier}
@@ -392,7 +392,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  {/* Empty State bila belum ada transaksi di DB */}
  {!isLoading && supporters.length === 0 && (
  <div className="mt-8 rounded-xl border border-dashed border-border/70 p-8 text-center">
- <Heart className="mx-auto size-8 text-rose-500/70" />
+ <Heart className="mx-auto size-8 text-accent-rose/70" />
  <h3 className="mt-3 text-base font-bold text-foreground">
  Belum Ada Donatur Terbaru
  </h3>

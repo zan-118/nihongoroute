@@ -96,7 +96,7 @@ describe("100% Documentation Integrity & Codebase Sync Audit", () => {
     });
   });
 
-  it("harus memiliki seluruh 18 Server Action files di src/actions/", () => {
+  it("harus memiliki seluruh 19 Server Action files di src/actions/", () => {
     const actions = [
       "vocab.actions.ts",
       "kanji.actions.ts",
@@ -116,6 +116,7 @@ describe("100% Documentation Integrity & Codebase Sync Audit", () => {
       "tools-integration.actions.ts",
       "library.actions.ts",
       "library-counts.actions.ts",
+      "contact.actions.ts",
     ];
 
     actions.forEach((file) => {
@@ -124,7 +125,7 @@ describe("100% Documentation Integrity & Codebase Sync Audit", () => {
     });
   });
 
-  it("harus memiliki seluruh 20 modul feature domain di src/features/", () => {
+  it("harus memiliki seluruh 22 modul feature domain di src/features/", () => {
     const features = [
       "auth",
       "courses",
@@ -146,6 +147,8 @@ describe("100% Documentation Integrity & Codebase Sync Audit", () => {
       "support",
       "tools",
       "user",
+      "about",
+      "contact",
     ];
 
     features.forEach((feat) => {

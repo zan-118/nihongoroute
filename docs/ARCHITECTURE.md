@@ -1,8 +1,8 @@
 # Arsitektur Sistem NihongoRoute
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 12 Agustus 2026 — Diverifikasi 100% dari `src/features/` & `src/lib/`  
-> **Ruang Lingkup**: Diagram Komponen, Alur Data 3-Tier, State Management, ISR Caching, 20 Modul Feature Domains, & Struktur Modul Inti  
+> **Terakhir Diperbarui**: 13 Agustus 2026 — Diverifikasi 100% dari `src/features/` & `src/lib/`  
+> **Ruang Lingkup**: Diagram Komponen, Alur Data 3-Tier, State Management, ISR Caching, 22 Modul Feature Domains, & Struktur Modul Inti  
 > **Rujukan Utama**: [README.md](../README.md) | [DATA_MODEL.md](DATA_MODEL.md) | [API_REFERENCE.md](API_REFERENCE.md) | [SECURITY.md](SECURITY.md)
 
 ---
@@ -16,7 +16,7 @@
 3. [Zustand Stores & Persistensi](#3-zustand-stores--persistensi)
 4. [Strategi Rendering & Cache (ISR vs Client State)](#4-strategi-rendering--cache-isr-vs-client-state)
 5. [Keputusan Desain Arsitektural](#5-keputusan-desain-arsitektural)
-6. [Struktur 20 Modul Feature Domain (`src/features/`)](#6-struktur-20-modul-feature-domain-srcfeatures)
+6. [Struktur 22 Modul Feature Domain (`src/features/`)](#6-struktur-22-modul-feature-domain-srcfeatures)
 7. [Aturan Layer Kode & Encapsulation](#7-aturan-layer-kode--encapsulation)
 
 ---
@@ -184,6 +184,7 @@ Halaman konten library menggunakan ISR dengan `generateStaticParams()` untuk pre
 - **Separasi konten library vs progres pengguna**: Konten library menggunakan ISR + revalidate. Progres pengguna menggunakan client-side sync via RPC.
 - **Legacy exam adapter**: Komponen `MockExamEngine` membaca format data lama. Adapter `src/lib/exams/supabase-adapter.ts` (`toLegacyExamData`) memetakan data relasional baru ke format lama.
 - **Optimasi bundle**: `optimizePackageImports` di `next.config.ts` untuk Radix UI, Iconify, Framer Motion, Date-fns, Sonner, Wanakana.
+- **Mode baca global (single source of truth)**: `useUIStore.readingState.mode` adalah satu-satunya sumber mode tampilan (kanji/furigana/hiragana). `SmartJapanese` tidak men-default `mode` agar `JapaneseText` jatuh ke mode global; `ReadingContext` juga mengikat `mode` ke store. Toggle Topbar & control bar reading menulis balik ke store → preferensi konsisten lintas halaman & ter-persist (IndexedDB).
 - **Custom Markdown Renderer**: Proyek menggunakan `LessonBlockRegistry` untuk menginjeksi komponen interaktif, dengan ekstensi Regex di `lesson-hydration-engine.ts` yang mendukung elemen struktural standar (Headings, Tables) serta ekstensi modern (Fenced Code Blocks & Horizontal Rules).
 
 ### 5a. Data Fetching via Server Actions (Bukan Query Client)
@@ -203,15 +204,17 @@ Beberapa modul domain besar dipecah menjadi folder kohesif dengan barrel re-expo
 | `features/social/LeaderboardClient.tsx` | `hooks/useLeaderboard.ts` (logika data) + komponen UI murni | ✅ Ya |
 | `features/exams/.../ExamResult.tsx` | `examResultData.ts` (logika skor) + `OfficialCertificateView.tsx` + `ModernBreakdownView.tsx` | ✅ Ya |
 | `features/library/listening/.../ListeningWorkspace.tsx` | `workspace/` → `WorkspaceTabs.tsx`, `StudyPanel.tsx`, `DictationPanel.tsx`, `QuizPanel.tsx`, `MediaControlBar.tsx` | ✅ Ya |
+| `features/library/reading/ReadingPageClient.tsx` | orkestrator tipis + `components/` → `ReadingPageHeader.tsx`, `ReadingVisuals.tsx`, `ReadingControlBar.tsx`, `VocabularyDrawer.tsx`, `ReadingQuizSection.tsx` + `utils/reading-metrics.ts` (helper murni) | ✅ Ya |
+| `features/exams/.../ExamReview.tsx` | orkestrator + komponen review terpisah (`examResultData.ts` logika skor murni + komponen breakdown/certificate) | ✅ Ya |
 
 > [!NOTE]
 > **Prinsip pemecahan**: (1) ekstrak logika murni ke modul `.ts` yang bisa di-unit-test; (2) ekstrak view raksasa ke komponen terpisah; (3) pertahankan API publik identik lewat barrel agar konsumen tanpa perubahan; (4) untuk komponen dengan state yang harus bertahan antar tab, panel tetap di-*mount* dan disembunyikan via CSS (`hidden`) — bukan unmount bersyarat.
 
 ---
 
-## 6. Struktur 20 Modul Feature Domain (`src/features/`)
+## 6. Struktur 22 Modul Feature Domain (`src/features/`)
 
-Seluruh UI dan logika bisnis yang spesifik fitur dikelompokkan ke dalam 20 direktori domain di `src/features/`:
+Seluruh UI dan logika bisnis yang spesifik fitur dikelompokkan ke dalam 22 direktori domain di `src/features/`:
 
 | No | Modul Feature | Peran Utama |
 |:---:|---|---|
@@ -233,8 +236,10 @@ Seluruh UI dan logika bisnis yang spesifik fitur dikelompokkan ke dalam 20 direk
 | 16 | `social` | Community feed, postingan, komentar, & leaderboard |
 | 17 | `srs` | Tombol tambah SRS & editor mnemonic |
 | 18 | `support` | Widget feedback pengguna & halaman bantuan |
-| 19 | `tools` | 13 sub-tools (shadowing-recorder, dictation, text-analyzer, conjugation-trainer, counter-trainer, jlpt-mini-drill, kana, kanji-similarity, particle-trainer, sentence-builder, stroke-canvas, weak-points, dictionary) |
+| 19 | `tools` | 14 sub-tools (shadowing-recorder, dictation, text-analyzer, conjugation-trainer, counter-trainer, jlpt-mini-drill, kana, kanji-similarity, particle-trainer, sentence-builder, stroke-canvas, weak-points, dictionary, search) |
 | 20 | `user` | Navigasi user, profile editor, & auth hooks |
+| 21 | `about` | Halaman publik Tentang Kami |
+| 22 | `contact` | Halaman publik Kontak & form pesan (via `contact.actions.ts`) |
 
 ---
 

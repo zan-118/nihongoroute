@@ -108,7 +108,7 @@ export function LandingFooter() {
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 mb-16">
  <div className="lg:col-span-4 flex flex-col gap-6">
  <div className="flex items-center gap-3">
- <div className="relative size-14 dark:drop-shadow-[0_0_15px_rgb(var(--primary)_/_0.25)]">
+ <div className="relative size-14 dark:drop-shadow-[0_0_15px_hsl(var(--primary)_/_0.25)]">
  <Image
  src="/logo-branding.svg"
  alt="NihongoRoute Logo"

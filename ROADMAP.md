@@ -19,6 +19,10 @@ Menjadi platform pembelajaran Bahasa Jepang mandiri terlengkap di Indonesia yang
 - [x] Modul Sosial & Komunitas Pembelajar (`src/features/social/`, postingan, komentar, notifikasi).
 - [x] Sistem Donasi & Webhooks (`Saweria` & `Trakteer`).
 - [x] Dokumentasi Teknis Terstruktur 4-Layer.
+- [x] Mode tampilan baca global (Kanji/Furigana/Hiragana) — satu sumber kebenaran di `useUIStore`, konsisten lintas halaman.
+- [x] Design tokens warna tema-adaptif (`accent-*` + `*-foreground`) dengan kontras ≥ 4.5:1 di mode terang & gelap.
+- [x] Pemecahan god files utama (ReadingPageClient 617, ExamReview 713, ListeningWorkspace 748, ExamResult 785, LeaderboardClient 749, learning-ecosystem 851) — seluruhnya di bawah ~430 baris.
+- [x] Quality gates lengkap: typecheck `src/` & `__tests__/`, lint 100% bersih, **441 unit test**, Playwright E2E.
 
 ---
 

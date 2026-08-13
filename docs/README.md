@@ -1,7 +1,7 @@
 # Indeks Dokumentasi Teknis NihongoRoute
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 12 Agustus 2026  
+> **Terakhir Diperbarui**: 13 Agustus 2026  
 > **Ruang Lingkup**: Arsitektur, Skema Database, API, Keamanan, UI Design System, dan Operational Runbook
 
 ---
@@ -39,3 +39,15 @@ Seluruh dokumentasi teknis mendalam tersimpan di direktori `docs/` dan dikategor
 
 > [!IMPORTANT]
 > Setiap pembaruan pada logika bisnis, skema database, atau alur data **WAJIB** memperbarui dokumen `docs/*.md` terkait sebagai bagian dari deliverable tugas tersebut.
+
+---
+
+## 📌 Catatan Sinkronisasi Terakhir (13 Agustus 2026)
+
+Dokumentasi disinkronkan dengan kondisi codebase per 13 Agustus 2026:
+- **441 unit test** lulus (81 file) — badge Vitest di README root diperbarui dari 389.
+- **22 modul feature** di `src/features/` (bertambah: `about`, `contact`) & **14 tools** di `src/features/tools/` (bertambah: `search`).
+- **19 server actions** di `src/actions/` (bertambah: `contact.actions.ts`).
+- Mode tampilan baca kini **global** (Kanji/Furigana/Hiragana) — `SmartJapanese` & `ReadingContext` terikat `useUIStore.readingState.mode`.
+- Mode `romaji` dihapus dari kontrol tampilan; romaji tetap ada sebagai data per kata/paragraf.
+- Token warna semantik tema-adaptif (`accent-*` + `*-foreground`) dengan kontras ≥ 4.5:1.
