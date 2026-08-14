@@ -106,34 +106,35 @@ function createEntry({
  * Fetch all rows from Supabase table using pagination.
  */
 async function fetchAllSupabaseRows<T extends SupabaseSitemapItem>(
- table: string,
- select: string,
- orderColumn: string,
+  table: string,
+  select: string,
+  orderColumn?: string,
 ) {
- const supabase = createStaticClient();
- const rows: T[] = [];
- const pageSize = 1000;
+  const supabase = createStaticClient();
+  const rows: T[] = [];
+  const pageSize = 1000;
 
- // Loop pages until all rows fetched.
- for (let from = 0; ; from += pageSize) {
- const { data, error } = await supabase
- .from(table)
- .select(select)
- .order(orderColumn, { ascending: false })
- .range(from, from + pageSize - 1);
+  // Loop pages until all rows fetched.
+  for (let from = 0; ; from += pageSize) {
+    let query = supabase.from(table).select(select);
+    if (orderColumn) {
+      query = query.order(orderColumn, { ascending: false });
+    }
 
- if (error) {
- console.error(`[Sitemap] Gagal mengambil data ${table}:`, error);
- break;
- }
+    const { data, error } = await query.range(from, from + pageSize - 1);
 
- const page = (data || []) as unknown as T[];
- rows.push(...page);
+    if (error) {
+      console.error(`[Sitemap] Gagal mengambil data ${table}:`, error);
+      break;
+    }
 
- if (page.length < pageSize) break;
- }
+    const page = (data || []) as unknown as T[];
+    rows.push(...page);
 
- return rows;
+    if (page.length < pageSize) break;
+  }
+
+  return rows;
 }
 
 /**
@@ -213,8 +214,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
  fetchAllSupabaseRows("listening", "slug, created_at", "created_at"),
  fetchAllSupabaseRows("grammar", "slug, created_at", "created_at"),
  fetchAllSupabaseRows("cheatsheets", "slug, created_at, updated_at", "updated_at"),
- fetchAllSupabaseRows("kanji", "slug, created_at, updated_at", "updated_at"),
- fetchAllSupabaseRows("vocab", "slug, created_at, updated_at", "updated_at"),
+ fetchAllSupabaseRows("kanji", "slug, created_at"),
+ fetchAllSupabaseRows("vocab", "slug, created_at"),
  ]);
 
  const categories = categoriesResult.data || [];

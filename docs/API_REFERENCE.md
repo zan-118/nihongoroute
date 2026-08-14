@@ -1,7 +1,7 @@
 # Referensi API & Route Handlers
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 13 Agustus 2026 — Diverifikasi 100% dari `src/app/api/` & `src/actions/`  
+> **Terakhir Diperbarui**: 14 Agustus 2026 - P0 auth/security audit lokal selesai  
 > **Ruang Lingkup**: Spesifikasi 6 API Route Handlers Active & Server Action Files  
 > **Rujukan Utama**: [README.md](../README.md) | [ARCHITECTURE.md](ARCHITECTURE.md) | [SECURITY.md](SECURITY.md)
 
@@ -18,6 +18,7 @@
    - [5. `/api/webhooks/trakteer` — Webhook Donasi Trakteer](#5-apiwebhookstrakteer--webhook-donasi-trakteer)
    - [6. `/auth/callback` — OAuth Callback](#6-authcallback--oauth-callback)
 3. [Daftar 19 Server Action Files (`src/actions/*.actions.ts`)](#3-daftar-19-server-action-files-srcactionsactionsts)
+4. [Audit Auth & Ownership P0](#4-audit-auth--ownership-p0)
 
 ---
 
@@ -43,6 +44,7 @@ NihongoRoute memiliki **6 endpoint aktif**: 4 API Route Handlers di `src/app/api
 - **Autentikasi**: Publik
 - **Runtime**: `nodejs` (`force-dynamic`)
 - **Fungsi**: Sintesis audio pelafalan bahasa Jepang via MsEdgeTTS + `tts_cache` + Supabase Storage `tts-cache`.
+- **Guard P0**: Batas panjang input `500` karakter dan burst limit `30 request/menit/IP`.
 
 ### 2. `/api/cards` — Flashcard Entity Resolver
 - **Method**: `GET`
@@ -95,3 +97,25 @@ Seluruh Server Action tersimpan di `src/actions/` dan bertindak sebagai layer ti
 | 17 | `library.actions.ts` | Pengambilan data agregat pustaka |
 | 18 | `library-counts.actions.ts` | Perhitungan jumlah item pustaka |
 | 19 | `contact.actions.ts` | Pengiriman pesan kontak (notifikasi via webhook/email admin) |
+
+---
+
+## 4. Audit Auth & Ownership P0
+
+| Surface | Auth | Mutasi | Ownership / Guard | Status |
+|---|---|---:|---|---|
+| `/api/tts` | Publik | Tidak | Batas panjang input `MAX_TTS_TEXT_LENGTH`; cache TTS via server; burst limit 30 request/menit/IP | OK |
+| `/api/cards` | Publik | Tidak | Validasi `ids` via Zod; konten read-only melalui RLS publik | OK |
+| `/api/health` | Publik | Tidak | Detail env disembunyikan di production | OK |
+| `/api/webhooks/saweria` | HMAC `x-saweria-signature` | Ya | Raw-body signature, Zod payload, replay window, duplicate event guard | OK |
+| `/api/webhooks/trakteer` | Token header timing-safe | Ya | Zod payload, replay window, duplicate event guard | OK |
+| `/auth/callback` | OAuth code | Ya | `exchangeCodeForSession`; redirect gagal ke login | OK |
+| `community.actions.ts` mutasi | `auth.getUser()` | Ya | Insert pakai `user.id`; delete/update notif difilter `user_id`; admin client hanya setelah auth | OK |
+| `flashcard.actions.ts` | Session refresh | Tidak | Read-only library data | OK |
+| `support.actions.ts` | Publik | Tidak | Read-only supporters; service role dipakai server-only | OK |
+
+Regression test P0:
+- Webhook Saweria tanpa signature wajib `401`.
+- Webhook Trakteer dengan token salah wajib `401`.
+- Mutasi community tanpa user wajib ditolak sebelum akses database/admin client.
+- TTS burst request ke IP sama wajib `429` setelah limit.

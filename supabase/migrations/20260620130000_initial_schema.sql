@@ -224,8 +224,8 @@ CREATE TABLE public.cheatsheets (
     updated_at timestamptz DEFAULT now()
 );
 
--- Leaderboard Profiles View (Aman untuk publik)
-CREATE OR REPLACE VIEW public.leaderboard_profiles WITH (security_invoker = false) AS
+-- Leaderboard Profiles View (Aman untuk publik; tetap mengikuti RLS profiles)
+CREATE OR REPLACE VIEW public.leaderboard_profiles WITH (security_invoker = true) AS
 SELECT 
     id, 
     full_name, 
@@ -571,6 +571,7 @@ CREATE OR REPLACE FUNCTION public.update_community_post_comments_count()
 RETURNS trigger
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public, pg_temp
 AS $$
 BEGIN
   IF TG_OP = 'INSERT' THEN
@@ -591,6 +592,7 @@ CREATE OR REPLACE FUNCTION public.handle_feedback_update_notification()
 RETURNS trigger
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public, pg_temp
 AS $$
 DECLARE
     v_type_label text;
@@ -1184,6 +1186,9 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+REVOKE EXECUTE ON ALL FUNCTIONS IN SCHEMA public FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.sync_user_progress(text, integer, integer, integer, text, jsonb, jsonb, jsonb, jsonb, jsonb) TO authenticated;
 
 -- Create trigger on profiles table
 DROP TRIGGER IF EXISTS block_direct_gamification_update ON public.profiles;

@@ -275,7 +275,8 @@ export async function getGrammarFamilyList(family: string, excludeId: string) {
  * Fetch vocab items containing kanji character for detail page sidebar.
  */
 export async function getVocabByCharacter(character: string, limit: number) {
- const supabase = createStaticClient();
+  if (!character) return [];
+  const supabase = createStaticClient();
  const { data, error } = await supabase
  .from("vocab")
  .select("id, word, furigana, meaning_id, slug")

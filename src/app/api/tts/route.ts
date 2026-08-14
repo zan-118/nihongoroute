@@ -1,9 +1,15 @@
 import { processTtsPipeline, MAX_TTS_TEXT_LENGTH } from "@/lib/audio/tts-pipeline";
+import { rateLimit } from "@/lib/core/rate-limit";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
 export async function GET(request: Request) {
+  const ip = request.headers.get("x-forwarded-for") ?? "unknown";
+  if (rateLimit(`tts_${ip}`, 30, 60_000)) {
+    return NextResponse.json({ error: "Too Many Requests" }, { status: 429 });
+  }
+
   const { searchParams } = new URL(request.url);
   const rawText = searchParams.get("text");
   const rawVoice = searchParams.get("voice") || "zundamon";

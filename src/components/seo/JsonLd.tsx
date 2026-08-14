@@ -26,6 +26,7 @@ export function JsonLd({ data }: JsonLdProps) {
  return (
  <script
  type="application/ld+json"
+ // Guarded no-danger: JSON-LD payload is serialized with JSON.stringify, not HTML.
  dangerouslySetInnerHTML={{ __html: JSON.stringify(payload) }}
  />
  );

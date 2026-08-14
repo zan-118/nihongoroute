@@ -85,16 +85,23 @@ interface LoggerOptions {
  * Serialisasi error ke bentuk aman tanpa stack yang berlebihan di metadata.
  */
 function toErrorMeta(error: unknown): Record<string, string | number | boolean | null> {
- if (error instanceof Error) {
- return {
-  name: error.name,
-  message: error.message,
- };
- }
- if (typeof error === "string") {
-  return { message: error };
- }
- return { message: "Unknown error" };
+  if (error instanceof Error) {
+    return {
+      name: error.name,
+      message: error.message,
+    };
+  }
+  if (typeof error === "string") {
+    return { message: error };
+  }
+  if (typeof error === "object" && error !== null) {
+    const errObj = error as Record<string, unknown>;
+    return {
+      name: String(errObj.name || errObj.code || "PostgrestError"),
+      message: String(errObj.message || errObj.details || JSON.stringify(error)),
+    };
+  }
+  return { message: "Unknown error" };
 }
 
 /**

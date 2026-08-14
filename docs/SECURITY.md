@@ -1,7 +1,7 @@
 # Kebijakan Keamanan & Proteksi Data
 
 > **Status Dokumentasi**: Aktif & Tersinkronisasi  
-> **Terakhir Diperbarui**: 13 Agustus 2026  
+> **Terakhir Diperbarui**: 14 Agustus 2026  
 > **Ruang Lingkup**: Kebijakan Secret Handling, Admin API Auth, Webhook Signature, RLS Matrix, & Anti-Cheat XP  
 > **Rujukan Utama**: [README.md](../README.md) | [DATA_MODEL.md](DATA_MODEL.md) | [CONFIGURATION.md](CONFIGURATION.md)
 
@@ -62,6 +62,18 @@ Validasi admin menggunakan `validateAdminApiRequest()` di `src/lib/core/admin-ap
 
 Seluruh **28 tabel** PostgreSQL mengaktifkan Row Level Security (RLS).
 
+Audit status aktual dapat dijalankan dengan:
+
+```bash
+npm run db:rls:audit
+```
+
+Query audit tersimpan di `supabase/audit-rls.sql` dan mencantumkan semua tabel `public`, status `relrowsecurity`, serta jumlah policy aktif per tabel.
+
+Status P0:
+- **Lokal selesai**: migration awal diuji agar 28 tabel mengaktifkan RLS, `leaderboard_profiles` memakai `security_invoker = true`, dan default function execute dicabut.
+- **Live pending**: audit terhadap database Supabase aktual belum dijalankan karena membutuhkan koneksi Supabase CLI (`--db-url` atau linked project token).
+
 ```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                   SUPABASE DATABASE RLS SECURITY MATRIX                   │
@@ -77,6 +89,12 @@ Seluruh **28 tabel** PostgreSQL mengaktifkan Row Level Security (RLS).
 
 > [!CAUTION]
 > Inisiasi `createAdminClient()` (service-role client) HANYA diizinkan di Server Actions dan Route Handlers. Dilarang diimpor ke Client Components.
+
+### Hardening P0
+
+- View publik `leaderboard_profiles` memakai `security_invoker = true` agar tetap tunduk pada RLS tabel `profiles`.
+- Default execute privilege function di schema `public` dicabut dari `PUBLIC`, `anon`, dan `authenticated`; hanya RPC `sync_user_progress` yang diberi `EXECUTE` untuk role `authenticated`.
+- Regression test menjaga service-role admin client tidak diimpor dari Client Component.
 
 ---
 
@@ -95,3 +113,4 @@ Klien tidak pernah dipercaya menentukan perolehan XP akhir.
 Jika Anda menemukan celah keamanan pada proyek ini:
 - Mohon **JANGAN** membuat publik issue terbuka di GitHub.
 - Kirimkan detail laporan kerentanan secara privat ke tim pengembang atau buat laporan via `user_feedback` privat.
+- `/api/tts` publik diberi burst limit `30 request/menit/IP` untuk menahan penyalahgunaan biaya sintesis audio.

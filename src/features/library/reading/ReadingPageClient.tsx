@@ -282,6 +282,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
 
       {/* Style Override untuk Zen Mode */}
       {isZenMode && (
+        // Guarded no-danger: static CSS only, no user/database input.
         <style dangerouslySetInnerHTML={{ __html: `
           aside, .bg-background > aside, .bg-background > div > div:first-child {
             display: none !important;

@@ -7,6 +7,8 @@ import { describe, expect, it } from "vitest";
 
 import { saweriaPayloadSchema } from "@/app/api/webhooks/saweria/route";
 import { trakteerPayloadSchema } from "@/app/api/webhooks/trakteer/route";
+import { POST as postSaweria } from "@/app/api/webhooks/saweria/route";
+import { POST as postTrakteer } from "@/app/api/webhooks/trakteer/route";
 
 describe("API Contract Validation", () => {
   describe("Saweria Webhook Schema Contract", () => {
@@ -69,6 +71,31 @@ describe("API Contract Validation", () => {
       
       const result = trakteerPayloadSchema.safeParse(invalidPayload);
       expect(result.success).toBe(false);
+    });
+  });
+
+  describe("Webhook Auth Guards", () => {
+    it("menolak Saweria webhook tanpa signature", async () => {
+      process.env.SAWERIA_WEBHOOK_SECRET = "secret";
+
+      const response = await postSaweria(new Request("https://example.test/api/webhooks/saweria", {
+        method: "POST",
+        body: JSON.stringify({ id: "donasi-1", amount_raw: 50000 }),
+      }));
+
+      expect(response.status).toBe(401);
+    });
+
+    it("menolak Trakteer webhook dengan token salah", async () => {
+      process.env.TRAKTEER_WEBHOOK_SECRET = "secret";
+
+      const response = await postTrakteer(new Request("https://example.test/api/webhooks/trakteer", {
+        method: "POST",
+        headers: { "x-webhook-token": "wrong" },
+        body: JSON.stringify({ transaction_id: "trx-1", net_amount: 50000 }),
+      }));
+
+      expect(response.status).toBe(401);
     });
   });
 });

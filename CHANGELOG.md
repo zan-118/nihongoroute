@@ -11,6 +11,9 @@ Semua perubahan penting pada proyek **NihongoRoute** dicatat dalam dokumen ini. 
 - Penamaan ulang file dokumentasi teknis ke format standar UPPERCASE (`ARCHITECTURE.md`, `DATA_MODEL.md`, `SECURITY.md`, dll).
 - Template Issue & Pull Request terstruktur di `.github/`.
 - File `CHANGELOG.md`, `ROADMAP.md`, `CONTRIBUTING.md`, dan `LICENSE`.
+- Dokumen `docs/IMPROVEMENT_PLAN.md` untuk rencana hardening P0/P1/P2, status eksekusi P0 lokal, dan sisa live Supabase RLS audit.
+- Audit auth/ownership P0 di `docs/API_REFERENCE.md` untuk API routes dan Server Actions kritis.
+- Script audit RLS lokal `supabase/audit-rls.sql` untuk status RLS dan jumlah policy aktif per tabel `public`.
 
 ### Ditingkatkan (Refactoring Kualitas Codebase)
 - **Deduplikasi parser & helper**: Markdown parser yang diduplikasi di `GrammarDetailClient`/`SmartText` kini memakai shared parser `lib/core/`; helper `firstParam`/`buildContextLabel` yang tersebar di 5 halaman tools digabung ke `lib/core/utils.ts`.
@@ -31,12 +34,20 @@ Semua perubahan penting pada proyek **NihongoRoute** dicatat dalam dokumen ini. 
 - **State interaktif & class rusak**: `text-white` di atas solid `bg-primary` diganti `text-primary-foreground` (StickerScene tombol Putar/Lanjut + tag pembicara aktif + chip label speaker per-token `success/secondary/primary/muted-foreground`-foreground, `VocabCard` group-hover, `VocabView` tombol Detail) — kontras di mode gelap naik dari 2.6:1 jadi ≥ 7:1; seluruh sisa class `bg-linear-` rusak (tanpa arah gradien = background hilang) dibersihkan: tombol "Tandai Selesai" `ReadingWorkspace`, teks gradien "MATERI" halaman library (sebelumnya `bg-clip-text text-transparent` = tak terlihat) kini `bg-linear-to-r from-primary to-accent-cyan`, avatar `UserNav` (sebelumnya tak berlatar) kini gradien `from-primary to-accent-violet`, corner marks privacy/terms (`bg-primary/50`/`bg-secondary/50`), divider `VocabHero` (sekaligus hapus shadow teal `rgba(0,122,124)` sisa era accentRgb), overlay avatar `ProfileSection` (`bg-primary/10`), card & divider `GrammarDetailClient` (`bg-card/60`, `bg-primary/20`), divider `ReadingQuizSection` (`bg-border`), shimmer `DashboardStats` (`before:bg-white/30`, hapus 3 class `before:` kosong).
 
 ### Perbaikan Bug
+- **Permissions-Policy microphone diperbaiki**: header global kini memakai `microphone=(self)` agar fitur rekam suara tidak diblokir browser di production.
+- **Proteksi burst `/api/tts`**: endpoint TTS publik kini dibatasi `30 request/menit/IP` untuk menahan penyalahgunaan biaya sintesis audio.
 - **Toggle mode baca global kini berlaku di semua halaman**: `SmartJapanese` sebelumnya me-hardcode default `mode="furigana"` sehingga `JapaneseText` selalu menerima mode truthy dan tidak pernah jatuh ke `globalMode` dari `useUIStore` — toggle Kanji/Furigana/Hiragana di Topbar mati di 16 pemakaian SmartJapanese (vocab, kanji, grammar, cheatsheet, listening, games, review). Default `mode` dihapus agar mengikuti mode global (default tetap furigana, tanpa perubahan visual sampai user toggle).
 - **Halaman reading tersinkron mode global**: `ReadingContext` sebelumnya hardcode `useState("furigana")` dan tak tersinkron store — kini `mode` diikat ke `useUIStore.readingState.mode` (satu sumber kebenaran); kontrol mode di halaman reading menulis balik ke store sehingga preferensi pengguna bertahan & berlaku lintas halaman.
 - **Mode `romaji` dihapus dari kontrol tampilan global**: romaji bukan mode siklus (Topbar & control bar reading hanya kanji/furigana/hiragana) dan bukan toggle global — setiap kalimat/kata sudah punya romaji sendiri di datanya (mis. toggle romaji per kata yang sudah ada di halaman vocab). Toggle global `showRomaji` yang sempat ditambahkan dihapus kembali; mode `kanji` = full kanji murni tanpa furigana maupun romaji.
 - **Pembersihan dead code FAB `FloatingActions`**: blok aksi `isReadingPage`/`isListeningPage` (Audio, Mode Cycle, Translation Toggle, Scroll ke Kuis) ternyata tak pernah dirender karena early `return null` di halaman reading/listening — dihapus beserta selector `readingState`/`listeningState`/`setReadingState`/`setListeningState` (yang terakhir tak pernah dipakai), array `modes`, impor `AudioController`/`ReadingMode`/`cn`/ikon tak terpakai, dan branch ikon `BookIcon`/`Headphone` di tombol utama (kini selalu `Add`). FAB tetap tampil di halaman lain dengan menu Feedback/Donasi, dan tetap sembunyi di halaman reading/listening (kontrolnya sudah ada di halaman itu sendiri).
 
 ### Test
+- `__tests__/config/security-headers.test.ts` menjaga `Permissions-Policy` tetap mengizinkan microphone same-origin.
+- `__tests__/api/tts.test.ts` memastikan burst request `/api/tts` ke IP sama mendapat `429` setelah limit.
+- `__tests__/api/contract.test.ts` menutup regresi webhook Saweria tanpa signature dan Trakteer dengan token salah.
+- `__tests__/actions/community-auth.test.ts` memastikan mutasi community unauthenticated ditolak sebelum akses database/admin client.
+- `__tests__/security/supabase-admin-imports.test.ts` menjaga `createAdminClient()` tidak diimpor dari Client Component.
+- `__tests__/security/supabase-migration-security.test.ts` menjaga RLS 28 tabel, `security_invoker = true` pada `leaderboard_profiles`, dan revoke default function execute.
 - `__tests__/components/ui/FuriganaText.test.tsx` diperluas 1 → 6 test: mode kanji/hiragana, mengikuti mode global store, regresi toggle topbar (SmartJapanese tanpa mode), dan prop eksplisit menimpa global.
 - `__tests__/lib/exams/exam-result-data.test.ts` (12 test skor JLPT/JFT).
 - `__tests__/actions/dictionary-lookup.test.ts` (7 test `lookupDictionaryWordAction`).

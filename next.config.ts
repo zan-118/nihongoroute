@@ -5,7 +5,7 @@ import type { NextConfig } from "next";
 
 const isProduction = process.env.NODE_ENV === "production";
 
-const securityHeaders = [
+export const securityHeaders = [
   {
     key: "X-DNS-Prefetch-Control",
     value: "on",
@@ -24,7 +24,7 @@ const securityHeaders = [
   },
   {
     key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+    value: "camera=(), microphone=(self), geolocation=(), payment=(), usb=()",
   },
   {
     key: "Cross-Origin-Opener-Policy",
@@ -177,4 +177,3 @@ const nextConfig: NextConfig = {
 };
 
 export default withBundleAnalyzer(nextConfig);
-

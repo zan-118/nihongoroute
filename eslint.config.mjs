@@ -1,6 +1,7 @@
 import nextPlugin from "@next/eslint-plugin-next";
 import tsParser from "@typescript-eslint/parser";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
+import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 
@@ -10,6 +11,7 @@ export default [
     plugins: {
       "@next/next": nextPlugin,
       "@typescript-eslint": tsPlugin,
+      "react": reactPlugin,
       "react-hooks": reactHooksPlugin,
       "jsx-a11y": jsxA11yPlugin,
     },
@@ -29,6 +31,7 @@ export default [
       ...reactHooksPlugin.configs.recommended.rules,
       "react-hooks/set-state-in-effect": "warn",
       "react-hooks/purity": "warn",
+      "react/no-danger": "warn",
       "no-restricted-syntax": [
         "warn",
         {
