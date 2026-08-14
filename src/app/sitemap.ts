@@ -152,71 +152,95 @@ function addUniqueEntry(
  urls.push(createEntry(entry));
 }
 
+export const revalidate = 604800;
+
 /**
  * Generate dynamic sitemap. Fetch data from Supabase.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
- const urls: MetadataRoute.Sitemap = [];
- const seen = new Set<string>();
- const supabase = createStaticClient();
+  const urls: MetadataRoute.Sitemap = [];
+  const seen = new Set<string>();
+  const supabase = createStaticClient();
 
- // Add static routes first.
- for (const route of STATIC_ROUTES) {
- addUniqueEntry(urls, seen, route);
- }
+  // Add static routes first.
+  for (const route of STATIC_ROUTES) {
+    addUniqueEntry(urls, seen, route);
+  }
 
- // Fetch all dynamic content concurrently.
- const [
- categoriesResult,
- lessonsResult,
- articlesResult,
- readingsResult,
- listeningsResult,
- grammarRows,
- cheatsheetRows,
- kanjiRows,
- vocabRows
- ] = await Promise.all([
- supabase.from("course_categories").select("id, slug, created_at"),
- supabase
- .from("lessons")
- .select("slug, category_id, created_at")
- .eq("is_published", true)
- .then(({ data, error }) => {
- if (error) {
- console.error("[Sitemap] Gagal mengambil data pelajaran dari Supabase:", error);
- return [];
- }
- return (data || []).map((row) => ({
- slug: row.slug,
- category_id: row.category_id,
- _createdAt: row.created_at,
- _updatedAt: row.created_at,
- })) as ContentSitemapItem[];
- }),
- supabase
- .from("articles")
- .select("slug, category_id, created_at")
- .eq("is_published", true)
- .then(({ data, error }) => {
- if (error) {
- console.error("[Sitemap] Gagal mengambil data artikel dari Supabase:", error);
- return [];
- }
- return (data || []).map((row) => ({
- slug: row.slug,
- category_id: row.category_id,
- _createdAt: row.created_at,
- _updatedAt: row.created_at,
- })) as ContentSitemapItem[];
- }),
- fetchAllSupabaseRows("reading", "slug, created_at", "created_at"),
- fetchAllSupabaseRows("listening", "slug, created_at", "created_at"),
- fetchAllSupabaseRows("grammar", "slug, created_at", "created_at"),
- fetchAllSupabaseRows("cheatsheets", "slug, created_at, updated_at", "updated_at"),
- fetchAllSupabaseRows("kanji", "slug, created_at"),
- fetchAllSupabaseRows("vocab", "slug, created_at"),
- ]);
+  // Fetch all dynamic content concurrently.
+  const [
+    categoriesResult,
+    lessonsResult,
+    articlesResult,
+    readingsResult,
+    listeningsResult,
+    grammarRows,
+    cheatsheetRows,
+    kanjiRows,
+    vocabRows
+  ] = await Promise.all([
+    supabase.from("course_categories").select("id, slug, created_at"),
+    supabase
+      .from("lessons")
+      .select("slug, category_id, created_at")
+      .eq("is_published", true)
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("[Sitemap] Gagal mengambil data pelajaran dari Supabase:", error);
+          return [];
+        }
+        return (data || []).map((row) => ({
+          slug: row.slug,
+          category_id: row.category_id,
+          _createdAt: row.created_at,
+          _updatedAt: row.created_at,
+        })) as ContentSitemapItem[];
+      }),
+    supabase
+      .from("articles")
+      .select("slug, category_id, created_at")
+      .eq("is_published", true)
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("[Sitemap] Gagal mengambil data artikel dari Supabase:", error);
+          return [];
+        }
+        return (data || []).map((row) => ({
+          slug: row.slug,
+          category_id: row.category_id,
+          _createdAt: row.created_at,
+          _updatedAt: row.created_at,
+        })) as ContentSitemapItem[];
+      }),
+    fetchAllSupabaseRows("reading", "slug, created_at", "created_at"),
+    fetchAllSupabaseRows("listening", "slug, created_at", "created_at"),
+    fetchAllSupabaseRows("grammar", "slug, created_at", "created_at"),
+    fetchAllSupabaseRows("cheatsheets", "slug, created_at, updated_at", "updated_at"),
+    supabase
+      .from("kanji")
+      .select("slug, created_at")
+      .not("jlpt_level", "is", null)
+      .not("slug", "is", null)
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("[Sitemap] Gagal mengambil data kanji dari Supabase:", error);
+          return [];
+        }
+        return (data || []) as unknown as SupabaseSitemapItem[];
+      }),
+    supabase
+      .from("vocab")
+      .select("slug, created_at")
+      .in("jlpt_level", ["N5", "N4"])
+      .not("slug", "is", null)
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("[Sitemap] Gagal mengambil data vocab dari Supabase:", error);
+          return [];
+        }
+        return (data || []) as unknown as SupabaseSitemapItem[];
+      }),
+  ]);
 
  const categories = categoriesResult.data || [];
  const categoryMap = new Map<string, string>();
