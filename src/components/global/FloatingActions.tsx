@@ -61,14 +61,15 @@ export default function FloatingActions() {
               </m.div>
 
               <m.div whileHover={{ x: -5 }}>
-                <Link href="/support">
-                  <Button
-                    className="rounded-lg px-4 py-6 flex items-center gap-3 h-auto group border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                  >
+                <Button
+                  asChild
+                  className="rounded-lg px-4 py-6 flex items-center gap-3 h-auto group border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                >
+                  <Link href="/support">
                     <span className="text-xs font-black uppercase tracking-widest hidden md:block">Donasi</span>
                     <Cup size={20} className="text-destructive group-hover:text-current" />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </m.div>
             </m.div>
           )}

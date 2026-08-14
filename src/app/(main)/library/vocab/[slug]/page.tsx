@@ -291,11 +291,11 @@ export default async function VocabDetailPage({
  </div>
  </div>
  <div className="flex flex-col md:flex-row items-center justify-between gap-8">
- <Link href="/library/vocab" className="w-full md:w-auto">
- <Button variant="ghost" className="w-full px-10 py-8 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-[hsl(var(--muted)/0.3)] border border-border hover:bg-[hsl(var(--muted)/0.5)] hover:border-primary/30 transition-all gap-4 group">
- <ChevronLeft size={20} aria-hidden="true" className="group-hover:-translate-x-2 transition-transform" /> Kembali ke Daftar Kosakata
- </Button>
- </Link>
+        <Button asChild variant="ghost" className="w-full md:w-auto px-10 py-8 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-[hsl(var(--muted)/0.3)] border border-border hover:bg-[hsl(var(--muted)/0.5)] hover:border-primary/30 transition-all gap-4 group">
+          <Link href="/library/vocab">
+            <ChevronLeft size={20} aria-hidden="true" className="group-hover:-translate-x-2 transition-transform" /> Kembali ke Daftar Kosakata
+          </Link>
+        </Button>
  </div>
  </footer>
  </div>

@@ -222,11 +222,11 @@ export default async function KanjiDetailPage({
  </div>
  </div>
  <div className="flex flex-col md:flex-row items-center justify-between gap-8">
- <Link href="/library/kanji" className="w-full md:w-auto">
- <Button variant="ghost" className="w-full px-10 py-8 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-muted/30 border border-border hover:bg-muted/50 hover:border-primary/30 transition-all gap-4 group shadow-none">
- <ChevronLeft size={20} className="group-hover:-translate-x-2 transition-transform" aria-hidden="true" /> Kembali ke Daftar Kanji
- </Button>
- </Link>
+        <Button asChild variant="ghost" className="w-full md:w-auto px-10 py-8 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-muted/30 border border-border hover:bg-muted/50 hover:border-primary/30 transition-all gap-4 group shadow-none">
+          <Link href="/library/kanji">
+            <ChevronLeft size={20} className="group-hover:-translate-x-2 transition-transform" aria-hidden="true" /> Kembali ke Daftar Kanji
+          </Link>
+        </Button>
  </div>
  </footer>
  </div>

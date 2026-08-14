@@ -10,6 +10,7 @@
 // Import & Dependencies
 // ==========================================
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Medal, Fire, Search, VipCrown, X, Lock, Target, CalendarEvent } from "@/components/ui/icons";
 import { m, AnimatePresence } from "framer-motion";
@@ -87,44 +88,49 @@ export default function LeaderboardClient() {
  onChange={(e) => setSearchQuery(e.target.value)}
  className="flex-1 bg-transparent border-none outline-none py-2 px-3 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/50"
  />
- {searchQuery && (
- <button type="button"
- onClick={() => setSearchQuery("")}
- className="p-2 mr-1 rounded-[4px] text-muted-foreground/50 hover:text-foreground hover:bg-muted/40 transition-colors"
- aria-label="Bersihkan pencarian"
- >
- <X size={14} />
- </button>
- )}
- </Card>
- </div>
+        {searchQuery && (
+          <Button 
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() => setSearchQuery("")}
+            className="p-2 mr-1 size-8 rounded-[4px] text-muted-foreground/50 hover:text-foreground hover:bg-muted/40 transition-colors"
+            aria-label="Bersihkan pencarian"
+          >
+            <X size={14} />
+          </Button>
+        )}
+        </Card>
+      </div>
 
- {/* 🏆 TAB SWITCHER */}
- <div className="flex justify-center -mt-2 sm:-mt-6 relative z-20">
- <div className="bg-background/50 p-1 rounded-lg flex gap-1.5 border border-border/80 shadow-sm">
- <button
- type="button"
- onClick={() => setActiveTab("top_global")}
- className={`px-6 py-2.5 text-xs font-black uppercase tracking-wider rounded-lg transition-all ${
- activeTab === "top_global"
- ? "bg-primary text-primary-foreground shadow-md"
- : "text-muted-foreground hover:text-foreground"
- }`}
- >
- Top 20 Global
- </button>
- <button
- type="button"
- onClick={handleAroundMeTab}
- className={`px-6 py-2.5 text-xs font-black uppercase tracking-wider rounded-lg transition-all flex items-center gap-1.5 ${
- activeTab === "around_me"
- ? "bg-primary text-primary-foreground shadow-md"
- : "text-muted-foreground hover:text-foreground"
- }`}
- >
+      {/* 🏆 TAB SWITCHER */}
+      <div className="flex justify-center -mt-2 sm:-mt-6 relative z-20">
+        <div className="bg-background/50 p-1 rounded-lg flex gap-1.5 border border-border/80 shadow-sm">
+          <Button
+            type="button"
+            variant={activeTab === "top_global" ? "default" : "ghost"}
+            onClick={() => setActiveTab("top_global")}
+            className={`px-6 py-2.5 text-xs font-black uppercase tracking-wider rounded-lg transition-all ${
+              activeTab === "top_global"
+                ? "bg-primary text-primary-foreground shadow-md"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Top 20 Global
+          </Button>
+          <Button
+            type="button"
+            variant={activeTab === "around_me" ? "default" : "ghost"}
+            onClick={handleAroundMeTab}
+            className={`px-6 py-2.5 text-xs font-black uppercase tracking-wider rounded-lg transition-all flex items-center gap-1.5 ${
+              activeTab === "around_me"
+                ? "bg-primary text-primary-foreground shadow-md"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
  {(isGuest || currentUserId === "guest") && <Lock size={12} className="text-muted-foreground/60" />}
  Di Sekitar Saya
- </button>
+ </Button>
  </div>
  </div>
 

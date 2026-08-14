@@ -166,11 +166,11 @@ export default async function CheatsheetDetailPage({
  <h3 className="text-2xl tracking-tight">Butuh Versi Cetak?</h3>
  <p className="text-muted-foreground text-sm font-medium">Unduh PDF cheatsheet ini untuk dipelajari secara offline di mana saja.</p>
  </div>
- <Link href="/library/cheatsheet">
- <Button variant="ghost" className="gap-2 font-bold text-muted-foreground hover:text-primary">
- <ChevronLeft size={16} /> Kembali ke Daftar
- </Button>
- </Link>
+      <Button asChild variant="ghost" className="gap-2 font-bold text-muted-foreground hover:text-primary">
+        <Link href="/library/cheatsheet">
+          <ChevronLeft size={16} /> Kembali ke Daftar
+        </Link>
+      </Button>
  </div>
  </div>
  </main>

@@ -92,21 +92,27 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
  </p>
  </div>
  </div>
- <div className="flex gap-1">
- <button type="button" 
- onClick={clearAll}
- className="size-8 flex items-center justify-center rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all"
- title="Hapus Semua"
- >
- <DeleteBin size={14} />
- </button>
- <button type="button" 
- onClick={onClose}
- className="size-8 flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground transition-all"
- >
- <X size={14} />
- </button>
- </div>
+          <div className="flex gap-1">
+            <Button 
+              type="button" 
+              variant="ghost"
+              size="icon"
+              onClick={clearAll}
+              className="size-8 flex items-center justify-center rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all"
+              title="Hapus Semua"
+            >
+              <DeleteBin size={14} />
+            </Button>
+            <Button 
+              type="button" 
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="size-8 flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground transition-all"
+            >
+              <X size={14} />
+            </Button>
+          </div>
  </div>
 
  <div className="max-h-[350px] md:max-h-[400px] overflow-y-auto custom-scrollbar">

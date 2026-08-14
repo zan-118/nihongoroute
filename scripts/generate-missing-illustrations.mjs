@@ -194,6 +194,32 @@ const MAX_PROMPT_LEN = 600;
 const REFUSAL_PATTERN = /\b(i can(?:no|')t|i cannot|i'm sorry|i am sorry|unable to (?:help|generate|create)|as an ai)\b/i;
 const POLICY_BLOCK_PATTERN = /\b(content policy|safety system|blocked|flagged|moderation|violat(e|ion))\b/i;
 const LOGO = "public/logo-branding.svg";
+
+/**
+ * Membaca respons dari 9Router LLM API (mendukung JSON maupun SSE stream chunk).
+ */
+async function parseLLMResponse(response) {
+  const text = await response.text();
+  if (text.startsWith("data: ")) {
+    let fullContent = "";
+    text.split("\n").forEach((line) => {
+      if (line.startsWith("data: ") && line !== "data: [DONE]") {
+        try {
+          const parsed = JSON.parse(line.slice(6));
+          fullContent += parsed.choices?.[0]?.delta?.content || parsed.choices?.[0]?.message?.content || "";
+        } catch {}
+      }
+    });
+    return fullContent;
+  }
+  try {
+    const parsed = JSON.parse(text);
+    return parsed.choices?.[0]?.message?.content || parsed.choices?.[0]?.delta?.content || text;
+  } catch {
+    return text;
+  }
+}
+
 /**
  * Membersihkan & memvalidasi teks prompt hasil LLM sebelum dipakai untuk generate gambar.
  * Menolak (throw) jika terindikasi penolakan/refusal dari model.
@@ -359,8 +385,7 @@ Aturan prompt gambar:
           });
 
           if (!response.ok) throw new Error(`Status: ${response.status}`);
-          const data = await response.json();
-          const raw = data.choices?.[0]?.message?.content?.trim() || "";
+          const raw = (await parseLLMResponse(response)).trim();
           if (!raw) throw new Error("Respons LLM kosong");
           return sanitizePrompt(raw);
         },
@@ -402,11 +427,44 @@ Aturan prompt gambar:
           throw new Error(`Images API gagal (${modelToUse}): ${response.status}`);
         }
 
-        const buf = Buffer.from(await response.arrayBuffer());
-        if (buf.length === 0) {
+        const contentType = response.headers.get("content-type") || "";
+        const rawBuf = Buffer.from(await response.arrayBuffer());
+
+        if (rawBuf.length === 0) {
           throw new Error("Images API mengembalikan file kosong (0 byte)");
         }
-        return buf;
+
+        // Jika respons berupa JSON (bukan binary image langsung)
+        if (contentType.includes("application/json") || rawBuf.toString("utf8", 0, 1) === "{") {
+          try {
+            const parsed = JSON.parse(rawBuf.toString("utf8"));
+            const b64 = parsed.data?.[0]?.b64_json;
+            const imgUrl = parsed.data?.[0]?.url;
+
+            if (b64 && b64.length > 0) {
+              return Buffer.from(b64, "base64");
+            }
+            if (imgUrl && imgUrl.length > 0) {
+              const imgRes = await fetch(imgUrl);
+              if (!imgRes.ok) throw new Error(`Gagal mengunduh gambar dari URL ${imgUrl}`);
+              return Buffer.from(await imgRes.arrayBuffer());
+            }
+            throw new Error("Respons JSON API gambar tidak berisi b64_json / url biner valid");
+          } catch (e) {
+            throw new Error(`Gagal memproses respons JSON gambar: ${e.message}`);
+          }
+        }
+
+        // Verifikasi magic header PNG (89 50) atau JPEG (FF D8)
+        const isPng = rawBuf[0] === 0x89 && rawBuf[1] === 0x50;
+        const isJpeg = rawBuf[0] === 0xff && rawBuf[1] === 0xd8;
+        if (!isPng && !isJpeg) {
+          throw new Error(
+            `File hasil generasi bukan biner PNG/JPEG valid (header: ${rawBuf.subarray(0, 10).toString("hex")})`
+          );
+        }
+
+        return rawBuf;
       },
       { retries: options.retries, label }
     );
@@ -448,6 +506,9 @@ Balas HANYA dengan JSON murni (tanpa markdown, tanpa penjelasan lain) dengan str
 {"score": <angka 0-10>, "relevant": <true/false>, "reason": "<alasan singkat dalam Bahasa Indonesia>"}
 `.trim();
 
+    // Utamakan model vision Gemini yang terbukti bisa membaca base64 di 9Router
+    const visionModelToUse = "ag/gemini-3-flash";
+
     const response = await fetch(`${imgBaseUrl}/chat/completions`, {
       method: "POST",
       headers: {
@@ -455,7 +516,7 @@ Balas HANYA dengan JSON murni (tanpa markdown, tanpa penjelasan lain) dengan str
         ...(imgApiKey ? { Authorization: `Bearer ${imgApiKey}` } : {}),
       },
       body: JSON.stringify({
-        model: process.env.AI_VISION_MODEL || process.env.AI_MODEL || "ag/claude-sonnet-4-6",
+        model: visionModelToUse,
         messages: [
           {
             role: "user",
@@ -471,8 +532,7 @@ Balas HANYA dengan JSON murni (tanpa markdown, tanpa penjelasan lain) dengan str
     });
 
     if (!response.ok) throw new Error(`Vision API gagal: ${response.status}`);
-    const data = await response.json();
-    const raw = data.choices?.[0]?.message?.content?.trim() || "";
+    const raw = (await parseLLMResponse(response)).trim();
     if (!raw) throw new Error("Respons vision-check kosong");
 
     const cleanJson = raw.replace(/^```json|```$/gi, "").trim();

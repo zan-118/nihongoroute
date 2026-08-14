@@ -14,6 +14,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Mail, ArrowLeft, Key } from "@/components/ui/icons";
 import Link from "next/link";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 // ==========================================
 // Main Component
@@ -121,13 +122,13 @@ export default function ForgotPasswordView() {
  />
  </div>
 
- <button
- type="submit"
- disabled={loading || !email}
- className="w-full py-3.5 px-4 bg-primary text-primary-foreground hover:bg-primary/92 rounded-xl text-xs disabled:opacity-50"
- >
- {loading ? "Lagi dikirim..." : "Kirim Link Pemulihan"}
- </button>
+        <Button
+          type="submit"
+          disabled={loading || !email}
+          className="w-full py-3.5 px-4 bg-primary text-primary-foreground hover:bg-primary/92 rounded-xl text-xs disabled:opacity-50"
+        >
+          {loading ? "Lagi dikirim..." : "Kirim Link Pemulihan"}
+        </Button>
  </form>
  </div>
  </div>

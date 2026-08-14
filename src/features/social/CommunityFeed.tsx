@@ -104,24 +104,27 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
  <Card className="bg-card border border-border/50 dark:border-white/10 p-5 rounded-2xl shadow-sm relative overflow-hidden transition-all duration-300 group-hover:border-primary/45">
  {/* Header Postingan */}
  <div className="flex items-center gap-3.5 mb-4">
- {/* Avatar */}
- <button 
- type="button"
- onClick={() => onAuthorClick(post.user_id)}
- className="size-10 rounded-lg flex items-center justify-center font-black text-foreground shrink-0 border border-primary/20 shadow-inner select-none font-japanese text-sm hover:scale-105 active:scale-95 transition-transform"
- aria-label={`Lihat profil ${post.author?.full_name || "Member"}`}
- >
- {post.author?.full_name?.charAt(0).toUpperCase() || "?"}
- </button>
- <div className="min-w-0 flex-1">
- <div className="flex items-center gap-1.5 flex-wrap">
- <button 
- type="button"
- onClick={() => onAuthorClick(post.user_id)}
- className="text-xs sm:text-sm font-black text-foreground hover:text-primary transition-colors text-left"
- >
- {post.author?.full_name || "Member NihongoRoute"}
- </button>
+        {/* Avatar */}
+        <Button 
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={() => onAuthorClick(post.user_id)}
+          className="size-10 rounded-lg flex items-center justify-center font-black text-foreground shrink-0 border border-primary/20 shadow-inner select-none font-japanese text-sm hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+          aria-label={`Lihat profil ${post.author?.full_name || "Member"}`}
+        >
+          {post.author?.full_name?.charAt(0).toUpperCase() || "?"}
+        </Button>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <Button 
+              type="button"
+              variant="link"
+              onClick={() => onAuthorClick(post.user_id)}
+              className="text-xs sm:text-sm font-black text-foreground hover:text-primary transition-colors text-left h-auto p-0 cursor-pointer"
+            >
+              {post.author?.full_name || "Member NihongoRoute"}
+            </Button>
  <Badge variant="ghost" className="p-0 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-primary/80">
  Lv.{post.author?.level || 1}
  </Badge>

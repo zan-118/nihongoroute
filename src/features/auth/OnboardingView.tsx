@@ -12,7 +12,7 @@
 import { m, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { BookOpen, Briefcase, Plane, Tv, ChevronRight, Check, Loader, ArrowLeft } from "@/components/ui/icons";
+import { BookOpen, Briefcase, Plane, Tv, ChevronRight, Check, Loader, ArrowLeft, Compass } from "@/components/ui/icons";
 import { useOnboardingWizard } from "@/features/auth/onboarding/useOnboardingWizard";
 
 // ==========================================
@@ -83,7 +83,7 @@ export default function OnboardingView() {
  >
  <div className="space-y-4">
  <div className="size-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-primary/20 shadow-[0_0_20px_hsl(var(--primary)/0.15)] animate-pulse">
- 
+   <Compass className="size-10 text-primary" />
  </div>
  <h1 className="text-6xl md:text-8xl font-black text-primary font-japanese tracking-tight">
  ようこそ!
@@ -137,7 +137,7 @@ export default function OnboardingView() {
  <div
  key={level.id}
  onClick={() => setTargetLevel(level.id)}
- className={`rounded-[1.5rem] p-1 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+ className={`rounded-[1.5rem] p-1 cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
  targetLevel === level.id 
  ? "bg-primary/20 border border-primary/40 shadow-lg scale-[1.03]" 
  : "bg-black/[0.01] dark:bg-white/[0.02] border border-black/5 dark:border-white/10 hover:border-primary/40"
@@ -206,7 +206,7 @@ export default function OnboardingView() {
  <div
  key={item.id}
  onClick={() => setMotivation(item.id)}
- className={`rounded-[1.5rem] p-1 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+ className={`rounded-[1.5rem] p-1 cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
  motivation === item.id 
  ? "bg-secondary/20 border border-secondary/40 shadow-lg scale-[1.03]" 
  : "bg-black/[0.01] dark:bg-white/[0.02] border border-black/5 dark:border-white/10 hover:border-secondary/40"

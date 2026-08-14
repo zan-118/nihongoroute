@@ -13,6 +13,7 @@ import React from "react";
 import { Lock, Key, Check } from "@/components/ui/icons";
 import Link from "next/link";
 import { usePasswordUpdate } from "@/features/user/usePasswordUpdate";
+import { Button } from "@/components/ui/button";
 
 // ==========================================
 // Main Component
@@ -95,13 +96,13 @@ export default function UpdatePasswordView() {
  </div>
  </div>
 
- <button
- type="submit"
- disabled={loading}
- className="w-full py-3.5 px-4 bg-primary text-primary-foreground hover:bg-primary/92 rounded-xl text-xs disabled:opacity-50"
- >
- {loading ? "Lagi disimpan..." : "Simpan Sandi Baru"}
- </button>
+        <Button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3.5 px-4 bg-primary text-primary-foreground hover:bg-primary/92 rounded-xl text-xs disabled:opacity-50"
+        >
+          {loading ? "Lagi disimpan..." : "Simpan Sandi Baru"}
+        </Button>
  </form>
  ) : (
  <Link

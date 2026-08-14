@@ -91,22 +91,6 @@ export async function POST(request: Request) {
  created_at = "",
  } = parsed.data;
 
- if (created_at) {
- const createdAtDate = new Date(created_at);
- if (!isNaN(createdAtDate.getTime())) {
- const timeDiff = Math.abs(Date.now() - createdAtDate.getTime());
- // Batas replay window: 5 menit (300.000 ms)
- if (timeDiff > 300000) {
- securityLogger.alert({ 
- event: "saweria_webhook_replay_attack", 
- source: "saweria", 
- metadata: { created_at } 
- });
- return NextResponse.json({ error: "Replay window exceeded" }, { status: 400 });
- }
- }
- }
-
  // Tentukan tingkatan lencana (tier) berdasarkan total kontribusi
  let tier: "gold" | "silver" | "bronze" = "bronze";
  if (amountRaw >= 100000) {

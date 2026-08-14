@@ -220,14 +220,15 @@ export default function KanjiListView({ initialData }: KanjiListViewProps) {
  {kanji.jlptLevel}
  </span>
  )}
- <Link href={`/library/kanji/${kanji.slug || kanji.id}`} className="shrink-0">
  <Button
- variant="outline"
- className="px-3 h-8 text-[9px] md:text-[10px] font-black uppercase tracking-wider rounded-lg bg-muted border-border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+   asChild
+   variant="outline"
+   className="px-3 h-8 text-[9px] md:text-[10px] font-black uppercase tracking-wider rounded-lg bg-muted border-border hover:bg-primary hover:text-primary-foreground transition-all duration-300 shrink-0"
  >
- Detail
+   <Link href={`/library/kanji/${kanji.slug || kanji.id}`}>
+     Detail
+   </Link>
  </Button>
- </Link>
  </div>
  </div>
  ))}

@@ -367,46 +367,51 @@ export default function VocabView({
  {/* AKSI */}
  <td className="py-3.5 px-4 text-right align-top">
  <div className="flex items-center justify-end gap-2">
- <div onClick={(e) => e.preventDefault()} className="shrink-0">
- <TTSReader text={item.word} minimal={true} speaker="indah" audioUrl={item.audio_url} />
- </div>
- <Link href={`/library/vocab/${item.slug || item.id}`}>
- <Button
- variant="ghost"
- size="sm"
- className="px-3 h-8 text-[10px] font-mono font-bold uppercase tracking-wider rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all"
- >
- Detail
- </Button>
- </Link>
- </div>
- </td>
- </tr>
- ))}
- </tbody>
- </table>
- </div>
- )}
- </div>
+              <div onClick={(e) => e.preventDefault()} className="shrink-0 cursor-pointer">
+                <TTSReader text={item.word} minimal={true} speaker="indah" audioUrl={item.audio_url} />
+              </div>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="px-3 h-8 text-[10px] font-mono font-bold uppercase tracking-wider rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all"
+              >
+                <Link href={`/library/vocab/${item.slug || item.id}`}>
+                  Detail
+                </Link>
+              </Button>
+            </div>
+          </td>
+        </tr>
+      ))}
+      </tbody>
+      </table>
+      </div>
+      )}
+      </div>
 
- <VocabPagination
- currentPage={currentPage}
- totalPages={totalPages}
- loading={loading}
- onPageChange={handlePageChange}
- />
+      <VocabPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        loading={loading}
+        onPageChange={handlePageChange}
+      />
 
- {/* Footer Navigation */}
- <footer className="mt-16 md:mt-24 pt-10 md:pt-16 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-6">
- <div className="flex items-center gap-3">
- <Loader size={16} className={`text-primary ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
- <span className="text-muted-foreground font-black text-[10px] md:text-xs uppercase tracking-[0.2em]">Basis Data Real-time</span>
- </div>
- <Link href="/library" className="w-full sm:w-auto">
- <Button variant="ghost" className="w-full px-8 py-6 md:px-10 md:py-7 h-auto text-xs md:text-xs font-bold uppercase tracking-widest rounded-lg bg-muted border border-border neo-card shadow-none hover:bg-primary hover:text-primary-foreground transition-all gap-3 group">
- <ChevronLeft size={16} className="group-hover:-translate-x-1.5 transition-transform duration-300" aria-hidden="true" /> Kembali ke Pustaka
- </Button>
- </Link>
+      {/* Footer Navigation */}
+      <footer className="mt-16 md:mt-24 pt-10 md:pt-16 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-6">
+        <div className="flex items-center gap-3">
+          <Loader size={16} className={`text-primary ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
+          <span className="text-muted-foreground font-black text-[10px] md:text-xs uppercase tracking-[0.2em]">Basis Data Real-time</span>
+        </div>
+        <Button 
+          asChild 
+          variant="ghost" 
+          className="w-full sm:w-auto px-8 py-6 md:px-10 md:py-7 h-auto text-xs md:text-xs font-bold uppercase tracking-widest rounded-lg bg-muted border border-border neo-card shadow-none hover:bg-primary hover:text-primary-foreground transition-all gap-3 group"
+        >
+          <Link href="/library">
+            <ChevronLeft size={16} className="group-hover:-translate-x-1.5 transition-transform duration-300" aria-hidden="true" /> Kembali ke Pustaka
+          </Link>
+        </Button>
  </footer>
  </div>
  );

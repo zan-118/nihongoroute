@@ -50,18 +50,18 @@ export const Threads = createIcon("ri:threads-fill");
 export const ArrowDown = createIcon("ri:arrow-down-line");
 export const ArrowLeft = createIcon("ri:arrow-left-line");
 export const ArrowRight = createIcon("ri:arrow-right-line");
-export const ArrowUpRight = createIcon("ri:arrow-up-right-line");
+export const ArrowUpRight = createIcon("ri:arrow-right-up-line");
 export const ArrowLeftRight = createIcon("ri:arrow-left-right-line");
-export const ChevronDown = createIcon("ri:chevron-down-line");
-export const ChevronLeft = createIcon("ri:chevron-left-line");
-export const ChevronRight = createIcon("ri:chevron-right-line");
-export const ChevronUp = createIcon("ri:chevron-up-line");
-export const DoubleLeft = createIcon("ri:double-left-line");
-export const DoubleRight = createIcon("ri:double-right-line");
+export const ChevronDown = createIcon("ri:arrow-down-s-line");
+export const ChevronLeft = createIcon("ri:arrow-left-s-line");
+export const ChevronRight = createIcon("ri:arrow-right-s-line");
+export const ChevronUp = createIcon("ri:arrow-up-s-line");
+export const DoubleLeft = createIcon("ri:arrow-left-double-line");
+export const DoubleRight = createIcon("ri:arrow-right-double-line");
 export const ExternalLink = createIcon("ri:external-link-line");
 
 export const CommandLine = createIcon("ri:command-line");
-export const GitCompare = createIcon("ri:git-compare-line");
+export const GitCompare = createIcon("ri:git-merge-line");
 export const Loader = createIcon("ri:loader-4-line");
 export const Menu = createIcon("ri:menu-line");
 export const FullscreenExit = createIcon("ri:fullscreen-exit-line");
@@ -70,7 +70,7 @@ export const Restart = createIcon("ri:restart-line");
 export const Search = createIcon("ri:search-line");
 export const Settings = createIcon("ri:settings-4-line");
 export const Share = createIcon("ri:share-line");
-export const Sliders = createIcon("ri:sliders-line");
+export const Sliders = createIcon("ri:equalizer-line");
 export const Close = createIcon("ri:close-line");
 export const X = createIcon("ri:close-line");
 
@@ -179,6 +179,6 @@ export const VolumeUp = createIcon("ri:volume-up-line");
 export const VolumeMute = createIcon("ri:volume-mute-line");
 export const WifiOff = createIcon("ri:wifi-off-line");
 export const Wrench = createIcon("ri:wrench-line");
-export const Zap = createIcon("ri:zap-line");
+export const Zap = createIcon("ri:flashlight-line");
 
 

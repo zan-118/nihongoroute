@@ -239,11 +239,11 @@ export default function DictationClient() {
  {/* Header */}
  <header className="mb-10 flex items-center justify-between">
  <div className="flex items-center gap-3">
- <Link href={ROUTES.TOOLS.ROOT}>
- <Button variant="ghost" size="icon" className="rounded-xl border border-border bg-card/20 hover:bg-card/40">
- <ChevronLeft size={20} />
- </Button>
- </Link>
+        <Button asChild variant="ghost" size="icon" className="rounded-xl border border-border bg-card/20 hover:bg-card/40">
+          <Link href={ROUTES.TOOLS.ROOT}>
+            <ChevronLeft size={20} />
+          </Link>
+        </Button>
  <div>
  <h1 className="text-2xl md:text-3xl text-foreground uppercase tracking-tight italic">
  Latihan <span className="text-success">Dictation</span>

@@ -89,13 +89,16 @@ export default function ProfileEditor() {
  <span className="text-primary">
  {name || "Pelajar"}
  </span>
- <button type="button"
- onClick={startEditing}
- className="opacity-0 group-hover:opacity-100 transition-opacity p-2 text-muted-foreground hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg shrink-0"
- aria-label="Edit Nama"
- >
- <Edit size={20} className="sm:w-6 sm:h-6" />
- </button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={startEditing}
+          className="opacity-0 group-hover:opacity-100 transition-opacity p-2 text-muted-foreground hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg shrink-0"
+          aria-label="Edit Nama"
+        >
+          <Edit size={20} className="sm:w-6 sm:h-6" />
+        </Button>
  </h2>
  <p className="text-muted-foreground text-xs md:text-sm font-bold uppercase tracking-[0.2em] mt-2 flex items-center gap-2">
  <span className="size-1.5 rounded-full bg-success animate-pulse" />

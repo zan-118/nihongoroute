@@ -102,23 +102,6 @@ export async function POST(request: Request) {
  return NextResponse.json({ success: true, message: "Trakteer Webhook Test Successful" });
  }
 
- const paymentDate = body.payment_date || body.created_at || "";
- if (paymentDate) {
- const createdAtDate = new Date(paymentDate);
- if (!isNaN(createdAtDate.getTime())) {
- const timeDiff = Math.abs(Date.now() - createdAtDate.getTime());
- // Batas replay window: 5 menit (300.000 ms)
- if (timeDiff > 300000) {
- securityLogger.alert({ 
- event: "trakteer_webhook_replay_attack", 
- source: "trakteer", 
- metadata: { payment_date: paymentDate } 
- });
- return NextResponse.json({ error: "Replay window exceeded" }, { status: 400 });
- }
- }
- }
-
  if (!Number.isFinite(netAmount) || netAmount <= 0 || netAmount > MAX_DONATION_AMOUNT) {
  return NextResponse.json({ error: "Invalid payment payload data" }, { status: 400 });
  }

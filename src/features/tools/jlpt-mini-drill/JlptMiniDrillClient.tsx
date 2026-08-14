@@ -245,29 +245,6 @@ export default function JlptMiniDrillClient({
  </div>
 
  <div className="flex flex-col gap-5">
- <div>
- <p className="mb-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
- Level
- </p>
- <div className="flex flex-wrap items-center justify-center gap-3">
- {DRILL_LEVELS.map((item) => (
- <button
- key={item}
- type="button"
- onClick={() => handleConfigChange(() => setLevel(item))}
- aria-pressed={level === item}
- className={cn(
- "min-h-12 rounded-xl border px-3 text-sm font-black transition-all",
- level === item
- ? "border-primary/40 bg-primary/10 text-primary"
- : "border-border bg-background/35 text-muted-foreground hover:text-foreground"
- )}
- >
- {LEVEL_LABELS[item]}
- </button>
- ))}
- </div>
- </div>
 
  <div>
  <p className="mb-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground">

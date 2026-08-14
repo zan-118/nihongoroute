@@ -104,7 +104,7 @@ export async function processTtsPipeline(params: TTSRequestParams): Promise<TTSP
 
  if (cached?.audio_url) {
  let storagePath = `${hash}.mp3`;
- const match = cached.audio_url.match(/\/public\/tts-cache\/(.+)$/);
+ const match = cached.audio_url.match(/\/tts-cache\/(.+)$/);
  if (match) {
  storagePath = decodeURIComponent(match[1]);
  }

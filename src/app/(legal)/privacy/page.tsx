@@ -210,12 +210,12 @@ export default function PrivacyPage() {
  {/* Tombol Kembali Kaki Halaman */}
  {/* Navigation back to dashboard */}
  <div className="pt-10 mt-14 border-t border-border/60 flex justify-start">
- <Link href="/dashboard">
- <Button variant="outline" className="rounded-2xl px-6 h-12 shadow-sm font-bold tracking-widest uppercase text-xs flex items-center gap-2 hover:bg-muted border border-border hover:border-primary/30 transition-all duration-300">
- <ArrowLeft size={16} />
- <span>Kembali ke Dashboard</span>
- </Button>
- </Link>
+        <Button asChild variant="outline" className="rounded-2xl px-6 h-12 shadow-sm font-bold tracking-widest uppercase text-xs flex items-center gap-2 hover:bg-muted border border-border hover:border-primary/30 transition-all duration-300">
+          <Link href="/dashboard">
+            <ArrowLeft size={16} />
+            <span>Kembali ke Dashboard</span>
+          </Link>
+        </Button>
  </div>
  </div>
  </div>

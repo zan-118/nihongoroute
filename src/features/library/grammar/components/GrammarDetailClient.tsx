@@ -379,24 +379,26 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
 
    {/* Footer Navigasi Modul */}
    <footer className="pt-12 border-t border-border/60 flex flex-col md:flex-row items-center justify-between gap-6 select-none">
-    <Link href="/library/grammar" className="w-full md:w-auto">
-     <Button 
+    <Button 
+      asChild
       variant="ghost" 
-      className="w-full px-8 py-6 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-card/5 border border-border hover:bg-card/15 hover:border-primary/30 transition-all gap-3 group active:scale-[0.98]"
+      className="w-full md:w-auto px-8 py-6 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-card/5 border border-border hover:bg-card/15 hover:border-primary/30 transition-all gap-3 group active:scale-[0.98]"
       aria-label="Kembali ke Daftar Tata Bahasa"
-     >
-      <ChevronLeft size={16} className="group-hover:-translate-x-1.5 transition-transform" /> Kembali ke Daftar
-     </Button>
-    </Link>
+    >
+      <Link href="/library/grammar">
+        <ChevronLeft size={16} className="group-hover:-translate-x-1.5 transition-transform" /> Kembali ke Daftar
+      </Link>
+    </Button>
 
-    <Link href="/library/grammar" className="w-full md:w-auto">
-     <Button 
+    <Button 
+      asChild
       className="w-full md:w-auto px-10 py-6 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-primary text-primary-foreground hover:bg-primary/95 transition-all shadow-[0_0_25px_hsl(var(--primary)/0.25)] hover:shadow-[0_0_40px_hsl(var(--primary)/0.4)] active:scale-95 flex items-center gap-2 group"
       aria-label="Tandai materi ini selesai dan kembali"
-     >
-      Selesai & Lanjut <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-     </Button>
-    </Link>
+    >
+      <Link href="/library/grammar">
+        Selesai & Lanjut <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+      </Link>
+    </Button>
    </footer>
   </div>
  );

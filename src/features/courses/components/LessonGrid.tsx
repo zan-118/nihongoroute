@@ -10,7 +10,7 @@
 // Import & Dependencies
 // ==========================================
 import { m, Variants } from "framer-motion";
-import { ChevronLeft, ChevronRight, DoubleLeft, DoubleRight } from "@/components/ui/icons";
+import { ChevronLeft, ChevronRight, DoubleLeft, DoubleRight, BookOpen } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { LessonCard } from "./LessonCard";
 
@@ -99,7 +99,7 @@ export function LessonGrid({
  backgroundColor: "hsl(var(--background)/0.5)"
  }}
  >
- 
+   <BookOpen className="size-7 sm:size-8 text-primary/70" />
  </div>
 
  <h4 className="text-lg sm:text-xl md:text-2xl text-foreground tracking-tight mb-2 sm:mb-3 uppercase relative z-10">

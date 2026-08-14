@@ -131,41 +131,59 @@ export default function WeakPointPanel() {
 
  {/* Tautan Tindakan Cepat (Quick Action) */}
  <div className="shrink-0 transition-transform active:scale-95 hover:scale-105">
- {item.type === "vocab" && item.slug ? (
- <Link href={`/library/vocab/${item.slug}`}>
- <Button 
- size="sm"
- variant="outline"
- className="size-9 p-0 rounded-xl bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 transition-all shadow-none"
- title="Pelajari Kosakata"
- aria-label={`Pelajari Kosakata: ${item.display}`}
- >
- <BookOpen size={16} />
- </Button>
- </Link>
- ) : item.type === "kanji" ? (
- <Link href={`/tools/writing?char=${encodeURIComponent(item.display)}`}>
- <Button 
- size="sm"
- variant="outline"
- className="size-9 p-0 rounded-xl bg-secondary/10 border-secondary/20 text-secondary hover:bg-secondary/20 transition-all shadow-none"
- title="Latih Menulis Kanji"
- aria-label={`Latih Menulis Kanji: ${item.display}`}
- >
- <Pencil size={16} />
- </Button>
- </Link>
- ) : (
- <Button 
- size="sm"
- variant="outline"
- className="size-9 p-0 rounded-xl text-muted-foreground border-border bg-muted/40 hover:text-foreground hover:bg-muted/80 transition-all"
- disabled
- aria-label="Tindakan tidak tersedia"
- >
- <ArrowRight size={16} />
- </Button>
- )}
+        {item.type === "vocab" && item.slug ? (
+          <Button 
+            asChild
+            size="sm"
+            variant="outline"
+            className="size-9 p-0 rounded-xl bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 transition-all shadow-none"
+            title="Pelajari Kosakata"
+            aria-label={`Pelajari Kosakata: ${item.display}`}
+          >
+            <Link href={`/library/vocab/${item.slug}`}>
+              <BookOpen size={16} />
+            </Link>
+          </Button>
+        ) : item.type === "kanji" ? (
+          <Button 
+            asChild
+            size="sm"
+            variant="outline"
+            className="size-9 p-0 rounded-xl bg-secondary/10 border-secondary/20 text-secondary hover:bg-secondary/20 transition-all shadow-none"
+            title="Latih Menulis Kanji"
+            aria-label={`Latih Menulis Kanji: ${item.display}`}
+          >
+            <Link href={`/tools/writing?char=${encodeURIComponent(item.display)}`}>
+              <Pencil size={16} />
+            </Link>
+          </Button>
+        ) : item.slug ? (
+          <Button 
+            asChild
+            size="sm"
+            variant="outline"
+            className="size-9 p-0 rounded-xl bg-accent-emerald/10 border-accent-emerald/20 text-accent-emerald hover:bg-accent-emerald/20 transition-all shadow-none"
+            title="Pelajari Detail"
+            aria-label={`Pelajari Detail: ${item.display}`}
+          >
+            <Link href={`/library/${item.type}/${item.slug}`}>
+              <BookOpen size={16} />
+            </Link>
+          </Button>
+        ) : (
+          <Button 
+            asChild
+            size="sm"
+            variant="outline"
+            className="size-9 p-0 rounded-xl text-primary border-primary/20 bg-primary/10 hover:bg-primary/20 transition-all shadow-none"
+            title="Latih Fokus Titik Lemah"
+            aria-label="Latih Fokus Titik Lemah"
+          >
+            <Link href={ROUTES.TOOLS.WEAK_POINTS}>
+              <ArrowRight size={16} />
+            </Link>
+          </Button>
+        )}
  </div>
  </div>
  );

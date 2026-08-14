@@ -11,6 +11,7 @@
 // IMPOR
 // ==========================================
 import { m } from "framer-motion";
+import { Trophy } from "@/components/ui/icons";
 
 // ==========================================
 // KOMPONEN UTAMA
@@ -32,8 +33,7 @@ export function QuestCompleted() {
  {/* Glow effect behind content. */}
  <div className="absolute inset-0 bg-success/5 blur-3xl rounded-full pointer-events-none" />
  <div className="size-16 bg-success/10 rounded-lg flex items-center justify-center mb-6 border border-success/20 relative z-10">
- {/* Icon with glow effect for dark mode. */}
- 
+ <Trophy className="size-8 text-success" />
  </div>
  <h4 className="text-lg md:text-xl text-foreground uppercase tracking-tight mb-2 relative z-10">
  Target Tercapai!

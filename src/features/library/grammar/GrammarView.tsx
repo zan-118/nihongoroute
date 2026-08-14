@@ -251,15 +251,16 @@ export default function GrammarView({ initialArticles = EMPTY_GRAMMAR_ARTICLES }
  </span>
  </td>
  <td className="py-3.5 px-4 text-right align-top">
- <Link href={`/library/grammar/${article.slug || article.id || article._id}`}>
  <Button
- variant="ghost"
- size="sm"
- className="px-3 h-8 text-[10px] font-mono font-bold uppercase tracking-wider rounded-full bg-accent-emerald/10 text-accent-emerald border border-accent-emerald/20 hover:bg-accent-emerald hover:text-accent-emerald-foreground transition-all"
- >
- Detail
- </Button>
- </Link>
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className="px-3 h-8 text-[10px] font-mono font-bold uppercase tracking-wider rounded-full bg-accent-emerald/10 text-accent-emerald border border-accent-emerald/20 hover:bg-accent-emerald hover:text-accent-emerald-foreground transition-all"
+                >
+                  <Link href={`/library/grammar/${article.slug || article.id || article._id}`}>
+                    Detail
+                  </Link>
+                </Button>
  </td>
  </tr>
  ))}

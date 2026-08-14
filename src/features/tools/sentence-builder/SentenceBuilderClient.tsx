@@ -159,42 +159,44 @@ export default function SentenceBuilderClient() {
  Prompt
  </h2>
  </div>
- <div className="flex gap-2 mb-4 p-1 bg-muted rounded-xl">
- <button
- type="button"
- onClick={() => {
- setIsDbMode(false);
- setPromptIndex(0);
- setSelectedTokens([]);
- setHasChecked(false);
- }}
- className={cn(
- "flex-1 py-2 text-xs font-bold rounded-lg transition-all",
- !isDbMode ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"
- )}
- >
- Bawaan
- </button>
- <button
- type="button"
- onClick={() => {
- if (dbPrompts.length === 0) {
- fetchDbSentences(dbLevel);
- } else {
- setIsDbMode(true);
- setPromptIndex(0);
- setSelectedTokens([]);
- setHasChecked(false);
- }
- }}
- className={cn(
- "flex-1 py-2 text-xs font-bold rounded-lg transition-all",
- isDbMode ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"
- )}
- >
- Database (DB)
- </button>
- </div>
+          <div className="flex gap-2 mb-4 p-1 bg-muted rounded-xl">
+            <Button
+              type="button"
+              variant={!isDbMode ? "default" : "ghost"}
+              onClick={() => {
+                setIsDbMode(false);
+                setPromptIndex(0);
+                setSelectedTokens([]);
+                setHasChecked(false);
+              }}
+              className={cn(
+                "flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer h-auto",
+                !isDbMode ? "bg-background shadow text-foreground hover:bg-background" : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Bawaan
+            </Button>
+            <Button
+              type="button"
+              variant={isDbMode ? "default" : "ghost"}
+              onClick={() => {
+                if (dbPrompts.length === 0) {
+                  fetchDbSentences(dbLevel);
+                } else {
+                  setIsDbMode(true);
+                  setPromptIndex(0);
+                  setSelectedTokens([]);
+                  setHasChecked(false);
+                }
+              }}
+              className={cn(
+                "flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer h-auto",
+                isDbMode ? "bg-background shadow text-foreground hover:bg-background" : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Database (DB)
+            </Button>
+          </div>
 
  {isDbMode && (
  <div className="mb-4 space-y-2 p-2.5 border border-border/60 rounded-lg bg-background/25">
