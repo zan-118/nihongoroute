@@ -89,9 +89,20 @@ export function useReviewSession(loading: boolean) {
 
  let data: MasterCardData[] = [];
  try {
- const res = await fetch(`/api/cards?ids=${targetIds.join(",")}`);
+ const BATCH_SIZE = 50;
+ const chunks: string[][] = [];
+ for (let i = 0; i < targetIds.length; i += BATCH_SIZE) {
+ chunks.push(targetIds.slice(i, i + BATCH_SIZE));
+ }
+
+ const results = await Promise.all(
+ chunks.map(async (chunk) => {
+ const res = await fetch(`/api/cards?ids=${chunk.join(",")}`);
  if (!res.ok) throw new Error(`API /api/cards gagal: ${res.status}`);
- data = await res.json();
+ return (await res.json()) as MasterCardData[];
+ })
+ );
+ data = results.flat();
  } catch (cmsError) {
  console.error("Gagal memuat kartu dari CMS:", cmsError);
  throw cmsError;
