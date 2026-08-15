@@ -115,6 +115,7 @@ Seluruh Server Action tersimpan di `src/actions/` dan bertindak sebagai layer ti
 | `/api/health`                 | Publik                     |  Tidak | Detail env disembunyikan di production                                                           | OK     |
 | `/api/webhooks/saweria`       | HMAC `x-saweria-signature` |     Ya | Raw-body signature, Zod payload, replay window, duplicate event guard                            | OK     |
 | `/api/webhooks/trakteer`      | Token header timing-safe   |     Ya | Zod payload, replay window, duplicate event guard                                                | OK     |
+| `/api/indexnow`               | Token `ADMIN_API_SECRET`   |  Tidak | Validasi token admin timing-safe; pemicu submission real-time IndexNow ke Bing & search engines  | OK     |
 | `/auth/callback`              | OAuth code                 |     Ya | `exchangeCodeForSession`; redirect gagal ke login                                                | OK     |
 | `community.actions.ts` mutasi | `auth.getUser()`           |     Ya | Insert pakai `user.id`; delete/update notif difilter `user_id`; admin client hanya setelah auth  | OK     |
 | `flashcard.actions.ts`        | Session refresh            |  Tidak | Read-only library data                                                                           | OK     |

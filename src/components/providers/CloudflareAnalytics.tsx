@@ -24,7 +24,7 @@ export default function CloudflareAnalytics() {
     <Script
       src="https://static.cloudflareinsights.com/beacon.min.js"
       data-cf-beacon={`{"token": "${token}"}`}
-      strategy="afterInteractive"
+      strategy="lazyOnload"
     />
   );
 }

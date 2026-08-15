@@ -71,6 +71,8 @@ const STATIC_ROUTES: SitemapEntryInput[] = [
  { path:ROUTES.TOOLS.SURVIVAL, changeFrequency: "monthly", priority: 0.65 },
  { path:ROUTES.TOOLS.WEAK_POINTS, changeFrequency: "monthly", priority: 0.65 },
  { path: "/support", changeFrequency: "monthly", priority: 0.55 },
+ { path: "/about", changeFrequency: "monthly", priority: 0.5 },
+ { path: "/contact", changeFrequency: "monthly", priority: 0.5 },
  { path: "/privacy", changeFrequency: "yearly", priority: 0.35 },
  { path: "/terms", changeFrequency: "yearly", priority: 0.35 },
 ];

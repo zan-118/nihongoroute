@@ -43,7 +43,7 @@ export function FeatureGrid() {
   ];
 
   return (
-    <div className="w-full space-y-24 mb-24">
+    <div className="w-full space-y-24 mb-24 content-auto">
       {/* SEKSI 1: SHOWCASE FITUR UTAMA */}
       <section className="relative">
         <div className="text-center max-w-2xl mx-auto mb-14">

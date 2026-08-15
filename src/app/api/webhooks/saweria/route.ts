@@ -16,6 +16,7 @@ import { securityLogger } from "@/lib/core/logger";
 import { rateLimit } from "@/lib/core/rate-limit";
 
 const MAX_DONATION_AMOUNT = 1_000_000_000;
+const REPLAY_WINDOW_MS = 5 * 60 * 1000; // 5 menit toleransi replay window
 
 export const saweriaPayloadSchema = z
  .object({
@@ -90,6 +91,19 @@ export async function POST(request: Request) {
  message = "",
  created_at = "",
  } = parsed.data;
+
+ // Tolak request jika created_at melebihi batas replay window
+ if (created_at) {
+ const createdTime = Date.parse(created_at);
+ if (!Number.isNaN(createdTime) && Math.abs(Date.now() - createdTime) > REPLAY_WINDOW_MS) {
+ securityLogger.warn({
+ event: "saweria_webhook_replay_exceeded",
+ source: "saweria",
+ metadata: { created_at },
+ });
+ return NextResponse.json({ error: "Replay window exceeded" }, { status: 400 });
+ }
+ }
 
  // Tentukan tingkatan lencana (tier) berdasarkan total kontribusi
  let tier: "gold" | "silver" | "bronze" = "bronze";

@@ -15,6 +15,7 @@ import { securityLogger } from "@/lib/core/logger";
 import { rateLimit } from "@/lib/core/rate-limit";
 
 const MAX_DONATION_AMOUNT = 1_000_000_000;
+const REPLAY_WINDOW_MS = 5 * 60 * 1000; // 5 menit toleransi replay window
 
 const optionalAmountSchema = z.coerce
  .number()
@@ -84,6 +85,20 @@ export async function POST(request: Request) {
  }
 
  const body = parsed.data;
+
+ // Tolak request jika payment_date atau created_at melebihi batas replay window
+ const eventDate = body.payment_date || body.created_at;
+ if (eventDate) {
+ const eventTime = Date.parse(eventDate);
+ if (!Number.isNaN(eventTime) && Math.abs(Date.now() - eventTime) > REPLAY_WINDOW_MS) {
+ securityLogger.warn({
+ event: "trakteer_webhook_replay_exceeded",
+ source: "trakteer",
+ metadata: { eventDate },
+ });
+ return NextResponse.json({ error: "Replay window exceeded" }, { status: 400 });
+ }
+ }
  
  // Field payload Trakteer:
  // transaction_id/tr_id, supporter_name, quantity, price, net_amount, supporter_message/support_message

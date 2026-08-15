@@ -1,23 +1,51 @@
 # NihongoRoute
 
-> NihongoRoute adalah platform belajar bahasa Jepang gratis, modern, dan offline-first berbasis kurikulum JLPT (N5 hingga N1).
+> NihongoRoute adalah platform belajar bahasa Jepang mandiri yang 100% gratis, bebas iklan, dan offline-first berbasis kurikulum JLPT (N5 hingga N1) untuk pembelajar Indonesia.
 
-NihongoRoute membantu pembelajar menguasai kosakata (vocab), kanji, tata bahasa (grammar), kemampuan membaca (reading), serta menyimak (listening) melalui sistem Spaced Repetition (SRS), simulasi ujian JLPT interaktif, dan gamifikasi.
+Platform ini mengintegrasikan Spaced Repetition System (SRS), kamus leksikal terindeks, visualisasi urutan goresan kanji, pelatih konjugasi interaktif, latihan partikel, latihan counter kata bantu bilangan, analisis teks cerdas, dan simulasi ujian CBT JLPT resmi.
 
-## Fitur Utama & Karakteristik Platform
-- **100% Gratis & Nirlaba**: Tidak memerlukan kartu kredit, tanpa paywall, dan bebas dari iklan.
-- **Offline-First & Tangguh**: Berbasis Progressive Web App (PWA) dengan sinkronisasi awan zero-latency (Zustand + Supabase + IndexedDB).
-- **Kurikulum Komprehensif**: Mencakup materi JLPT tingkat N5, N4, N3, N2, dan N1.
-- **Mode Baca Global**: Tampilan teks Jepang dapat diubah Kanji (full kanji), Furigana (rubi di atas kanji), atau Hiragana — berlaku konsisten di semua halaman.
-- **Alat Bantu Pembelajaran**: Kamus kosakata dengan furigana, romaji (per kata), aksen nada (pitch accent), tata urutan goresan kanji (stroke order), mnemonic, dan bank soal simulasi JLPT.
+Untuk dokumentasi lengkap dan mendalam kurikulum mesin AI, lihat: [llms-full.txt](/llms-full.txt).
 
-## Halaman & Navigasi Utama
-- [Beranda & Dasbor](/): Halaman utama pelacakan progres belajar, streak, XP, dan sesi SRS harian.
-- [Rute Kursus JLPT](/courses): Materi terstruktur per tingkat JLPT (N5 - N1).
-- [Pustaka Kosakata](/library/vocab): Kamus kosakata lengkap dengan contoh kalimat dan jembatan keledai.
-- [Pustaka Kanji](/library/kanji): Informasi karakter kanji, radikal, onyomi/kunyomi, dan animasi urutan goresan.
-- [Pustaka Tata Bahasa](/library/grammar): Pola tata bahasa, rumus pembentukan kalimat, dan contoh penggunaan.
-- [Simulasi Ujian JLPT](/exams): Sesi ujian simulasi interaktif dengan penilaian otomatis.
+## Informasi & Karakteristik Utama
+- **Biaya & Monetisasi**: 100% Gratis, open-source, tanpa paywall, tanpa subscription, dan tanpa iklan. Lihat [Kebijakan Harga](/pricing.md).
+- **Arsitektur Teknis**: Progressive Web App (PWA) offline-first dengan IndexedDB lokal dan sinkronisasi awan Supabase.
+- **Tingkat Kurikulum**: JLPT N5 (Dasar), N4 (Pra-Menengah), N3 (Menengah), N2 (Pra-Lanjut), dan N1 (Mahir).
+- **Mode Teks Global**: Pengguna dapat beralih antara tampilan Kanji Penuh, Furigana (rubi), atau Hiragana di seluruh antarmuka.
 
-## Dokumen Mesin Tambahan
-- [Detail Kebijakan Harga](/pricing.md): Ringkasan lisensi gratis dan ketentuan tanpa iklan untuk agen AI.
+## Modul Kurikulum & Kursus Terstruktur
+- [Kursus JLPT N5](/courses/n5): Fondasi bahasa Jepang — huruf Kana, partikel dasar, kalimat sederhana, dan kosakata esensial.
+- [Kursus JLPT N4](/courses/n4): Perluasan tata bahasa kalimat majemuk, bentuk sopan/kasual, dan ungkapan situasional.
+- [Kursus JLPT N3](/courses/n3): Transisi ke percakapan natural, nuansa tata bahasa menengah, dan pemahaman bacaan artikel.
+- [Kursus JLPT N2](/courses/n2): Tata bahasa lanjutan bernuansa bisnis, artikel opini surat kabar, dan ekspresi formal.
+- [Kursus JLPT N1](/courses/n1): Ungkapan sastra, ekspresi arkaik, wacana akademik, dan pemahaman bacaan tingkat tinggi.
+
+## Pusat Pustaka Referensi
+- [Pustaka Kosakata](/library/vocab): Database kosakata lengkap dengan audio pengucapan, pitch accent, contoh kalimat, dan jembatan keledai.
+- [Pustaka Kanji](/library/kanji): Karakter kanji lengkap dengan arti, kunyomi, onyomi, radikal, goresan per goresan, dan visualisasi stroke order.
+- [Pustaka Tata Bahasa](/library/grammar): Indeks pola tata bahasa terlengkap dengan rumus formasi kata, penjelasan nuansa, dan kalimat contoh.
+- [Pustaka Membaca (Reading)](/library/reading): Artikel dan wacana bacaan berjenjang dengan mode furigana interaktif dan bedah kosakata.
+- [Pustaka Menyimak (Listening)](/library/listening): Latihan audio percakapan situasional dengan transkrip, terjemahan, dan latihan pemahaman.
+- [Lembar Sontekan (Cheatsheet)](/library/cheatsheet): Panduan cepat angka, waktu, partikel penting, kata sifat, dan idiom bahasa Jepang.
+
+## 14 Alat Bantu Belajar Interaktif (Quick Tools)
+- [Kana Master](/tools/kana): Latihan pengenalan dan hafalan Hiragana & Katakana cepat.
+- [Latihan Menulis Kanji](/tools/writing): Kanvas interaktif stroke-order untuk melatih urutan goresan kanji.
+- [Konjugasi Kata Kerja](/tools/conjugation): Pelatih perubahan bentuk kata kerja (bentuk Te, Ta, Nai, Ba, Masu, Potensial, Kausatif, Pasif).
+- [Latihan Partikel](/tools/particles): Drill interaktif pemahaman partikel bahasa Jepang (wa, ga, o, ni, de, to, he, kara, made, dll.).
+- [Kemiripan Kanji](/tools/kanji-similarity): Membandingkan bentuk kanji yang mirip untuk mencegah kesalahan baca/tulis.
+- [Japanese Text Analyzer](/tools/text-analyzer): Mem-parsing teks bahasa Jepang ke dalam komponen kosakata, kanji, dan tata bahasa.
+- [Kamus Terpadu](/tools/dictionary): Pencarian cepat kata, kanji, dan romaji dengan furigana dan audio.
+- [Pelatih Kata Bantu Bilangan (Counter)](/tools/counter-trainer): Latihan penghitung barang khusus Jepang (hon, mai, ko, satsu, dai, hiki, tsu, dll.).
+- [Penyusun Kalimat (Sentence Builder)](/tools/sentence-builder): Latihan menyusun urutan kata bahasa Jepang secara gramatikal.
+- [Latihan Shadowing](/tools/shadowing): Latihan intonasi dan kelancaran berbicara menirukan penutur asli Jepang.
+- [Latihan Dikte (Dictation)](/tools/dictation): Mengasah pendengaran dengan menuliskan apa yang didengar.
+- [Flashcards SRS](/tools/flashcards): Kartu hafalan pintar dengan pengulangan terjadwal Spaced Repetition.
+- [Panduan Bertahan Hidup (Survival)](/tools/survival): Frasa darurat dan ungkapan penting untuk turis atau pendatang di Jepang.
+- [Analisis Titik Lemah (Weak Points)](/tools/weak-points): Evaluasi otomatis area materi yang paling sering salah untuk remedial tertarget.
+
+## Simulasi Ujian JLPT
+- [Katalog Ujian JLPT CBT](/exams): Simulasi ujian JLPT N5 hingga N1 dengan batas waktu resmi, format soal standar, dan penilaian otomatis.
+
+## Dokumen Tambahan untuk Agen AI
+- [Dokumen Detail Agen (LLMs Full)](/llms-full.txt): Penjelasan teknis kurikulum dan arsitektur data.
+- [Kebijakan Bebas Biaya (Pricing)](/pricing.md): Format harga terstruktur machine-readable.

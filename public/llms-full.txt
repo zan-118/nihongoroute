@@ -1,0 +1,74 @@
+# NihongoRoute — Spesifikasi Komprehensif Platform & Kurikulum Belajar Bahasa Jepang
+
+NihongoRoute adalah platform pembelajaran bahasa Jepang mandiri berbasis web (PWA) modern, 100% gratis, bebas iklan, dan offline-first yang dirancang khusus untuk pembelajar bahasa Jepang di Indonesia.
+
+---
+
+## 1. Ringkasan & Filosofi Proyek
+- **Misi**: Menghadirkan akses pendidikan bahasa Jepang berkualitas tinggi yang setara bagi seluruh masyarakat Indonesia tanpa hambatan biaya atau iklan yang mengganggu fokus belajar.
+- **Arsitektur Teknis**: Offline-First PWA menggunakan Next.js App Router, Supabase PostgreSQL, Zustand, IndexedDB lokal, dan framer-motion.
+- **Lisensi & Monetisasi**: 100% Nirlaba & Gratis. Tidak ada sistem langganan (subscription), tidak ada kartu kredit yang dituntut, dan tidak ada fitur yang terkunci di balik paywall.
+
+---
+
+## 2. Struktur Kurikulum Japanese Language Proficiency Test (JLPT)
+
+NihongoRoute menyusun kurikulum bertahap yang selaras dengan standar Japan Educational Exchanges and Services (JEES) dan The Japan Foundation:
+
+### JLPT N5 (Tingkat Dasar I)
+- **Cakupan**: Pengenalan aksara Hiragana & Katakana, ~100 Kanji dasar, ~800 Kosakata harian, partikel dasar (は, が, を, に, で, へ, と, も, から, まで), pola kalimat dasar (~です, ~ます, bentuk negatif, lampau), dan konjugasi kata kerja bentuk Te, Nai, Ta, Dictionary form.
+- **Tujuan**: Memahami frasa sederhana, menyapa, memperkenalkan diri, dan membaca teks pendek bertuliskan kana/kanji dasar.
+
+### JLPT N4 (Tingkat Dasar II)
+- **Cakupan**: Tambahan ~200 Kanji (~300 total), ~1.500 Kosakata, bentuk potensial (~れる/られる), bentuk izin/larangan (~てもいい/てはいけない), bentuk kondisional (~たら, ~ば, ~なら), bentuk keinginan (~たい, ~ほしい), serta pola kausalitas (~ので, ~から, ~ために).
+- **Tujuan**: Memahami percakapan sehari-hari dalam konteks umum yang diucapkan dengan tempo lambat.
+
+### JLPT N3 (Tingkat Menengah)
+- **Cakupan**: Tambahan ~350 Kanji (~650 total), ~3.750 Kosakata, ungkapan bernuansa (~わけだ, ~はずだ, ~べきだ, ~ようにする, ~ことになる), bentuk pasif (受身形), bentuk kausatif (使役形), dan bentuk keigo dasar (sonkeigo & kenjougo).
+- **Tujuan**: Memahami wacana artikel berita sederhana, petunjuk di tempat umum, dan percakapan tempo wajar tentang topik konkret.
+
+### JLPT N2 (Tingkat Pra-Lanjut)
+- **Cakupan**: Tambahan ~400 Kanji (~1.000+ total), ~6.000 Kosakata, pola tata bahasa bisnis dan formal (~に際して, ~に伴って, ~を巡って, ~かねない, ~ざるを得ない), serta pemahaman wacana opini dan editorial surat kabar.
+- **Tujuan**: Mampu bekerja atau studi di Jepang dengan kemampuan komunikasi dan pemahaman teks yang lancar.
+
+### JLPT N1 (Tingkat Mahir)
+- **Cakupan**: ~2.000+ Kanji, ~10.000 Kosakata, pola tata bahasa sastra, ungkapan arkaik, idiom bernuansa tinggi (~あっての, ~極まりない, ~をおいて他にない, ~べからざる), serta esai akademik dan kritik sastra.
+- **Tujuan**: Penguasaan bahasa Jepang setara penutur asli berpendidikan tinggi dalam konteks profesional, legal, dan akademik.
+
+---
+
+## 3. Ekosistem 14 Alat Bantu Pembelajaran (Interactive Tools)
+
+1. **Kana Master (`/tools/kana`)**: Tabel interaktif Hiragana, Katakana, Dakuon, Handakuon, Yoon, serta mode kuis pengenalan aksara.
+2. **Kanji Writing Canvas (`/tools/writing`)**: Kanvas interaktif dengan pengenalan goresan (stroke order) dan validasi arah goresan kanji.
+3. **Verb Conjugation Trainer (`/tools/conjugation`)**: Latihan sistematis pengubahan bentuk Golongan I (Godan), Golongan II (Ichidan), dan Golongan III (Kuru, Suru).
+4. **Particle Master (`/tools/particles`)**: Latihan pembedaan fungsi partikel yang sering membingungkan (mis. は vs が, に vs で).
+5. **Kanji Similarity Comparison (`/tools/kanji-similarity`)**: Analisis perbandingan karakter kanji yang mirip visualnya (mis. 待 vs 持, 末 vs 未, 微 vs 徴).
+6. **Japanese Text Analyzer (`/tools/text-analyzer`)**: Parsing morfem otomatis pada kalimat atau artikel bahasa Jepang dengan pemisahan kata, furigana, dan link ke kamus.
+7. **Integrated Lexical Dictionary (`/tools/dictionary`)**: Pencarian kata multikata, arti bahasa Indonesia, romaji, kanji radikal, pitch accent, dan file audio.
+8. **Japanese Counter Trainer (`/tools/counter-trainer`)**: Latihan pemakaian kata bantu bilangan bahasa Jepang (angka + counter: 本, 枚, 個, 冊, 台, 匹, 歳, 階, つ).
+9. **Sentence Builder (`/tools/sentence-builder`)**: Game menyusun fragmen kata menjadi kalimat gramatikal yang tepat.
+10. **Audio Shadowing (`/tools/shadowing`)**: Latihan pelafalan menirukan intonasi penutur asli untuk melatih aksen alami dan ritme mora.
+11. **Dictation Exercise (`/tools/dictation`)**: Latihan mendengar audio dan mengetikkan kembali aksara yang diucapkan secara akurat.
+12. **Spaced Repetition Flashcards (`/tools/flashcards`)**: Modul kaji ulang hafalan harian berbasis algoritma SuperMemo SM-2 yang teroptimasi.
+13. **Survival Japanese Phrasebook (`/tools/survival`)**: Kumpulan frasa darurat, pesanan restoran, transportasi, dan medis untuk kebutuhan mendesak di Jepang.
+14. **Weak Points Diagnostics (`/tools/weak-points`)**: Analisis kecerdasan diagnostik yang merekam kesalahan kuis dan memberikan rekomendasi perbaikan materi.
+
+---
+
+## 4. Simulasi Ujian JLPT Komputer (CBT Exam Simulator)
+- Menyediakan simulasi ujian lengkap per level JLPT (N5 - N1) dengan kategori:
+  1. **Moji & Goi (Huruf & Kosakata)**
+  2. **Bunpou (Tata Bahasa)**
+  3. **Dokkai (Pemahaman Membaca)**
+  4. **Choukai (Pemahaman Menyimak)**
+- Skor otomatis, batas waktu sesuai durasi ujian resmi, serta review pembahasan mendalam per butir pertanyaan.
+
+---
+
+## 5. Metadata Kontak & Entitas
+- **Platform**: NihongoRoute
+- **Domain Utama**: `https://nihongoroute.my.id`
+- **Repositori & Kontribusi**: `https://github.com/zan-118/nihongoroute`
+- **Kategori Pendidikan**: Japanese Language Learning, JLPT Preparation, Educational Technology.
+- **Bahasa Pengantar**: Bahasa Indonesia & Bahasa Jepang.

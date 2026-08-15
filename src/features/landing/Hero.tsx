@@ -32,6 +32,8 @@ export function Hero() {
             src="/logo-branding.svg"
             alt="NihongoRoute"
             fill
+            priority
+            sizes="144px"
             className="object-contain p-2"
           />
         </div>

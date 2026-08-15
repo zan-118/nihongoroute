@@ -112,7 +112,7 @@ Laporan bug dan umpan balik pengguna.
 | `articles` | 100+ | Artikel pelajaran tambahan (fallback `lessons.actions.ts`) |
 | `kanji` | 13.108 | Pustaka kanji lengkap, stroke SVG, onyomi/kunyomi |
 | `vocab` | 22.000 | Pustaka kosakata, audio, pitch accent, contoh |
-| `grammar` | 697 | Tata bahasa Jepang, pembentukan, dan contoh |
+| `grammar` | 615 | Tata bahasa Jepang, pembentukan, dan contoh |
 | `radicals` | 253 | Radikal kanji Kangxi |
 | `sentences` | 25.980 | Contoh kalimat Bahasa Jepang terjemahan |
 | `expressions` | 13.220 | Ungkapan & frasa harian |

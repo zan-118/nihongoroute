@@ -167,32 +167,92 @@ export function createPageMetadata({
  };
 }
 
+/** Input for WebApplication schema. */
+type WebApplicationInput = {
+  name: string;
+  description: string;
+  path: string;
+  applicationCategory?: string;
+  operatingSystem?: string;
+};
+
 /** Generate Organization schema. */
 export function organizationJsonLd(): JsonLdObject {
- return {
- "@id": `${getSiteUrl()}/#organization`,
- "@type": "Organization",
- description: DEFAULT_DESCRIPTION,
- logo: absoluteUrl("/logo-branding.png"),
- name: SITE_NAME,
- sameAs: ["https://github.com/zan-118/nihongoroute"],
- url: getSiteUrl(),
- };
+  return {
+    "@id": `${getSiteUrl()}/#organization`,
+    "@type": "Organization",
+    description: DEFAULT_DESCRIPTION,
+    logo: absoluteUrl("/logo-branding.png"),
+    name: SITE_NAME,
+    sameAs: ["https://github.com/zan-118/nihongoroute"],
+    url: getSiteUrl(),
+    knowsAbout: [
+      "Bahasa Jepang",
+      "Japanese Language Proficiency Test (JLPT)",
+      "JLPT N5",
+      "JLPT N4",
+      "JLPT N3",
+      "JLPT N2",
+      "JLPT N1",
+      "Kanji",
+      "Hiragana",
+      "Katakana",
+      "Tata Bahasa Jepang",
+      "Spaced Repetition System (SRS)",
+    ],
+  };
 }
 
 /** Generate WebSite schema. */
 export function websiteJsonLd(): JsonLdObject {
- return {
- "@id": `${getSiteUrl()}/#website`,
- "@type": "WebSite",
- description: DEFAULT_DESCRIPTION,
- inLanguage: "id-ID",
- name: SITE_NAME,
- publisher: {
- "@id": `${getSiteUrl()}/#organization`,
- },
- url: getSiteUrl(),
- };
+  return {
+    "@id": `${getSiteUrl()}/#website`,
+    "@type": "WebSite",
+    description: DEFAULT_DESCRIPTION,
+    inLanguage: "id-ID",
+    name: SITE_NAME,
+    publisher: {
+      "@id": `${getSiteUrl()}/#organization`,
+    },
+    url: getSiteUrl(),
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${getSiteUrl()}/tools/dictionary?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+}
+
+/** Generate WebApplication / SoftwareApplication schema. */
+export function webApplicationJsonLd({
+  name,
+  description,
+  path,
+  applicationCategory = "EducationalApplication",
+  operatingSystem = "All",
+}: WebApplicationInput): JsonLdObject {
+  return {
+    "@type": "WebApplication",
+    "@id": `${absoluteUrl(path)}#webapp`,
+    name,
+    description,
+    url: absoluteUrl(path),
+    applicationCategory,
+    operatingSystem,
+    inLanguage: "id-ID",
+    isAccessibleForFree: true,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "IDR",
+    },
+    provider: {
+      "@id": `${getSiteUrl()}/#organization`,
+    },
+  };
 }
 
 /** Generate WebPage schema. */
@@ -346,16 +406,16 @@ type FaqItemInput = {
 };
 
 /** Generate FAQPage schema. */
-export function faqPageJsonLd(items: FaqItemInput[]): JsonLdObject {
- return {
- "@type": "FAQPage",
- mainEntity: items.map((item) => ({
- "@type": "Question",
- acceptedAnswer: {
- "@type": "Answer",
- text: item.answer,
- },
- name: item.question,
- })),
- };
+export function faqPageJsonLd(items: FaqItemInput[] = []): JsonLdObject {
+  return {
+    "@type": "FAQPage",
+    mainEntity: (items ?? []).map((item) => ({
+      "@type": "Question",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+      name: item.question,
+    })),
+  };
 }

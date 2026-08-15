@@ -315,3 +315,8 @@
 .bg-seigaiha {
   background-image: url("data:image/svg+xml,%3Csvg width='40' height='24' viewBox='0 0 40 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 24 C 10 24, 10 16, 20 16 C 30 16, 30 24, 40 24 M0 20 C 10 20, 10 12, 20 12 C 30 12, 30 20, 40 20 M0 16 C 10 16, 10 8, 20 8 C 30 8, 30 16, 40 16 M0 12 C 10 12, 10 4, 20 4 C 30 4, 30 12, 40 12 M0 8 C 10 8, 10 0, 20 0 C 30 0, 30 8, 40 8' fill='none' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.12'/%3E%3C/svg%3E");
 }
+
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 500px;
+}

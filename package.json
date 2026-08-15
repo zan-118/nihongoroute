@@ -24,6 +24,7 @@
     "pdf:generate:vocab-hinshi": "npx tsx scripts/generate-vocab-pdf.tsx",
     "pdf:generate:grammar": "npx tsx scripts/generate-grammar-pdf.tsx",
     "pdf:generate:lesson": "npx tsx scripts/generate-lesson-pdf.tsx",
+    "indexnow:submit": "node scripts/submit-indexnow.mjs",
     "prepare": "husky"
   },
   "dependencies": {

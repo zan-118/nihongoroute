@@ -7,9 +7,10 @@ import type { Metadata } from "next";
 
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
- createPageMetadata,
- learningResourceJsonLd,
- webPageJsonLd,
+  createPageMetadata,
+  faqPageJsonLd,
+  learningResourceJsonLd,
+  webPageJsonLd,
 } from "@/lib/seo";
 
 // Server Components (rendered purely statically to HTML for zero JS overhead on initial render)
@@ -18,6 +19,7 @@ import { Hero } from "@/features/landing/Hero";
 import { FeatureGrid } from "@/features/landing/FeatureGrid";
 import { TrustBanner } from "@/features/landing/TrustBanner";
 import { LandingFaq } from "@/features/landing/LandingFaq";
+import { LANDING_FAQ_ITEMS } from "@/lib/constants/landing-faq";
 import { PreFooterCta } from "@/features/landing/PreFooterCta";
 import { LandingFooter } from "@/features/landing/LandingFooter";
 
@@ -77,6 +79,7 @@ export default function LandingPage() {
  "Simulasi JLPT",
  ],
  }),
+ faqPageJsonLd(LANDING_FAQ_ITEMS),
  ]}
  />
  {/* Decorative background radial gradients for desktop */}

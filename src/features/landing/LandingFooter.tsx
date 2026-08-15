@@ -100,7 +100,7 @@ function FooterColumn({
  */
 export function LandingFooter() {
  return (
- <footer className="mt-24 md:mt-28 border-t border-border/80 pb-14 relative z-10 w-full">
+ <footer className="mt-24 md:mt-28 border-t border-border/80 pb-14 relative z-10 w-full content-auto">
  {/* Decorative top border gradient */}
  <div className="absolute inset-x-0 top-0 h-px pointer-events-none" />
 
