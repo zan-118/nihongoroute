@@ -220,21 +220,20 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
      </Card>
     )}
 
-    {/* Bento Catatan Tambahan (Spacious Full Width) */}
+    {/* Panduan Lengkap & 6 Pilar Tata Bahasa */}
     {article.notes && (
-     <Card className="p-8 md:p-10 bg-card/60 border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-border transition-all duration-500 shadow-[0_0_30px_hsl(var(--primary)/0.02)] select-none glass">
-      <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-muted-foreground">
-       <Lightbulb size={180} />
+     <section className="border border-border/60 bg-card/40 rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12 relative overflow-hidden select-text transition-all duration-300">
+      <div className="flex items-center gap-3 mb-8 pb-4 border-b border-border/40">
+       <span className="w-2 h-6 rounded-full bg-primary" />
+       <h2 className="text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-foreground">
+        Panduan Mendalam & Analisis Tata Bahasa
+       </h2>
       </div>
       
-      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/80 mb-6 opacity-80 flex items-center gap-2">
-       <Lightbulb size={12} /> Catatan Tambahan & Tabel Penjelasan
-      </span>
-      
-      <div className="text-sm md:text-base font-semibold text-muted-foreground leading-relaxed tracking-wide select-text selection:bg-primary/10">
+      <div className="text-sm md:text-base text-foreground leading-relaxed">
        {parseNotesToJSX(article.notes)}
       </div>
-     </Card>
+     </section>
     )}
 
     {/* Bagian Contoh Kalimat */}

@@ -78,11 +78,3 @@ jobs:
 
       - name: Check migration filenames and ordering
         run: npm run db:migrations:check
-
-      - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v2
-        with:
-          version: latest
-
-      - name: Show Supabase CLI version
-        run: supabase --version
