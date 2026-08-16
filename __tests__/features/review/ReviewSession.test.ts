@@ -83,7 +83,6 @@ describe("useReviewSession", () => {
     expect(fetchMock).toHaveBeenCalledTimes(3); // 120 items split into 50, 50, 20 = 3 requests
     expect(result.current.cards).toHaveLength(120);
 
-    vi.toBePolled;
     vi.unstubAllGlobals();
   });
 });

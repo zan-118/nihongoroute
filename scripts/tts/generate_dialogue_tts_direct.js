@@ -87,6 +87,7 @@ const SPEAKER_MAP = {
   "lala": "lala",
   "ritsu": "ritsu",
   "yamada": "yamada",
+  "faisal":"fausal",
 
   // Japanese Katakana/Kanji dari database (30)
   "アニ": "ani",
@@ -124,7 +125,8 @@ const SPEAKER_MAP = {
   "高橋": "takahashi",
   "山田": "yamada",
   "ヤマダ": "yamada",
-  "やまだ": "yamada"
+  "やまだ": "yamada",
+  "ファイサル":"faisal"
 };
 
 const GEMINI_VOICE_MAP = {
@@ -467,7 +469,7 @@ function getGeminiModels() {
     // dokumentasi Gemini TTS). 3.1 tetap ada sebagai fallback terakhir.
     models.push(
       "gemini-3.1-flash-tts-preview",
-      "gemini-2.5-flash-preview-tts",
+      // "gemini-2.5-flash-preview-tts",
     );
   }
   return Array.from(new Set(models)).filter(Boolean);
