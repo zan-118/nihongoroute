@@ -1,7 +1,9 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { getIntegratedMiniDrillQuestions } from "@/actions/tools-integration.actions";
 import {
   ArrowRight,
   Check,
@@ -15,13 +17,13 @@ import {
   X,
 } from "@/components/ui/icons";
 import {
- createMiniDrill,
- DRILL_KINDS,
- DRILL_LEVELS,
- isMiniDrillAnswerCorrect,
- type DrillKind,
- type DrillLevel,
- type MiniDrillQuestion,
+  createMiniDrill,
+  DRILL_KINDS,
+  DRILL_LEVELS,
+  isMiniDrillAnswerCorrect,
+  type DrillKind,
+  type DrillLevel,
+  type MiniDrillQuestion,
 } from "@/lib/jlpt-mini-drill";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,29 +32,30 @@ import { Progress } from "@/components/ui/progress";
 import NextActionPanel from "@/features/ecosystem/NextActionPanel";
 import { useUIStore } from "@/store/useUIStore";
 import { cn, shuffleArray } from "@/lib/utils";
+import { buildContextLabel } from "@/lib/core/utils";
 
 import { ROUTES } from "@/lib/core/routes";
 /**
  * Map drill levels to display labels.
  */
 const LEVEL_LABELS: Record<DrillLevel | "all", string> = {
- all: "Semua",
- N5: "N5",
- N4: "N4",
- N3: "N3",
- N2: "N2",
- N1: "N1",
+  all: "Semua",
+  N5: "N5",
+  N4: "N4",
+  N3: "N3",
+  N2: "N2",
+  N1: "N1",
 };
 
 /**
  * Map drill kinds to display labels.
  */
 const KIND_LABELS: Record<DrillKind | "mixed", string> = {
- mixed: "Campur",
- vocab: "Kosakata",
- kanji: "Kanji",
- grammar: "Tata Bahasa",
- sentence: "Kalimat",
+  mixed: "Campur",
+  vocab: "Kosakata",
+  kanji: "Kanji",
+  grammar: "Tata Bahasa",
+  sentence: "Kalimat",
 };
 
 /**
@@ -64,39 +67,76 @@ const AMOUNT_OPTIONS = [5, 8, 12, 16] as const;
  * Props for JLPT mini drill client.
  */
 interface JlptMiniDrillClientProps {
- initialQuestions?: MiniDrillQuestion[];
- databaseQuestionCount?: number;
- initialLevel?: DrillLevel | "all";
- initialKind?: DrillKind | "mixed";
- contextLabel?: string;
+  initialQuestions?: MiniDrillQuestion[];
+  databaseQuestionCount?: number;
+}
+
+/** Validate and cast level parameter to DrillLevel or "all". */
+function normalizeLevel(value: string | null | undefined): DrillLevel | "all" {
+  const upper = String(value || "all").toUpperCase();
+  return ["N5", "N4", "N3", "N2", "N1"].includes(upper) ? (upper as DrillLevel) : "all";
+}
+
+/** Validate and cast kind parameter to DrillKind or "mixed". */
+function normalizeKind(value: string | null | undefined): DrillKind | "mixed" {
+  const normalized = String(value || "mixed").toLowerCase();
+  return ["vocab", "kanji", "grammar", "sentence"].includes(normalized)
+    ? (normalized as DrillKind)
+    : "mixed";
 }
 
 /**
  * JLPT mini drill client. Manage state, filters, scoring, events.
  */
 export default function JlptMiniDrillClient({
- initialQuestions = [],
- databaseQuestionCount = 0,
- initialLevel = "all",
- initialKind = "mixed",
- contextLabel,
+  initialQuestions = [],
+  databaseQuestionCount = 0,
 }: JlptMiniDrillClientProps) {
- const [level, setLevel] = useState<DrillLevel | "all">(initialLevel);
- const [kind, setKind] = useState<DrillKind | "mixed">(initialKind);
- const [amount, setAmount] = useState<number>(8);
- const [seed, setSeed] = useState(1);
- const [questionIndex, setQuestionIndex] = useState(0);
- const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
- const [score, setScore] = useState({ correct: 0, total: 0 });
- const [isFinished, setIsFinished] = useState(false);
- const hasRecordedFinishRef = useRef(false);
- const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
+  const searchParams = useSearchParams();
+  const sourceParam = searchParams.get("source") || undefined;
+  const slugParam = searchParams.get("slug") || undefined;
+  const levelParam = searchParams.get("level") || undefined;
+  const kindParam = searchParams.get("kind") || sourceParam;
+  
+  const [level, setLevel] = useState<DrillLevel | "all">(normalizeLevel(levelParam));
+  const [kind, setKind] = useState<DrillKind | "mixed">(normalizeKind(kindParam));
+  const [contextLabel, setContextLabel] = useState<string | undefined>(buildContextLabel(sourceParam, slugParam));
+  
+  const [amount, setAmount] = useState<number>(8);
+  const [seed, setSeed] = useState(1);
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [score, setScore] = useState({ correct: 0, total: 0 });
+  const [isFinished, setIsFinished] = useState(false);
+  const hasRecordedFinishRef = useRef(false);
+  const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
 
- // Cache initial questions.
- const questionBank = useMemo(
- () => (initialQuestions.length > 0 ? initialQuestions : undefined),
- [initialQuestions]
- );
+  const [dynamicQuestions, setDynamicQuestions] = useState<MiniDrillQuestion[] | undefined>(undefined);
+  const [isFetching, setIsFetching] = useState(false);
+
+  // Fetch specific questions if URL has parameters
+  useEffect(() => {
+    if (sourceParam || slugParam || levelParam || searchParams.get("kind")) {
+      setIsFetching(true);
+      getIntegratedMiniDrillQuestions({ 
+        source: sourceParam, 
+        slug: slugParam, 
+        level: levelParam, 
+        kind: searchParams.get("kind") || undefined 
+      }).then(qs => {
+        setDynamicQuestions(qs);
+        setIsFetching(false);
+      }).catch(() => {
+        setIsFetching(false);
+      });
+    }
+  }, [sourceParam, slugParam, levelParam, searchParams]);
+
+  // Use dynamic questions if fetched, otherwise fallback to initial static questions.
+  const questionBank = useMemo(
+    () => (dynamicQuestions && dynamicQuestions.length > 0) ? dynamicQuestions : (initialQuestions.length > 0 ? initialQuestions : undefined),
+    [dynamicQuestions, initialQuestions]
+  );
 
  // Generate questions from filters and seed.
  const questions = useMemo(

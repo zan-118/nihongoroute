@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { analyzeTextWithDictionary, type ToolSearchItem } from "@/lib/tools-search";
+import { getLibraryTextForTool } from "@/actions/tools-integration.actions";
 import {
  BookOpen,
  Clipboard,
@@ -11,7 +14,6 @@ import {
  Loader,
  Search,
 } from "@/components/ui/icons";
-import { analyzeTextWithDictionary, type ToolSearchItem } from "@/lib/tools-search";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -150,30 +152,44 @@ function ResultPanel({
  * Props for TextAnalyzerClient component.
  */
 interface TextAnalyzerClientProps {
- initialText?: string;
- initialSourceTitle?: string;
- initialSourceHref?: string;
+ // Keeping interface for future use if needed, but not utilizing server-passed initial text anymore to allow static build.
 }
 
 /**
  * Main client component for Japanese text analysis. Parse text, show stats, list vocabulary, grammar, and kanji.
  */
-export default function TextAnalyzerClient({
- initialText,
- initialSourceTitle,
- initialSourceHref,
-}: TextAnalyzerClientProps) {
- const [text, setText] = useState(initialText || SAMPLE_TEXT);
- const [analysis, setAnalysis] = useState<AnalyzerState | null>(null);
- const [error, setError] = useState("");
- const [isPending, startTransition] = useTransition();
- const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
+export default function TextAnalyzerClient({}: TextAnalyzerClientProps) {
+  const searchParams = useSearchParams();
+  const sourceParam = searchParams.get("source") || undefined;
+  const slugParam = searchParams.get("slug") || undefined;
 
- const trimmedText = text.trim();
- const textPreview = useMemo(
- () => trimmedText || "Tempel teks Jepang untuk dianalisis.",
- [trimmedText]
- );
+  const [initialSourceTitle, setInitialSourceTitle] = useState<string | undefined>(undefined);
+  const [initialSourceHref, setInitialSourceHref] = useState<string | undefined>(undefined);
+  const [initialText, setInitialText] = useState<string | undefined>(undefined);
+  const [text, setText] = useState(SAMPLE_TEXT);
+  const [analysis, setAnalysis] = useState<AnalyzerState | null>(null);
+  const [error, setError] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
+
+  useEffect(() => {
+    if (sourceParam && slugParam) {
+      getLibraryTextForTool({ source: sourceParam, slug: slugParam }).then(res => {
+        if (res) {
+          setInitialSourceTitle(res.title);
+          setInitialSourceHref(res.sourceHref);
+          setInitialText(res.text);
+          setText(res.text);
+        }
+      });
+    }
+  }, [sourceParam, slugParam]);
+
+  const trimmedText = text.trim();
+  const textPreview = useMemo(
+    () => trimmedText || "Tempel teks Jepang untuk dianalisis.",
+    [trimmedText]
+  );
 
  // Validate that sourceHref is a safe internal path to prevent open redirect and XSS
  const safeSourceHref = useMemo(() => {

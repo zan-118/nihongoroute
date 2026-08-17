@@ -1,24 +1,26 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { getIntegratedCounterQuestions } from "@/actions/tools-integration.actions";
 import {
- ArrowRight,
- Check,
- Fire,
- NumberList,
- Question,
- Refresh,
- X,
+  ArrowRight,
+  Check,
+  Fire,
+  NumberList,
+  Question,
+  Refresh,
+  X,
 } from "@/components/ui/icons";
 import {
- COUNTER_OPTIONS,
- COUNTER_QUESTIONS,
- formatCounterPrompt,
- getCounterQuestion,
- isCounterAnswerCorrect,
- type CounterQuestion,
- type CounterWord,
+  COUNTER_OPTIONS,
+  COUNTER_QUESTIONS,
+  formatCounterPrompt,
+  getCounterQuestion,
+  isCounterAnswerCorrect,
+  type CounterQuestion,
+  type CounterWord,
 } from "@/lib/counter-trainer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,38 +29,62 @@ import { Progress } from "@/components/ui/progress";
 import NextActionPanel from "@/features/ecosystem/NextActionPanel";
 import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
+import { buildContextLabel } from "@/lib/core/utils";
 
 import { ROUTES } from "@/lib/core/routes";
 /**
  * Props for CounterTrainerClient.
  */
 interface CounterTrainerClientProps {
- /** Questions loaded from database or local fallback. */
- initialQuestions?: CounterQuestion[];
- /** Total questions available in database. */
- databaseQuestionCount?: number;
- /** Label showing source context. */
- contextLabel?: string;
+  /** Questions loaded from database or local fallback. */
+  initialQuestions?: CounterQuestion[];
+  /** Total questions available in database. */
+  databaseQuestionCount?: number;
 }
 
 /**
  * Interactive trainer for Japanese counters.
  */
 export default function CounterTrainerClient({
- initialQuestions = [],
- databaseQuestionCount = 0,
- contextLabel,
+  initialQuestions = [],
+  databaseQuestionCount = 0,
 }: CounterTrainerClientProps) {
- const [questionIndex, setQuestionIndex] = useState(0);
- const [selectedCounter, setSelectedCounter] = useState<CounterWord | null>(null);
- const [showHint, setShowHint] = useState(false);
- const [score, setScore] = useState({ correct: 0, total: 0 });
- const [answeredIds, setAnsweredIds] = useState<Set<string>>(() => new Set());
- const completedBankRef = useRef(false);
- const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
- 
- // Use database questions if available, else fallback to local questions
- const questionBank = initialQuestions.length > 0 ? initialQuestions : COUNTER_QUESTIONS;
+  const searchParams = useSearchParams();
+  const sourceParam = searchParams.get("source") || undefined;
+  const slugParam = searchParams.get("slug") || undefined;
+  const levelParam = searchParams.get("level") || undefined;
+  
+  const [contextLabel, setContextLabel] = useState<string | undefined>(buildContextLabel(sourceParam, slugParam));
+
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [selectedCounter, setSelectedCounter] = useState<CounterWord | null>(null);
+  const [showHint, setShowHint] = useState(false);
+  const [score, setScore] = useState({ correct: 0, total: 0 });
+  const [answeredIds, setAnsweredIds] = useState<Set<string>>(() => new Set());
+  const completedBankRef = useRef(false);
+  const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
+  
+  const [dynamicQuestions, setDynamicQuestions] = useState<CounterQuestion[] | undefined>(undefined);
+  const [isFetching, setIsFetching] = useState(false);
+
+  useEffect(() => {
+    if (sourceParam || slugParam || levelParam) {
+      setIsFetching(true);
+      getIntegratedCounterQuestions({
+        source: sourceParam,
+        slug: slugParam,
+        level: levelParam
+      }).then(qs => {
+        setDynamicQuestions(qs);
+        setIsFetching(false);
+      }).catch(() => {
+        setIsFetching(false);
+      });
+    }
+  }, [sourceParam, slugParam, levelParam]);
+
+  // Use database questions if available, else fallback to local questions
+  const questionBank = (dynamicQuestions && dynamicQuestions.length > 0) ? dynamicQuestions : (initialQuestions.length > 0 ? initialQuestions : COUNTER_QUESTIONS);
 
  const question = getCounterQuestion(questionIndex, questionBank);
  const hasAnswered = selectedCounter !== null;

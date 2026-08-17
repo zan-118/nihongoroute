@@ -2,19 +2,21 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { getIntegratedShadowingPresets } from "@/actions/tools-integration.actions";
 import {
- SoundModule,
- Mic,
- PlayCircle,
- Refresh,
- CheckboxBlank,
- VolumeUp,
+  SoundModule,
+  Mic,
+  PlayCircle,
+  Refresh,
+  CheckboxBlank,
+  VolumeUp,
 } from "@/components/ui/icons";
 import {
- formatShadowingDuration,
- getShadowingPaceLabel,
- SHADOWING_PRESETS,
- type ShadowingPreset,
+  formatShadowingDuration,
+  getShadowingPaceLabel,
+  SHADOWING_PRESETS,
+  type ShadowingPreset,
 } from "@/lib/shadowing-recorder";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,23 +25,22 @@ import { Progress } from "@/components/ui/progress";
 import NextActionPanel from "@/features/ecosystem/NextActionPanel";
 import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
+import { buildContextLabel } from "@/lib/core/utils";
 
 import { ROUTES } from "@/lib/core/routes";
 /** Playback speed options for target speech. */
 const PLAYBACK_RATES = [
- { label: "Lambat", value: 0.78 },
- { label: "Normal", value: 0.95 },
- { label: "Cepat", value: 1.12 },
+  { label: "Lambat", value: 0.78 },
+  { label: "Normal", value: 0.95 },
+  { label: "Cepat", value: 1.12 },
 ] as const;
 
 /** Props for ShadowingRecorderClient component. */
 interface ShadowingRecorderClientProps {
- /** Initial presets to display. */
- initialPresets?: ShadowingPreset[];
- /** Total presets available in library. */
- libraryPresetCount?: number;
- /** Optional label for context. */
- contextLabel?: string;
+  /** Initial presets to display. */
+  initialPresets?: ShadowingPreset[];
+  /** Total presets available in library. */
+  libraryPresetCount?: number;
 }
 
 /**
@@ -47,34 +48,59 @@ interface ShadowingRecorderClientProps {
  * Allows users to listen to Japanese text, record their own voice, and compare durations.
  */
 export default function ShadowingRecorderClient({
- initialPresets = [],
- libraryPresetCount = 0,
- contextLabel,
+  initialPresets = [],
+  libraryPresetCount = 0,
 }: ShadowingRecorderClientProps) {
- // State hooks for UI and audio status
- const [selectedIndex, setSelectedIndex] = useState(0);
- const [playbackRate, setPlaybackRate] = useState<(typeof PLAYBACK_RATES)[number]["value"]>(0.95);
- const [isSpeaking, setIsSpeaking] = useState(false);
- const [isRecording, setIsRecording] = useState(false);
- const [elapsedSeconds, setElapsedSeconds] = useState(0);
- const [audioUrl, setAudioUrl] = useState<string | null>(null);
- const [error, setError] = useState("");
- const [speechSupported, setSpeechSupported] = useState(false);
- const [recordingSupported, setRecordingSupported] = useState(false);
- const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const searchParams = useSearchParams();
+  const sourceParam = searchParams.get("source") || undefined;
+  const slugParam = searchParams.get("slug") || undefined;
+  const levelParam = searchParams.get("level") || undefined;
+  
+  const [contextLabel, setContextLabel] = useState<string | undefined>(buildContextLabel(sourceParam, slugParam));
 
- // Refs for media recording and timers
- const mediaRecorderRef = useRef<MediaRecorder | null>(null);
- const streamRef = useRef<MediaStream | null>(null);
- const chunksRef = useRef<Blob[]>([]);
- const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
- const startedAtRef = useRef<number | null>(null);
- const finalElapsedRef = useRef(0);
- const audioUrlRef = useRef<string | null>(null);
- const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
+  // State hooks for UI and audio status
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [playbackRate, setPlaybackRate] = useState<(typeof PLAYBACK_RATES)[number]["value"]>(0.95);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [error, setError] = useState("");
+  const [speechSupported, setSpeechSupported] = useState(false);
+  const [recordingSupported, setRecordingSupported] = useState(false);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
 
- // Resolve presets and current selection
- const presets = initialPresets.length > 0 ? initialPresets : SHADOWING_PRESETS;
+  // Refs for media recording and timers
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const startedAtRef = useRef<number | null>(null);
+  const finalElapsedRef = useRef(0);
+  const audioUrlRef = useRef<string | null>(null);
+  const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
+
+  const [dynamicPresets, setDynamicPresets] = useState<ShadowingPreset[] | undefined>(undefined);
+  const [isFetching, setIsFetching] = useState(false);
+
+  useEffect(() => {
+    if (sourceParam || slugParam || levelParam) {
+      setIsFetching(true);
+      getIntegratedShadowingPresets({
+        source: sourceParam,
+        slug: slugParam,
+        level: levelParam
+      }).then(ps => {
+        setDynamicPresets(ps);
+        setIsFetching(false);
+      }).catch(() => {
+        setIsFetching(false);
+      });
+    }
+  }, [sourceParam, slugParam, levelParam]);
+
+  // Resolve presets and current selection
+  const presets = (dynamicPresets && dynamicPresets.length > 0) ? dynamicPresets : (initialPresets.length > 0 ? initialPresets : SHADOWING_PRESETS);
  const preset = presets[selectedIndex] ?? presets[0];
  const paceLabel = getShadowingPaceLabel(elapsedSeconds, preset.targetSeconds);
  const pacePercent = Math.min(100, Math.round((elapsedSeconds / Math.max(preset.targetSeconds, 1)) * 100));

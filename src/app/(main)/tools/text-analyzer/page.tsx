@@ -1,50 +1,32 @@
 import type { Metadata } from "next";
-import { getLibraryTextForTool } from "@/actions/tools-integration.actions";
+import { Suspense } from "react";
 import TextAnalyzerClient from "@/features/tools/text-analyzer/TextAnalyzerClient";
 import { createPageMetadata } from "@/lib/seo";
-import { firstParam, type ToolSearchParams } from "@/lib/core/utils";
 
 import { ROUTES } from "@/lib/core/routes";
 /**
  * Page metadata. Configure SEO for Japanese text analyzer tool.
  */
 export const metadata: Metadata = {
- ...createPageMetadata({
- title: "Japanese Text Analyzer | NihongoRoute",
- description: "Analisis teks Jepang untuk menemukan kosakata, kanji, dan pola tata bahasa penting.",
- path:ROUTES.TOOLS.TEXT_ANALYZER,
- keywords: ["text analyzer Jepang", "analisis teks Jepang", "kanji parser", "grammar parser Jepang"],
- }),
+  ...createPageMetadata({
+    title: "Japanese Text Analyzer | NihongoRoute",
+    description: "Analisis teks Jepang untuk menemukan kosakata, kanji, dan pola tata bahasa penting.",
+    path: ROUTES.TOOLS.TEXT_ANALYZER,
+    keywords: ["text analyzer Jepang", "analisis teks Jepang", "kanji parser", "grammar parser Jepang"],
+  }),
 };
 
 /**
- * Force dynamic rendering. Ensure fresh data on request.
- */
-export const dynamic = "force-dynamic";
-
-/**
  * Text analyzer page component. Fetch initial text from library if source and slug provided. Render client component.
- * 
- * @param props - Component properties.
- * @param props.searchParams - URL search parameters.
  */
-export default async function TextAnalyzerPage({
- searchParams,
-}: {
- searchParams?: Promise<ToolSearchParams>;
-}) {
- // Await search params for Next.js 15 compatibility.
- const params = searchParams ? await searchParams : {};
- const source = firstParam(params.source);
- const slug = firstParam(params.slug);
- // Fetch text from database using source and slug.
- const sourceText = await getLibraryTextForTool({ source, slug });
-
- return (
- <TextAnalyzerClient
- initialText={sourceText?.text}
- initialSourceTitle={sourceText?.title}
- initialSourceHref={sourceText?.sourceHref}
- />
- );
+export default async function TextAnalyzerPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-background/95">
+        <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    }>
+      <TextAnalyzerClient />
+    </Suspense>
+  );
 }

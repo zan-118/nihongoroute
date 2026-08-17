@@ -1,43 +1,35 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { getIntegratedCounterQuestions } from "@/actions/tools-integration.actions";
 import CounterTrainerClient from "@/features/tools/counter-trainer/CounterTrainerClient";
 import { createPageMetadata } from "@/lib/seo";
-import { buildContextLabel, firstParam, type ToolSearchParams } from "@/lib/core/utils";
 
 import { ROUTES } from "@/lib/core/routes";
 /** Page metadata for SEO. */
 export const metadata: Metadata = {
- ...createPageMetadata({
- title: "Counter Trainer Jepang | NihongoRoute",
- description: "Latihan memilih counter bahasa Jepang untuk orang, benda, umur, lantai, waktu, dan kategori umum lainnya.",
- path:ROUTES.TOOLS.COUNTER_TRAINER,
- keywords: ["counter bahasa Jepang", "josuushi", "latihan counter Jepang", "angka Jepang"],
- }),
+  ...createPageMetadata({
+    title: "Counter Trainer Jepang | NihongoRoute",
+    description: "Latihan memilih counter bahasa Jepang untuk orang, benda, umur, lantai, waktu, dan kategori umum lainnya.",
+    path: ROUTES.TOOLS.COUNTER_TRAINER,
+    keywords: ["counter bahasa Jepang", "josuushi", "latihan counter Jepang", "angka Jepang"],
+  }),
 };
 
-/** Force dynamic rendering. Prevent static build caching. */
-export const dynamic = "force-dynamic";
-
 /** Counter trainer page component. Fetch questions and render client trainer. */
-export default async function CounterTrainerPage({
- searchParams,
-}: {
- searchParams?: Promise<ToolSearchParams>;
-}) {
- // Await search params for dynamic query resolution.
- const params = searchParams ? await searchParams : {};
- const source = firstParam(params.source);
- const slug = firstParam(params.slug);
- const level = firstParam(params.level);
- 
- // Fetch questions filtered by source, slug, and level.
- const questions = await getIntegratedCounterQuestions({ source, slug, level });
+export default async function CounterTrainerPage() {
+  // Fetch default static questions.
+  const questions = await getIntegratedCounterQuestions();
 
- return (
- <CounterTrainerClient
- initialQuestions={questions}
- databaseQuestionCount={questions.length}
- contextLabel={buildContextLabel(source, slug)}
- />
- );
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-background/95">
+        <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    }>
+      <CounterTrainerClient
+        initialQuestions={questions}
+        databaseQuestionCount={questions.length}
+      />
+    </Suspense>
+  );
 }
