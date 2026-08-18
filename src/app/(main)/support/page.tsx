@@ -21,8 +21,8 @@ import { getSupporters } from "@/actions/support.actions";
 // ==========================================
 // SEO & Metadata Configuration
 // ==========================================
-// Enable Incremental Static Regeneration (ISR) revalidated every 1 hour.
-export const revalidate = 3600;
+// Enable Incremental Static Regeneration (ISR) revalidated every 1 day.
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
  ...createPageMetadata({

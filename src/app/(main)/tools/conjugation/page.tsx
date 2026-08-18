@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import ConjugationTrainerClient from "@/features/tools/conjugation-trainer/ConjugationTrainerClient";
-import type { VerbFormId, VerbGroup } from "@/lib/verb-conjugation";
+import ConjugationTrainerWrapper from "@/features/tools/conjugation-trainer/ConjugationTrainerWrapper";
 import { createPageMetadata } from "@/lib/seo";
-import { firstParam, type ToolSearchParams } from "@/lib/core/utils";
-
+import { Suspense } from "react";
 import { ROUTES } from "@/lib/core/routes";
+import { Loader } from "@/components/ui/icons";
+
 /** Page metadata. Define SEO tags for conjugation trainer. */
 export const metadata: Metadata = {
  ...createPageMetadata({
@@ -15,56 +15,17 @@ export const metadata: Metadata = {
  }),
 };
 
-/** Validate and normalize verb group string. */
-function normalizeGroup(value: string | undefined): VerbGroup {
- const normalized = String(value || "").toLowerCase();
- // Fallback to godan if invalid group.
- return ["godan", "ichidan", "irregular"].includes(normalized)
- ? (normalized as VerbGroup)
- : "godan";
-}
-
-/** Validate and normalize verb form ID. */
-function normalizeForm(value: string | undefined): VerbFormId {
- const normalized = String(value || "").toLowerCase();
- // Fallback to te form if invalid form.
- return [
- "masu",
- "nai",
- "te",
- "ta",
- "potential",
- "passive",
- "causative",
- "volitional",
- "conditional",
- "imperative",
- ].includes(normalized)
- ? (normalized as VerbFormId)
- : "te";
-}
-
 /** Page component for Japanese verb conjugation trainer. */
-export default async function ConjugationTrainerPage({
- searchParams,
-}: {
- searchParams?: Promise<ToolSearchParams>;
-}) {
- // Resolve search params from Next.js page props.
- const params = searchParams ? await searchParams : {};
- const verb = firstParam(params.verb);
- const group = firstParam(params.group);
- const form = firstParam(params.form);
- const sourceTitle = firstParam(params.sourceTitle);
- const sourceHref = firstParam(params.sourceHref);
-
+export default function ConjugationTrainerPage() {
  return (
- <ConjugationTrainerClient
- initialVerb={verb}
- initialGroup={normalizeGroup(group)}
- initialForm={normalizeForm(form)}
- sourceTitle={sourceTitle}
- sourceHref={sourceHref}
- />
+ <div className="min-h-screen bg-background/95">
+ <Suspense fallback={
+ <div className="flex h-full min-h-[50vh] items-center justify-center">
+ <Loader className="animate-spin text-muted-foreground" size={32} />
+ </div>
+ }>
+ <ConjugationTrainerWrapper />
+ </Suspense>
+ </div>
  );
 }

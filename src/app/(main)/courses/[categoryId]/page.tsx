@@ -13,6 +13,7 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import CourseCategoryView from "@/features/courses/CourseCategoryView";
 import { getCourseCategoryData } from "@/actions/library.actions";
+import { getCourseCategories } from "@/actions/lessons.actions";
 import {
  breadcrumbJsonLd,
  courseJsonLd,
@@ -67,6 +68,18 @@ export async function generateMetadata({
  "materi bahasa Jepang gratis",
  ],
  });
+}
+
+// ======================
+// GENERASI STATIS
+// ======================
+export async function generateStaticParams() {
+  const categories = await getCourseCategories();
+  if (!categories || categories.length === 0) return [];
+  
+  return categories.map((cat: { slug: string; _id: string }) => ({
+    categoryId: String(cat.slug || cat._id),
+  }));
 }
 
 // ======================
