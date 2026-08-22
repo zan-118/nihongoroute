@@ -16,9 +16,8 @@ import {
  Font,
 } from "@react-pdf/renderer";
 
-// ======================
 // CONFIG / FONTS
-// ======================
+
 Font.register({
  family: "NotoSansJP",
  fonts: [
@@ -27,9 +26,7 @@ Font.register({
  ],
 });
 
-// ======================
 // TYPES
-// ======================
 
 /**
  * Grammar item data structure.
@@ -51,9 +48,8 @@ interface GrammarTemplateProps {
  data: PdfGrammarItem;
 }
 
-// ======================
 // STYLES
-// ======================
+
 const styles = StyleSheet.create({
  page: {
  padding: 50,
@@ -299,9 +295,7 @@ const styles = StyleSheet.create({
  },
 });
 
-// ======================
 // PARSER & HELPERS
-// ======================
 
 /**
  * Remove emoji characters from text.
@@ -514,9 +508,7 @@ const parseNotesToPdfJSX = (notes: string) => {
  return <View style={styles.notesBox}>{elements}</View>;
 };
 
-// ======================
 // MAIN COMPONENT
-// ======================
 
 /**
  * PDF template component for grammar lessons.

@@ -5,9 +5,8 @@
  * @module StandaloneExamSessionPage
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import MockExamEngine from "@/features/exams/components/mock-engine/MockExamEngine";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -17,9 +16,7 @@ import type { Metadata } from "next";
 import { createPageMetadata, encodeRouteSegment } from "@/lib/seo";
 import { Shield, Wrench } from "@/components/ui/icons";
 
-// ======================
 // ANTARMUKA
-// ======================
 
 /**
  * Route parameters for exam page.
@@ -28,9 +25,7 @@ interface PageProps {
  params: Promise<{ id: string }>;
 }
 
-// ======================
 // METADATA SEO
-// ======================
 
 /**
  * Generate dynamic SEO metadata for specific JLPT exam session.
@@ -53,9 +48,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
  });
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * Standalone exam session page component.
@@ -71,10 +64,7 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
 
  const backLink = "/exams";
 
-
- // ======================
  // RENDER UTAMA (Penanganan Kesalahan & Engine)
- // ======================
 
  // 1. PENANGANAN: DATA TIDAK DITEMUKAN
  if (!examData) {

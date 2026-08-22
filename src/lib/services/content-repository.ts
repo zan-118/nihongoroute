@@ -16,8 +16,6 @@ export interface PaginatedOptions<TFilter = any> { // eslint-disable-line @types
  orderBy?: { column: string; ascending?: boolean; nullsFirst?: boolean }[];
 }
 
-
-
 export interface PaginatedResponse<T> {
  data: T[];
  total: number;
@@ -187,7 +185,6 @@ export async function getStaticSlugs<T = Record<string, unknown>>(
  }
  return (data || []) as T[];
 }
-
 
 /**
  * Fetch detailed related kanji items by character array.

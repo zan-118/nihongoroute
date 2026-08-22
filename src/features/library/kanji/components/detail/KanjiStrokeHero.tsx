@@ -3,17 +3,17 @@
  * @description Komponen hero bento utama untuk menampilkan visualisasi pemutar coretan Kanji, definisi, level JLPT, dan tombol add-.
  */
 
-// ==========================================
+
 // IMPORT & DEPENDENSI
-// ==========================================
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import KanjiStrokePlayer from "@/features/library/kanji/components/KanjiStrokePlayer";
 import { AddToSRSButton } from "@/features/srs/actions/AddToSRSButton";
 
-// ==========================================
+
 // TIPE DATA / INTERFACE
-// ==========================================
+
 /**
  * Props for KanjiStrokeHero component.
  */
@@ -30,18 +30,18 @@ interface KanjiStrokeHeroProps {
  jlpt?: string;
 }
 
-// ==========================================
+
 // KOMPONEN UTAMA
-// ==========================================
+
 /**
  * Hero panel component displaying kanji stroke animation, meaning, JLPT level, and SRS action.
  */
 export function KanjiStrokeHero({ id, character, strokeOrderSvg, meaning, jlpt }: KanjiStrokeHeroProps) {
- // ==========================================
+
  // RENDER KOMPONEN
- // ==========================================
+
  return (
- <Card className="p-6 sm:p-8 md:p-12 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all flex flex-col items-center justify-center group relative overflow-hidden glass shadow-[0_0_30px_hsl(var(--primary)/0.05)]">
+ <Card className="p-6 sm:p-8 md:p-12 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all flex flex-col items-center justify-center group relative overflow-hidden glass shadow-sm">
  {/* Top-right SRS action button */}
  <div className="absolute top-4 right-4 z-20">
  {id && <AddToSRSButton wordId={id} />}

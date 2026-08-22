@@ -5,16 +5,14 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import React from "react";
 import Image from "next/image";
 import { PlayCircle, File } from "@/components/ui/icons";
 
-// ======================
 // ANTARMUKA / TIPE DATA
-// ======================
+
 /**
  * Props for MediaAsset component.
  */
@@ -33,9 +31,8 @@ interface MediaAssetProps {
  height?: number;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
+
 /**
  * Render media asset. Handle image, video, document.
  * 
@@ -107,7 +104,7 @@ export default function MediaAsset({
  <div className="flex-1">
  {/* Get filename from URL end. */}
  <p className="text-sm font-bold text-foreground truncate">{url.split("/").pop()}</p>
- <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Unduh Lampiran</p>
+      <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Unduh Lampiran</p>
  </div>
  </a>
  );

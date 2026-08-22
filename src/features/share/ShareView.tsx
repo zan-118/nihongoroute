@@ -6,9 +6,9 @@
 
 "use client";
 
-// ======================
+
 // IMPOR
-// ======================
+
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { m } from "framer-motion";
@@ -19,9 +19,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { toast } from "sonner";
 
-// ======================
+
 // TIPE DATA
-// ======================
+
 /**
  * Shared certificate data structure.
  */
@@ -62,9 +62,9 @@ function ShareContent() {
  return (
  <div className="min-h-screen flex items-center justify-center p-6 text-center bg-transparent relative overflow-hidden">
  <div className="absolute inset-0 ] pointer-events-none" />
- <Card className="p-8 sm:p-12 max-w-md w-full glass border-border rounded-[3rem] shadow-[0_20px_50px_hsl(var(--primary)/0.15)] relative z-10">
+ <Card className="p-8 sm:p-12 max-w-md w-full glass border-border rounded-[3rem] shadow-sm relative z-10">
  <div className="size-20 mx-auto rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-6">
- <Share size={40} className="text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]" />
+ <Share size={40} className="text-primary drop-shadow-sm" />
  </div>
  <h1 className="text-2xl uppercase tracking-wide mb-3 text-foreground">Bagikan NihongoRoute</h1>
  <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
@@ -99,9 +99,9 @@ function ShareContent() {
  return (
  <div className="min-h-screen flex items-center justify-center p-6 text-center bg-transparent relative overflow-hidden">
  <div className="absolute inset-0 ] pointer-events-none" />
- <Card className="p-8 sm:p-12 max-w-md w-full glass border-destructive/25 rounded-[3rem] shadow-[0_20px_50px_hsl(var(--destructive)/0.15)] relative z-10">
+ <Card className="p-8 sm:p-12 max-w-md w-full glass border-destructive/25 rounded-[3rem] shadow-sm relative z-10">
  <div className="size-20 mx-auto rounded-xl bg-destructive/10 border border-destructive/25 flex items-center justify-center mb-6">
- <ErrorWarning size={40} className="text-destructive drop-shadow-[0_0_8px_hsl(var(--destructive)/0.4)]" />
+ <ErrorWarning size={40} className="text-destructive drop-shadow-sm" />
  </div>
  <h1 className="text-2xl uppercase tracking-wide mb-3">Tautan Tidak Valid</h1>
  <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
@@ -141,7 +141,7 @@ function ShareContent() {
  transition={{ type: "spring", stiffness: 100, damping: 15 }}
  className="w-full max-w-3xl relative z-10"
  >
- <Card className="p-8 sm:p-16 text-center glass border border-border/80 rounded-[4rem] shadow-[0_30px_70px_hsl(var(--foreground)/0.35)] relative overflow-hidden">
+ <Card className="p-8 sm:p-16 text-center glass border border-border/80 rounded-[4rem] shadow-sm relative overflow-hidden">
  {/* Certificate Holographic Grid Background Overlay */}
  <div className="absolute inset-0 bg-grid-white/[0.02] pointer-events-none" />
  <div className="absolute inset-x-0 top-0 h-1.5 " />
@@ -154,8 +154,8 @@ function ShareContent() {
  transition={{ type: "spring", damping: 12, delay: 0.2 }}
  className={`w-24 h-24 mx-auto rounded-[2.5rem] flex items-center justify-center mb-8 border shadow-xl relative z-10 ${
  data.passed 
- ? 'bg-success/10 border-success/35 text-success shadow-[0_15px_30px_hsl(var(--success)/0.2)]' 
- : 'bg-destructive/10 border-destructive/35 text-destructive shadow-[0_15px_30px_hsl(var(--destructive)/0.15)]'
+ ? 'bg-success/10 border-success/35 text-success shadow-sm' 
+ : 'bg-destructive/10 border-destructive/35 text-destructive shadow-sm'
  }`}
  >
  {data.passed ? <Trophy size={48} className="animate-pulse" /> : <ErrorWarning size={48} />}
@@ -185,7 +185,7 @@ function ShareContent() {
  </div>
  <div>
  <span className="text-[9px] font-black text-muted-foreground/60 uppercase tracking-widest block mb-1">Skor yang Diperoleh</span>
- <span className={`text-2xl sm:text-3xl font-black font-mono tracking-tight ${data.passed ? 'text-success drop-shadow-[0_0_8px_hsl(var(--success)/0.2)]' : 'text-destructive'}`}>
+ <span className={`text-2xl sm:text-3xl font-black font-mono tracking-tight ${data.passed ? 'text-success drop-shadow-sm' : 'text-destructive'}`}>
  {data.score} <span className="text-xs font-black text-muted-foreground/50">/ 180 XP</span>
  </span>
  </div>

@@ -5,9 +5,8 @@
  * @description Hook kustom (Custom Hook) untuk mengelola inisialisasi sesi ulasan (Review Session).
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { useState, useCallback, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
@@ -15,9 +14,8 @@ import { MasterCardData } from "@/features/review/flashcards/master/types";
 import { useSRSStore } from "@/store/useSRSStore";
 import { summarizeSrs } from "@/lib/srs-summary";
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
+
 export type SessionMode = "srs" | "quick" | null;
 
 function getReviewIds(selectedMode: Exclude<SessionMode, null>, now: number) {
@@ -54,9 +52,8 @@ function getReviewIds(selectedMode: Exclude<SessionMode, null>, now: number) {
  return ids;
 }
 
-// ======================
 // HOOK UTAMA
-// ======================
+
 export function useReviewSession(loading: boolean) {
  const [mode, setMode] = useState<SessionMode>(null);
  const [cards, setCards] = useState<MasterCardData[]>([]);

@@ -352,7 +352,7 @@ export default function ShadowingRecorderClient({
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
  <div className="mb-5 flex items-center gap-2">
  <SoundModule size={16} className="text-primary" aria-hidden="true" />
- <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
+ <h2 className="text-xs uppercase tracking-wider text-foreground">
  Baris Preset
  </h2>
  </div>
@@ -370,7 +370,7 @@ export default function ShadowingRecorderClient({
  : "border-border bg-background/35 text-muted-foreground hover:text-foreground"
  )}
  >
- <span className="block text-xs font-black uppercase tracking-widest">
+ <span className="block text-xs font-black uppercase tracking-wider">
  {item.level} · {item.focus}
  </span>
  <span className="mt-1 block text-sm font-black text-foreground">
@@ -380,7 +380,7 @@ export default function ShadowingRecorderClient({
  {item.text}
  </span>
  {item.sourceTitle ? (
- <span className="mt-2 block text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+ <span className="mt-2 block text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
  {item.sourceType}: {item.sourceTitle}
  </span>
  ) : null}
@@ -409,7 +409,7 @@ export default function ShadowingRecorderClient({
  ) : null}
  </div>
  <div className="w-full rounded-lg border border-border bg-muted/15 p-4 sm:w-44">
- <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+ <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
  Rekaman
  </p>
  <p className="font-mono text-3xl font-black text-foreground">
@@ -439,7 +439,7 @@ export default function ShadowingRecorderClient({
  onClick={() => setPlaybackRate(item.value)}
  aria-pressed={playbackRate === item.value}
  className={cn(
- "min-h-11 rounded-xl border px-2 text-xs font-black uppercase tracking-widest transition-all",
+ "min-h-11 rounded-xl border px-2 text-xs font-black uppercase tracking-wider transition-all",
  playbackRate === item.value
  ? "border-primary/40 bg-primary/10 text-primary"
  : "border-border bg-background/35 text-muted-foreground hover:text-foreground"
@@ -480,7 +480,7 @@ export default function ShadowingRecorderClient({
  </Button>
  </div>
  <div className="rounded-xl border border-border bg-muted/15 px-4 py-3">
- <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+ <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
  Tempo
  </p>
  <p className="text-sm font-black text-foreground">{paceLabel}</p>
@@ -491,7 +491,7 @@ export default function ShadowingRecorderClient({
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
  <div className="mb-4 flex items-center gap-2">
  <SoundModule size={16} className="text-success" aria-hidden="true" />
- <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
+ <h2 className="text-xs uppercase tracking-wider text-foreground">
  Playback Kamu
  </h2>
  </div>
@@ -503,7 +503,7 @@ export default function ShadowingRecorderClient({
  </audio>
  <div className="mt-4 flex flex-col sm:flex-row gap-4">
  <div className="rounded-xl border border-border bg-background/35 p-3">
- <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+ <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
  Target
  </p>
  <p className="font-mono text-lg font-black text-foreground">
@@ -511,7 +511,7 @@ export default function ShadowingRecorderClient({
  </p>
  </div>
  <div className="rounded-xl border border-border bg-background/35 p-3">
- <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+ <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
  Kamu
  </p>
  <p className="font-mono text-lg font-black text-foreground">
@@ -519,7 +519,7 @@ export default function ShadowingRecorderClient({
  </p>
  </div>
  <div className="rounded-xl border border-border bg-background/35 p-3">
- <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+ <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
  Fokus
  </p>
  <p className="text-sm font-black text-foreground">{preset.focus}</p>

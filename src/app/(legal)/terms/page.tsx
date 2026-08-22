@@ -3,9 +3,6 @@
  * @description Terms of Service page route component for the NihongoRoute platform.
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -14,9 +11,6 @@ import AppBreadcrumbs from "@/components/layout/AppBreadcrumbs";
 import { createPageMetadata } from "@/lib/seo";
 import { getBreadcrumbItems } from "@/lib/routes";
 
-// ==========================================
-// Metadata Configuration
-// ==========================================
 /**
  * Metadata configuration for the Terms of Service page.
  * Sets SEO titles, descriptions, and canonical path.
@@ -40,12 +34,6 @@ export const metadata = {
 export default function TermsPage() {
  return (
  <main className="min-h-screen bg-background text-foreground py-24 px-4 sm:px-6 md:px-12 relative overflow-hidden flex flex-col items-center justify-start transition-colors duration-300">
- {/* Hamparan Neural Latar Belakang */}
- <div className="grid-overlay" />
- <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--secondary)/0.07)_0%,transparent_70%)] pointer-events-none z-0" />
- <div className="absolute top-1/4 left-0 size-75 bg-[hsl(var(--secondary)/0.03)] rounded-full blur-[60px] pointer-events-none z-0 ambient-glow will-change-transform" />
- <div className="absolute bottom-1/4 right-0 size-62.5 bg-[hsl(var(--primary)/0.02)] rounded-full blur-[80px] pointer-events-none z-0 ambient-glow will-change-transform" />
-
  <div className="max-w-4xl w-full relative z-10 flex flex-col">
  {/* Breadcrumb / Navigasi Atas */}
  <div className="mb-8 animate-fade-in">
@@ -55,29 +43,22 @@ export default function TermsPage() {
  />
  </div>
 
- {/* Kartu Cyber-glass Premium Luar */}
- <div className="glass border border-border/60 rounded-xl p-6 sm:p-10 md:p-14 shadow-[0_0_50px_hsl(var(--secondary)/0.05)] relative overflow-hidden">
- {/* Aksen Sudut Halus */}
- <div className="absolute top-0 right-0 w-8 h-0.5 bg-secondary/50 " />
- <div className="absolute top-0 right-0 w-0.5 h-8 bg-secondary/50 " />
- <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-secondary/50 " />
- <div className="absolute bottom-0 left-0 w-0.5 h-8 bg-secondary/50 " />
-
+ <div className="bg-card border border-border rounded-2xl p-6 sm:p-10 md:p-14 shadow-sm relative overflow-hidden">
  {/* Header Jepang */}
  <header className="mb-12 border-b border-border/60 pb-8 relative">
  <div className="flex items-center gap-3 mb-4">
- <div className="size-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary shadow-[0_0_15px_hsl(var(--secondary)/0.2)]">
+ <div className="size-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary">
  <BookOpen size={20} />
  </div>
- <span className="text-xs font-black tracking-widest text-secondary uppercase bg-secondary/5 border border-secondary/10 px-3 py-1 rounded-full">
+ <span className="text-xs font-bold tracking-wider text-secondary uppercase bg-secondary/5 border border-secondary/10 px-3 py-1 rounded-full">
  Platform Terms
  </span>
  </div>
  
- <h1 className="text-4xl md:text-5xl font-black text-foreground font-japanese tracking-tight mb-3 select-none">
+ <h1 className="text-4xl md:text-5xl font-bold text-foreground font-japanese tracking-tight mb-3 select-none">
  利用規約
  </h1>
- <p className="text-sm md:text-base font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+ <p className="text-sm md:text-base font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
  Terms of Service <span className="text-secondary/60">•</span> Syarat & Ketentuan
  </p>
  </header>
@@ -97,7 +78,7 @@ export default function TermsPage() {
  {/* Seksi 1 */}
  <div className="space-y-4 pt-4 border-t border-border/20">
  <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
- <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--secondary)/0.1)]">1</span>
+ <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-sm">1</span>
  Platform Edukasi Non-Komersial
  </h2>
  <p className="leading-relaxed">
@@ -108,7 +89,7 @@ export default function TermsPage() {
  {/* Seksi 2 */}
  <div className="space-y-4 pt-4 border-t border-border/20">
  <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
- <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--secondary)/0.1)]">2</span>
+ <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-sm">2</span>
  Penggunaan yang Diizinkan
  </h2>
  <p className="leading-relaxed">
@@ -116,7 +97,7 @@ export default function TermsPage() {
  </p>
  
  <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 list-none! pl-0!">
- <li className="glass border border-border/60 hover:border-secondary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-[0_0_20px_hsl(var(--secondary)/0.02)]">
+ <li className="glass border border-border/60 hover:border-secondary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-sm">
  <div className="size-8 rounded-lg bg-secondary/5 border border-secondary/10 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-300">
  <Compass size={16} />
  </div>
@@ -125,7 +106,7 @@ export default function TermsPage() {
  <p className="text-xs leading-relaxed text-muted-foreground">Menyalin, mengekstrak, memodifikasi, atau mendistribusikan konten NihongoRoute untuk kepentingan komersial.</p>
  </div>
  </li>
- <li className="glass border border-border/60 hover:border-secondary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-[0_0_20px_hsl(var(--secondary)/0.02)]">
+ <li className="glass border border-border/60 hover:border-secondary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-sm">
  <div className="size-8 rounded-lg bg-secondary/5 border border-secondary/10 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-300">
  <Shield size={16} />
  </div>
@@ -140,7 +121,7 @@ export default function TermsPage() {
  {/* Seksi 3 */}
  <div className="space-y-4 pt-4 border-t border-border/20">
  <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
- <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--secondary)/0.1)]">3</span>
+ <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-sm">3</span>
  Ketersediaan Layanan (&quot;As-Is&quot; Basis)
  </h2>
  <p className="leading-relaxed">
@@ -151,7 +132,7 @@ export default function TermsPage() {
  {/* Seksi 4 */}
  <div className="space-y-4 pt-4 border-t border-border/20">
  <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
- <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--secondary)/0.1)]">4</span>
+ <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-sm">4</span>
  Penghentian & Modifikasi Layanan
  </h2>
  <p className="leading-relaxed">
@@ -162,7 +143,7 @@ export default function TermsPage() {
  {/* Seksi 5 */}
  <div className="space-y-4 pt-4 border-t border-border/20">
  <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
- <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--secondary)/0.1)]">5</span>
+ <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-sm">5</span>
  Perubahan Syarat & Ketentuan
  </h2>
  <p className="leading-relaxed">

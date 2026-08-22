@@ -3,9 +3,8 @@
  * @description Interactive 3D flip flashcard component utilizing Framer Motion animations. Integrates front face (question/input) and back face (answer/details).
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { m } from "framer-motion";
 import { FlashcardProps } from "./types";
 import { useFlashcard } from "./useFlashcard";
@@ -13,9 +12,8 @@ import { FlashcardFront } from "./FlashcardFront";
 import { FlashcardBack } from "./FlashcardBack";
 import { WritingPracticeModal } from "./WritingPracticeModal";
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Flashcard component.
  * Renders 3D flipping card with front (question/input) and back (answer/details) faces.
@@ -46,9 +44,9 @@ export default function Flashcard({
  mnemonic,
  related_kanji,
 }: FlashcardProps) {
- // ==========================================
+
  // STATUS & STATE & HOOKS
- // ==========================================
+
  /** Custom hook managing flashcard state, theme, and click handlers */
  const {
  showWritingModal,
@@ -58,9 +56,8 @@ export default function Flashcard({
  handleDrawClick,
  } = useFlashcard({ type, onFlip });
 
- // ==========================================
  // RENDER KOMPONEN
- // ==========================================
+
  return (
  <>
  {/* Outer container establishing 3D perspective context */}

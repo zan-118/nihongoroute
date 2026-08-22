@@ -6,15 +6,15 @@
  * @module features/dashboard/components
  */
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import React from "react";
 import { m } from "framer-motion";
 
-// ==========================================
+
 // Component Props Interface
-// ==========================================
+
 /**
  * Represents a single tab item configuration.
  */
@@ -39,9 +39,9 @@ interface DashboardTabsProps {
  onTabChange: (id: string) => void;
 }
 
-// ==========================================
+
 // KOMPONEN UTAMA
-// ==========================================
+
 /**
  * DashboardTabs component.
  * Renders an interactive tab navigation bar with smooth sliding animations.

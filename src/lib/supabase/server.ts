@@ -3,16 +3,13 @@
  * @description Supabase Server-Side client initializer for Next.js Server Components, Route Handlers, and Server Actions with automatic cookie handling.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-// ==========================================
 // Supabase Server Client Initializer
-// ==========================================
 
 /**
  * Returns formatted Supabase URL and Key for server clients.

@@ -43,7 +43,7 @@ export const TTS_VOICES = {
 export type TtsVoice = typeof TTS_VOICES[keyof typeof TTS_VOICES];
 
 export const VOICE_CHARACTERS: Record<string, VoiceCharacter> = {
- // === WANITA / MASKOT ===
+
  lala: {
  name: "lala",
  gender: "female",
@@ -113,7 +113,6 @@ export const VOICE_CHARACTERS: Record<string, VoiceCharacter> = {
  description: "Nada sangat tinggi, kekanak-kanakan, energetik.",
  },
 
- // === PRIA ===
  dito: {
  name: "dito",
  gender: "male",

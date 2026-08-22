@@ -6,17 +6,14 @@
  * Menyediakan opsi jenis masukan berupa laporan Bug (kutu), Saran, atau Pujian, serta form pengiriman teks pesan masukan.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { Message, SendPlane, Loader } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useFeedbackWidget } from "./useFeedbackWidget";
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
 
 /**
  * Props for FeedbackWidget component.
@@ -28,9 +25,7 @@ interface FeedbackWidgetProps {
  onOpenChange?: (open: boolean) => void;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * FeedbackWidget component. Render dialog modal for user feedback.
@@ -86,8 +81,8 @@ export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidg
  onClick={() => setType(t)}
  className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium border transition-all ${
  type === t 
- ? 'bg-[hsl(var(--primary)/0.2)] border-primary text-primary' 
- : 'bg-[hsl(var(--muted)/0.5)] dark:bg-[hsl(var(--background)/0.2)] border border-border text-muted-foreground hover:bg-muted dark:hover:bg-[hsl(var(--background)/0.05)]'
+ ? 'bg-primary/20 border-primary text-primary' 
+ : 'bg-muted/50 dark:bg-background/20 border border-border text-muted-foreground hover:bg-muted dark:hover:bg-background/5'
  }`}
  >
  {t === 'bug' ? 'Bug' : t === 'suggestion' ? 'Saran' : 'Pujian'}

@@ -5,9 +5,6 @@
  * @description Komponen seksi dialog/skenario percakapan (DialogueSection) dalam pelajaran. Dilengkapi pembaca dialog per kalimat, audio, dan gambar/video rujukan.
  */
 
-// ======================
-// IMPOR
-// ======================
 import React from "react";
 import { Message, PlayCircle, PauseCircle } from "@/components/ui/icons";
 import { SmartJapanese } from "@/components/ui/japanese";
@@ -17,10 +14,6 @@ import { Button } from "@/components/ui/button";
 import { useLineTTS } from "@/features/media";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
-
-// ======================
-// ANTARMUKA / TIPE DATA
-// ======================
 
 /**
  * DialogueSpeakerItem
@@ -79,9 +72,9 @@ interface DialogueSectionProps {
  listeningList: DialogueItem[];
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Komponen: DialogueSection
@@ -157,10 +150,10 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
  <div className="absolute top-0 right-0 w-px h-3.5 bg-secondary/20 group-hover/dialog:bg-secondary transition-colors duration-500" />
  </div>
 
- <Card className="p-6 md:p-10 border border-border/50 dark:border-white/10 rounded-2xl bg-card shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
+ <Card className="p-6 md:p-10 border border-border/50 dark:border-white/10 rounded-2xl bg-card shadow-sm relative overflow-hidden">
  {/* Header: media + title/audio side-by-side */}
  <div className={`flex flex-col ${(l.imageUrl || l.videoUrl) ? 'md:flex-row' : ''} gap-6 mb-8 border-b border-border/50 pb-8`}>
- {/* MEDIA HERO MENYIMAK — ditaruh di samping, bukan bawah */}
+ {/* MEDIA HERO MENYIMAK: ditaruh di samping, bukan bawah */}
  {(l.imageUrl || l.videoUrl) && (
  <div className="w-full md:w-48 lg:w-56 shrink-0 rounded-lg overflow-hidden">
  <MediaAsset 
@@ -194,7 +187,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
  }}
  title={isCurrentPlaying ? "Jeda Dialog AI" : "Putar Semua Dialog AI"}
  className={cn(
- "rounded-full gap-2 transition-all border shrink-0 text-xs font-bold uppercase tracking-widest px-4 py-2 h-10",
+ "rounded-full gap-2 transition-all border shrink-0 text-xs font-bold uppercase tracking-wider px-4 py-2 h-10",
  isCurrentPlaying
  ? "bg-success/15 border-success/30 text-success"
  : "bg-muted/50 border-border text-muted-foreground hover:text-success hover:bg-success/5 hover:border-success/20"
@@ -227,14 +220,14 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
  const isLineActive = activeDialogId === dialogId && isPlayingPlaylist && playlistIndex === pos;
  const bubbleBg = isLineActive ? "hsl(var(--secondary)/0.12)" : "hsl(var(--secondary)/0.05)";
  const bubbleBorder = isLineActive ? "hsl(var(--secondary)/0.45)" : "hsl(var(--secondary)/0.1)";
- const bubbleShadow = isLineActive ? "0 0 20px hsl(var(--secondary)/0.15)" : "none";
+ const bubbleShadow = "none";
  const bubbleScale = isLineActive ? "scale-[1.01]" : "scale-100";
 
  return (
  <div key={`dialogue-${pos}`} className="flex flex-col gap-2 group/dialogue">
  <div className="flex items-center gap-2">
  <span 
- className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] px-2 py-0.5 rounded"
+ className="text-[10px] font-bold text-secondary uppercase tracking-wider px-2 py-0.5 rounded"
  style={{ backgroundColor: "hsl(var(--secondary)/0.1)" }}
  >
  {item.speaker || item.speakerName}

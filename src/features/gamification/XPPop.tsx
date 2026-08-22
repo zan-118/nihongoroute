@@ -6,14 +6,11 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import { m, AnimatePresence } from "framer-motion";
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * XPPop component. Shows floating XP gain animation.
@@ -45,7 +42,7 @@ export default function XPPop({
  <div className="absolute size-24 bg-destructive/20 blur-3xl rounded-full animate-bloom" />
  
  {/* XP text with drop shadow */}
- <span className="relative text-destructive font-black italic text-4xl drop-shadow-[0_0_20px_hsl(var(--destructive)/0.8)] tracking-tighter">
+ <span className="relative text-destructive font-black italic text-4xl drop-shadow-sm tracking-tighter">
  +{amount} XP
  </span>
  </m.div>

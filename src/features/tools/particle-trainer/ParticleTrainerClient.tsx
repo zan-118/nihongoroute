@@ -183,7 +183,7 @@ export default function ParticleTrainerClient() {
  <div className="flex flex-col gap-6">
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
  <div className="mb-4 flex items-center gap-2">
- <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
+ <h2 className="text-xs uppercase tracking-wider text-foreground">
  Feedback
  </h2>
  </div>
@@ -198,7 +198,7 @@ export default function ParticleTrainerClient() {
  >
  <div className="flex items-center gap-2">
  {isCorrect ? <Check size={18} /> : <X size={18} />}
- <span className="text-xs font-black uppercase tracking-widest">
+ <span className="text-xs font-black uppercase tracking-wider">
  {isCorrect ? "Benar" : "Coba ingat lagi"}
  </span>
  </div>

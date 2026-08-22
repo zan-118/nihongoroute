@@ -6,9 +6,8 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import React, { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { m, AnimatePresence } from "framer-motion";

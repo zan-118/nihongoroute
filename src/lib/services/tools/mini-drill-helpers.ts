@@ -8,16 +8,12 @@
 import { generateAdaptiveDistractors } from "@/lib/services/practice-session-engine";
 import type { DrillKind, DrillLevel, MiniDrillQuestion } from "@/lib/jlpt-mini-drill";
 
-// ======================================================
 // CONSTANTS
-// ======================================================
 
 /** Valid JLPT levels for mini drills. */
 export const JLPT_LEVELS = ["N5", "N4", "N3", "N2", "N1"] as const;
 
-// ======================================================
 // TYPES (dipindahkan dari tools.service.ts)
-// ======================================================
 
 /** Database row structure for vocabulary. */
 export interface VocabToolRow {
@@ -54,9 +50,7 @@ export interface GrammarToolRow {
 /** Source types for integration tools. */
 export type ToolsSource = "vocab" | "kanji" | "grammar" | "reading" | "listening";
 
-// ======================================================
 // SHARED UTILITIES
-// ======================================================
 
 /**
  * Normalize whitespace and trim string.
@@ -110,9 +104,7 @@ export function safeDecodeHref(value: string | undefined): string {
  }
 }
 
-// ======================================================
 // LEVEL / KIND / SOURCE CASTERS
-// ======================================================
 
 /**
  * Cast string to DrillLevel. Fallback to N5.
@@ -162,9 +154,7 @@ export function getToolsSource(value: string | null | undefined): ToolsSource | 
  : undefined;
 }
 
-// ======================================================
 // DETERMINISTIC SHUFFLE
-// ======================================================
 
 /**
  * Shuffle array deterministically using string seed (LCG algorithm).
@@ -186,9 +176,7 @@ export function shuffleBySeed<T>(items: T[], seed: string): T[] {
  return next;
 }
 
-// ======================================================
 // OPTION BUILDER
-// ======================================================
 
 /**
  * Build multiple choice options with distractors using PracticeSessionEngine.
@@ -208,9 +196,7 @@ export function buildOptions(answer: string, candidates: string[], seed: string)
  return shuffleBySeed(uniqueValues([answer, ...selected]), `${seed}-options`);
 }
 
-// ======================================================
 // CONTEXT SORTING
-// ======================================================
 
 /** Context parameters for filtering integration data. */
 export interface ToolsIntegrationContext {

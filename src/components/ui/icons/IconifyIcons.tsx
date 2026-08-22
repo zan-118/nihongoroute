@@ -181,4 +181,3 @@ export const WifiOff = createIcon("ri:wifi-off-line");
 export const Wrench = createIcon("ri:wrench-line");
 export const Zap = createIcon("ri:flashlight-line");
 
-

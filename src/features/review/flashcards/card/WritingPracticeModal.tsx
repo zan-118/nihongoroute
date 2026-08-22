@@ -3,18 +3,16 @@
  * @description Modal dialog component for Kanji writing practice within flashcards, embedding interactive stroke canvas with stroke direction validation.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { m } from "framer-motion";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Pencil, X } from "@/components/ui/icons";
 import WritingCanvas from "@/features/tools/stroke-canvas/WritingCanvas";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for WritingPracticeModal component.
  */
@@ -27,9 +25,8 @@ interface WritingPracticeModalProps {
  onClose: () => void;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Modal dialog containing interactive kanji writing canvas.
  */
@@ -41,9 +38,8 @@ export function WritingPracticeModal({
  // Extract first character for writing practice.
  const kanjiChar = word.charAt(0);
 
- // ==========================================
  // RENDER KOMPONEN
- // ==========================================
+
  return (
  <Dialog open={isOpen} onOpenChange={onClose}>
  <DialogContent className="max-w-md p-0 border-none bg-transparent shadow-none">

@@ -90,8 +90,6 @@ export function StickerScene({
  const isSynced = typeof activeIndex === "number" && activeIndex >= 0;
  const currentIndex = isSynced ? activeIndex : internalIndex;
 
-
-
  if (!dialogue || dialogue.length === 0) return null;
 
  // Get current active line
@@ -192,7 +190,7 @@ export function StickerScene({
  className={cn(
  "relative w-[85px] sm:w-[120px] md:w-[170px] h-[95%] rounded-t-[2rem] border-x border-t bg-background/50 flex flex-col justify-end transition-all duration-300",
  isActive ? asset.color : "border-transparent",
- isActive && "shadow-[0_-10px_25px_hsl(var(--primary)_/_0.1)]"
+ isActive && "shadow-sm"
  )}
  style={
  isActive
@@ -214,7 +212,7 @@ export function StickerScene({
  {/* Speaker Tag Name */}
  <div
  className={cn(
- "absolute bottom-0 inset-x-0 py-1 text-center text-[9px] font-black uppercase tracking-widest transition-colors duration-300",
+ "absolute bottom-0 inset-x-0 py-1 text-center text-[9px] font-black uppercase tracking-wider transition-colors duration-300",
  isActive ? "bg-primary text-primary-foreground" : "bg-muted-foreground/30 text-white"
  )}
  >
@@ -232,7 +230,7 @@ export function StickerScene({
  {/* Label Pembicara */}
  <span
  className={cn(
- "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm self-start",
+ "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm self-start",
  activeSpeakerKey === "zundamon" ? "bg-success text-success-foreground" :
  (activeSpeakerKey === "ayu" || activeSpeakerKey === "lala") ? "bg-secondary text-secondary-foreground" :
  (activeSpeakerKey === "narrator" || activeSpeakerKey === "narator") ? "bg-muted-foreground text-background" : "bg-primary text-primary-foreground"

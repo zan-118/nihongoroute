@@ -34,7 +34,7 @@ export default function MainNotFound() {
  </div>
 
  {/* Main content card. Glassmorphism style. */}
- <Card className="p-8 md:p-12 border border-border max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/40 shadow-[0_20px_50px_hsl(var(--foreground)/0.3)] hover:shadow-[0_25px_60px_hsl(var(--primary)/0.1)] transition-all duration-500 glass">
+ <Card className="p-8 md:p-12 border border-border max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/40 shadow-sm hover:shadow-sm transition-all duration-500 glass">
  {/* Kilau Pojok Siber */}
  <div className="absolute top-0 right-0 size-24 blur-md rounded-tr-[2.5rem] pointer-events-none" />
 
@@ -42,7 +42,7 @@ export default function MainNotFound() {
  {/* Japanese localization header. Adds thematic flavor. */}
  <div className="space-y-3 mb-6">
  <div className="flex justify-center mb-4">
- <div className="size-20 bg-destructive/10 rounded-lg flex items-center justify-center border border-destructive/20 shadow-[0_0_20px_hsl(var(--destructive)/0.15)] animate-premium-bounce">
+ <div className="size-20 bg-destructive/10 rounded-lg flex items-center justify-center border border-destructive/20 shadow-sm animate-premium-bounce">
  <MapPin className="text-destructive animate-pulse" size={36} />
  </div>
  </div>
@@ -66,7 +66,7 @@ export default function MainNotFound() {
  {/* Tombol Aksi */}
  {/* Navigation buttons. Redirect user to valid routes. */}
  <div className="flex flex-col sm:flex-row items-center gap-3 w-full justify-center">
- <Button asChild size="lg" className="w-full sm:w-auto font-black uppercase tracking-widest text-xs h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_15px_hsl(var(--primary)/0.15)] hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)] duration-300">
+ <Button asChild size="lg" className="w-full sm:w-auto font-black uppercase tracking-widest text-xs h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm hover:shadow-sm duration-300">
  <Link href="/dashboard" className="flex items-center justify-center gap-2">
  <Dashboard size={14} />
  Dashboard

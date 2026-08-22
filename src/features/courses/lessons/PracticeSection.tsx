@@ -3,17 +3,17 @@
  * @description Komponen seksi latihan/ujian akhir pelajaran (PracticeSection) untuk mengarahkan pengguna ke ujian komprehensif bab tersebut.
  */
 
-// ======================
+
 // IMPOR
-// ======================
+
 import React from "react";
 import Link from "next/link";
 import { Award } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 
-// ======================
+
 // ANTARMUKA / TIPE DATA
-// ======================
+
 
 /**
  * Practice lesson item details.
@@ -36,9 +36,9 @@ interface PracticeSectionProps {
  lesson: LessonPracticeData;
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Render practice section for lesson.
@@ -58,7 +58,7 @@ export const PracticeSection: React.FC<PracticeSectionProps> = ({ lesson }) => {
  </div>
 
  <Card 
- className="p-8 md:p-14 relative overflow-hidden border border-border/50 dark:border-white/10 rounded-2xl bg-card shadow-[0_4px_25px_rgba(0,0,0,0.015)]"
+ className="p-8 md:p-14 relative overflow-hidden border border-border/50 dark:border-white/10 rounded-2xl bg-card shadow-sm"
  >
  {/* Decorative background icon */}
  <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12">
@@ -83,7 +83,7 @@ export const PracticeSection: React.FC<PracticeSectionProps> = ({ lesson }) => {
  {/* Link to exam page */}
  <Link
  href={`/exams/${lesson.finalPractice.slug}`}
- className="w-full sm:w-auto text-center px-6 md:px-10 py-4 rounded-lg rounded-br-none bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md"
+ className="w-full sm:w-auto text-center px-6 md:px-10 py-4 rounded-lg rounded-br-none bg-primary text-primary-foreground font-black uppercase tracking-wider text-xs hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md"
  >
  Mulai Uatihan: {lesson.finalPractice.title}
  </Link>

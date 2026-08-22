@@ -12,70 +12,61 @@ export function PedagogicalBadges({ block }: { block: ContentBlock }) {
 
  if (!pedagogical_role && !difficulty_stage && !estimated_reading_time) return null;
 
- const roleMeta = {
- core_explanation: {
- label: "Penjelasan Utama",
- icon: BookOpen,
- className: "text-primary",
- style: { backgroundColor: "hsl(var(--primary)/0.1)", borderColor: "hsl(var(--primary)/0.2)", borderWidth: "1px" },
- },
- practical_scenario: {
- label: "Skenario Praktis",
- icon: Global,
- className: "text-success",
- style: { backgroundColor: "hsl(var(--success)/0.1)", borderColor: "hsl(var(--success)/0.2)", borderWidth: "1px" },
- },
- pitfall_alert: {
- label: "Tips & Perangkap",
- icon: Alert,
- className: "text-destructive",
- style: { backgroundColor: "hsl(var(--destructive)/0.1)", borderColor: "hsl(var(--destructive)/0.2)", borderWidth: "1px" },
- },
- cultural_note: {
- label: "Catatan Budaya",
- icon: Information,
- className: "text-warning",
- style: { backgroundColor: "hsl(var(--warning)/0.1)", borderColor: "hsl(var(--warning)/0.2)", borderWidth: "1px" },
- },
- };
+  const roleMeta = {
+    core_explanation: {
+      label: "Penjelasan Utama",
+      icon: BookOpen,
+      className: "text-primary bg-primary/10 border border-primary/20",
+    },
+    practical_scenario: {
+      label: "Skenario Praktis",
+      icon: Global,
+      className: "text-success bg-success/10 border border-success/20",
+    },
+    pitfall_alert: {
+      label: "Tips & Perangkap",
+      icon: Alert,
+      className: "text-destructive bg-destructive/10 border border-destructive/20",
+    },
+    cultural_note: {
+      label: "Catatan Budaya",
+      icon: Information,
+      className: "text-warning bg-warning/10 border border-warning/20",
+    },
+  };
 
- const stageMeta = {
- introducing: {
- label: "Tahap: Pengenalan",
- className: "text-muted-foreground border border-border bg-muted/50",
- style: {},
- },
- guided: {
- label: "Tahap: Terbimbing",
- className: "text-secondary",
- style: { backgroundColor: "hsl(var(--secondary)/0.15)", borderColor: "hsl(var(--secondary)/0.2)", borderWidth: "1px" },
- },
- autonomous: {
- label: "Tahap: Mandiri",
- className: "text-success",
- style: { backgroundColor: "hsl(var(--success)/0.15)", borderColor: "hsl(var(--success)/0.2)", borderWidth: "1px" },
- },
- };
+  const stageMeta = {
+    introducing: {
+      label: "Tahap: Pengenalan",
+      className: "text-muted-foreground border border-border bg-muted/50",
+    },
+    guided: {
+      label: "Tahap: Terbimbing",
+      className: "text-secondary bg-secondary/15 border border-secondary/20",
+    },
+    autonomous: {
+      label: "Tahap: Mandiri",
+      className: "text-success bg-success/15 border border-success/20",
+    },
+  };
 
  const role = pedagogical_role ? roleMeta[pedagogical_role] : null;
  const stage = difficulty_stage ? stageMeta[difficulty_stage] : null;
 
  return (
  <div className="flex flex-wrap gap-2 mb-3.5 items-center">
- {role && (
- <span 
- className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${role.className}`}
- style={role.style}
- >
- <role.icon className="size-3.5" />
- {role.label}
- </span>
- )}
- {stage && (
- <span 
- className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${stage.className}`}
- style={stage.style}
- >
+      {role && (
+        <span 
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${role.className}`}
+        >
+          <role.icon className="size-3.5" />
+          {role.label}
+        </span>
+      )}
+      {stage && (
+        <span 
+          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${stage.className}`}
+        >
  <BarChart className="size-3 mr-1" />
  {stage.label}
  </span>

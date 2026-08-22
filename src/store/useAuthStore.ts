@@ -3,16 +3,10 @@
  * @description Offline-first Zustand store managing user authentication state securely via IndexedDB (`idb-keyval`) for zero-latency route guards.
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { get, set as idbSet, del } from "idb-keyval";
 
-// ==========================================
-// State Interface & Actions
-// ==========================================
 /**
  * Authentication state structure.
  * Manages user authentication state offline and online.
@@ -26,9 +20,6 @@ interface AuthState {
  resetAuth: () => void;
 }
 
-// ==========================================
-// ZUSTAND STORE UTAMA
-// ==========================================
 /**
  * Zustand store for authentication state. Persists to IndexedDB.
  * Zustand Store untuk memantau status sesi masuk pengguna secara zero-latency di peramban.

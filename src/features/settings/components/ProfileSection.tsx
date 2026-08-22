@@ -80,7 +80,7 @@ export default function ProfileSection({
  </div>
 
  <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 md:p-10 shadow-[0_4px_25px_rgba(0,0,0,0.015)] overflow-hidden relative">
- <div className="absolute top-0 left-0 right-0 h-1 bg-[linear-gradient(90deg,hsl(var(--primary)),hsl(var(--primary)))] opacity-80" />
+ <div className="absolute top-0 left-0 right-0 h-1 bg-muted/30 opacity-80" />
 
  <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 relative z-10">
  <div className="flex flex-col items-center gap-4 shrink-0">

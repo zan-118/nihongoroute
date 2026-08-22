@@ -188,7 +188,7 @@ export default function KanjiSimilarityClient() {
 
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-muted/15 p-5">
  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
- <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+ <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
  Setelah lihat petunjuk visual, coba tulis keduanya bergantian di kanvas menulis.
  </p>
  <Button asChild className="rounded-xl">

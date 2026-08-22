@@ -3,17 +3,15 @@
  * @description Configuration panel component before starting Flashcard quizzes. Enables selecting JLPT levels, practice modes (vocab/kanji/survival/pronunciation/sentence), and card counts.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import React, { useState } from "react";
 import { m } from "framer-motion";
 import { Zap, Fire, Pencil, Hashtag, LayoutGrid, Stack, PlayCircle, Mic, BookOpen } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for FlashcardSetup component.
  */
@@ -26,17 +24,14 @@ interface FlashcardSetupProps {
  defaultMode?: "vocab" | "kanji" | "survival" | "pronunciation" | "sentence" | null;
 }
 
-// ==========================================
-// Static Session Configuration Data
-// ==========================================
 /** JLPT level options with styling classes. */
 const JLPT_LEVELS = [
- { id: "all", label: "Campur (Semua)", color: "bg-muted text-muted-foreground border-border" },
- { id: "N5", label: "N5", color: "bg-[hsl(var(--primary)/0.1)] text-primary border-[hsl(var(--primary)/0.2)]" },
- { id: "N4", label: "N4", color: "bg-[hsl(var(--success)/0.1)] text-success border-[hsl(var(--success)/0.2)]" },
- { id: "N3", label: "N3", color: "bg-[hsl(var(--warning)/0.1)] text-warning border-[hsl(var(--warning)/0.2)]" },
- { id: "N2", label: "N2", color: "bg-[hsl(var(--secondary)/0.1)] text-secondary border-[hsl(var(--secondary)/0.2)]" },
- { id: "N1", label: "N1", color: "bg-[hsl(var(--destructive)/0.1)] text-destructive border-[hsl(var(--destructive)/0.2)]" }
+  { id: "all", label: "Campur (Semua)", color: "bg-muted text-muted-foreground border-border" },
+  { id: "N5", label: "N5", color: "bg-primary/10 text-primary border-primary/20" },
+  { id: "N4", label: "N4", color: "bg-success/10 text-success border-success/20" },
+  { id: "N3", label: "N3", color: "bg-warning/10 text-warning border-warning/20" },
+  { id: "N2", label: "N2", color: "bg-secondary/10 text-secondary border-secondary/20" },
+  { id: "N1", label: "N1", color: "bg-destructive/10 text-destructive border-destructive/20" }
 ];
 
 /** Study mode options with icons and descriptions. */
@@ -51,9 +46,8 @@ const MODES = [
 /** Card count options. */
 const AMOUNTS = [10, 20, 50, 100];
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Flashcard configuration panel.
  * Let user choose JLPT level, study mode, and card count.
@@ -70,9 +64,8 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
  // Selected card count state.
  const [amount, setAmount] = useState<number>(20);
 
- // ==========================================
  // RENDER KOMPONEN
- // ==========================================
+
  return (
  <m.div
  key="flashcard-setup"

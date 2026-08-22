@@ -6,9 +6,8 @@
  * @module actions
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import {
  getLessonDetail as serviceGetLessonDetail,
  getCourseCategories as serviceGetCourseCategories,

@@ -6,14 +6,11 @@
 
 "use server";
 
-// ======================
 // IMPORTS
-// ======================
+
 import { createStaticClient } from "@/lib/supabase/server";
 
-// ======================
 // TYPES
-// ======================
 
 /**
  * Library item counts.
@@ -27,9 +24,7 @@ export interface LibraryCounts {
  exams: number;
 }
 
-// ======================
 // SERVER ACTIONS
-// ======================
 
 /**
  * Fetch library item counts.

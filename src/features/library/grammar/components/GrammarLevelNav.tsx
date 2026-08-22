@@ -6,15 +6,13 @@
  * Menampilkan tab tingkat kesulitan JLPT dengan transisi pegas (spring) Framer Motion premium.
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import React from "react";
 import { m } from "framer-motion";
 
-// ==========================================
 // ANTARMUKA & TIPE DATA
-// ==========================================
+
 /**
  * Props for GrammarLevelNav component.
  */
@@ -27,9 +25,8 @@ interface GrammarLevelNavProps {
  onLevelChange: (level: string) => void;
 }
 
-// ==========================================
 // KOMPONEN UTAMA: GrammarLevelNav
-// ==========================================
+
 /**
  * JLPT level navigation bar.
  * Render tab buttons with spring transition indicator.
@@ -39,7 +36,7 @@ interface GrammarLevelNavProps {
  */
 export function GrammarLevelNav({ levels, selectedLevel, onLevelChange }: GrammarLevelNavProps) {
  return (
- <nav className="inline-flex p-1.5 bg-[hsl(var(--muted)/0.5)] dark:bg-[hsl(var(--background)/0.4)] rounded-lg md:rounded-3xl border border-border shadow-2xl overflow-x-auto w-full xl:w-auto no-scrollbar relative font-sans">
+ <nav className="inline-flex p-1.5 bg-muted/50 dark:bg-background/40 rounded-lg md:rounded-3xl border border-border shadow-2xl overflow-x-auto w-full xl:w-auto no-scrollbar relative font-sans">
  {levels.map((lvl) => (
  <button type="button"
  key={lvl}
@@ -55,7 +52,7 @@ export function GrammarLevelNav({ levels, selectedLevel, onLevelChange }: Gramma
  {selectedLevel === lvl && (
  <m.div
  layoutId="activeTab"
- className="absolute inset-0 bg-primary rounded-xl md:rounded-[1.5rem] shadow-[0_0_20px_hsl(var(--primary)/0.4)] z-[-1]"
+ className="absolute inset-0 bg-primary rounded-xl md:rounded-[1.5rem] shadow-sm z-[-1]"
  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
  />
  )}

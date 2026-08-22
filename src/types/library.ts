@@ -3,9 +3,6 @@
  * @description TypeScript type definitions for the offline-ready library module (paginated vocabulary, kanji, listening, and reading materials).
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import { 
  VocabTable, 
  KanjiTable, 
@@ -16,10 +13,6 @@ import {
  ExamTable,
  LibraryContentAIResponse
 } from "@/types/database";
-
-// ==========================================
-// Paginated Data Interfaces & Types
-// ==========================================
 
 /**
  * Paginated vocabulary response.

@@ -147,7 +147,7 @@ export const tools: ToolItem[] = [
   },
   {
     title: "Kamus Terpadu",
-    description: "Cari cepat lintas kosakata, kanji, dan tata bahasa dalam satu kolom, langsung tambahkan ke SRS dari hasil pencarian — untuk baca detail lengkap, buka Pustaka.",
+    description: "Cari cepat lintas kosakata, kanji, dan tata bahasa dalam satu kolom, langsung tambahkan ke SRS dari hasil pencarian: untuk baca detail lengkap, buka Pustaka.",
     icon: Search,
     href: ROUTES.TOOLS.DICTIONARY,
     color: "text-warning",

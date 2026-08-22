@@ -81,7 +81,7 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
  <div className="size-16 rounded-full bg-muted/40 border border-border/60 flex items-center justify-center mb-4">
  <Search size={24} className="text-muted-foreground/60" aria-hidden="true" />
  </div>
- <h3 className="text-base font-black text-foreground uppercase tracking-widest font-mono">Karakter Kanji Tidak Ditemukan</h3>
+ <h3 className="text-base font-black text-foreground uppercase tracking-wider font-mono">Karakter Kanji Tidak Ditemukan</h3>
  <p className="text-muted-foreground font-medium text-xs mt-2 max-w-sm">Silakan sesuaikan kata kunci pencarian atau ganti filter level JLPT.</p>
  </div>
  )}

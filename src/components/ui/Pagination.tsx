@@ -5,15 +5,13 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import { ChevronLeft, ChevronRight, DoubleLeft, DoubleRight } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
-// ======================
 // ANTARMUKA / TIPE DATA
-// ======================
+
 /**
  * Properties for Pagination component.
  */
@@ -28,9 +26,8 @@ interface PaginationProps {
  className?: string;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
+
 /**
  * Cyber-style pagination control component.
  * Renders page navigation buttons and page indicator.
@@ -46,7 +43,7 @@ export function Pagination({
 
  return (
  <div className={`flex flex-col items-center gap-6 ${className}`}>
- <div className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">
+ <div className="text-xs font-black text-muted-foreground uppercase tracking-wider">
  Halaman <span className="text-primary">{currentPage}</span> dari {totalPages}
  </div>
  <div className="flex items-center gap-2">

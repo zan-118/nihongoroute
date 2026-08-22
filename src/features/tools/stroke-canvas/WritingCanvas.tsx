@@ -3,9 +3,8 @@
  * @description Interactive canvas drawing component for practicing Hiragana, Katakana, and Kanji stroke order.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import React from "react";
 import { DeleteBin, Eye, EyeOff, Refresh, Pulse, Check } from "@/components/ui/icons";
 import { AnimatedKanji } from "./AnimatedKanji";
@@ -14,9 +13,8 @@ import { Button } from "@/components/ui/button";
 import XPPop from "@/features/gamification/XPPop";
 import { useWritingCanvas } from "./useWritingCanvas";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 export interface WritingCanvasProps {
  /** Character to write. */
  character?: string;
@@ -28,9 +26,8 @@ export interface WritingCanvasProps {
  className?: string;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 export function WritingCanvas({ 
  character = "", 
  strokeColor = "hsl(var(--primary))", 
@@ -57,10 +54,10 @@ export function WritingCanvas({
 
  const containerClass = `relative w-full aspect-square rounded-lg overflow-hidden group touch-none transition-all duration-500 border ${
  isCompleted
- ? "border-success/40 shadow-[0_0_30px_hsl(var(--success)/0.25)] bg-success/5"
+ ? "border-success/40 shadow-sm bg-success/5"
  : strokeError
- ? "border-destructive/40 shadow-[0_0_30px_hsl(var(--destructive)/0.3)] bg-destructive/5 animate-pulse"
- : "border-border shadow-[0_0_20px_hsl(var(--primary)/0.12)] bg-muted/40 dark:bg-card/30 glass"
+ ? "border-destructive/40 shadow-sm bg-destructive/5 animate-pulse"
+ : "border-border shadow-sm bg-muted/40 dark:bg-card/30 glass"
  }`;
 
  return (
@@ -70,7 +67,7 @@ export function WritingCanvas({
  className={containerClass}
  style={{ touchAction: 'none' }}
  >
- <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--foreground)/0.01)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.01)_1px,transparent_1px)] bg-size-[25%_25%] opacity-40 pointer-events-none" />
+ <div className="absolute inset-0 bg-muted/30 bg-size-[25%_25%] opacity-40 pointer-events-none" />
  
  <div className="absolute inset-0 pointer-events-none opacity-10">
  <div className="absolute top-1/2 left-0 right-0 h-px bg-destructive/30 border-dashed" />
@@ -83,11 +80,11 @@ export function WritingCanvas({
 
  {isCompleted && (
  <div className="absolute inset-0 bg-background/85 flex flex-col items-center justify-center gap-4 z-30 transition-all duration-300 animate-in fade-in">
- <div className="h-14 w-14 rounded-full bg-success/15 border border-success/30 flex items-center justify-center text-success shadow-[0_0_20px_hsl(var(--success)/0.3)]">
+ <div className="h-14 w-14 rounded-full bg-success/15 border border-success/30 flex items-center justify-center text-success shadow-sm">
  <Check size={28} className="animate-premium-bounce" />
  </div>
  <div className="text-center space-y-1">
- <h4 className="text-xs uppercase tracking-widest text-success">Latihan Selesai!</h4>
+ <h4 className="text-xs uppercase tracking-wider text-success">Latihan Selesai!</h4>
  <p className="text-[9px] text-muted-foreground">Kanji "{character}" Berhasil Ditulis</p>
  </div>
  <Button 
@@ -102,7 +99,7 @@ export function WritingCanvas({
  )}
 
  {strokeError && (
- <div className="absolute bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-destructive/10 border border-destructive/20 text-[9px] font-bold uppercase tracking-wider text-destructive shadow-[0_0_15px_hsl(var(--destructive)/0.25)] animate-premium-bounce z-30">
+ <div className="absolute bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-destructive/10 border border-destructive/20 text-[9px] font-bold uppercase tracking-wider text-destructive shadow-sm animate-premium-bounce z-30">
  {strokeError === "reverse" ? "Arah guratan terbalik!" : "Guratan kurang tepat!"}
  </div>
  )}
@@ -136,7 +133,7 @@ export function WritingCanvas({
 
  <div className="absolute top-3 left-3 flex items-center gap-2 z-20">
  <Pulse size={10} className="text-destructive animate-pulse" />
- <span className="text-[7px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
+ <span className="text-[7px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
  {totalStrokes > 0 ? `Guratan ${currentStrokeIndex + 1} / ${totalStrokes}` : "WRITING_ACTIVE"}
  </span>
  </div>

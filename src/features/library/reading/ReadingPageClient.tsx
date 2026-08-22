@@ -7,9 +7,8 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { FullscreenExit } from "@/components/ui/icons";
@@ -41,9 +40,8 @@ interface ReadingProgressSnapshot {
   hasResumed: boolean;
 }
 
-// ======================
 // TIPE DATA
-// ======================
+
 /**
  * Props for the ReadingPageClient component.
  */
@@ -51,9 +49,7 @@ interface ReadingPageClientProps {
   data: ReadingData;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * Internal content component containing reading workspace logic and layout.
@@ -277,7 +273,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-20%] left-[-10%] size-[60%] bg-primary/5 blur-[150px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-20%] right-[-10%] size-[60%] bg-success/5 blur-[150px] rounded-full animate-pulse delay-1000" />
-        <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--foreground)/0.01)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.01)_1px,transparent_1px)] bg-size-[100px_100px] pointer-events-none opacity-20" />
+        <div className="absolute inset-0 bg-muted/30 bg-size-[100px_100px] pointer-events-none opacity-20" />
       </div>
 
       {/* Style Override untuk Zen Mode */}
@@ -385,7 +381,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
           lessonId={lessonId}
         />
 
-        {/* Kuis Membaca Inline — tampil setelah artikel, tanpa overlay */}
+        {/* Kuis Membaca Inline: tampil setelah artikel, tanpa overlay */}
         {hasQuiz && !isZenMode && (
           <ReadingQuizSection quizzes={formattedQuizzes} lessonId={lessonId} />
         )}

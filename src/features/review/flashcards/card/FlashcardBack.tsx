@@ -3,9 +3,8 @@
  * @description Back face component of flashcards (answer side), displaying translations, furigana/romaji, example sentences, SRS memory stats, and shortcuts.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,9 +16,8 @@ import { toRomaji, toHiragana } from "wanakana";
 import { splitFurigana } from "@/components/ui/japanese";
 import { MnemonicEditor } from "@/features/srs/mnemonic/MnemonicEditor";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for FlashcardBack component.
  */
@@ -68,9 +66,8 @@ interface FlashcardBackProps {
  relatedKanji?: unknown[] | null;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Back side of flashcard. Shows meaning, reading, examples, SRS state.
  */
@@ -90,9 +87,9 @@ export function FlashcardBack({
  hinshi,
  examples,
 }: FlashcardBackProps) {
- // ==========================================
+
  // METODE PENGENDALI & HELPERS
- // ==========================================
+
  const { isKanji, themeColor, themeBorder, themeShadow } = themeContext;
 
  // Check if furigana contains only romaji characters.
@@ -116,9 +113,8 @@ export function FlashcardBack({
  // Get current memory level.
  const memory = srsState ? getMemoryLevel(srsState.interval) : { label: "Baru", color: "text-primary bg-primary/10" };
 
- // ==========================================
  // RENDER KOMPONEN
- // ==========================================
+
  return (
  <Card
  className={`absolute inset-0 w-full h-full border ${themeBorder} rounded-lg ${themeShadow} flex flex-col p-4 md:p-6 transition-all duration-200 shadow-none overflow-hidden bg-card`}

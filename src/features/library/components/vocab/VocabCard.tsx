@@ -74,7 +74,7 @@ export function VocabCard({ item, showRomaji }: VocabCardProps) {
  <div className="pt-3 border-t border-border/40 dark:border-white/5 flex items-center justify-between gap-3 relative z-10">
  {item.related_kanji && item.related_kanji.length > 0 ? (
  <div className="flex flex-wrap gap-1 items-center">
- <span className="text-[9px] font-mono font-bold text-muted-foreground/50 uppercase tracking-widest mr-1">
+ <span className="text-[9px] font-mono font-bold text-muted-foreground/50 uppercase tracking-wider mr-1">
  Kanji:
  </span>
  {item.related_kanji.slice(0, 3).map((kanji: { character: string; meaning: string }) => (
@@ -84,7 +84,7 @@ export function VocabCard({ item, showRomaji }: VocabCardProps) {
  ))}
  </div>
  ) : (
- <span className="text-[9px] font-mono font-bold text-muted-foreground/40 uppercase tracking-widest">
+ <span className="text-[9px] font-mono font-bold text-muted-foreground/40 uppercase tracking-wider">
  LIHAT DETAIL
  </span>
  )}

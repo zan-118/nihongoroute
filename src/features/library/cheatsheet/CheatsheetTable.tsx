@@ -6,9 +6,9 @@
 
 "use client";
 
-// ======================
+
 // IMPOR
-// ======================
+
 import { useState } from "react";
 import { 
  LayoutGrid, 
@@ -27,9 +27,9 @@ import * as wanakana from "wanakana";
 import { SmartJapanese } from "@/components/ui/japanese";
 import { cn } from "@/lib/utils";
 
-// ======================
+
 // TIPE DATA
-// ======================
+
 
 /**
  * Represents a single item in the cheatsheet.
@@ -56,9 +56,9 @@ interface CheatsheetTableProps {
  */
 type ViewMode = "table" | "flashcard";
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Interactive table component for rendering cheatsheet items.
@@ -139,7 +139,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
  // Render fallback message if no items are provided
  if (!items || items.length === 0) {
  return (
- <div className="px-8 py-20 text-center text-muted-foreground font-medium italic bg-[hsl(var(--card)/0.2)] rounded-6xl border border-border glass">
+ <div className="px-8 py-20 text-center text-muted-foreground font-medium italic bg-card/20 rounded-6xl border border-border glass">
  Belum ada data tersedia untuk cheatsheet ini.
  </div>
  );

@@ -7,9 +7,8 @@
  * untuk mengevaluasi syarat pembukaan lencana secara dinamis.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Trophy } from "@/components/ui/icons";
@@ -19,9 +18,7 @@ import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 import { ACHIEVEMENTS_LIST } from "@/lib/constants/gamification";
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * AchievementsGrid component.
@@ -79,7 +76,7 @@ export default function AchievementsGrid() {
  key={ach.id}
  className={`p-6 rounded-lg border transition-all duration-500 relative overflow-hidden group ${
  isUnlocked 
- ? 'bg-primary/5 border-primary/30 shadow-[0_0_20px_hsl(var(--primary)/0.05)]' 
+ ? 'bg-primary/5 border-primary/30 shadow-sm' 
  : 'bg-muted/30 border-border grayscale opacity-70'
  }`}
  >

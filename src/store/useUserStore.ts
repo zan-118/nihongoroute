@@ -3,9 +3,6 @@
  * @description Offline-first Zustand store managing user profile, gamification progress (XP, level, streak), virtual inventory items (Streak Freeze), active study day logs, and lesson completion history. Persisted via IndexedDB (`idb-keyval`).
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { get, set as idbSet, del } from "idb-keyval";
@@ -14,9 +11,6 @@ import { calculateLevel } from "@/lib/level";
 import { useUIStore } from "./useUIStore";
 import { ACHIEVEMENTS_LIST, type AchievementProgressState } from "@/lib/constants/gamification";
 
-// ==========================================
-// State & Actions Interface
-// ==========================================
 /**
  * User state interface. Track progress, XP, level, streak, inventory, lessons.
  */
@@ -72,9 +66,6 @@ interface UserState {
  isCheckingAchievements?: boolean;
 }
 
-// ==========================================
-// BIAYA ITEM & KONSTANTA
-// ==========================================
 /** XP cost for streak freeze. */
 export const STREAK_FREEZE_COST = 500;
 

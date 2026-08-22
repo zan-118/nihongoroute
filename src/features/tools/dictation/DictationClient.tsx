@@ -5,9 +5,8 @@
  * @description Interactive client component for the Listening Dictation Practice Tool.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { m, AnimatePresence } from "framer-motion";
@@ -36,9 +35,8 @@ import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { toHiragana } from "wanakana";
 
 import { ROUTES } from "@/lib/core/routes";
-// ==========================================
+
 // Constants & Configuration
-// ==========================================
 
 /**
  * JLPT difficulty levels for selection.
@@ -57,9 +55,7 @@ const JLPT_LEVELS = [
  */
 const AMOUNTS = [5, 10, 15, 20];
 
-// ==========================================
 // Main Component
-// ==========================================
 
 /**
  * Dictation practice client component.
@@ -350,7 +346,7 @@ export default function DictationClient() {
  <span className="text-xs font-bold font-mono text-muted-foreground">
  KALIMAT {currentIndex + 1} DARI {sentences.length}
  </span>
- <span className="text-xs font-black uppercase tracking-widest text-success">
+ <span className="text-xs font-black uppercase tracking-wider text-success">
  Skor: {score.correct} / {currentIndex + (isChecked ? 1 : 0)}
  </span>
  </div>
@@ -362,7 +358,7 @@ export default function DictationClient() {
  key={idx}
  className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
  idx === currentIndex
- ? "bg-success shadow-[0_0_10px_hsl(var(--success)/0.5)] scale-y-110"
+ ? "bg-success shadow-sm scale-y-110"
  : idx < currentIndex
  ? correctList[idx]
  ? "bg-success"
@@ -388,7 +384,7 @@ export default function DictationClient() {
  onClick={() => speakSentence(sentences[currentIndex].japanese)}
  className={`size-24 rounded-full border flex flex-col items-center justify-center transition-all duration-300 gap-2 ${
  audioPlaying
- ? "border-success bg-success/10 text-success shadow-[0_0_30px_hsl(var(--success)/0.3)] animate-pulse"
+ ? "border-success bg-success/10 text-success shadow-sm animate-pulse"
  : "border-border bg-card/40 text-muted-foreground hover:border-success/40 hover:text-success hover:bg-success/5"
  }`}
  >

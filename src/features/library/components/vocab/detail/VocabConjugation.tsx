@@ -6,9 +6,8 @@
  * Mendeteksi struktur dinamis JSONB conjugations dari database Supabase dan memetakan label Bahasa Indonesia premium.
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import { Card } from "@/components/ui/card";
 import { ArrowLeftRight } from "@/components/ui/icons";
 
@@ -72,9 +71,8 @@ interface VocabConjugationProps {
  conjugations?: Record<string, string> | null;
 }
 
-// ==========================================
 // KOMPONEN UTAMA: VocabConjugation
-// ==========================================
+
 /**
  * Render conjugation table for Japanese verbs or adjectives.
  * 
@@ -134,7 +132,7 @@ export function VocabConjugation({
  if (renderedConjugations.length === 0) return null;
 
  return (
- <Card className="p-6 md:p-8 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative font-sans glass shadow-[0_0_20px_hsl(var(--primary)/0.02)]">
+ <Card className="p-6 md:p-8 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative font-sans glass shadow-sm">
  <div className="flex items-center gap-3 mb-6">
  <ArrowLeftRight size={18} aria-hidden="true" className="text-primary" />
  <h2 className="text-sm uppercase tracking-[0.2em] text-foreground">
@@ -145,7 +143,7 @@ export function VocabConjugation({
  {/* Grid Item Konjugasi */}
  <div className="flex flex-col sm:flex-row flex-wrap gap-4">
  {renderedConjugations.map((conj) => (
- <div key={conj.key} className="p-4 bg-[hsl(var(--muted)/0.2)] border border-border rounded-xl">
+ <div key={conj.key} className="p-4 bg-muted/20 border border-border rounded-xl">
  <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-1">{conj.label}</span>
  <span className="text-base font-bold text-foreground font-japanese">{conj.value}</span>
  </div>

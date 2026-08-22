@@ -30,7 +30,7 @@ export function ReviewPassageBlock({ passage }: ReviewPassageBlockProps) {
  if (!hasContent) return null;
 
  return (
-   <div className="mb-8 rounded-lg border border-border bg-[hsl(var(--muted)/0.25)] p-5 dark:bg-[hsl(var(--background)/0.12)]">
+   <div className="mb-8 rounded-lg border border-border bg-muted/25 p-5 dark:bg-background/12">
      {passage.visualUrl && (
        <div className="mb-5 overflow-hidden rounded-lg border border-border bg-background/60">
          <Image

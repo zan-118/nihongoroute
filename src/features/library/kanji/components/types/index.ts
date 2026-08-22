@@ -3,9 +3,9 @@
  * @description Definisi tipe data (TypeScript) untuk fitur visualisasi coretan dan informasi detail Kanji.
  */
 
-// ==========================================
+
 // TIPE DATA GORESAN & SVG KANJI
-// ==========================================
+
 
 /**
  * Individual stroke path data.
@@ -31,9 +31,9 @@ export interface KanjiSvgData {
  viewBox: string;
 }
 
-// ==========================================
+
 // TIPE DATA PENGENDALI PEMUTARAN (PLAYBACK)
-// ==========================================
+
 
 /**
  * Stroke animation playback state.
@@ -54,9 +54,9 @@ export interface KanjiPlaybackControl {
  showNumbers: boolean;
 }
 
-// ==========================================
+
 // TIPE DATA DETAIL KANJI
-// ==========================================
+
 
 /**
  * Detailed kanji metadata.

@@ -61,7 +61,7 @@ export function ReviewQuestionCard({ insight, resolvedTheme }: ReviewQuestionCar
         <div className="mb-8 flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-start sm:justify-between">
           <Badge
             variant="outline"
-            className="w-fit rounded-xl border border-border bg-[hsl(var(--muted)/0.5)] px-4 py-2 text-xs font-bold uppercase tracking-widest text-muted-foreground dark:bg-[hsl(var(--background)/0.2)]"
+            className="w-fit rounded-xl border border-border bg-muted/50 px-4 py-2 text-xs font-bold uppercase tracking-widest text-muted-foreground dark:bg-background/20"
           >
             SOAL {insight.index + 1} - {SECTION_LABELS[q.section]}
           </Badge>
@@ -79,14 +79,14 @@ export function ReviewQuestionCard({ insight, resolvedTheme }: ReviewQuestionCar
         {q.questionText && (
           <ExamQuestionText
             questionText={q.questionText}
-            className="mb-8 rounded-lg border border-border bg-[hsl(var(--muted)/0.3)] p-5 text-lg font-medium leading-relaxed text-foreground dark:bg-[hsl(var(--background)/0.1)] md:text-2xl font-japanese prose-custom"
+            className="mb-8 rounded-lg border border-border bg-muted/30 p-5 text-lg font-medium leading-relaxed text-foreground dark:bg-background/10 md:text-2xl font-japanese prose-custom"
           />
         )}
 
         <ReviewPassageBlock passage={q.passage} />
 
         {q.imageUrl && (
-          <div className="mb-8 overflow-hidden rounded-xl border border-border bg-[hsl(var(--muted)/0.2)] p-3 dark:bg-[hsl(var(--background)/0.2)]">
+          <div className="mb-8 overflow-hidden rounded-xl border border-border bg-muted/20 p-3 dark:bg-background/20">
             <Image
               src={q.imageUrl}
               alt="Gambar pendukung"
@@ -99,7 +99,7 @@ export function ReviewQuestionCard({ insight, resolvedTheme }: ReviewQuestionCar
         )}
 
         {q.audioUrl && (
-          <div className="mb-8 flex flex-col gap-4 rounded-lg border border-border bg-[hsl(var(--muted)/0.2)] p-5 shadow-none dark:bg-[hsl(var(--background)/0.3)]">
+          <div className="mb-8 flex flex-col gap-4 rounded-lg border border-border bg-muted/20 p-5 shadow-none dark:bg-background/30">
             <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
               <VolumeUp size={16} aria-hidden="true" className="text-primary" />
               Audio Track (Review)

@@ -3,15 +3,13 @@
  * @description Komponen Kartu (Card) atomik dengan estetika Bento / Cyber-glass (neo-card).
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
+
 /**
  * Root card container. Apply neo-card styling.
  */

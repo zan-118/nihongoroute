@@ -170,7 +170,7 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
  hasLiked ? "text-primary" : ""
  }`}
  >
- <Heart size={16} className={hasLiked ? "fill-current text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]" : ""} />
+ <Heart size={16} className={hasLiked ? "fill-current text-primary drop-shadow-sm" : ""} />
  <span>{post.likes_users.length} Suka</span>
  </button>
 
@@ -360,7 +360,7 @@ export default function CommunityFeed() {
  value={postContent}
  onChange={(e) => setPostContent(e.target.value)}
  rows={3}
- className="w-full bg-background/25 border border-border/60 rounded-lg p-4 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/50 outline-none resize-none focus:border-primary/45 focus:shadow-[0_0_12px_hsl(var(--primary)/0.06)]"
+ className="w-full bg-background/25 border border-border/60 rounded-lg p-4 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/50 outline-none resize-none focus:border-primary/45 focus:shadow-sm"
  />
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
  {/* Compose Category Selector */}

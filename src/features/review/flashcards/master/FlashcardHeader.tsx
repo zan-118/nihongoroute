@@ -3,9 +3,8 @@
  * @description Flashcard session header component displaying progress bars, mode switchers (Warmup, Memory Drill, Challenge), study combo streaks, and back navigation.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -14,9 +13,8 @@ import { Brain, Check, X, Search, Fire } from "@/components/ui/icons";
 import { StudyMode } from "./types";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for FlashcardHeader component.
  */
@@ -43,9 +41,8 @@ interface FlashcardHeaderProps {
  router: AppRouterInstance;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Header component for flashcard session.
  * Displays progress bar, study mode selector, combo counter, and exit button.
@@ -157,7 +154,7 @@ export function FlashcardHeader({
  <Progress
  value={((currentIndex + 1) / totalCards) * 100}
  className="h-1.5 md:h-2 bg-muted/50 border-none"
- indicatorClassName={`${themeBgColor} shadow-[0_0_10px_hsl(var(--primary)/0.5)]`}
+ indicatorClassName={`${themeBgColor} shadow-sm`}
  />
  </div>
  </header>

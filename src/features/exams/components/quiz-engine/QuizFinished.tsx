@@ -3,9 +3,8 @@
  * @description Komponen tampilan ringkasan hasil penyelesaian kuis (QuizFinished) Lengkap dengan skor, persentase kelulusan, penambahan XP pengguna, tombol pengulangan, dan tombol lanjut.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { m } from "framer-motion";
 import { useRouter } from "next/navigation";
 import XPPop from "@/features/gamification/XPPop";
@@ -14,9 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Target, Restart, ArrowRight } from "@/components/ui/icons";
 
-// ======================
 // ANTARMUKA / TIPE DATA
-// ======================
 
 /**
  * Props for QuizFinished component.
@@ -34,9 +31,7 @@ interface QuizFinishedProps {
  resetQuiz: () => void;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * QuizFinished component. Displays final score, percentage, XP gained, and action buttons.
@@ -71,7 +66,7 @@ export function QuizFinished({
  <Card
  className={`w-28 h-28 rounded-2xl border flex items-center justify-center text-4xl neo-inset shadow-none ${
  isPerfect
- ? "bg-destructive/10 border-destructive/30 shadow-lg dark:shadow-[0_0_40px_hsl(var(--destructive)/0.2)]"
+ ? "bg-destructive/10 border-destructive/30 shadow-lg shadow-sm"
  : "bg-warning/10 border-warning/30"
  }`}
  >
@@ -101,7 +96,7 @@ export function QuizFinished({
  <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-2">
  Persentase
  </p>
- <p className={`text-5xl font-black tracking-tight ${isPerfect ? "text-destructive drop-shadow-sm dark:drop-shadow-[0_0_15px_hsl(var(--destructive)/0.4)]" : "text-warning"}`}>
+ <p className={`text-5xl font-black tracking-tight ${isPerfect ? "text-destructive drop-shadow-sm dark:drop-shadow-sm" : "text-warning"}`}>
  {percentage}%
  </p>
  </div>

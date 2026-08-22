@@ -6,17 +6,15 @@
  * Menyediakan metode masuk/daftar berbasis email, OAuth Google, dan masuk instan sebagai tamu anonim menggunakan Supabase Auth.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import React, { useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
-// ======================
 // HOOK UTAMA
-// ======================
+
 /**
  * Auth hook. Manage email auth, Google OAuth, guest login.
  * @returns Auth state and handler functions.

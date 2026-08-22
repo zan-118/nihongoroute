@@ -7,9 +7,8 @@
  * serta pesan penyemangat bagi pelajar.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,9 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Award, Trophy, Shield, ArrowRight, Star, Zap } from "@/components/ui/icons";
 import { useLevelUpOverlay } from "./useLevelUpOverlay";
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * LevelUpOverlay component.
@@ -50,7 +47,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
  >
  <Card className="text-center py-6 px-4 md:py-10 md:px-12 bg-background rounded-2xl md:rounded-3xl border border-primary/30 shadow-2xl neo-card relative overflow-hidden w-full h-auto flex flex-col items-center">
  {/* Grid background pattern */}
- <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--primary)/0.03)_1px,transparent_1px)] bg-size-[100%_4px] pointer-events-none opacity-20 dark:opacity-40" />
+ <div className="absolute inset-0 bg-muted/30 bg-size-[100%_4px] pointer-events-none opacity-20 dark:opacity-40" />
  
  {/* Radial glow effects */}
  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-125 bg-primary/10 blur-[65px] rounded-full animate-bloom pointer-events-none ambient-glow will-change-transform" />
@@ -71,15 +68,15 @@ export default function LevelUpOverlay({ level }: { level: number }) {
  }}
  className="w-16 h-16 md:w-28 md:h-28 mx-auto bg-primary/10 rounded-lg md:rounded-2xl flex items-center justify-center mb-6 md:mb-10 neo-inset shadow-none border border-primary/30"
  >
- <Trophy size={40} className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_hsl(var(--primary)/0.6)] md:w-14 md:h-14" />
+ <Trophy size={40} className="text-primary drop-shadow-sm dark:drop-shadow-sm md:w-14 md:h-14" />
  </m.div>
 
  <Badge variant="outline" className="text-primary text-xs md:text-xs font-bold uppercase tracking-widest mb-4 md:mb-6 h-auto neo-inset px-4 py-1.5 md:px-8 md:py-2.5 border-primary/30 bg-primary/5 rounded-xl">
  Naik Level!
  </Badge>
  
- <h1 className="text-4xl md:text-6xl lg:text-7xl text-foreground uppercase tracking-tighter mb-4 md:mb-6 drop-shadow-sm dark:drop-shadow-[0_0_20px_hsl(var(--foreground)/0.2)]">
- LEVEL <span className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_hsl(var(--primary)/0.4)]">{level}</span>
+ <h1 className="text-4xl md:text-6xl lg:text-7xl text-foreground uppercase tracking-tighter mb-4 md:mb-6 drop-shadow-sm dark:drop-shadow-sm">
+ LEVEL <span className="text-primary drop-shadow-sm dark:drop-shadow-sm">{level}</span>
  </h1>
  
  {/* Level stats indicators */}

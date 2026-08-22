@@ -4,15 +4,13 @@
  * Mengelola pembaruan waktu audio (currentTime) dan navigasi linear (seekToLine).
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import { useState, useCallback, useRef } from "react";
 import { TranscriptLine } from "../types";
 
-// ==========================================
 // HOOK UTAMA: useListeningSync
-// ==========================================
+
 /**
  * Syncs audio playback time with active transcript lines.
  * 

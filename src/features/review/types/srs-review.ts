@@ -3,9 +3,7 @@
  * @description Deklarasi tipe data dan antarmuka kartu flashcard untuk kebutuhan ulasan hafalan (SRS Review Session).
  */
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
 
 /**
  * Flashcard data structure for SRS review.

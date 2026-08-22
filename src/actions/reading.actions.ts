@@ -6,9 +6,8 @@
 
 "use server";
 
-// ======================
 // IMPORTS
-// ======================
+
 import { PaginatedReadingResponse, LibraryItem } from "@/types/library";
 import { ReadingMaterialTable } from "@/types/database";
 import {
@@ -18,9 +17,7 @@ import {
 } from "@/lib/services/content-repository";
 import { logger } from "@/lib/core/logger";
 
-// ======================
 // SERVER ACTIONS
-// ======================
 
 /**
  * Fetches paginated reading materials from Supabase with optional search and JLPT level filters.

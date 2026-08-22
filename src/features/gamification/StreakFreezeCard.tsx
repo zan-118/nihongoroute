@@ -7,18 +7,15 @@
  * serta melakukan sinkronisasi transaksi langsung ke Zustand store (`useUserStore`).
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Shield, Zap, Information } from "@/components/ui/icons";
 import { toast } from "sonner";
 import { useUserStore, STREAK_FREEZE_COST } from "@/store/useUserStore";
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * StreakFreezeCard component.

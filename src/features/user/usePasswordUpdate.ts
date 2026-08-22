@@ -6,17 +6,14 @@
  * Memvalidasi kesamaan dan kekuatan kata sandi, serta mengeksekusi operasi pembaruan akun di Supabase Auth.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
-// ======================
 // HOOK UTAMA
-// ======================
 
 /**
  * Custom hook to manage password update form state, validation, and submission.

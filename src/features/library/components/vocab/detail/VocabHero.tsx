@@ -69,7 +69,7 @@ export function VocabHero({ word, furigana, romaji, meaning, audioUrl }: VocabHe
  )}
  
  {/* Glowing Divider Bar */}
- <div className="h-1.5 w-20 bg-primary rounded-full mb-6 shadow-[0_0_20px_hsl(var(--primary)/0.3)]" />
+ <div className="h-1.5 w-20 bg-primary rounded-full mb-6 shadow-sm" />
  
  {/* Main Meaning */}
  <p className="text-2xl sm:text-3xl md:text-4xl font-black text-foreground max-w-2xl leading-tight">

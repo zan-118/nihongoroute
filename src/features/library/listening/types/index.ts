@@ -3,9 +3,7 @@
  * @description Tipe data dan antarmuka untuk aktivitas latihan Menyimak (Listening Comprehension).
  */
 
-// ==========================================
 // ANTARMUKA & TIPE DATA UTAMA
-// ==========================================
 
 /**
  * Represents a single line in the audio transcript.

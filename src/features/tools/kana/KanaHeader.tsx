@@ -3,17 +3,16 @@
  * @description Header component for Master Kana page, providing back navigation and Hiragana/Katakana overview.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, LayoutGrid } from "@/components/ui/icons";
 import Link from "next/link";
 
 import { ROUTES } from "@/lib/core/routes";
-// ==========================================
+
 // Component Props Interface
-// ==========================================
+
 /**
  * Properties for KanaHeader component.
  */
@@ -22,9 +21,8 @@ interface KanaHeaderProps {
  themeColor: string;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Header component for Kana Master page.
  * Renders navigation link, page title, description, and layout indicator.
@@ -33,9 +31,7 @@ interface KanaHeaderProps {
  * @param props.themeColor - Tailwind class for text color styling.
  */
 export function KanaHeader({ themeColor }: KanaHeaderProps) {
- // ==========================================
- // RENDER KOMPONEN
- // ==========================================
+
  return (
  <header className="mb-8">
  {/* Navigation bar containing back button */}
@@ -43,7 +39,7 @@ export function KanaHeader({ themeColor }: KanaHeaderProps) {
  <Button
  variant="outline"
  asChild
- className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest bg-muted border-border"
+ className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-muted border-border"
  >
  <Link href={ROUTES.TOOLS.ROOT}>
  <ChevronLeft size={14} className="mr-2" /> Kembali ke Peralatan

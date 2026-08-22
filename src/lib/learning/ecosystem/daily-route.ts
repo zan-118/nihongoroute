@@ -74,8 +74,6 @@ export function buildDailyRoute({
  });
  }
 
-
-
  // Add recommendation steps.
  recommendations.forEach((recommendation, index) => {
  pushRouteStep(steps, {

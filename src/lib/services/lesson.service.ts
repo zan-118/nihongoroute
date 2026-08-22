@@ -4,11 +4,8 @@
  * Logika hidrasi relasi didelegasikan ke LessonHydrationEngine.
  */
 
-
-
-// ======================
 // IMPORTS
-// ======================
+
 import { createStaticClient } from "@/lib/supabase/server";
 import { LibraryItem } from "@/types/library";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
@@ -23,9 +20,7 @@ import {
 } from "@/lib/services/lesson-hydration-engine";
 import { logger } from "@/lib/core/logger";
 
-// ======================
 // SERVER ACTIONS
-// ======================
 
 /**
  * Mengambil detail lengkap materi pelajaran bahasa Jepang berdasarkan slug teks.
@@ -60,9 +55,7 @@ export async function getLessonDetail(slug: string) {
  return { ...rawData, category: rawData.course_categories };
 }
 
-// ======================
 // INTERNAL TYPES
-// ======================
 
 /**
  * Representasi item pelajaran minimal.
@@ -73,7 +66,7 @@ interface LessonListItem {
  slug: string;
 }
 
-// VocabRow, GrammarRow, ContentBlock — dipindahkan ke lesson-hydration-engine.ts
+// VocabRow, GrammarRow, ContentBlock: dipindahkan ke lesson-hydration-engine.ts
 
 /**
  * Mengambil seluruh daftar kategori kursus dari Supabase, lalu menggabungkannya secara paralel

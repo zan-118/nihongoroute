@@ -3,17 +3,16 @@
  * @description Interactive Hiragana and Katakana grid matrix visualizer component. Allows selecting characters for stroke order details.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
-import React from "react";
+
+import React, { useCallback, useRef, useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
+import { fetchTTSAudio, speakWithWebSpeech } from "@/lib/audio/tts";
 import { KANA_DATA, KanaType, KanaCategory } from "./kana-data";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for KanaMatrix component.
  */
@@ -28,19 +27,50 @@ interface KanaMatrixProps {
  themeBgHover: string;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Interactive grid visualizer for Hiragana and Katakana characters.
  */
 export function KanaMatrix({ type, category, onSelectChar, themeBgHover }: KanaMatrixProps) {
  // Get character data for selected category
  const currentData = KANA_DATA[category];
+ const audioRef = useRef<HTMLAudioElement | null>(null);
 
- // ==========================================
+ const playKanaAudio = useCallback(async (char: string) => {
+   if (!char) return;
+   try {
+     const ttsUrl = await fetchTTSAudio(char, "indah");
+     if (ttsUrl) {
+       if (!audioRef.current) {
+         audioRef.current = new Audio();
+       }
+       audioRef.current.src = ttsUrl;
+       await audioRef.current.play();
+       return;
+     }
+   } catch (err) {
+     console.warn("[Kana Matrix] Gagal memutar Edge TTS:", err);
+   }
+   speakWithWebSpeech(char, "indah", 0.9);
+ }, []);
+
+ useEffect(() => {
+   return () => {
+     if (audioRef.current) {
+       audioRef.current.pause();
+       audioRef.current = null;
+     }
+   };
+ }, []);
+
+ const handleCellClick = (char: string, romaji: string) => {
+   playKanaAudio(char);
+   onSelectChar(char, romaji);
+ };
+
  // RENDER KOMPONEN
- // ==========================================
+
  return (
  <Card className="p-4 md:p-8 rounded-lg border border-border bg-card shadow-2xl relative flex-1 min-h-[400px] md:min-h-[450px] overflow-hidden">
  {/* Yoon category uses 3 columns, others use 5 */}
@@ -59,7 +89,7 @@ export function KanaMatrix({ type, category, onSelectChar, themeBgHover }: KanaM
  initial={{ opacity: 0, scale: 0.9 }}
  animate={{ opacity: 1, scale: 1 }}
  exit={{ opacity: 0, scale: 0.9 }}
- onClick={() => onSelectChar(char, currentData.romaji[rowIndex][colIndex])}
+ onClick={() => handleCellClick(char, currentData.romaji[rowIndex][colIndex])}
  className={`relative aspect-square bg-muted/30 border border-border rounded-lg md:rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${themeBgHover} hover:border-current group active:scale-95 shadow-sm`}
  >
  <span className="text-2xl md:text-4xl font-black text-foreground group-hover:scale-105 transition-transform font-japanese drop-shadow-sm">

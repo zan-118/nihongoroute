@@ -36,7 +36,7 @@ export function ReviewHeader({ onBack }: ReviewHeaderProps) {
         <Button
           variant="ghost"
           onClick={onBack}
-          className="w-full sm:w-auto text-xs neo-inset hover:bg-background text-muted-foreground hover:text-foreground px-5 py-3 h-auto font-black uppercase tracking-widest border border-border bg-[hsl(var(--muted)/0.5)] dark:bg-[hsl(var(--background)/0.2)] shadow-none rounded-xl"
+          className="w-full sm:w-auto text-xs neo-inset hover:bg-background text-muted-foreground hover:text-foreground px-5 py-3 h-auto font-black uppercase tracking-widest border border-border bg-muted/50 dark:bg-background/20 shadow-none rounded-xl"
         >
           <ArrowLeft data-icon="inline-start" />
           Kembali

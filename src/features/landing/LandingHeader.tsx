@@ -103,7 +103,7 @@ export function LandingHeader() {
             size="icon"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Buka Menu Navigasi"
-            className="size-9 rounded-xl border border-border text-foreground hover:bg-muted"
+            className="size-11 rounded-xl border border-border text-foreground hover:bg-muted min-h-[44px] min-w-[44px]"
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </Button>

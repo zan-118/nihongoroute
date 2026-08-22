@@ -6,9 +6,9 @@
  * @module features/dashboard/components
  */
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,9 +22,9 @@ import Heatmap from "./heatmap/Heatmap";
 import StreakFreezeCard from "@/features/gamification/StreakFreezeCard";
 import { useUserStore } from "@/store/useUserStore";
 
-// ==========================================
+
 // ANTARMUKA & PROPS (INTERFACES)
-// ==========================================
+
 
 /**
  * Props for DashboardStats component.
@@ -73,9 +73,9 @@ interface DashboardStatsProps {
  }>;
 }
 
-// ==========================================
+
 // KOMPONEN UTAMA
-// ==========================================
+
 
 /**
  * Dashboard stats grid. Shows level, XP, streak, course progress, quests, SRS stats, and heatmap.
@@ -137,7 +137,7 @@ export default function DashboardStats({
  <Progress
  value={xpProgress}
  className="h-3 bg-muted border border-border relative overflow-hidden"
- indicatorClassName="bg-[linear-gradient(90deg,hsl(var(--primary)),hsl(var(--primary)))] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-white/30"
+ indicatorClassName="bg-muted/30 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-white/30"
  />
  <p className="mt-4 text-xs text-muted-foreground uppercase font-bold tracking-widest font-mono text-center md:text-right">
  Kumpulkan <span className="text-foreground">{xpNeeded} XP</span> lagi untuk naik level!
@@ -189,7 +189,7 @@ export default function DashboardStats({
  <m.div variants={itemVariants} className="md:col-span-12">
  <div className="flex flex-col mb-8 mt-4">
  <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-[10px] mb-2 flex items-center gap-2">
- <div className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.8)]" />
+ <div className="size-1.5 rounded-full bg-primary shadow-sm" />
  Pencapaian Silabus
  </h2>
  <h3 className="text-xl md:text-2xl font-black text-foreground uppercase tracking-tight">
@@ -239,8 +239,8 @@ export default function DashboardStats({
  viewport={{ once: true }}
  className={`h-full rounded-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-white/30 ${
  percentage === 100 
- ? 'bg-success shadow-[0_0_10px_hsl(var(--success)/0.5)]' 
- : 'bg-[linear-gradient(90deg,hsl(var(--primary)),hsl(var(--primary)))] shadow-[0_0_10px_hsl(var(--primary)/0.4)]'
+ ? 'bg-success shadow-sm' 
+ : 'bg-muted/30 shadow-sm'
  }`}
  />
  </div>

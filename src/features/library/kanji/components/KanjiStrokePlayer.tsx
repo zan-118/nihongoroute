@@ -5,9 +5,9 @@
  * @description Komponen pemutar animasi urutan goresan (stroke order) Kanji dengan kontrol playback interaktif (play, pause, speed, step-by-step).
  */
 
-// ==========================================
+
 // IMPORT & DEPENDENSI
-// ==========================================
+
 import React, { useState, useEffect, useCallback } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { 
@@ -23,9 +23,9 @@ import { Button } from "@/components/ui/button";
 import { useKanjiSvg } from "./hooks/useKanjiSvg";
 import { PlaybackStatus, StrokeData } from "./types";
 
-// ==========================================
+
 // TIPE DATA / INTERFACE
-// ==========================================
+
 /**
  * Props for KanjiStrokePlayer component.
  */
@@ -40,9 +40,9 @@ interface KanjiStrokePlayerProps {
  size?: number;
 }
 
-// ==========================================
+
 // KOMPONEN UTAMA
-// ==========================================
+
 /**
  * Kanji stroke order animation player.
  * Render SVG paths. Provide playback controls.
@@ -53,9 +53,9 @@ export default function KanjiStrokePlayer({
  strokeColor = "#a855f7",
  size = 250,
 }: KanjiStrokePlayerProps) {
- // ==========================================
+
  // STATUS & STATE & HOOKS
- // ==========================================
+
  // Fetch SVG data for character.
  const { data, loading, error } = useKanjiSvg(character, strokeOrderSvg);
  
@@ -75,9 +75,9 @@ export default function KanjiStrokePlayer({
  // Konstanta durasi animasi dasar (detik)
  const BASE_STROKE_DURATION = 0.8;
 
- // ==========================================
+
  // FUNGSI PENGENDALI PEMUTARAN
- // ==========================================
+
  /**
  * Advance to next stroke. Finish if last.
  */
@@ -125,17 +125,17 @@ export default function KanjiStrokePlayer({
  };
 
 
- // ==========================================
+
  // RENDER KOMPONEN
- // ==========================================
+
  if (loading) return (
- <div className="flex items-center justify-center bg-[hsl(var(--card)/0.2)] rounded-xl border border-border" style={{ width: size, height: size }}>
+ <div className="flex items-center justify-center bg-card/20 rounded-xl border border-border" style={{ width: size, height: size }}>
  <div className="animate-spin rounded-full size-8 border-b-2 border-primary" />
  </div>
  );
 
  if (error || !data) return (
- <div className="flex items-center justify-center bg-[hsl(var(--card)/0.2)] rounded-xl border border-border text-destructive text-xs p-4 text-center" style={{ width: size, height: size }}>
+ <div className="flex items-center justify-center bg-card/20 rounded-xl border border-border text-destructive text-xs p-4 text-center" style={{ width: size, height: size }}>
  Gagal memuat animasi kanji.
  </div>
  );
@@ -144,7 +144,7 @@ export default function KanjiStrokePlayer({
  <div className="flex flex-col items-center gap-6">
  {/* WADAH PEMUTAR CYBER-GLASS */}
  <div 
- className="relative bg-[hsl(var(--card)/0.4)] rounded-2xl md:rounded-3xl border border-border shadow-2xl overflow-hidden group p-6 md:p-8 flex items-center justify-center"
+ className="relative bg-card/40 rounded-2xl md:rounded-3xl border border-border shadow-2xl overflow-hidden group p-6 md:p-8 flex items-center justify-center"
  style={{ 
  width: '100%',
  maxWidth: size + 64, 
@@ -246,7 +246,7 @@ export default function KanjiStrokePlayer({
 
  {/* Lencana Indikator Kecepatan */}
  <div className="absolute top-6 right-8 z-20">
- <div className="px-2 py-1 rounded-md bg-[hsl(var(--background)/0.05)] border border-border text-[8px] font-bold uppercase tracking-widest text-primary flex items-center gap-1">
+ <div className="px-2 py-1 rounded-md bg-background/5 border border-border text-[8px] font-bold uppercase tracking-widest text-primary flex items-center gap-1">
  <Zap size={8} aria-hidden="true" /> {speed}x KECEPATAN
  </div>
  </div>
@@ -254,7 +254,7 @@ export default function KanjiStrokePlayer({
 
  {/* KONTROL PEMUTARAN */}
  <div className="flex flex-col gap-4 w-full max-w-[320px]">
- <div className="grid grid-cols-5 gap-2 bg-[hsl(var(--background)/0.05)] p-2 rounded-lg border border-border">
+ <div className="grid grid-cols-5 gap-2 bg-background/5 p-2 rounded-lg border border-border">
  <Button
  variant="ghost"
  size="icon" 

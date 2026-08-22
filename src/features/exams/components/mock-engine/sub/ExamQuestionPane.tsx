@@ -85,7 +85,7 @@ const OptionButton = memo(({
  onClick={() => onSelect(idx)}
  className={`p-4 rounded-xl text-left transition-all font-medium flex items-center gap-4 border [&_rt]:text-[0.55em] [&_rt]:leading-none ${
  isSelected
- ? "bg-destructive/10 border-destructive text-destructive shadow-[0_0_12px_hsl(var(--destructive)/0.1)]"
+ ? "bg-destructive/10 border-destructive text-destructive shadow-sm"
  : "bg-card border-border text-muted-foreground hover:border-destructive/30"
  }`}
  >
@@ -244,7 +244,7 @@ export function ExamQuestionPane() {
  {/* Kartu Utama Soal */}
  <div className="bg-card border border-border rounded-xl p-6 md:p-8 shadow-sm glass">
  <div className="flex items-start justify-between gap-4 mb-6">
- <div className="px-3 py-1 bg-muted dark:bg-[hsl(var(--background)/0.1)] rounded-lg text-[10px] font-mono font-bold text-muted-foreground">
+ <div className="px-3 py-1 bg-muted dark:bg-background/10 rounded-lg text-[10px] font-mono font-bold text-muted-foreground">
  SOAL {currentQuestionIndex + 1}
  </div>
 

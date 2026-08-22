@@ -8,9 +8,8 @@
  * @module features/dashboard/components
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import Link from "next/link";
 import { ArrowRight, Brain, Target } from "@/components/ui/icons";
 import { buildWeakPointInsights } from "@/lib/learning-ecosystem";
@@ -40,7 +39,7 @@ export default function WeakPointSummary() {
  <Target size={18} aria-hidden="true" />
  </div>
  <div>
- <p className="text-[10px] font-black uppercase tracking-[0.2em] text-warning">
+ <p className="text-[10px] font-black uppercase tracking-wider text-warning">
  Titik Lemah
  </p>
  <h2 className="text-lg tracking-tight text-foreground">

@@ -15,9 +15,7 @@ import { cn } from "@/lib/utils";
 import { useCachedAudio } from "@/hooks/useCachedAudio";
 import { fetchTTSAudio, speakWithWebSpeech, TTS_VOICES } from "@/lib/tts";
 
-// ============================================================
 // TIPE DATA
-// ============================================================
 
 /**
  * Props for the AudioController component.
@@ -68,9 +66,7 @@ const formatTime = (t: number) => {
  return `${m}:${s.toString().padStart(2, "0")}`;
 };
 
-// ============================================================
 // KOMPONEN UTAMA
-// ============================================================
 
 /**
  * AudioController component.
@@ -104,7 +100,7 @@ export default function AudioController({
  // ── Refs ───────────────────────────────────────────────
  /** Elemen <audio> untuk native file */
  const nativeAudioRef = useRef<HTMLAudioElement | null>(null);
- /** Elemen Audio() untuk TTS — terpisah dari native */
+  /** Elemen Audio() untuk TTS: terpisah dari native */
  const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
  /** Fungsi stop untuk Web Speech API fallback */
  const stopSpeechRef = useRef<(() => void) | null>(null);
@@ -131,7 +127,6 @@ export default function AudioController({
  ttsObjectUrlRef.current = null;
  }
  }, []);
-
 
  // ── Helpers ────────────────────────────────────────────
  /** Cancels pending animation frame. */
@@ -314,7 +309,7 @@ export default function AudioController({
  const myRequestId = ttsRequestIdRef.current;
  window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
 
- // fetchTTSAudio mengembalikan URL API route — bukan blob URL
+  // fetchTTSAudio mengembalikan URL API route: bukan blob URL
  const ttsUrl = await fetchTTSAudio(text, TTS_VOICES.ZUNDAMON, "medium");
 
  if (myRequestId !== ttsRequestIdRef.current) return;
@@ -356,8 +351,7 @@ export default function AudioController({
  };
 
  ttsEl.play().catch(() => { setIsLoading(false); setError("Gagal memutar AI Voice."); });
- } else {
- // Edge TTS tidak tersedia — fallback ke Web Speech API
+ } else {     // Edge TTS tidak tersedia: fallback ke Web Speech API
  setIsLoading(false);
  setIsPlaying(true);
  setIsTTS(true);
@@ -408,9 +402,6 @@ export default function AudioController({
  ? <PauseCircle size={iconSize} fill="currentColor" />
  : <PlayCircle size={iconSize} fill="currentColor" className={!compact ? "ml-1" : undefined} />;
 
- // ============================================================
- // RENDER
- // ============================================================
  return (
  <div className={cn(
  "flex items-center gap-4 transition-all duration-500",
@@ -455,7 +446,7 @@ export default function AudioController({
  {header && audioUrl && (
  <div className="flex-1 flex flex-col gap-1">
  <div className="flex justify-between items-center">
- <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">
+ <span className="text-[10px] font-black uppercase tracking-wider text-primary/70">
  {isTTS ? "AI Voice" : "Audio"}
  </span>
  <span className="text-[10px] font-mono text-muted-foreground">
@@ -479,8 +470,8 @@ export default function AudioController({
 
  {/* Header tanpa audio */}
  {header && !audioUrl && (
- <div className="flex flex-col flex-1">
- <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">AI Smart Voice</span>
+ <div className="flex flex-col">
+ <span className="text-[10px] font-black uppercase tracking-wider text-primary/70">AI Smart Voice</span>
  <span className="text-xs font-bold text-foreground">
  {isLoading ? "Memuat..." : isPlayingActive ? "Membaca..." : "Siap"}
  </span>
@@ -491,7 +482,7 @@ export default function AudioController({
  {!compact && !header && audioUrl && (
  <div className="flex-1 flex flex-col gap-1 px-2">
  <div className="flex justify-between items-center px-1">
- <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">
+ <span className="text-[10px] font-black uppercase tracking-wider text-primary/70">
  {isTTS ? "AI Reading" : "Native Audio"}
  </span>
  <span className="text-[10px] font-mono text-muted-foreground">
@@ -516,7 +507,7 @@ export default function AudioController({
  {/* ── Compact / tanpa audio: status label ── */}
  {(compact || (!audioUrl && !header)) && (
  <div className="flex flex-col pr-2 pl-2">
- <span className="text-[10px] font-black uppercase tracking-widest text-primary/70 mb-0.5">
+ <span className="text-[10px] font-black uppercase tracking-wider text-primary/70 mb-0.5">
  {audioUrl ? "Native" : "AI Smart Voice"}
  </span>
  <span className="text-xs font-bold text-foreground line-clamp-1">

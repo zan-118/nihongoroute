@@ -55,8 +55,7 @@ export default function AboutView() {
       <div className="app-container-narrow mx-auto space-y-16">
         {/* Header Section */}
         <div className="text-center space-y-6 max-w-3xl mx-auto">
-          <Badge variant="outline" className="bg-card border-border text-primary px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2">
-            
+          <Badge variant="outline" className="bg-card border-border text-primary px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center gap-2">
             <span>Tentang NihongoRoute</span>
           </Badge>
 
@@ -89,7 +88,7 @@ export default function AboutView() {
                 Kami percaya bahwa belajar bahasa baru membutuhkan ketenangan dan konsistensi. Oleh karena itu, antarmuka NihongoRoute dirancang mengusung prinsip <strong className="text-foreground">Kanso (kesederhanaan)</strong> dan <strong className="text-foreground">Shibui (keindahan yang tenang)</strong>.
               </p>
               <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-                Semua fitur — mulai dari tabel Kana, pengulang kosakata SRS, hingga simulasi JLPT — dibuat agar Anda bisa fokus 100% pada pemahaman materi.
+                Semua fitur: mulai dari tabel Kana, pengulang kosakata SRS, hingga simulasi JLPT, dibuat agar Anda bisa fokus 100% pada pemahaman materi.
               </p>
             </div>
           </div>

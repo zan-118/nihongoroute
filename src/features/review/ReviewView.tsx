@@ -117,13 +117,13 @@ export function ReviewView() {
  <Button
  onClick={() => setMode(null)}
  variant="ghost"
- className="text-muted-foreground hover:text-foreground text-xs font-bold uppercase tracking-widest bg-muted/50 h-auto px-4 py-2.5 rounded-xl border border-border"
+ className="text-muted-foreground hover:text-foreground text-xs font-bold uppercase tracking-wider bg-muted/50 h-auto px-4 py-2.5 rounded-xl border border-border"
  >
  <ChevronLeft size={14} className="mr-2" /> Kembali
  </Button>
  <Badge
  variant="outline"
- className={`${mode === 'srs' ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-warning/10 border-warning/30 text-warning'} px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 h-auto`}
+ className={`${mode === 'srs' ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-warning/10 border-warning/30 text-warning'} px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 h-auto`}
  >
  {mode === 'srs' ? <Brain size={16} /> : <Zap size={16} />}
  <span>{mode === 'srs' ? 'Review SRS' : 'Latihan Cepat'}</span>

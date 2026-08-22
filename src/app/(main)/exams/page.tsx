@@ -5,9 +5,9 @@
  * @module ExamsPage
  */
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -27,9 +27,9 @@ type ExamListItem = {
  title?: string;
 };
 
-// ======================
+
 // METADATA SEO
-// ======================
+
 /**
  * SEO metadata configuration for the Exams page.
  */
@@ -43,9 +43,9 @@ export const metadata: Metadata = {
  }),
 };
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Server component for the JLPT exam center page.

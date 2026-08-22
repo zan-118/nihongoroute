@@ -3,16 +3,10 @@
  * @description Authentication page route (Login & Sign Up) for NihongoRoute. Entry point for LoginView.
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import type { Metadata } from "next";
 import LoginView from "@/features/auth/LoginView";
 import { createPageMetadata } from "@/lib/seo";
 
-// ==========================================
-// Metadata Configuration
-// ==========================================
 /**
  * Metadata for login page.
  * Disable search indexing. Set SEO title and description.
@@ -27,9 +21,6 @@ export const metadata: Metadata = {
  }),
 };
 
-// ==========================================
-// Main Execution
-// ==========================================
 /**
  * Login page entry point.
  * Render client-side login interface.

@@ -7,15 +7,13 @@
  * @project NihongoRoute
  */
 
-// ==========================================
 // IMPOR
-// ==========================================
+
 import { useState, useEffect } from "react";
 import { TemplateType } from "./PdfGenerator";
 
-// ==========================================
 // ANTARMUKA (INTERFACES)
-// ==========================================
+
 /**
  * Properties for the usePdfGenerator hook.
  */
@@ -28,9 +26,8 @@ interface UsePdfGeneratorProps {
  level?: string;
 }
 
-// ==========================================
 // HOOK UTAMA
-// ==========================================
+
 /**
  * Custom hook to manage client-side PDF rendering state and generate dynamic PDF filenames.
  *

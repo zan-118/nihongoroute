@@ -4,16 +4,13 @@
  * Contains streak increment logic and reconciliation algorithms for cloud and local state merging.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { calculateLevel } from "./level";
 import { getLocalDateString } from "@/lib/utils";
 import { Inventory } from "@/store/types";
 
-// ==========================================
 // Gamification Data Interfaces
-// ==========================================
 
 /**
  * Gamification state structure.
@@ -33,9 +30,8 @@ export interface GamificationData {
  inventory: Inventory;
 }
 
-// ==========================================
 // FUNGSI UTILITAS & LOGIKA BISNIS
-// ==========================================
+
 /**
  * Menghitung streak baru berdasarkan tanggal belajar terakhir.
  * Mempertimbangkan penggunaan Streak Freeze jika tersedia.

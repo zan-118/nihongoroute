@@ -3,9 +3,6 @@
  * @description Privacy Policy page route component for the NihongoRoute platform.
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -14,9 +11,6 @@ import AppBreadcrumbs from "@/components/layout/AppBreadcrumbs";
 import { createPageMetadata } from "@/lib/seo";
 import { getBreadcrumbItems } from "@/lib/routes";
 
-// ==========================================
-// Metadata Configuration
-// ==========================================
 /**
  * Metadata configuration for Privacy Policy page.
  */
@@ -35,13 +29,6 @@ export const metadata = {
 export default function PrivacyPage() {
  return (
  <main className="min-h-screen bg-background text-foreground py-24 px-4 sm:px-6 md:px-12 relative overflow-hidden flex flex-col items-center justify-start transition-colors duration-300">
- {/* Hamparan Neural Latar Belakang */}
- {/* Background decorative elements */}
- <div className="grid-overlay" />
- <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.07)_0%,transparent_70%)] pointer-events-none z-0" />
- <div className="absolute top-1/4 right-0 size-75 bg-[hsl(var(--primary)/0.03)] rounded-full blur-[60px] pointer-events-none z-0 ambient-glow will-change-transform" />
- <div className="absolute bottom-1/4 left-0 size-62.5 bg-[hsl(var(--destructive)/0.02)] rounded-full blur-[80px] pointer-events-none z-0 ambient-glow will-change-transform" />
-
  <div className="max-w-4xl w-full relative z-10 flex flex-col">
  {/* Breadcrumb / Navigasi Atas */}
  {/* Navigation breadcrumbs */}
@@ -52,32 +39,22 @@ export default function PrivacyPage() {
  />
  </div>
 
- {/* Kartu Cyber-glass Premium Luar */}
- {/* Main content container with glassmorphism */}
- <div className="glass border border-border/60 rounded-xl p-6 sm:p-10 md:p-14 shadow-[0_0_50px_hsl(var(--primary)/0.05)] relative overflow-hidden">
- {/* Aksen Sudut Halus */}
- {/* Decorative corner borders */}
- <div className="absolute top-0 left-0 w-8 h-0.5 bg-primary/50 " />
- <div className="absolute top-0 left-0 w-0.5 h-8 bg-primary/50 " />
- <div className="absolute bottom-0 right-0 w-8 h-0.5 bg-primary/50 " />
- <div className="absolute bottom-0 right-0 w-0.5 h-8 bg-primary/50 " />
-
+ <div className="bg-card border border-border rounded-2xl p-6 sm:p-10 md:p-14 shadow-sm relative overflow-hidden">
  {/* Header Jepang */}
- {/* Page header with Japanese title */}
  <header className="mb-12 border-b border-border/60 pb-8 relative">
  <div className="flex items-center gap-3 mb-4">
- <div className="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-[0_0_15px_hsl(var(--primary)/0.2)]">
+ <div className="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
  <Shield size={20} />
  </div>
- <span className="text-xs font-black tracking-widest text-primary uppercase bg-primary/5 border border-primary/10 px-3 py-1 rounded-full">
+ <span className="text-xs font-bold tracking-wider text-primary uppercase bg-primary/5 border border-primary/10 px-3 py-1 rounded-full">
  Guaranteed Privacy
  </span>
  </div>
  
- <h1 className="text-4xl md:text-5xl font-black text-foreground font-japanese tracking-tight mb-3 select-none">
+ <h1 className="text-4xl md:text-5xl font-bold text-foreground font-japanese tracking-tight mb-3 select-none">
  プライバシーポリシー
  </h1>
- <p className="text-sm md:text-base font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+ <p className="text-sm md:text-base font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
  Privacy Policy <span className="text-primary/60">•</span> Kebijakan Privasi
  </p>
  </header>
@@ -98,7 +75,7 @@ export default function PrivacyPage() {
  {/* Seksi 1 */}
  <div className="space-y-4 pt-4 border-t border-border/20">
  <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
- <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--primary)/0.1)]">1</span>
+ <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-sm">1</span>
  Pendahuluan
  </h2>
  <p className="leading-relaxed">
@@ -109,7 +86,7 @@ export default function PrivacyPage() {
  {/* Seksi 2 */}
  <div className="space-y-4 pt-4 border-t border-border/20">
  <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
- <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--primary)/0.1)]">2</span>
+ <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-sm">2</span>
  Data yang Kami Kumpulkan
  </h2>
  <p className="leading-relaxed">
@@ -117,7 +94,7 @@ export default function PrivacyPage() {
  </p>
  
  <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 list-none! pl-0!">
- <li className="glass border border-border/60 hover:border-primary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-[0_0_20px_hsl(var(--primary)/0.02)]">
+ <li className="glass border border-border/60 hover:border-primary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-sm">
  <div className="size-8 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
  <Lock size={16} />
  </div>
@@ -126,7 +103,7 @@ export default function PrivacyPage() {
  <p className="text-xs leading-relaxed text-muted-foreground">Nama dan alamat surel apabila Anda memilih masuk log untuk menyinkronkan progres lintas perangkat.</p>
  </div>
  </li>
- <li className="glass border border-border/60 hover:border-primary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-[0_0_20px_hsl(var(--primary)/0.02)]">
+ <li className="glass border border-border/60 hover:border-primary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-sm">
  <div className="size-8 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
  <FileText size={16} />
  </div>
@@ -141,7 +118,7 @@ export default function PrivacyPage() {
  {/* Seksi 3 */}
  <div className="space-y-4 pt-4 border-t border-border/20">
  <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
- <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--primary)/0.1)]">3</span>
+ <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-sm">3</span>
  Penggunaan Data
  </h2>
  <p className="leading-relaxed">
@@ -164,7 +141,7 @@ export default function PrivacyPage() {
  {/* Seksi 4 */}
  <div className="space-y-4 pt-4 border-t border-border/20">
  <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
- <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--primary)/0.1)]">4</span>
+ <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-sm">4</span>
  Berbagi Data dengan Pihak Ketiga
  </h2>
  <p className="leading-relaxed">
@@ -175,7 +152,7 @@ export default function PrivacyPage() {
  {/* Seksi 5 */}
  <div className="space-y-4 pt-4 border-t border-border/20">
  <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
- <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--primary)/0.1)]">5</span>
+ <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-sm">5</span>
  Keamanan Data Anda
  </h2>
  <p className="leading-relaxed">
@@ -186,7 +163,7 @@ export default function PrivacyPage() {
  {/* Seksi 6 */}
  <div className="space-y-4 pt-4 border-t border-border/20">
  <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
- <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_hsl(var(--primary)/0.1)]">6</span>
+ <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-sm">6</span>
  Hubungi Kami
  </h2>
  <p className="leading-relaxed">

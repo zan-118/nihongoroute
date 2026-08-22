@@ -6,9 +6,9 @@
  * @module features/dashboard/components
  */
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import { useMemo } from "react";
 import { m, Variants } from "framer-motion";
 import { Brain, Target, Book, Zap, Lightbulb } from "@/components/ui/icons";
@@ -24,9 +24,9 @@ import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { getLevelProgressPercent } from "@/lib/level";
 
 import { ROUTES } from "@/lib/core/routes";
-// ==========================================
+
 // ANTARMUKA & PROPS (INTERFACES)
-// ==========================================
+
 /**
  * Props for DashboardHero component.
  */
@@ -56,9 +56,9 @@ interface DashboardHeroProps {
  isAuthenticated: boolean;
 }
 
-// ==========================================
+
 // KOMPONEN UTAMA
-// ==========================================
+
 /**
  * Dashboard hero component. Display user stats, SRS status, quick actions.
  */
@@ -148,16 +148,16 @@ export default function DashboardHero({
  <div className="flex flex-col items-center lg:items-start gap-3.25 mb-8.5">
  <Badge 
  variant="outline" 
- className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] flex items-center gap-2 w-fit border-border transition-all ${
+ className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-2 w-fit border-border transition-all ${
  isAuthenticated 
  ? 'bg-success/5 text-success border-success/20' 
  : 'bg-primary/5 text-primary border-primary/20'
  }`}
  >
   
- {isAuthenticated ? 'PELAJAR' : 'TAMU'} — {guestId}
+ {isAuthenticated ? 'PELAJAR' : 'TAMU'}: {guestId}
  </Badge>
- <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-60 ml-1">
+ <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider opacity-60 ml-1">
  {isAuthenticated ? 'Sinkronisasi Cloud Aktif' : 'Mode Penyimpanan Lokal'}
  </span>
  </div>
@@ -233,21 +233,21 @@ export default function DashboardHero({
  <AnimatedCounter value={streak} />
  </span>
  </div>
- <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Streak</span>
+ <span className="text-[8px] md:text-[10px] font-black uppercase tracking-wider text-muted-foreground/60">Streak</span>
  </div>
  <div className="flex flex-col items-center gap-1 md:gap-2 border-x border-border/60">
  <div className="flex items-center gap-1 md:gap-1.5 text-primary transition-transform hover:scale-105">
  <Star size={14} className="fill-current md:w-4 md:h-4" />
  <span className="text-sm md:text-lg font-black font-mono">Lvl {level}</span>
  </div>
- <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Level</span>
+ <span className="text-[8px] md:text-[10px] font-black uppercase tracking-wider text-muted-foreground/60">Level</span>
  </div>
  <div className="flex flex-col items-center gap-1 md:gap-2">
  <div className="flex items-center gap-1 md:gap-1.5 text-primary transition-transform hover:scale-105">
  <Target size={14} className="md:w-4 md:h-4" />
  <span className="text-sm md:text-lg font-black font-mono">{Math.floor(xpProgress)}%</span>
  </div>
- <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Progres</span>
+ <span className="text-[8px] md:text-[10px] font-black uppercase tracking-wider text-muted-foreground/60">Progres</span>
  </div>
  </div>
  

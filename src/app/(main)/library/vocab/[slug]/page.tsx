@@ -5,9 +5,9 @@
  * @module VocabDetailPage
  */
 
-// ======================
+
 // IMPOR
-// ======================
+
 import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { getVocabStaticSlugs } from "@/actions/vocab.actions";
@@ -38,9 +38,9 @@ import {
  encodeRouteSegment,
 } from "@/lib/seo";
 
-// ======================
+
 // ANTARMUKA
-// ======================
+
 
 /**
  * Structure for vocabulary example sentences.
@@ -83,9 +83,9 @@ interface VocabRef {
 
 
 
-// ======================
+
 // METADATA SEO
-// ======================
+
 
 /**
  * Generates dynamic SEO metadata for the vocabulary detail page.
@@ -139,9 +139,9 @@ export async function generateStaticParams() {
  return await getVocabStaticSlugs();
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Vocabulary detail page component (React Server Component).
@@ -209,7 +209,7 @@ export default async function VocabDetailPage({
  <div className="absolute bottom-[10%] right-[-10%] size-[30%] bg-secondary/5 blur-[65px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
  
  {/* Background Grid Overlay */}
- <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--foreground)/0.01)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.01)_1px,transparent_1px)] bg-size-[60px_60px] pointer-events-none z-0" />
+ <div className="absolute inset-0 bg-muted/30 bg-size-[60px_60px] pointer-events-none z-0" />
 
  <div className="max-w-4xl mx-auto w-full relative z-10 pt-8 md:pt-16">
  <div className="flex flex-col gap-12 md:gap-16">
@@ -291,7 +291,7 @@ export default async function VocabDetailPage({
  </div>
  </div>
  <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-        <Button asChild variant="ghost" className="w-full md:w-auto px-10 py-8 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-[hsl(var(--muted)/0.3)] border border-border hover:bg-[hsl(var(--muted)/0.5)] hover:border-primary/30 transition-all gap-4 group">
+        <Button asChild variant="ghost" className="w-full md:w-auto px-10 py-8 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-muted/30 border border-border hover:bg-muted/50 hover:border-primary/30 transition-all gap-4 group">
           <Link href="/library/vocab">
             <ChevronLeft size={20} aria-hidden="true" className="group-hover:-translate-x-2 transition-transform" /> Kembali ke Daftar Kosakata
           </Link>

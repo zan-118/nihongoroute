@@ -3,9 +3,8 @@
  * @description Konstanta label seksi JLPT untuk simulasi ujian Mock Exam Engine NihongoRoute.
  */
 
-// ======================
 // KONSTANTA
-// ======================
+
 /**
  * Map JLPT section keys to Indonesian display labels.
  */

@@ -24,14 +24,14 @@ import { Badge } from "@/components/ui/badge";
  * @returns React element representing trust banner section.
  */
 export function TrustBanner() {
- const tickerItems = [
- "100+ Pembelajar Terdaftar",
- "100% Open Source di GitHub",
- "22,000+ Kosakata Terkontribusi",
- "Didukung Donatur Trakteer & Saweria",
- "Kebijakan Data Offline Aman",
- "Didukung Komunitas Bahasa Jepang Indonesia"
- ];
+  const tickerItems = [
+    "Akses Gratis & Tanpa Iklan",
+    "100% Open Source di GitHub",
+    "Pustaka Kosakata & Tata Bahasa Lengkap",
+    "Didukung Donatur Trakteer & Saweria",
+    "Kebijakan Data Offline Aman",
+    "Didukung Komunitas Bahasa Jepang Indonesia",
+  ];
 
  return (
  <section className="w-full mb-[120px] relative group">
@@ -47,7 +47,7 @@ export function TrustBanner() {
  
  {/* AREA KONTEN KIRI (TEXT & MANFAAT UTAMA) */}
  <div className="flex-1 space-y-6">
- <Badge className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-[4px] text-[9px] font-black uppercase tracking-widest shadow-none">
+  <Badge className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-[4px] text-[10px] font-bold uppercase tracking-wider shadow-none">
  Akses Edukasi Terbuka
  </Badge>
  
@@ -104,32 +104,32 @@ export function TrustBanner() {
  </div>
  </div>
  
- {/* KOLOM AKSI KANAN (CTA & REPOSITORY) */}
- <div className="flex flex-col sm:flex-row xl:flex-col gap-3.5 w-full sm:w-auto xl:w-[260px] shrink-0 justify-center">
- <Button
- asChild
- className="bg-primary text-primary-foreground hover:bg-primary/92 h-12 px-7 text-xs rounded-lg rounded-br-none group"
- >
- <Link href="/support">
- Dukung Kami <Heart size={14} className="ml-3 text-primary-foreground fill-current animate-pulse" />
- </Link>
- </Button>
- 
- <Button
- asChild
- variant="ghost"
- className="bg-transparent text-muted-foreground hover:bg-muted hover:text-primary border border-border h-12 px-7 text-xs rounded-lg rounded-br-none group border border-border/80"
- >
- <a 
- href="https://github.com/zan-118/nihongoroute" 
- target="_blank" 
- rel="noreferrer"
- className="flex items-center justify-center"
- >
- <Github size={16} className="mr-3" /> Repositori GitHub <ArrowRight size={12} className="ml-2 group-hover:translate-x-1 transition-transform" />
- </a>
- </Button>
- </div>
+        {/* KOLOM AKSI KANAN (CTA & REPOSITORY) */}
+        <div className="flex flex-col sm:flex-row xl:flex-col gap-3.5 w-full sm:w-auto xl:w-[260px] shrink-0 justify-center">
+          <Button
+            asChild
+            className="bg-primary text-primary-foreground hover:bg-primary/92 h-12 px-7 text-xs rounded-xl xl:rounded-br-none group"
+          >
+            <Link href="/support" className="flex items-center justify-center">
+              Dukung Kami <Heart size={14} className="ml-3 text-primary-foreground fill-current animate-pulse" />
+            </Link>
+          </Button>
+
+          <Button
+            asChild
+            variant="ghost"
+            className="bg-transparent text-muted-foreground hover:bg-muted hover:text-primary border border-border h-12 px-7 text-xs rounded-xl xl:rounded-br-none group border-border/80"
+          >
+            <a 
+              href="https://github.com/zan-118/nihongoroute" 
+              target="_blank" 
+              rel="noreferrer"
+              className="flex items-center justify-center"
+            >
+              <Github size={16} className="mr-3" /> Repositori GitHub <ArrowRight size={12} className="ml-2 group-hover:translate-x-1 transition-transform" />
+            </a>
+          </Button>
+        </div>
  
  </div>
 

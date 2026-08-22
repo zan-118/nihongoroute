@@ -5,17 +5,15 @@
  * pelacakan skor, serta sinkronisasi perolehan XP ke Zustand store (`useUserStore`).
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { useState, useEffect, useCallback, useRef } from "react";
 import { CardData, SurvivalGameState } from "./types";
 import { shuffleArray } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
 
-// ======================
 // HOOK UTAMA
-// ======================
+
 /**
  * Manage survival game state, HP, timer, score, and card deck.
  * @param cards Array of card data for game.

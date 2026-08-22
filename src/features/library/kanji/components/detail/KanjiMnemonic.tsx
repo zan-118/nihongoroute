@@ -3,15 +3,15 @@
  * @description Komponen untuk menampilkan jembatan keledai (mnemonic) memori Kanji bawaan dan menyediakan editor mnemonic kustom offline-first.
  */
 
-// ==========================================
+
 // IMPORT & DEPENDENSI
-// ==========================================
+
 import { Card } from "@/components/ui/card";
 import { MnemonicEditor } from "@/features/srs/mnemonic/MnemonicEditor";
 
-// ==========================================
+
 // TIPE DATA / INTERFACE
-// ==========================================
+
 /**
  * Props for KanjiMnemonic component.
  */
@@ -22,18 +22,18 @@ interface KanjiMnemonicProps {
  wordId: string;
 }
 
-// ==========================================
+
 // KOMPONEN UTAMA
-// ==========================================
+
 /**
  * Kanji mnemonic panel. Displays default mnemonics and embeds offline-first custom editor.
  */
 export function KanjiMnemonic({ mnemonics, wordId }: KanjiMnemonicProps) {
- // ==========================================
+
  // RENDER KOMPONEN
- // ==========================================
+
  return (
- <Card className="p-8 md:p-10 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all relative overflow-hidden group glass shadow-[0_0_20px_hsl(var(--warning)/0.02)]">
+ <Card className="p-8 md:p-10 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all relative overflow-hidden group glass shadow-sm">
  {mnemonics && (
  <div className="mb-6 relative z-10">
  <div className="flex items-center gap-3 mb-6">

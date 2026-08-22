@@ -355,7 +355,7 @@ export default function SentenceBuilderClient() {
               <X size={16} className="text-warning" />
             )
           )}
- <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
+ <h2 className="text-xs uppercase tracking-wider text-foreground">
  Feedback
  </h2>
  </div>
@@ -368,7 +368,7 @@ export default function SentenceBuilderClient() {
  : "border-warning/25 bg-warning/10"
  )}
  >
- <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+ <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">
  {isCorrect ? "Benar" : "Kalimat Target"}
  </p>
  <p className="mt-2 font-japanese text-2xl font-black text-foreground">

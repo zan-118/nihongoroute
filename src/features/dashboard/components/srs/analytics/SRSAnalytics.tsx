@@ -6,17 +6,14 @@
  * @module features/dashboard/components/srs/analytics
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Fire, Brain, BarChart, Trophy, Zap, Shield, Alert } from "@/components/ui/icons";
 import { useSRSAnalytics } from "./useSRSAnalytics";
 
-// ==========================================
 // Main Component
-// ==========================================
 
 /**
  * SRS memory stability analytics component.
@@ -40,7 +37,7 @@ export default function SRSAnalytics() {
 
  return (
  <Card className="bg-card p-8 rounded-2xl md:rounded-3xl border-border relative overflow-hidden neo-card shadow-none flex flex-col h-full">
- <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,hsl(var(--primary)/0.05),transparent_50%)]" />
+ <div className="absolute inset-0 bg-muted/30" />
  
  <header className="flex items-center justify-between mb-10 relative z-10">
  <div className="flex items-center gap-4">
@@ -48,11 +45,11 @@ export default function SRSAnalytics() {
  <BarChart size={24} className="text-primary" />
  </Card>
  <div>
- <h3 className="text-foreground uppercase tracking-widest text-sm">Kekuatan Ingatan</h3>
- <span className="block text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">Stabilitas Memori (Ease Factor)</span>
+ <h3 className="text-foreground uppercase tracking-wider text-sm">Kekuatan Ingatan</h3>
+ <span className="block text-xs text-muted-foreground font-bold uppercase tracking-wider mt-1">Stabilitas Memori (Ease Factor)</span>
  </div>
  </div>
- <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest">
+ <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider">
  Kecerdasan Memori
  </Badge>
  </header>
@@ -88,7 +85,7 @@ export default function SRSAnalytics() {
  </div>
  <div className="text-center">
  <div style={{ color: item.color }} className="flex justify-center mb-1">{item.icon}</div>
- <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">{item.label}</span>
+ <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">{item.label}</span>
  </div>
  </div>
  );
@@ -103,7 +100,7 @@ export default function SRSAnalytics() {
  <div className="size-1.5 rounded-full" style={{ backgroundColor: item.color }} />
  <div>
  <p className="text-xs font-black text-foreground uppercase tracking-tight">{item.label}</p>
- <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-widest">{item.desc}</p>
+ <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-wider">{item.desc}</p>
  </div>
  </div>
  <span className="font-mono text-xs font-bold text-muted-foreground">

@@ -7,9 +7,8 @@
  * @project NihongoRoute
  */
 
-// ==========================================
 // IMPOR
-// ==========================================
+
 import React from "react";
 import {
  Page,
@@ -20,9 +19,8 @@ import {
  Font,
 } from "@react-pdf/renderer";
 
-// ==========================================
 // REGISTRASI FONT
-// ==========================================
+
 // Register Japanese font. Prevent character corruption.
 Font.register({
  family: "NotoSansJP",
@@ -32,9 +30,8 @@ Font.register({
  ],
 });
 
-// ==========================================
 // GAYA VISUAL (STYLESHEET)
-// ==========================================
+
 /**
  * Stylesheet for certificate PDF layout.
  * Define colors, borders, typography, and absolute positioning.
@@ -254,9 +251,8 @@ const styles = StyleSheet.create({
  }
 });
 
-// ==========================================
 // ANTARMUKA & DATA
-// ==========================================
+
 /**
  * Data structure for certificate template.
  */
@@ -273,9 +269,8 @@ interface CertificateData {
  level?: string;
 }
 
-// ==========================================
 // KOMPONEN UTAMA (TEMPLAT EKSPOR)
-// ==========================================
+
 /**
  * PDF template component. Render landscape A4 certificate.
  * 

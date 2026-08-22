@@ -4,9 +4,6 @@
  * @module CourseCategoryPage
  */
 
-// ======================
-// IMPOR
-// ======================
 import { cache } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -15,18 +12,18 @@ import CourseCategoryView from "@/features/courses/CourseCategoryView";
 import { getCourseCategoryData } from "@/actions/library.actions";
 import { getCourseCategories } from "@/actions/lessons.actions";
 import {
- breadcrumbJsonLd,
- courseJsonLd,
- createPageMetadata,
- encodeRouteSegment,
+  breadcrumbJsonLd,
+  courseJsonLd,
+  createPageMetadata,
+  encodeRouteSegment,
 } from "@/lib/seo";
 
 /**
  * Route parameters for the course category page.
  */
 interface PageProps {
- /** Promise resolving to route parameters. */
- params: Promise<{ categoryId: string }>;
+  /** Promise resolving to route parameters. */
+  params: Promise<{ categoryId: string }>;
 }
 
 /**
@@ -35,44 +32,34 @@ interface PageProps {
  */
 const getCachedCourseCategoryData = cache(getCourseCategoryData);
 
-// ======================
-// METADATA SEO
-// ======================
-
 /**
  * Generates dynamic SEO metadata based on the requested course category.
- * @param props - Component properties containing route parameters.
- * @returns Promise resolving to Next.js Metadata object.
  */
 export async function generateMetadata({
- params,
+  params,
 }: PageProps): Promise<Metadata> {
- const { categoryId } = await params;
- // Decode URL parameter to handle special characters or spaces
- const decodedCategoryId = decodeURIComponent(categoryId);
- const data = await getCachedCourseCategoryData(decodedCategoryId);
+  const { categoryId } = await params;
+  const decodedCategoryId = decodeURIComponent(categoryId);
+  const data = await getCachedCourseCategoryData(decodedCategoryId);
 
- if (!data.category)
- return { title: "Kategori Tidak Ditemukan | NihongoRoute" };
+  if (!data.category)
+    return { title: "Kategori Tidak Ditemukan | NihongoRoute" };
 
- return createPageMetadata({
- title: `${data.category.title} - Rute Belajar | NihongoRoute`,
- description:
- data.category.description ||
- `Pelajari materi bahasa Jepang untuk level ${data.category.title} secara gratis.`,
- path: `/courses/${encodeRouteSegment(decodedCategoryId)}`,
- keywords: [
- String(data.category.title),
- "rute belajar bahasa Jepang",
- "kurikulum JLPT",
- "materi bahasa Jepang gratis",
- ],
- });
+  return createPageMetadata({
+    title: `${data.category.title} - Rute Belajar | NihongoRoute`,
+    description:
+      data.category.description ||
+      `Pelajari materi bahasa Jepang untuk level ${data.category.title} secara gratis.`,
+    path: `/courses/${encodeRouteSegment(decodedCategoryId)}`,
+    keywords: [
+      String(data.category.title),
+      "rute belajar bahasa Jepang",
+      "kurikulum JLPT",
+      "materi bahasa Jepang gratis",
+    ],
+  });
 }
 
-// ======================
-// GENERASI STATIS
-// ======================
 export async function generateStaticParams() {
   const categories = await getCourseCategories();
   if (!categories || categories.length === 0) return [];
@@ -81,10 +68,6 @@ export async function generateStaticParams() {
     categoryId: String(cat.slug || cat._id),
   }));
 }
-
-// ======================
-// EKSEKUSI UTAMA
-// ======================
 
 /**
  * CourseCategoryPage component. Fetches category data and renders client view.

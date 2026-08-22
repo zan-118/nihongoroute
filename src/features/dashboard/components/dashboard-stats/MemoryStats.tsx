@@ -7,9 +7,8 @@
  * @module features/dashboard/components/dashboard-stats
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -32,21 +31,21 @@ export default function MemoryStats() {
  label: "Tingkat Master",
  count: stats.master,
  color: "text-success",
- indicatorColor: "bg-success shadow-[0_0_15px_hsl(var(--success)/0.5)]",
+ indicatorColor: "bg-success shadow-sm",
  icon: <Trophy size={16} />,
  },
  {
  label: "Memori Stabil",
  count: stats.intermediate,
  color: "text-primary",
- indicatorColor: "bg-primary shadow-[0_0_15px_hsl(var(--primary)/0.5)]",
+ indicatorColor: "bg-primary shadow-sm",
  icon: <Pulse size={16} />,
  },
  {
  label: "Fase Belajar",
  count: stats.learning,
  color: "text-warning",
- indicatorColor: "bg-warning shadow-[0_0_15px_hsl(var(--warning)/0.5)]",
+ indicatorColor: "bg-warning shadow-sm",
  icon: <Fire size={16} />,
  },
  {
@@ -61,7 +60,7 @@ export default function MemoryStats() {
  return (
  <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-2xl md:rounded-3xl border-border relative overflow-hidden h-full flex flex-col neo-card shadow-none">
  {/* Pola Kisi Latar Belakang */}
- <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--primary)/0.02)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--primary)/0.02)_1px,transparent_1px)] bg-size-[20px_20px] pointer-events-none opacity-50" />
+ <div className="absolute inset-0 bg-muted/30 bg-size-[20px_20px] pointer-events-none opacity-50" />
 
  {/* Bagian Header */}
  <header className="flex items-center justify-between mb-8 md:mb-10 relative z-10">
@@ -124,9 +123,7 @@ export default function MemoryStats() {
  );
 }
 
-// ==========================================
 // ELEMEN SUB-KOMPONEN (STATBAR)
-// ==========================================
 
 /**
  * Props for StatBar component.

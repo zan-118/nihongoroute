@@ -6,23 +6,20 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import React from "react";
 import { useCachedAudio } from "@/hooks/useCachedAudio";
 
-// ======================
 // ANTARMUKA / TIPE DATA
-// ======================
+
 export interface OfflineAudioProps extends React.AudioHTMLAttributes<HTMLAudioElement> {
  /** Source URL of the audio file. */
  src: string;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
+
 /**
  * HTML5 audio player component. Uses cached audio URL for offline playback.
  */

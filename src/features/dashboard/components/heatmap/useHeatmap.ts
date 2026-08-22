@@ -4,14 +4,12 @@
  * @module features/dashboard/components/heatmap
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useMemo } from "react";
 
-// ==========================================
 // Helper Functions
-// ==========================================
+
 /**
  * Format Date object to YYYY-MM-DD local string.
  * @param date Date object to format.
@@ -43,9 +41,8 @@ function generateLastNDays(n: number): string[] {
  return days;
 }
 
-// ==========================================
 // EKSPOR UTAS (UTILITIES & HOOKS)
-// ==========================================
+
 /**
  * Get Tailwind CSS classes based on word count intensity.
  * @param value Number of words learned.
@@ -57,12 +54,12 @@ export function getBoxStyle(value: number): string {
  return "bg-background/40 border-border neo-inset shadow-none opacity-30";
  // Low intensity: < 10 words
  if (value < 10)
- return "bg-primary/20 border-primary/30 shadow-[0_0_10px_hsl(var(--primary)/0.1)] neo-card shadow-none";
+ return "bg-primary/20 border-primary/30 shadow-sm neo-card shadow-none";
  // Medium intensity: < 30 words
  if (value < 30)
- return "bg-primary/50 border-primary/60 shadow-[0_0_20px_hsl(var(--primary)/0.3)] neo-card shadow-none";
+ return "bg-primary/50 border-primary/60 shadow-sm neo-card shadow-none";
  // High intensity: >= 30 words
- return "bg-primary border-border shadow-[0_0_25px_hsl(var(--primary)/0.7)] neo-card shadow-none";
+ return "bg-primary border-border shadow-sm neo-card shadow-none";
 }
 
 /**

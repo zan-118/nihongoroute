@@ -5,9 +5,6 @@
  * @module CoursesLandingPage
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import CoursesView from "@/features/courses/CoursesView";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -18,9 +15,6 @@ import {
  learningResourceJsonLd,
 } from "@/lib/seo";
 
-// ==========================================
-// SEO Metadata Configuration
-// ==========================================
 /**
  * SEO metadata configuration for courses page.
  */
@@ -33,10 +27,6 @@ export const metadata: Metadata = {
  keywords: ["rute belajar bahasa Jepang", "kurikulum JLPT", "belajar JLPT online"],
  }),
 };
-
-// ======================
-// EKSEKUSI UTAMA
-// ======================
 
 /**
  * Courses landing page component. Fetch categories. Render client view.

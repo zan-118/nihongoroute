@@ -5,18 +5,15 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import { useEffect } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/icons";
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * Props interface for the ExamError component.

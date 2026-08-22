@@ -4,9 +4,9 @@
  * Mengambil data awal dari database Supabase dan mendelegasikan rendering ke ReadingListClient.
  */
 
-// ======================
+
 // IMPOR
-// ======================
+
 import { getPaginatedReading } from "@/actions/library.actions";
 import ReadingListView from "@/features/library/reading/ReadingListView";
 import type { Metadata } from "next";
@@ -17,9 +17,7 @@ import {
  learningResourceJsonLd,
 } from "@/lib/seo";
 
-// ======================
-// METADATA SEO
-// ======================
+
 
 /**
  * SEO metadata configuration.
@@ -34,9 +32,9 @@ export const metadata: Metadata = {
  }),
 };
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Reading list page component.

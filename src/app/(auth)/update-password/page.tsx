@@ -3,16 +3,10 @@
  * @description Password update page route (Update Password). Entry point for UpdatePasswordView.
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import type { Metadata } from "next";
 import UpdatePasswordView from "@/features/auth/UpdatePasswordView";
 import { createPageMetadata } from "@/lib/seo";
 
-// ==========================================
-// Metadata Configuration
-// ==========================================
 /**
  * Metadata for Update Password page.
  * Disables search engine indexing for security.
@@ -26,9 +20,6 @@ export const metadata: Metadata = {
  }),
 };
 
-// ==========================================
-// Main Execution
-// ==========================================
 /**
  * Page component for password updates.
  * Serves as entry point for client component.

@@ -3,9 +3,9 @@
  * @description Halaman detail graded reading (Dokkai) dinamis untuk meresolusi materi membaca berdasarkan slug.
  */
 
-// ======================
+
 // IMPOR
-// ======================
+
 import { cache } from "react";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { getReadingStaticSlugs } from "@/actions/reading.actions";
@@ -43,9 +43,9 @@ function getCmsSeo(data: unknown) {
  };
 }
 
-// ======================
+
 // METADATA SEO
-// ======================
+
 
 /**
  * Generate dynamic SEO metadata for reading page.
@@ -78,9 +78,9 @@ export async function generateMetadata({
  });
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Render reading page. Fetch data from CMS. Render client component.

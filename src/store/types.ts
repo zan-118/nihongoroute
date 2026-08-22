@@ -5,9 +5,7 @@
 
 import { SRSState } from "@/lib/srs";
 
-// ==========================================
 // Store Types & Interfaces
-// ==========================================
 
 /**
  * Visual in-app notification data structure.

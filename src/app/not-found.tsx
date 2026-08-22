@@ -3,16 +3,9 @@
  * @description 404 Route Not Found error page component featuring NihongoRoute cyber theme layout.
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MapPin, ArrowLeft, Home } from "@/components/ui/icons";
-
-// ==========================================
-// Main Component
-// ==========================================
 
 /**
  * Render 404 error page.
@@ -37,11 +30,11 @@ export default function NotFound() {
  </span>
  </div>
 
- <div className="z-10 flex flex-col items-center text-center max-w-md w-full glass border border-border rounded-[2rem] p-8 md:p-12 shadow-[0_20px_50px_hsl(var(--foreground)/0.3)]">
+ <div className="z-10 flex flex-col items-center text-center max-w-md w-full glass border border-border rounded-[2rem] p-8 md:p-12 shadow-sm">
  {/* Elemen Tematik Jepang */}
  <div className="space-y-3 mb-6">
  <div className="flex justify-center mb-4">
- <div className="size-20 bg-destructive/10 rounded-lg flex items-center justify-center border border-destructive/20 shadow-[0_0_20px_hsl(var(--destructive)/0.15)] animate-premium-bounce">
+ <div className="size-20 bg-destructive/10 rounded-lg flex items-center justify-center border border-destructive/20 shadow-sm animate-premium-bounce">
  <MapPin className="text-destructive animate-pulse" size={36} />
  </div>
  </div>
@@ -66,7 +59,7 @@ export default function NotFound() {
  {/* Tombol Tindakan (Call to Actions) */}
  {/* Navigation links to dashboard or home */}
  <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
- <Button asChild size="lg" className="w-full font-black uppercase tracking-widest text-xs h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_15px_hsl(var(--primary)/0.15)] hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)] duration-300">
+ <Button asChild size="lg" className="w-full font-black uppercase tracking-widest text-xs h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm hover:shadow-sm duration-300">
  <Link href="/dashboard" className="flex items-center justify-center gap-2">
  <Home size={16} />
  Dashboard

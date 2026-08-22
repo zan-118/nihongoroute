@@ -290,7 +290,7 @@ export default function CounterTrainerClient({
               <X size={16} className="text-warning" aria-hidden="true" />
             )
           )}
- <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
+ <h2 className="text-xs uppercase tracking-wider text-foreground">
  Feedback
  </h2>
  </div>
@@ -302,7 +302,7 @@ export default function CounterTrainerClient({
  isCorrect ? "border-success/25 bg-success/10" : "border-warning/25 bg-warning/10"
  )}
  >
- <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+ <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">
  {isCorrect ? "Benar" : "Counter Target"}
  </p>
  <p className="mt-2 font-japanese text-3xl font-black text-foreground">
@@ -334,7 +334,7 @@ export default function CounterTrainerClient({
  </Card>
 
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-muted/15 p-5">
- <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+ <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
  Bank Counter
  </p>
  <div className="mt-4 flex flex-wrap items-center justify-center gap-2">

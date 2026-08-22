@@ -4,9 +4,8 @@
  * Provides high-performance, offline-friendly bento-grid navigation directory.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Book } from "@/components/ui/icons";
@@ -97,14 +96,14 @@ export default async function LibraryPage() {
  <div className="flex flex-wrap items-center justify-between gap-4">
  <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 dark:bg-primary/10 backdrop-blur-md">
  <Book size={16} className="text-primary" />
- <span className="text-[10px] font-black uppercase tracking-[0.25em] font-mono text-primary">
+ <span className="text-[10px] font-black uppercase tracking-wider font-mono text-primary">
  ARCHIVE // PUSTAKA BELAJAR
  </span>
  </div>
 
  <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-success/30 bg-success/10 backdrop-blur-md">
  <span className="size-2 rounded-full bg-success animate-pulse" />
- <span className="text-[10px] font-bold text-success uppercase tracking-widest font-mono">
+ <span className="text-[10px] font-bold text-success uppercase tracking-wider font-mono">
  SINKRONISASI LURING: AKTIF
  </span>
  </div>

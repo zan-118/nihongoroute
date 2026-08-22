@@ -4,15 +4,12 @@
  * Menyimpan informasi level terakhir di localStorage untuk mencegah pemicuan berulang dan memainkan efek suara keberhasilan.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { useState, useEffect } from "react";
 import { sounds } from "@/lib/audio";
 
-// ======================
 // HOOK UTAMA
-// ======================
 
 /**
  * Hook kelola tampilan overlay naik level.

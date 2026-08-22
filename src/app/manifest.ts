@@ -3,14 +3,7 @@
  * @description PWA (Progressive Web App) manifest generator for mobile installation and offline capabilities.
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import type { MetadataRoute } from "next";
-
-// ==========================================
-// Main Execution
-// ==========================================
 
 /**
  * Generates the Web App Manifest for NihongoRoute PWA.

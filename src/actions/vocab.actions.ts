@@ -7,9 +7,8 @@
 
 "use server";
 
-// ======================
 // IMPORTS
-// ======================
+
 import { PaginatedVocabResponse, LibraryItem } from "@/types/library";
 import { VocabTable } from "@/types/database";
 import { queryLexicalDomain } from "@/lib/services/lexical-content-engine";
@@ -22,9 +21,7 @@ import {
 import { createStaticClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/core/logger";
 
-// ======================
 // SERVER ACTIONS
-// ======================
 
 /**
  * Fetch paginated vocabulary items using LexicalContentEngine domain seam.

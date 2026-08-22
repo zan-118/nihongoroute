@@ -3,9 +3,7 @@
  * @description Defini tipe data, antarmuka, serta daftar konstanta kategori level/kelas kata untuk pustaka kosakata.
  */
 
-// ==========================================
 // ANTARMUKA & TIPE DATA KOSAKATA
-// ==========================================
 
 /**
  * Represents meaning details of vocabulary item from dictionary source.
@@ -82,9 +80,7 @@ export interface VocabItem {
  created_at?: string;
 }
 
-// ==========================================
 // DAFTAR KONSTANTA DAN PRESET FILTER
-// ==========================================
 
 /**
  * Available JLPT and general difficulty levels.

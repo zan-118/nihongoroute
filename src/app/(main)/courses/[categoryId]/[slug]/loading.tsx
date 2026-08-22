@@ -3,28 +3,16 @@
  * @description Komponen pemuat (Loading Skeleton) premium untuk halaman detail pelajaran kursus NihongoRoute.
  */
 
-// ======================
-// IMPOR
-// ======================
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-
-// ======================
-// EKSEKUSI UTAMA
-// ======================
 
 /**
  * Loading skeleton component for course detail page.
  * Renders placeholder UI while course data loads.
- * 
- * @returns {React.JSX.Element} Course detail loading skeleton.
  */
 export default function CourseDetailLoading() {
  return (
  <div className="w-full text-foreground px-4 md:px-8 relative overflow-hidden flex flex-col flex-1">
- {/* Ambient background glow effect */}
- <div className="absolute top-0 right-0 size-[360px] bg-primary/5 blur-[65px] rounded-full pointer-events-none ambient-glow will-change-transform" />
-
  <article className="max-w-4xl mx-auto w-full relative z-10 flex-1 pt-10 md:pt-14">
  <header className="mb-20">
  {/* Kerangka Judul */}

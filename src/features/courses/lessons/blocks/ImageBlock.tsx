@@ -11,7 +11,7 @@ export function ImageBlock({ block }: { block: ContentBlock }) {
  if (!block.content) return null;
  return (
  <figure className="w-full mb-10">
- <div className="relative w-full rounded-2xl overflow-hidden border border-border/50 dark:border-white/10 shadow-[0_4px_25px_rgba(0,0,0,0.015)] bg-card group">
+ <div className="relative w-full rounded-2xl overflow-hidden border border-border/50 dark:border-white/10 shadow-sm bg-card group">
  <Image
  src={block.content}
  alt={block.title || "Gambar pelajaran"}
@@ -22,7 +22,7 @@ export function ImageBlock({ block }: { block: ContentBlock }) {
  />
  </div>
  {block.title && (
- <figcaption className="text-xs font-bold uppercase tracking-widest text-muted-foreground text-center mt-6">
+ <figcaption className="text-xs font-bold uppercase tracking-wider text-muted-foreground text-center mt-6">
  {block.title}
  </figcaption>
  )}

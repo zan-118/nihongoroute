@@ -54,46 +54,37 @@ export function TextBlock({ block }: { block: ContentBlock }) {
  * Renders a list of example sentences with furigana, romaji, translation, and TTS.
  */
 function ExamplesSection({ examples }: { examples: ExampleSentence[] }) {
- if (!examples?.length) return null;
- return (
- <div className="space-y-3 mt-4">
- <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
- Contoh Kalimat (Examples)
- </p>
- <div className="space-y-3">
- {examples.map((ex) => (
- <div 
- key={ex.jp} 
- className="border border-border rounded-lg p-4 space-y-2 transition-all duration-300 group"
- style={{ backgroundColor: "hsl(var(--card)/0.1)" }}
- onMouseEnter={(e) => {
- e.currentTarget.style.backgroundColor = "hsl(var(--card)/0.2)";
- e.currentTarget.style.borderColor = "hsl(var(--primary)/0.2)";
- }}
- onMouseLeave={(e) => {
- e.currentTarget.style.backgroundColor = "hsl(var(--card)/0.1)";
- e.currentTarget.style.borderColor = "";
- }}
- >
- <div className="flex items-center justify-between gap-4">
- <div className="flex-1 min-w-0">
- <FuriganaDisplay
- text={ex.jp}
- furigana={ex.furigana || ""}
- size="medium"
- />
- </div>
- <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0">
- <TTSReader text={ex.jp} minimal />
- </div>
- </div>
- {ex.romaji && (
- <p className="text-xs text-primary/80 font-mono tracking-wide">{ex.romaji}</p>
- )}
- <p className="text-sm text-muted-foreground font-medium">{parseInlineStyles(ex.id)}</p>
- </div>
- ))}
- </div>
- </div>
- );
+  if (!examples?.length) return null;
+  return (
+    <div className="space-y-3 mt-4">
+      <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+        Contoh Kalimat (Examples)
+      </p>
+      <div className="space-y-3">
+        {examples.map((ex) => (
+          <div 
+            key={ex.jp} 
+            className="border border-border hover:border-primary/30 rounded-lg p-4 space-y-2 bg-muted/20 hover:bg-muted/30 transition-all duration-300 group"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <FuriganaDisplay
+                  text={ex.jp}
+                  furigana={ex.furigana || ""}
+                  size="medium"
+                />
+              </div>
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0">
+                <TTSReader text={ex.jp} minimal />
+              </div>
+            </div>
+            {ex.romaji && (
+              <p className="text-xs text-primary/80 font-mono tracking-wide">{ex.romaji}</p>
+            )}
+            <p className="text-sm text-muted-foreground font-medium">{parseInlineStyles(ex.id)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }

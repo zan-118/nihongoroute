@@ -5,9 +5,8 @@
 
 "use client";
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import React from "react";
 import Link from "next/link";
 import { m } from "framer-motion";
@@ -16,9 +15,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Properties for UserStatusSection component.
  */
@@ -33,9 +31,8 @@ interface UserStatusSectionProps {
  handleLogout: () => void;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Renders user profile card, theme toggle, and auth actions in sidebar footer.
  */
@@ -89,7 +86,7 @@ export function UserStatusSection({
  </span>
  <div className="flex items-center gap-1.5 mt-0.5">
  <div className="size-1 rounded-full bg-success" />
- <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
+ <span className="text-[8px] font-black text-muted-foreground uppercase tracking-wider">
  Sinkronisasi Aktif
  </span>
  </div>
@@ -102,7 +99,7 @@ export function UserStatusSection({
  <Button
  variant="ghost"
  onClick={handleLogout}
- className="w-full h-11 rounded-xl text-xs font-black uppercase tracking-widest border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+ className="w-full h-11 rounded-xl text-xs font-black uppercase tracking-wider border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground"
  >
  <LoginBox size={16} className="mr-2" /> Keluar
  </Button>

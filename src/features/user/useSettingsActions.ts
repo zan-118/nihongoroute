@@ -6,9 +6,8 @@
  * Menyediakan fungsionalitas ekspor/impor data JSON, reset progres belajar, logout, serta sinkronisasi progres manual ke cloud Supabase.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -19,9 +18,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { buildSrsUpdates, buildLessonUpdates } from "@/lib/cloud-sync-payload";
 import { toast } from "sonner";
 
-// ======================
 // HOOK UTAMA
-// ======================
 
 /**
  * Manage account settings actions.

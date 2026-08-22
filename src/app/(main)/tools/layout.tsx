@@ -3,17 +3,15 @@
  * @description Layout sekunder untuk grup rute peralatan (Tools), menyediakan metadata SEO.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import type { Metadata } from "next";
 import { breadcrumbJsonLd, createPageMetadata, webApplicationJsonLd } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ROUTES } from "@/lib/core/routes";
 
-// ======================
 // KONFIGURASI METADATA
-// ======================
+
 /**
  * SEO metadata configuration for tools route group.
  */
@@ -33,9 +31,8 @@ export const metadata: Metadata = {
   }),
 };
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
+
 /**
  * Layout component for tools section.
  * Injects Breadcrumb and WebApplication structured data schemas for search engines & AI bots.

@@ -5,9 +5,8 @@
  * @description Main orchestrator component for flashcard study sessions. Manages card transitions, audio pronunciation integration, visual XP feedback, session summary modals, and Zustand state synchronization.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
 
@@ -21,9 +20,8 @@ import { FlashcardActions } from "./FlashcardActions";
 import { FlashcardHeader } from "./FlashcardHeader";
 import PronunciationPanel from "./PronunciationPanel";
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Main orchestrator component for flashcard study sessions.
  * Manages card navigation, study modes, user input validation, and session statistics.
@@ -97,8 +95,8 @@ export default function FlashcardMaster({
  const themeColor = isKanji ? "text-secondary" : "text-primary";
  const themeBgColor = isKanji ? "bg-secondary" : "bg-primary";
  const themeShadow = isKanji
- ? "shadow-md dark:shadow-[0_0_12px_hsl(var(--secondary)/0.18)]"
- : "shadow-md dark:shadow-[0_0_12px_hsl(var(--primary)/0.18)]";
+ ? "shadow-md shadow-sm"
+ : "shadow-md shadow-sm";
 
  return (
  <section className="w-full max-w-2xl mx-auto relative px-4 md:px-0 transition-colors duration-300">

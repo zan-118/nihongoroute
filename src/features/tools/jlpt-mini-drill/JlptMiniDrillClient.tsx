@@ -358,7 +358,7 @@ export default function JlptMiniDrillClient({
  ) : null}
  </div>
  <div className="w-full rounded-lg border border-border bg-muted/15 p-4 sm:w-44">
- <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+ <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
  Akurasi
  </p>
  <p className="font-mono text-3xl font-black text-foreground">{accuracy}%</p>

@@ -6,9 +6,9 @@
  * yang mengandung karakter Kanji bersangkutan, lengkap dengan tombol Text-To-Speech (TTS).
  */
 
-// ==========================================
+
 // IMPORT & DEPENDENSI
-// ==========================================
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { VolumeUp, VolumeMute, BookOpen } from "@/components/ui/icons";
@@ -17,9 +17,9 @@ import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import type { SentenceRow } from "@/actions/sentences.actions";
 import { SmartJapanese } from "@/components/ui/japanese";
 
-// ==========================================
+
 // TIPE DATA / INTERFACE
-// ==========================================
+
 /**
  * Props for KanjiSentences component.
  */
@@ -30,9 +30,9 @@ interface KanjiSentencesProps {
  character: string;
 }
 
-// ==========================================
+
 // KOMPONEN UTAMA
-// ==========================================
+
 /**
  * Render list of example sentences for specific kanji with TTS audio.
  */
@@ -61,7 +61,7 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
  };
 
  return (
- <Card className="p-6 md:p-10 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all glass shadow-[0_0_20px_hsl(var(--primary)/0.02)]">
+ <Card className="p-6 md:p-10 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all glass shadow-sm">
  <div className="flex items-center gap-3 mb-6">
  <BookOpen size={18} className="text-success" aria-hidden="true" />
  <h2 className="text-xs md:text-sm uppercase tracking-[0.2em] text-foreground">
@@ -99,7 +99,7 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
  onClick={() => playAudio(sentence.japanese, i, { voice: getDeterministicVoice(sentence.japanese) })}
  className={`h-12 w-12 rounded-xl border flex items-center justify-center transition-all duration-300 relative ${
  playingIndex === i
- ? "border-success bg-success/10 text-success shadow-[0_0_20px_hsl(var(--success)/0.35)] animate-pulse"
+ ? "border-success bg-success/10 text-success shadow-sm animate-pulse"
  : "border-border bg-card/20 text-muted-foreground hover:border-success/40 hover:text-success hover:bg-success/5"
  }`}
  aria-label={playingIndex === i ? "Hentikan pengucapan" : "Dengarkan pengucapan"}

@@ -23,7 +23,7 @@ export function ReadingQuizSection({ quizzes, lessonId }: ReadingQuizSectionProp
     <div className="mt-16">
       <div className="flex items-center gap-4 mb-10">
         <div className="flex-1 h-px bg-border " />
-        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 shrink-0">
+        <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground/50 shrink-0">
           Kuis Pemahaman
         </span>
         <div className="flex-1 h-px bg-border " />

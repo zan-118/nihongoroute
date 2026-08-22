@@ -3,9 +3,9 @@
  * @description Halaman detail referensi cheatsheet interaktif NihongoRoute yang dapat diekspor ke PDF secara dinamis.
  */
 
-// ======================
+
 // IMPOR
-// ======================
+
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -25,9 +25,9 @@ import {
  learningResourceJsonLd,
 } from "@/lib/seo";
 
-// ======================
+
 // KONFIGURASI STATIC GENERATION (ISR/SSG)
-// ======================
+
 
 export const dynamicParams = true;
 export const revalidate = 604800;
@@ -40,9 +40,9 @@ export async function generateStaticParams() {
  return await getCheatsheetStaticParams();
 }
 
-// ======================
+
 // METADATA SEO
-// ======================
+
 
 /**
  * Generate page metadata.
@@ -73,9 +73,9 @@ export async function generateMetadata({
  });
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Cheatsheet detail page component.
@@ -124,7 +124,7 @@ export default async function CheatsheetDetailPage({
  />
  {/* Dekorasi Latar Belakang */}
  <div className="grid-overlay" />
- <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--destructive)/0.03)_0%,transparent_70%)] pointer-events-none" />
+ <div className="absolute inset-0 bg-muted/30 pointer-events-none" />
 
  <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10 pt-10">
  {/* Bagian Tajuk Halaman (Header) */}

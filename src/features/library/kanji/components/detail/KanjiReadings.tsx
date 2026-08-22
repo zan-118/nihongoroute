@@ -3,15 +3,15 @@
  * @description Komponen bento untuk menampilkan cara baca Onyomi (cara baca Cina) dan Kunyomi (cara baca Jepang asli) dari sebuah Kanji.
  */
 
-// ==========================================
+
 // IMPORT & DEPENDENSI
-// ==========================================
+
 import { Card } from "@/components/ui/card";
 import { PlayCircle } from "@/components/ui/icons";
 
-// ==========================================
+
 // TIPE DATA / INTERFACE
-// ==========================================
+
 /**
  * Props for KanjiReadings component.
  */
@@ -26,9 +26,9 @@ interface KanjiReadingsProps {
  kunyomi?: string;
 }
 
-// ==========================================
+
 // KOMPONEN UTAMA
-// ==========================================
+
 /**
  * Render Onyomi and Kunyomi readings in bento grid.
  * 
@@ -36,14 +36,14 @@ interface KanjiReadingsProps {
  * @returns Bento grid layout with readings.
  */
 export function KanjiReadings({ onyomi, kunyomi }: KanjiReadingsProps) {
- // ==========================================
+
  // RENDER KOMPONEN
- // ==========================================
+
  return (
  /* Grid layout split. Onyomi left, Kunyomi right. */
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
  {/* Bento Onyomi */}
- <Card className="p-6 md:p-8 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center group glass shadow-[0_0_20px_hsl(var(--primary)/0.02)]">
+ <Card className="p-6 md:p-8 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center group glass shadow-sm">
  {/* Decorative background icon. Scale up on hover. */}
  <div className="absolute top-4 right-6 opacity-[0.05] group-hover:scale-110 transition-transform text-primary">
  <PlayCircle size={40} aria-hidden="true" />
@@ -56,7 +56,7 @@ export function KanjiReadings({ onyomi, kunyomi }: KanjiReadingsProps) {
  </Card>
 
  {/* Bento Kunyomi */}
- <Card className="p-6 md:p-8 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center group glass shadow-[0_0_20px_hsl(var(--success)/0.02)]">
+ <Card className="p-6 md:p-8 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center group glass shadow-sm">
  {/* Decorative background icon. Scale up on hover. */}
  <div className="absolute top-4 right-6 opacity-[0.05] group-hover:scale-110 transition-transform text-success">
  <PlayCircle size={40} aria-hidden="true" />

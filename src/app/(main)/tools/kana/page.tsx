@@ -5,9 +5,8 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import React, { Suspense } from "react";
 
 import { useKanaQuiz } from "@/features/tools/kana/useKanaQuiz";

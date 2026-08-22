@@ -5,9 +5,6 @@
  * @module LessonPage
  */
 
-// ======================
-// IMPOR
-// ======================
 import React from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -37,22 +34,12 @@ import {
  learningResourceJsonLd,
 } from "@/lib/seo";
 
-// ======================
-// TIPE DATA
-// ======================
-
 /**
  * Route parameters for the dynamic lesson page.
  */
 interface Props {
  params: Promise<{ categoryId: string; slug: string }>;
 }
-
-
-
-// ======================
-// METADATA SEO
-// ======================
 
 /**
  * Generates dynamic SEO metadata for the lesson page.
@@ -96,9 +83,7 @@ export async function generateStaticParams() {
  return await getLessonStaticParams();
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * Dynamic lesson page component.
@@ -160,10 +145,6 @@ export default async function LessonPage({ params }: Props) {
  ]}
  />
  <div className="w-full text-foreground px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 transition-colors duration-300">
- {/* Dekorasi Ambient Latar Belakang */}
- <div className="absolute top-0 right-0 size-90 bg-primary/5 blur-[65px] rounded-full pointer-events-none ambient-glow will-change-transform" />
- <div className="absolute bottom-0 left-0 size-75 bg-secondary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
-
  <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col flex-1">
  <article className="flex-1 min-w-0">
  <LessonHeader

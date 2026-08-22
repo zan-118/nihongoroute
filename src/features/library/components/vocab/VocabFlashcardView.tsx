@@ -6,18 +6,16 @@
  * Melakukan pemetaan properti VocabItem ke format FlashcardData dan merender komponen FlashcardMaster.
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import React from "react";
 import { ArrowLeft } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import FlashcardMaster from "@/features/review/flashcards/master/FlashcardMaster";
 import { VocabItem } from "./types";
 
-// ==========================================
 // ANTARMUKA & TIPE DATA
-// ==========================================
+
 /**
  * Props for VocabFlashcardView component.
  */
@@ -28,9 +26,8 @@ interface VocabFlashcardViewProps {
  onBack: () => void;
 }
 
-// ==========================================
 // KOMPONEN UTAMA: VocabFlashcardView
-// ==========================================
+
 /**
  * Component for vocabulary flashcard study session.
  * Maps vocabulary items to flashcard format and renders master flashcard interface.

@@ -6,17 +6,14 @@
  * Menampilkan tautan ke kanji pembentuk kosakata, sinonim, antonim, beserta arti singkatnya.
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import { Card } from "@/components/ui/card";
 import { Link as LinkIcon } from "@/components/ui/icons";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
-// ==========================================
 // ANTARMUKA & TIPE DATA
-// ==========================================
 
 /**
  * Kanji reference data structure.
@@ -52,9 +49,8 @@ interface VocabRelatedProps {
  antonyms?: VocabRef[];
 }
 
-// ==========================================
 // KOMPONEN UTAMA: VocabRelated
-// ==========================================
+
 /**
  * Component displays related kanji, synonyms, and antonyms.
  * 
@@ -66,7 +62,7 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
  const hasContent = (relatedKanji?.length || 0) > 0 || (synonyms?.length || 0) > 0 || (antonyms?.length || 0) > 0;
 
  return (
- <Card className="p-6 md:p-8 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative space-y-8 font-sans glass shadow-[0_0_20px_hsl(var(--primary)/0.02)]">
+ <Card className="p-6 md:p-8 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative space-y-8 font-sans glass shadow-sm">
  
  {/* Tampilan Karakter Kanji Terkait */}
  {relatedKanji && relatedKanji.length > 0 && (
@@ -79,7 +75,7 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
  {relatedKanji.map((kanji) => {
  // Render kanji card.
  const kanjiEl = (
- <div className="p-2 pr-4 bg-[hsl(var(--muted)/0.3)] border border-border rounded-xl flex items-center gap-3 transition-all group/kanji hover:border-primary/40">
+ <div className="p-2 pr-4 bg-muted/30 border border-border rounded-xl flex items-center gap-3 transition-all group/kanji hover:border-primary/40">
  <div className="size-10 rounded-lg bg-background border border-border flex items-center justify-center text-xl font-japanese group-hover/kanji:text-primary transition-colors">
  {kanji.character}
  </div>

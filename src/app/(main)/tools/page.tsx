@@ -6,9 +6,9 @@
 
 "use client";
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import React from "react";
 import { m } from "framer-motion";
 import { Wrench, ChevronRight, Zap } from "@/components/ui/icons";
@@ -101,11 +101,10 @@ export default function ToolsPage() {
  ))}
  </div>
 
- {/* Informasi Kaki Halaman */}
- {/* Footer banner with grid background pattern */}
- <div className="mt-16 p-8 rounded-xl bg-muted/30 border border-border/50 text-center relative overflow-hidden">
- <div className="absolute inset-0 bg-grid-foreground/5 [mask-image:radial-gradient(hsl(var(--foreground)),transparent)]" />
- <p className="relative z-10 text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">
+ {/* Informasi Kaki Halaman      {/* Footer banner with grid background pattern */}
+      <div className="mt-16 p-8 rounded-xl bg-muted/30 border border-border/50 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-foreground/5 opacity-50" />
+        <p className="relative z-10 text-xs font-bold text-muted-foreground uppercase tracking-wider">
  Alat baru akan ditambahkan secara berkala • Tetap Semangat Belajar!
  </p>
  </div>

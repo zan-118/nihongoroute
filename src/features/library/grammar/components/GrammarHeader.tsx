@@ -6,16 +6,14 @@
  * Menampilkan tajuk dan sistem navigasi tingkat level JLPT.
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import { BookOpen } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { GrammarLevelNav } from "./GrammarLevelNav";
 
-// ==========================================
 // ANTARMUKA & TIPE DATA
-// ==========================================
+
 /**
  * Properties for GrammarHeader component.
  */
@@ -28,9 +26,8 @@ interface GrammarHeaderProps {
  onLevelChange: (level: string) => void;
 }
 
-// ==========================================
 // KOMPONEN UTAMA: GrammarHeader
-// ==========================================
+
 /**
  * Header component for grammar section. Displays title and level navigation.
  * 

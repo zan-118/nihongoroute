@@ -6,16 +6,14 @@
  * Menampilkan mnemonik resmi dari server, catatan penggunaan tata bahasa/konteks, serta editor kustom luring (MnemonicEditor).
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import { Card } from "@/components/ui/card";
 import { Information } from "@/components/ui/icons";
 import { MnemonicEditor } from "@/features/srs/mnemonic/MnemonicEditor";
 
-// ==========================================
 // ANTARMUKA & TIPE DATA
-// ==========================================
+
 /**
  * Properties for VocabNotes component.
  */
@@ -28,9 +26,8 @@ interface VocabNotesProps {
  usageNotes?: string;
 }
 
-// ==========================================
 // KOMKOMPONEN UTAMA: VocabNotes
-// ==========================================
+
 /**
  * Renders official mnemonics, usage notes, and custom mnemonic editor.
  * 
@@ -39,7 +36,7 @@ interface VocabNotesProps {
  */
 export function VocabNotes({ wordId, mnemonic, usageNotes }: VocabNotesProps) {
  return (
- <Card className="p-6 bg-warning/5 border-warning/20 rounded-2xl md:rounded-3xl hover:border-warning/40 transition-all group overflow-hidden relative flex flex-col gap-4 font-sans glass shadow-[0_0_20px_hsl(var(--warning)/0.02)]">
+ <Card className="p-6 bg-warning/5 border-warning/20 rounded-2xl md:rounded-3xl hover:border-warning/40 transition-all group overflow-hidden relative flex flex-col gap-4 font-sans glass shadow-sm">
  {/* Decorative background icon */}
  <div className="absolute -top-4 -right-4 p-8 opacity-[0.05] group-hover:scale-110 transition-transform duration-700 text-warning">
  

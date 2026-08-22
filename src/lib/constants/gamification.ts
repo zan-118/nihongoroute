@@ -23,9 +23,8 @@ import {
  Pulse,
  Heart
 } from "@/components/ui/icons";
-// ==========================================
+
 // TIPE DATA & ANTARMUKA
-// ==========================================
 
 /**
  * State minimal yang dibutuhkan untuk evaluasi kondisi achievement.
@@ -66,9 +65,7 @@ export interface Achievement {
  threshold: number;
 }
 
-// ==========================================
 // POOL 15 MISI HARIAN (DAILY QUESTS POOL)
-// ==========================================
 
 /**
  * Pool of daily quests. System select subset daily.
@@ -196,9 +193,7 @@ export const DAILY_QUESTS_POOL: Quest[] = [
  },
 ];
 
-// ==========================================
 // DAFTAR 20 LENCANA PRESTASI (ACHIEVEMENTS LIST)
-// ==========================================
 
 /**
  * List of achievements. Evaluate progress against thresholds.
@@ -377,9 +372,7 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
  }
 ];
 
-// ==========================================
 // SEEDED RANDOM SELECTION HELPER (PRNG)
-// ==========================================
 
 /**
  * Seeded pseudo-random number generator. Ensure same seed yield same sequence.

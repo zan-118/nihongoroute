@@ -6,18 +6,16 @@
  * @module features/dashboard/components
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Save, Upload, DeleteBin, LoginBox } from "@/components/ui/icons";
 import NotificationManager from "@/features/notifications/NotificationManager";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for DashboardSettings component.
  */
@@ -36,9 +34,8 @@ interface DashboardSettingsProps {
  itemVariants: Variants;
 }
 
-// ==========================================
 // KOMPONEN UTAMA
-// ==========================================
+
 /**
  * Dashboard settings panel. Manage notifications and data backup.
  */

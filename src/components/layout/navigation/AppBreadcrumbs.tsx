@@ -5,16 +5,14 @@
 
 "use client";
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import Link from "next/link";
 import { ChevronRight } from "@/components/ui/icons";
 import { BreadcrumbItem } from "@/lib/routes";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for AppBreadcrumbs component.
  */
@@ -25,9 +23,8 @@ interface AppBreadcrumbsProps {
  className?: string;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Render responsive breadcrumb navigation trail.
  */

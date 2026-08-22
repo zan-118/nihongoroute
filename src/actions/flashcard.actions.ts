@@ -6,14 +6,11 @@
 
 "use server";
 
-// ==========================================
 // Imports & Dependencies
-// ==========================================
+
 import { createClient } from "@/lib/supabase/server";
 
-// ==========================================
 // Server Actions
-// ==========================================
 
 /**
  * Fetch flashcards from database.

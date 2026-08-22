@@ -7,16 +7,14 @@
  * @project NihongoRoute
  */
 
-// ==========================================
 // IMPOR
-// ==========================================
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Target } from "@/components/ui/icons";
 
-// ==========================================
 // KOMPONEN UTAMA
-// ==========================================
+
 /**
  * Header component for daily quests.
  * Shows target icon, title, subtitle, and reset time badge.
@@ -33,7 +31,7 @@ export function QuestHeader() {
  <h3 className="text-foreground uppercase tracking-tight text-xs md:text-sm">
  Target Hari Ini
  </h3>
- <span className="block text-xs text-muted-foreground font-bold uppercase tracking-widest mt-0.5">
+ <span className="block text-xs text-muted-foreground font-bold uppercase tracking-wider mt-0.5">
  Yuk, kejar targetmu!
  </span>
  </div>
@@ -41,7 +39,7 @@ export function QuestHeader() {
  {/* Reset time indicator */}
  <Badge
  variant="ghost"
- className="bg-muted dark:bg-muted/30 border border-border text-muted-foreground px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest uppercase shadow-none h-auto"
+ className="bg-muted dark:bg-muted/30 border border-border text-muted-foreground px-3 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase shadow-none h-auto"
  >
  Reset 00:00
  </Badge>

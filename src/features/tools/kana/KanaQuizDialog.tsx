@@ -3,10 +3,9 @@
  * @description Interactive quiz dialog component for Hiragana & Katakana practice. Features instant visual feedback (correct/incorrect), lives system, and character audio pronunciation.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
-import React, { useEffect, useCallback } from "react";
+
+import React, { useEffect, useCallback, useRef } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Heart, Trophy, VolumeUp } from "@/components/ui/icons";
 import {
@@ -17,11 +16,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { fetchTTSAudio, speakWithWebSpeech } from "@/lib/audio/tts";
 import { KanaType } from "./kana-data";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for KanaQuizDialog component.
  */
@@ -64,9 +63,8 @@ interface KanaQuizDialogProps {
  isVictory?: boolean;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Interactive quiz dialog component for Hiragana and Katakana practice.
  * Provides visual feedback, lives system, and audio pronunciation.
@@ -93,44 +91,55 @@ export function KanaQuizDialog({
 }: KanaQuizDialogProps) {
  const isHira = type === "hiragana";
 
- // ==========================================
- // METODE & EFEK SAMPING (EFFECTS)
- // ==========================================
- /**
- * PlayCircle audio pronunciation of current kana character using SpeechSynthesis API.
- */
- const speakActiveKana = useCallback(() => {
- if (typeof window === "undefined" || !window.speechSynthesis || !char?.char) return;
- // Cancel ongoing speech to prevent overlap
- window.speechSynthesis.cancel();
- const utterance = new SpeechSynthesisUtterance(char.char);
- utterance.lang = "ja-JP";
- utterance.rate = 0.85;
+  // Audio element reference for Edge TTS playback
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
- // Find Japanese voice if available
- const voices = window.speechSynthesis.getVoices();
- const jaVoice = voices.find((v) => v.lang.startsWith("ja"));
- if (jaVoice) {
- utterance.voice = jaVoice;
- }
+  /**
+   * Putar audio pelafalan karakter kana aktif menggunakan Edge TTS (dengan fallback Web Speech API).
+   */
+  const speakActiveKana = useCallback(async () => {
+    if (!char?.char) return;
 
- window.speechSynthesis.speak(utterance);
- }, [char]);
+    try {
+      const ttsUrl = await fetchTTSAudio(char.char, "indah");
+      if (ttsUrl) {
+        if (!audioRef.current) {
+          audioRef.current = new Audio();
+        }
+        audioRef.current.src = ttsUrl;
+        await audioRef.current.play();
+        return;
+      }
+    } catch (err) {
+      console.warn("[Kana Quiz] Gagal memutar Edge TTS, beralih ke Web Speech fallback:", err);
+    }
 
- // Autoplay voice in audio mode
- useEffect(() => {
- if (isActive && questionMode === "audio" && char?.char) {
- // Delay speech slightly to allow dialog transition to finish
- const timer = setTimeout(() => {
- speakActiveKana();
- }, 120);
- return () => clearTimeout(timer);
- }
- }, [isActive, char, questionMode, speakActiveKana]);
+    // Fallback: Web Speech API jika fetch TTS gagal atau offline
+    speakWithWebSpeech(char.char, "indah", 0.9);
+  }, [char]);
 
- // ==========================================
+  // Autoplay voice in audio mode
+  useEffect(() => {
+    if (isActive && questionMode === "audio" && char?.char) {
+      const timer = setTimeout(() => {
+        speakActiveKana();
+      }, 120);
+      return () => clearTimeout(timer);
+    }
+  }, [isActive, char, questionMode, speakActiveKana]);
+
+  // Cleanup audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
  // RENDER KOMPONEN
- // ==========================================
+
  return (
  <Dialog
  open={isActive}
@@ -182,7 +191,7 @@ export function KanaQuizDialog({
  onClick={speakActiveKana}
  type="button"
  aria-label="Putar Suara Aksara"
- className="w-20 h-20 rounded-full flex items-center justify-center bg-warning/10 border border-warning/45 hover:bg-warning/20 shadow-[0_0_25px_hsl(var(--warning)/0.25)] hover:shadow-[0_0_35px_hsl(var(--warning)/0.4)] transition-all duration-300 text-warning"
+ className="w-20 h-20 rounded-full flex items-center justify-center bg-warning/10 border border-warning/45 hover:bg-warning/20 shadow-sm hover:shadow-sm transition-all duration-300 text-warning"
  >
  <VolumeUp size={36} className="animate-pulse" />
  </m.button>
@@ -238,8 +247,8 @@ export function KanaQuizDialog({
  </div>
  </div>
  ) : isVictory ? (
- <Card className="bg-success/5 p-8 md:p-10 rounded-lg border border-success/30 text-center w-full relative overflow-hidden shadow-[0_0_30px_hsl(var(--success)/0.15)] glass">
- <div className="w-16 h-16 bg-warning/10 rounded-xl flex items-center justify-center mx-auto mb-6 border border-warning/25 shadow-[0_0_20px_hsl(var(--warning)/0.3)] text-warning">
+ <Card className="bg-success/5 p-8 md:p-10 rounded-lg border border-success/30 text-center w-full relative overflow-hidden shadow-sm glass">
+ <div className="w-16 h-16 bg-warning/10 rounded-xl flex items-center justify-center mx-auto mb-6 border border-warning/25 shadow-sm text-warning">
  <Trophy size={32} className="fill-current" />
  </div>
  <h2 className="text-2xl text-foreground uppercase tracking-tight mb-2">Kemenangan!</h2>

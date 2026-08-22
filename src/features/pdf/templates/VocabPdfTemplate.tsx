@@ -16,9 +16,7 @@ import {
  Font,
 } from "@react-pdf/renderer";
 
-// ======================
 // CONFIG / FONTS
-// ======================
 
 // Register Japanese font family to support Kanji and Kana characters in PDF.
 Font.register({
@@ -29,9 +27,8 @@ Font.register({
  ],
 });
 
-// ======================
 // TYPES
-// ======================
+
 import { PdfVocabItem } from "./LessonPdfTemplate";
 
 /**
@@ -44,9 +41,8 @@ interface VocabTemplateProps {
  level: string;
 }
 
-// ======================
 // STYLES
-// ======================
+
 /**
  * Stylesheet definitions for the PDF layout.
  */
@@ -209,9 +205,7 @@ const styles = StyleSheet.create({
  },
 });
 
-// ======================
 // MAIN EXECUTION
-// ======================
 
 /**
  * Formats the meaning string by limiting the items to a maximum of two.

@@ -9,9 +9,6 @@ import type { ContentBlock } from "@/types/database";
 import type { RawQuizItem } from "@/lib/utils/lesson-utils";
 import { transformLessonBlocks } from "@/lib/learning/lesson-block-transformer";
 
-// ======================================================
-// TYPES
-// ======================================================
 
 /**
  * Blok konten dinamis hasil parsing markdown atau dari database.
@@ -124,9 +121,7 @@ export interface RawLessonRow {
  _sourceTable: "lessons" | "articles";
 }
 
-// ======================================================
 // HELPERS (internal)
-// ======================================================
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -147,9 +142,7 @@ export function parseArray(val: unknown): unknown[] {
  }
 }
 
-// ======================================================
 // MARKDOWN PARSER
-// ======================================================
 
 /**
  * Mengubah konten Markdown biasa menjadi struktur HydrationContentBlock dinamis.
@@ -295,9 +288,7 @@ export function parseMarkdownToBlocks(markdown: string): HydrationContentBlock[]
  return blocks;
 }
 
-// ======================================================
 // RELATION HYDRATORS (internal)
-// ======================================================
 
 /**
  * Hidrasi daftar kosakata dari raw ID/word/slug list.
@@ -524,9 +515,7 @@ async function hydrateReading(
  }));
 }
 
-// ======================================================
 // MAIN HYDRATION FUNCTION
-// ======================================================
 
 /**
  * Menghidrasi raw lesson/article row menjadi LibraryItem yang sepenuhnya terformat.

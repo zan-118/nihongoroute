@@ -4,9 +4,7 @@
  * Dipisahkan dari komponen agar mudah diuji dan komponen tetap ramping.
  */
 
-// ======================
 // TIPE
-// ======================
 
 /** Skor per bagian ujian. */
 export interface SectionScore {
@@ -48,9 +46,7 @@ export interface CertificatePayload {
  level: string;
 }
 
-// ======================
 // HELPERS
-// ======================
 
 /** Ambil data bagian dengan fallback kosong. */
 function sectionData(
@@ -69,9 +65,7 @@ function getGrade(correct: number, total: number): string {
  return "C";
 }
 
-// ======================
 // FUNGSI MURNI
-// ======================
 
 /**
  * Deteksi apakah ujian berjenis JFT-Basic.

@@ -6,9 +6,9 @@
 
 "use client";
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import { useState, useEffect, useMemo, useRef } from "react";
 import { getGrammarArticles } from "@/actions/library.actions";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
@@ -23,9 +23,9 @@ import { GrammarSearch } from "@/features/library/grammar/components/GrammarSear
 import { GrammarEmptyState } from "@/features/library/grammar/components/GrammarEmptyState";
 import { GrammarHeader } from "@/features/library/grammar/components/GrammarHeader";
 
-// ======================
+
 // KONFIGURASI / KONSTANTA
-// ======================
+
 /** JLPT levels for filtering. */
 const LEVELS = ["all", "n5", "n4", "n3", "n2", "n1"];
 /** Pagination limit. */
@@ -33,9 +33,9 @@ const ITEMS_PER_PAGE = 12;
 /** Static empty array reference. Prevent unnecessary re-renders. */
 const EMPTY_GRAMMAR_ARTICLES: GrammarArticle[] = [];
 
-// ======================
+
 // TIPE DATA
-// ======================
+
 /**
  * Grammar article schema.
  */
@@ -57,9 +57,9 @@ interface GrammarViewProps {
  initialArticles?: GrammarArticle[];
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * GrammarView component. Handle search, filter, pagination.

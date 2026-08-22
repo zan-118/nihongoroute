@@ -5,9 +5,6 @@
  * @description Komponen seksi kosakata (VocabSection) dalam halaman pelajaran. Menampilkan detail kata, romaji, jenis kata, tombol tambah ke SRS, dan pemutar TTS.
  */
 
-// ======================
-// IMPOR
-// ======================
 import React, { useState } from "react";
 import { toRomaji } from "wanakana";
 import { SmartJapanese } from "@/components/ui/japanese";
@@ -15,10 +12,6 @@ import { TTSReader } from "@/features/media";
 import AddToSRSButton from "@/features/srs/actions/AddToSRSButton";
 import { ChevronDown, ChevronUp } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
-
-// ======================
-// ANTARMUKA / TIPE DATA
-// ======================
 
 /**
  * Vocab item data structure. Hold word, reading, meaning, grammar info.
@@ -45,9 +38,9 @@ interface VocabSectionProps {
  vocabList: VocabLessonItem[];
 }
 
-// ======================
+
 // KARTU KOSAKATA INDIVIDU (STATEFUL)
-// ======================
+
 
 /**
  * Card component. Show single vocab item. Handle meaning expansion, audio play, SRS add.
@@ -74,19 +67,19 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
  </div>
 
  <div
- className="p-6 md:p-8 border border-border/50 dark:border-white/10 rounded-2xl bg-card shadow-[0_4px_25px_rgba(0,0,0,0.015)] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 group hover:border-primary/45 transition-all duration-500 h-full"
+ className="p-6 md:p-8 border border-border/50 dark:border-white/10 rounded-2xl bg-card shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 group hover:border-primary/45 transition-all duration-500 h-full"
  >
  <div className="flex-1 w-full">
  <div className="flex items-center gap-2 mb-3">
   <span 
-  className="text-[10px] font-bold text-primary bg-primary/10 uppercase tracking-widest px-2 py-0.5 rounded-[4px] border border-primary/20"
+  className="text-[10px] font-bold text-primary bg-primary/10 uppercase tracking-wider px-2 py-0.5 rounded-[4px] border border-primary/20"
   >
   {/* Convert furigana to romaji if romaji */}
   {v.romaji || (v.furigana ? toRomaji(v.furigana) : "-")}
   </span>
   {v.hinshi && (
   <span 
-  className="text-[9px] font-mono font-black text-muted-foreground bg-muted uppercase tracking-widest px-2 py-0.5 rounded-[4px] border border-border"
+  className="text-[9px] font-mono font-bold text-muted-foreground bg-muted uppercase tracking-wider px-2 py-0.5 rounded-[4px] border border-border"
   >
   {Array.isArray(v.hinshi) ? v.hinshi.join(", ") : (
   v.hinshi === "Meishi" ? "Kata Benda" :
@@ -99,7 +92,7 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
   {v.transitivity && (
   <span 
   className={cn(
-  "text-[9px] font-mono font-black uppercase tracking-widest px-2 py-0.5 rounded-[4px] border",
+  "text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-[4px] border",
   v.transitivity === "transitive"
   ? "text-warning bg-warning/10 border-warning/20"
   : "text-primary bg-primary/10 border-primary/20"
@@ -156,9 +149,9 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
  );
 };
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Section component. Render list of vocab cards. Handle pagination if item count exceed 10.
@@ -188,11 +181,11 @@ export const VocabSection: React.FC<VocabSectionProps> = ({ vocabList }) => {
  </div>
  {hasMoreThanTen && (
  <div className="flex justify-center pt-8">
- <button
- onClick={() => setShowAll(!showAll)}
- className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-lg rounded-br-none font-black uppercase tracking-widest text-[9px] sm:text-[10px] border shadow-sm transition-all duration-300 bg-card hover:bg-primary/5 hover:border-primary/30 text-muted-foreground hover:text-primary active:scale-95"
- aria-label={showAll ? "Sembunyikan kosakata tambahan" : "Tampilkan semua kosakata"}
- >
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl lg:rounded-br-none font-bold uppercase tracking-wider text-[9px] sm:text-[10px] border shadow-sm transition-all duration-300 bg-card hover:bg-primary/5 hover:border-primary/30 text-muted-foreground hover:text-primary active:scale-95"
+          aria-label={showAll ? "Sembunyikan kosakata tambahan" : "Tampilkan semua kosakata"}
+        >
  <span>{showAll ? "Sembunyikan" : `Lihat Selanjutnya (${vocabList.length - 10} lainnya)`}</span>
  {showAll ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
  </button>

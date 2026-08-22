@@ -59,7 +59,7 @@ export default function ContactView() {
       <div className="app-container-narrow mx-auto space-y-12">
         {/* Header Section */}
         <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <Badge variant="outline" className="bg-card border-border text-primary px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2">
+          <Badge variant="outline" className="bg-card border-border text-primary px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center gap-2">
             <Message size={14} className="text-primary" />
             <span>Hubungi Kami</span>
           </Badge>
@@ -83,7 +83,6 @@ export default function ContactView() {
           <div className="lg:col-span-5 space-y-6">
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-                
                 <span>Kanal Resmi Komunitas</span>
               </h2>
 
@@ -95,7 +94,7 @@ export default function ContactView() {
                   rel="noreferrer"
                   className="block group"
                 >
-                  <Card className="p-5 bg-card border border-border rounded-xl group-hover:border-primary/40 transition-all duration-300">
+                  <Card className="p-5 bg-card border border-border rounded-xl group-hover:border-primary/40 active:scale-[0.98] transition-all duration-300">
                     <div className="flex items-start gap-4">
                       <div className="p-3 bg-primary/10 text-primary rounded-xl group-hover:scale-105 transition-transform">
                         <channel.icon size={20} />

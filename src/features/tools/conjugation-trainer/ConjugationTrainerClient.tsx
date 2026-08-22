@@ -287,7 +287,7 @@ export default function ConjugationTrainerClient({
  </div>
 
  <div>
- <p className="mb-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+ <p className="mb-2 text-[10px] font-black uppercase tracking-wider text-muted-foreground">
  Target Bentuk
  </p>
  <div className="flex flex-wrap gap-2">
@@ -318,7 +318,7 @@ export default function ConjugationTrainerClient({
  </div>
 
  <div>
- <p className="mb-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+ <p className="mb-2 text-[10px] font-black uppercase tracking-wider text-muted-foreground">
  Contoh Cepat
  </p>
  <div className="flex flex-wrap gap-2">
@@ -343,7 +343,7 @@ export default function ConjugationTrainerClient({
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-2xl md:p-6">
  <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
  <div>
- <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+ <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
  Target
  </p>
  <h2 className="font-japanese text-3xl text-foreground">
@@ -396,7 +396,7 @@ export default function ConjugationTrainerClient({
  ) : (
  <X size={18} aria-hidden="true" />
  )}
- <span className="text-xs font-black uppercase tracking-widest">
+ <span className="text-xs font-black uppercase tracking-wider">
  {isCorrect ? "Benar" : "Belum Tepat"}
  </span>
  </div>
@@ -422,7 +422,7 @@ export default function ConjugationTrainerClient({
             {!conjugation.result && (
               <Loader size={16} className="text-muted-foreground" aria-hidden="true" />
             )}
- <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
+ <h2 className="text-xs uppercase tracking-wider text-foreground">
  Tabel Bentuk
  </h2>
  </div>
@@ -438,7 +438,7 @@ export default function ConjugationTrainerClient({
  : "border-border bg-background/40"
  )}
  >
- <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+ <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
  {item.label}
  </p>
  <p className="mt-1 font-japanese text-xl font-black text-foreground">

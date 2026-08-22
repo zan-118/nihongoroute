@@ -6,9 +6,8 @@
 
 "use server";
 
-// ======================
 // IMPORTS
-// ======================
+
 import { GrammarTable } from "@/types/database";
 import { LibraryItem } from "@/types/library";
 import { queryLexicalDomain } from "@/lib/services/lexical-content-engine";
@@ -21,9 +20,7 @@ import {
 } from "@/lib/services/content-repository";
 import { logger } from "@/lib/core/logger";
 
-// ======================
 // SERVER ACTIONS
-// ======================
 
 /**
  * Fetch paginated grammar records from database using LexicalContentEngine domain seam.

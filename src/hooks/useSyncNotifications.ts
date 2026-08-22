@@ -9,9 +9,8 @@ import { useUIStore } from "@/store/useUIStore";
 import { useUserStore } from "@/store/useUserStore";
 import { getNotifications } from "@/actions/community.actions";
 
-// ==========================================
 // Main Custom Hook
-// ==========================================
+
 /**
  * Sync database notifications into local Zustand UI store.
  * Polls Supabase community notifications every 30 seconds for authenticated non-guest users.

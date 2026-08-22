@@ -6,15 +6,13 @@
  * Menampilkan judul halaman, statistik jumlah kata yang ditemukan, serta tombol latihan interaktif.
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import { Book } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
-// ==========================================
 // ANTARMUKA & TIPE DATA
-// ==========================================
+
 /**
  * Props for the VocabHeader component.
  */
@@ -27,9 +25,8 @@ interface VocabHeaderProps {
  isPracticeDisabled: boolean;
 }
 
-// ==========================================
 // KOMPONEN UTAMA: VocabHeader
-// ==========================================
+
 /**
  * Header component for the Vocabulary Library.
  * Renders page title, total vocabulary count, and a practice button.

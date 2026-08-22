@@ -6,9 +6,8 @@
 
 "use server";
 
-// ======================
 // IMPORTS
-// ======================
+
 import { PaginatedKanjiResponse, LibraryItem } from "@/types/library";
 import { KanjiTable } from "@/types/database";
 import { queryLexicalDomain } from "@/lib/services/lexical-content-engine";
@@ -20,9 +19,7 @@ import {
 import { createStaticClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/core/logger";
 
-// ======================
 // SERVER ACTIONS
-// ======================
 
 /**
  * Fetch kanji list with pagination, search, and JLPT filter using LexicalContentEngine domain seam.

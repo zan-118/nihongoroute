@@ -6,18 +6,18 @@
 
 "use client";
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import { m, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { BookOpen, Briefcase, Plane, Tv, ChevronRight, Check, Loader, ArrowLeft, Compass } from "@/components/ui/icons";
 import { useOnboardingWizard } from "@/features/auth/onboarding/useOnboardingWizard";
 
-// ==========================================
+
 // Constants & Configuration
-// ==========================================
+
 /** JLPT levels for user selection. */
 const JLPT_LEVELS = [
  { id: "N5", label: "Pemula (N5)" },
@@ -82,7 +82,7 @@ export default function OnboardingView() {
  className="text-center space-y-10"
  >
  <div className="space-y-4">
- <div className="size-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-primary/20 shadow-[0_0_20px_hsl(var(--primary)/0.15)] animate-pulse">
+ <div className="size-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-primary/20 shadow-sm animate-pulse">
    <Compass className="size-10 text-primary" />
  </div>
  <h1 className="text-6xl md:text-8xl font-black text-primary font-japanese tracking-tight">
@@ -221,7 +221,7 @@ export default function OnboardingView() {
  >
  <div className={`p-4 rounded-2xl transition-colors duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
  motivation === item.id 
- ? "bg-secondary text-secondary-foreground shadow-[0_0_15px_hsl(var(--secondary)/0.2)]" 
+ ? "bg-secondary text-secondary-foreground shadow-sm" 
  : "bg-muted text-muted-foreground group-hover:text-secondary group-hover:bg-secondary/5"
  }`}>
  <item.icon size={24} />
@@ -271,7 +271,7 @@ export default function OnboardingView() {
  key={i} 
  className={`h-1.5 rounded-full transition-all duration-500 ${
  step === i 
- ? "w-12 bg-primary shadow-[0_0_10px_hsl(var(--primary)/0.5)]" 
+ ? "w-12 bg-primary shadow-sm" 
  : step > i 
  ? "w-6 bg-primary/30" 
  : "w-6 bg-border/80"

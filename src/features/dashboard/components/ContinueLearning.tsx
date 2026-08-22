@@ -7,9 +7,9 @@
  * @module features/dashboard/components
  */
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import { useUserStore } from "@/store/useUserStore";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,9 +18,9 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { m } from "framer-motion";
 
-// ==========================================
+
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for ContinueLearning component.
  * Contains course metadata array.
@@ -38,9 +38,9 @@ interface ContinueLearningProps {
  }>;
 }
 
-// ==========================================
+
 // Main Component
-// ==========================================
+
 /**
  * ContinueLearning component.
  * Render shortcut to next incomplete lesson.
@@ -120,7 +120,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
  <div className="flex flex-col gap-2">
  <div className="flex items-center gap-[13px]">
  <div className="w-[34px] h-[1px] bg-primary/40" />
- <h2 className="text-[10px] uppercase tracking-[0.2em] text-primary">
+ <h2 className="text-[10px] uppercase tracking-wider text-primary">
  Lanjut Belajar
  </h2>
  </div>

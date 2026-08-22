@@ -4,15 +4,13 @@
  * Ensures user sessions remain active across page navigations.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-// ==========================================
 // Main Middleware Function
-// ==========================================
+
 /**
  * Safely refreshes user authentication session on the server side via cookies.
  * 

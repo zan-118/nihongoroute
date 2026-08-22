@@ -6,9 +6,9 @@
 
 "use client";
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
@@ -32,9 +32,9 @@ import { SmartJapanese } from "@/components/ui/japanese";
 import { TTSReader } from "@/features/media";
 import type { VocabItem } from "@/features/library/components/vocab/types";
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /** Number of items per page. */
 const VOCAB_PAGE_SIZE = 50;
@@ -297,7 +297,7 @@ export default function VocabView({
  className="py-24 text-center border border-dashed border-border rounded-xl bg-muted/20 neo-inset px-6"
  >
  <Search className="mx-auto mb-6 text-muted-foreground/30" size={48} aria-hidden="true" />
- <p className="text-muted-foreground font-bold text-xs md:text-sm uppercase tracking-widest">
+ <p className="text-muted-foreground font-bold text-xs md:text-sm uppercase tracking-wider">
  Kosakata nggak ketemu. Coba cari kata kunci lain ya.
  </p>
  </div>
@@ -318,7 +318,7 @@ export default function VocabView({
  <div className="w-full overflow-x-auto font-sans">
  <table className="w-full min-w-160 text-left border-collapse">
  <thead>
- <tr className="border-b-2 border-border/80 text-[10px] font-mono font-black uppercase tracking-widest text-muted-foreground/80 bg-muted/20">
+ <tr className="border-b-2 border-border/80 text-[10px] font-mono font-black uppercase tracking-wider text-muted-foreground/80 bg-muted/20">
  <th className="py-3 px-4 w-48">KOSAKATA</th>
  <th className="py-3 px-4">ARTI / DEFINISI</th>
  <th className="py-3 px-4 w-32">JENIS KATA</th>
@@ -401,12 +401,12 @@ export default function VocabView({
       <footer className="mt-16 md:mt-24 pt-10 md:pt-16 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-6">
         <div className="flex items-center gap-3">
           <Loader size={16} className={`text-primary ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
-          <span className="text-muted-foreground font-black text-[10px] md:text-xs uppercase tracking-[0.2em]">Basis Data Real-time</span>
+          <span className="text-muted-foreground font-black text-[10px] md:text-xs uppercase tracking-wider">Basis Data Real-time</span>
         </div>
         <Button 
           asChild 
           variant="ghost" 
-          className="w-full sm:w-auto px-8 py-6 md:px-10 md:py-7 h-auto text-xs md:text-xs font-bold uppercase tracking-widest rounded-lg bg-muted border border-border neo-card shadow-none hover:bg-primary hover:text-primary-foreground transition-all gap-3 group"
+          className="w-full sm:w-auto px-8 py-6 md:px-10 md:py-7 h-auto text-xs md:text-xs font-bold uppercase tracking-wider rounded-lg bg-muted border border-border neo-card shadow-none hover:bg-primary hover:text-primary-foreground transition-all gap-3 group"
         >
           <Link href="/library">
             <ChevronLeft size={16} className="group-hover:-translate-x-1.5 transition-transform duration-300" aria-hidden="true" /> Kembali ke Pustaka

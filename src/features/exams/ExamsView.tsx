@@ -74,10 +74,10 @@ export function ExamsView({ exams }: ExamsViewProps) {
  variants={itemVariants}
  className="flex items-center gap-4 mb-8"
  >
- <div className="size-3.5 rounded-full bg-destructive shadow-[0_0_8px_hsl(var(--destructive)/0.35)]" />
+ <div className="size-3.5 rounded-full bg-destructive shadow-sm" />
  <Badge
  variant="outline"
- className="text-destructive font-bold uppercase tracking-widest text-xs md:text-xs border-destructive/30 px-4 py-1.5 bg-destructive/5 rounded-xl h-auto"
+ className="text-destructive font-bold uppercase tracking-wider text-xs md:text-xs border-destructive/30 px-4 py-1.5 bg-destructive/5 rounded-xl h-auto"
  >
  Simulasi JLPT Aktif
  </Badge>
@@ -88,7 +88,7 @@ export function ExamsView({ exams }: ExamsViewProps) {
  className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-none mb-10 text-foreground drop-shadow-lg"
  >
  Pusat <br />{" "}
- <span className="text-destructive drop-shadow-[0_0_14px_hsl(var(--destructive)/0.3)]">
+ <span className="text-destructive drop-shadow-sm">
  Simulasi
  </span>
  </m.h1>
@@ -110,7 +110,7 @@ export function ExamsView({ exams }: ExamsViewProps) {
  <Alert className="text-warning" size={20} />
  </div>
  <div>
- <h4 className="text-warning uppercase tracking-widest text-xs md:text-xs mb-1">
+ <h4 className="text-warning uppercase tracking-wider text-xs md:text-xs mb-1">
  Catatan Penting
  </h4>
  <p className="text-muted-foreground text-xs md:text-sm font-medium leading-relaxed">
@@ -138,7 +138,7 @@ export function ExamsView({ exams }: ExamsViewProps) {
  onClick={() => setActiveFilter(tab.id)}
  className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border ${
  isActive
- ? "bg-destructive text-destructive-foreground border-transparent shadow-[0_0_12px_hsl(var(--destructive)/0.25)] scale-105"
+ ? "bg-destructive text-destructive-foreground border-transparent shadow-sm scale-105"
  : "bg-card border-border hover:border-destructive/30 text-muted-foreground"
  }`}
  >
@@ -162,7 +162,7 @@ export function ExamsView({ exams }: ExamsViewProps) {
  onClick={() => handleModeChange(tab.id as ExamModeFilter)}
  className={`px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
  isActive
- ? "bg-primary text-primary-foreground border-transparent shadow-[0_0_12px_hsl(var(--primary)/0.25)] scale-105"
+ ? "bg-primary text-primary-foreground border-transparent shadow-sm scale-105"
  : "bg-card border-border hover:border-primary/30 text-muted-foreground"
  }`}
  >
@@ -194,7 +194,7 @@ export function ExamsView({ exams }: ExamsViewProps) {
  onClick={() => setActiveSubFilter(subTab.id as ExamSubFilter)}
  className={`px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${
  isActive
- ? "bg-secondary text-secondary-foreground border-transparent shadow-[0_0_10px_hsl(var(--secondary)/0.2)] scale-105"
+ ? "bg-secondary text-secondary-foreground border-transparent shadow-sm scale-105"
  : "bg-card border-border hover:border-secondary/40 text-muted-foreground"
  }`}
  >

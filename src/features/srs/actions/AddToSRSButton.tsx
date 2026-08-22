@@ -6,18 +6,16 @@
  * Uses atomic `useSRSStore` selectors to eliminate unnecessary re-renders, supporting "star" and "action" variants.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import React, { useState, useEffect, useCallback } from "react";
 import { Add, Check, Star } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { useSRSStore } from "@/store/useSRSStore";
 import { cn } from "@/lib/utils";
 
-// ==========================================
 // Component Props & Interfaces
-// ==========================================
+
 export interface AddToSRSButtonProps {
  /** Unique vocabulary or kanji identifier. */
  wordId: string;
@@ -27,9 +25,8 @@ export interface AddToSRSButtonProps {
  className?: string;
 }
 
-// ==========================================
 // Internal Atomic Hook
-// ==========================================
+
 /**
  * Internal atomic hook to check and add a item to SRS state.
  * Only reads `srs[wordId]` to avoid re-renders on unrelated user/XP state changes.
@@ -63,9 +60,8 @@ export function useAddToSRSInternal(wordId: string) {
  return { isLoaded, isAdded, handleAdd };
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Unified button to add vocabulary/kanji into Spaced Repetition System.
  */
@@ -141,8 +137,8 @@ export function AddToSRSButton({
  className={cn(
  "h-10 w-10 rounded-xl transition-all duration-300",
  isAdded
- ? "bg-primary/20 border-primary text-primary shadow-[0_0_15px_hsl(var(--primary)/0.35)] cursor-default"
- : "bg-card/40 border-border hover:border-primary/50 text-muted-foreground hover:text-primary hover:scale-105 active:scale-95 shadow-[0_0_10px_hsl(var(--foreground)/0.05)]",
+ ? "bg-primary/20 border-primary text-primary shadow-sm cursor-default"
+ : "bg-card/40 border-border hover:border-primary/50 text-muted-foreground hover:text-primary hover:scale-105 active:scale-95 shadow-sm",
  className
  )}
  aria-label={isAdded ? "Sudah ditambahkan ke SRS" : "Tambahkan ke SRS"}
@@ -150,7 +146,7 @@ export function AddToSRSButton({
  >
  {isAdded ? (
  <div className="relative flex items-center justify-center">
- <Star className="size-5 fill-primary text-primary filter drop-shadow-[0_0_2px_hsl(var(--primary)/0.5)] animate-[scaleIn_0.3s_ease-out]" />
+ <Star className="size-5 fill-primary text-primary filter drop-shadow-sm animate-[scaleIn_0.3s_ease-out]" />
  <Check className="size-2.5 absolute text-background font-black stroke-3" />
  </div>
  ) : (

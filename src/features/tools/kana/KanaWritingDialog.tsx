@@ -3,23 +3,24 @@
  * @description Interactive stroke writing dialog component for Kana practice (Hiragana/Katakana) utilizing integrated offline-first stroke canvas.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { m, AnimatePresence } from "framer-motion";
-import { Pencil } from "@/components/ui/icons";
+import React, { useCallback, useRef, useEffect } from "react";
+import { Pencil, VolumeUp } from "@/components/ui/icons";
 import {
  Dialog,
  DialogContent,
  DialogHeader,
  DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import WritingCanvas from "@/features/tools/stroke-canvas/WritingCanvas";
+import { fetchTTSAudio, speakWithWebSpeech } from "@/lib/audio/tts";
 import { KanaType } from "./kana-data";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for KanaWritingDialog component.
  */
@@ -36,9 +37,8 @@ interface KanaWritingDialogProps {
  themeBorder: string;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Dialog component for interactive kana writing practice.
  * Uses canvas to draw and trace characters.
@@ -52,10 +52,46 @@ export function KanaWritingDialog({
 }: KanaWritingDialogProps) {
  // Check if hiragana. Determine color scheme.
  const isHira = type === "hiragana";
+ 
+  // Audio element reference for Edge TTS playback
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
- // ==========================================
+  /**
+   * Putar audio pelafalan karakter kana aktif menggunakan Edge TTS.
+   */
+  const speakKana = useCallback(async () => {
+    if (!selectedChar?.char) return;
+
+    try {
+      const ttsUrl = await fetchTTSAudio(selectedChar.char, "indah");
+      if (ttsUrl) {
+        if (!audioRef.current) {
+          audioRef.current = new Audio();
+        }
+        audioRef.current.src = ttsUrl;
+        await audioRef.current.play();
+        return;
+      }
+    } catch (err) {
+      console.warn("[Kana Writing] Gagal memutar Edge TTS, beralih ke Web Speech fallback:", err);
+    }
+
+    // Fallback: Web Speech API
+    speakWithWebSpeech(selectedChar.char, "indah", 0.9);
+  }, [selectedChar]);
+
+  // Cleanup audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
  // RENDER KOMPONEN
- // ==========================================
+
  return (
  <Dialog
  // Open when character selected.
@@ -96,11 +132,23 @@ export function KanaWritingDialog({
  <p className="text-4xl sm:text-5xl font-black text-foreground font-japanese leading-none">
  {selectedChar!.char}
  </p>
+ <div>
  <p
  className={`font-mono uppercase tracking-widest text-[10px] sm:text-sm font-bold ${themeColor}`}
  >
  &quot;{selectedChar!.romaji}&quot;
  </p>
+ <Button
+ type="button"
+ variant="ghost"
+ size="sm"
+ onClick={speakKana}
+ className="h-6 px-1.5 mt-1 text-[9px] font-bold gap-1 text-muted-foreground hover:text-foreground"
+ >
+ <VolumeUp size={12} className="text-primary" />
+ <span>Dengar</span>
+ </Button>
+ </div>
  </div>
  <div
  className={`px-3 py-1.5 rounded-lg bg-background border border-border text-[8px] sm:text-xs font-bold uppercase tracking-widest ${themeColor}`}

@@ -5,9 +5,8 @@
 
 "use client";
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useState, useEffect } from "react";
 import { Search, Notification, Menu, Cloud, Restart, ChevronLeft, BookOpen, Eye, EyeOff, Share } from "@/components/ui/icons";
 import { m, AnimatePresence } from "framer-motion";
@@ -25,9 +24,8 @@ import UserNav from "@/features/user/UserNav";
 import { ThemeToggle } from "./ThemeToggle";
 import { getBreadcrumbItems, getCurrentRouteLabel, getParentRouteLabel } from "@/lib/routes";
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Render application top header bar.
  * @param props Component properties containing menu click handler.
@@ -84,7 +82,6 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
  document.addEventListener("keydown", down);
  return () => document.removeEventListener("keydown", down);
  }, []);  const readingMode = useUIStore((s) => s.readingState.mode);
-
 
  return (
  <>

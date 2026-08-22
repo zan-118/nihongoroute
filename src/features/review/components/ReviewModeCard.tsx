@@ -5,17 +5,15 @@
  * @description Komponen visual kartu pemilih mode ulasan (Review Mode Card).
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import React from "react";
 import { ArrowRight, IconType } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
+
 export interface ReviewModeCardProps {
  /** Callback function triggered on card click */
  onClick: () => void;
@@ -39,9 +37,8 @@ export interface ReviewModeCardProps {
  accentColor: "primary" | "amber";
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
+
 export function ReviewModeCard({
  onClick,
  isEnabled,
@@ -76,19 +73,21 @@ export function ReviewModeCard({
  }`}
  >
  <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
- <div 
- className="absolute top-0 right-0 w-3.5 h-px transition-colors duration-500" 
- style={{ backgroundColor: isEnabled ? (isPrimary ? "hsl(var(--primary))" : "hsl(var(--warning))") : "hsl(var(--muted))" }}
- />
- <div 
- className="absolute top-0 right-0 w-px h-3.5 transition-colors duration-500" 
- style={{ backgroundColor: isEnabled ? (isPrimary ? "hsl(var(--primary))" : "hsl(var(--warning))") : "hsl(var(--muted))" }}
- />
- </div>
+  <div 
+  className={`absolute top-0 right-0 w-3.5 h-px transition-colors duration-500 ${
+    isEnabled ? (isPrimary ? "bg-primary" : "bg-warning") : "bg-muted"
+  }`} 
+  />
+  <div 
+  className={`absolute top-0 right-0 w-px h-3.5 transition-colors duration-500 ${
+    isEnabled ? (isPrimary ? "bg-primary" : "bg-warning") : "bg-muted"
+  }`} 
+  />
+  </div>
 
- <Card
- className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-primary/50"
- >
+  <Card
+  className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] shadow-sm group-hover:border-primary/50"
+  >
  <div className="relative z-10 flex flex-col gap-6">
  <div className="flex justify-between items-start">
  <div className={`w-14 h-14 rounded-lg flex items-center justify-center shadow-inner transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105 ${iconContainerStyles}`}>

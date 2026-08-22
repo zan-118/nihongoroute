@@ -5,18 +5,15 @@
 
 "use client";
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import React, { useState, useEffect, useRef } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Trophy, X, Zap } from "@/components/ui/icons";
 import { useUIStore } from "@/store/useUIStore";
 import { sounds } from "@/lib/audio";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
 
 /**
  * Structure of achievement notification payload.
@@ -40,11 +37,11 @@ interface AchievementNotification {
  * 
  * @returns Achievement toast element or null if queue empty.
  */
-// ======================
+
 // EKSEKUSI UTAMA
-// ==========================================
+
 // Main Component
-// ==========================================
+
 export default function AchievementToast() {
  // Get notifications from global UI store
  const notifications = useUIStore((state) => state.notifications);
@@ -127,17 +124,17 @@ export default function AchievementToast() {
  if (isGold) {
  borderStyle = "border-warning/50 shadow-md bg-warning/5";
  glowColor = "hsl(var(--warning)/ 0.4)";
- badgeColor = "bg-[hsl(var(--warning)/0.15)] text-warning border-warning/30";
+ badgeColor = "bg-warning/15 text-warning border-warning/30";
  rarityLabel = "Gold / Emas";
  } else if (isSilver) {
  borderStyle = "border-muted-foreground/50 shadow-md bg-muted";
  glowColor = "hsl(var(--muted-foreground)/ 0.35)";
- badgeColor = "bg-[hsl(var(--muted-foreground)/0.15)] text-muted-foreground border-muted-foreground/30";
+ badgeColor = "bg-muted-foreground/15 text-muted-foreground border-muted-foreground/30";
  rarityLabel = "Silver / Perak";
  } else if (isBronze) {
  borderStyle = "border-destructive/50 shadow-md bg-destructive/5";
  glowColor = "hsl(var(--destructive)/ 0.3)";
- badgeColor = "bg-[hsl(var(--destructive)/0.15)] text-destructive border-destructive/30";
+ badgeColor = "bg-destructive/15 text-destructive border-destructive/30";
  rarityLabel = "Bronze / Perunggu";
  }
 
@@ -179,7 +176,7 @@ export default function AchievementToast() {
  >
  <Trophy size={28} className="text-warning" />
  </m.div>
- <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground mt-2">
+ <span className="text-[8px] font-black uppercase tracking-wider text-muted-foreground mt-2">
  Lencana
  </span>
  </div>
@@ -188,7 +185,7 @@ export default function AchievementToast() {
  <div className="flex-1 pr-6 flex flex-col justify-center">
  <div className="flex items-center gap-2 mb-1">
  <Zap size={10} className="text-warning animate-premium-bounce" />
- <span className="text-[8px] font-black uppercase tracking-[0.2em] text-warning">
+ <span className="text-[8px] font-black uppercase tracking-wider text-warning">
  Achievement Unlocked
  </span>
  </div>

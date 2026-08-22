@@ -5,9 +5,9 @@
  * @module VocabLibraryPage
  */
 
-// ======================
+
 // IMPOR
-// ======================
+
 import { Suspense } from "react";
 import { Restart } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -19,9 +19,9 @@ import {
  learningResourceJsonLd,
 } from "@/lib/seo";
 
-// ======================
+
 // METADATA SEO
-// ======================
+
 /**
  * SEO metadata configuration for the vocabulary library page.
  */
@@ -35,9 +35,9 @@ export const metadata = {
  }),
 };
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Halaman utama Kamus Kosakata (RSC).
@@ -70,7 +70,7 @@ export default async function VocabLibraryPage() {
  />
  {/* Background Neural Overlays */}
  <div className="grid-overlay" />
- <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--destructive)/0.05)_0%,transparent_70%)] pointer-events-none z-0" />
+ <div className="absolute inset-0 bg-muted/30 pointer-events-none z-0" />
 
  <div className="max-w-7xl mx-auto w-full relative z-10 flex flex-col pt-10">
  {/* Stream client component with initial server-fetched data */}

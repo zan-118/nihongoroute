@@ -112,7 +112,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  <div className="space-y-3">
  <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-accent-violet/20 bg-accent-violet/10 text-accent-violet">
  <BookOpen size={16} />
- <span className="text-[10px] font-black uppercase tracking-[0.25em] font-mono">
+ <span className="text-[10px] font-black uppercase tracking-wider font-mono">
  GRADED READING VAULT
  </span>
  </div>
@@ -192,7 +192,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  {material.jlpt_level || material.difficulty}
  </Badge>
  )}
- <span className="text-[9px] font-mono font-bold text-muted-foreground/60 uppercase tracking-widest">
+ <span className="text-[9px] font-mono font-bold text-muted-foreground/60 uppercase tracking-wider">
  {material.category || "GENERAL READING"}
  </span>
  {isCompleted && (
@@ -228,7 +228,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  <div className="size-16 rounded-full bg-muted/30 border border-border/60 flex items-center justify-center mx-auto">
  <BookOpen size={24} className="text-muted-foreground/50" />
  </div>
- <h3 className="text-base font-black text-foreground uppercase tracking-widest font-mono">Materi Bacaan Tidak Ditemukan</h3>
+ <h3 className="text-base font-black text-foreground uppercase tracking-wider font-mono">Materi Bacaan Tidak Ditemukan</h3>
  <p className="text-muted-foreground text-xs max-w-sm mx-auto font-medium">Silakan sesuaikan filter level JLPT atau kata kunci pencarian Anda.</p>
  </div>
  )}
@@ -237,7 +237,7 @@ export default function ReadingListView({ initialData }: ReadingListViewProps) {
  {/* Pagination Controls */}
  {totalPages > 1 && (
  <div className="flex flex-col items-center gap-4 pt-8">
- <div className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">
+ <div className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-wider">
  HALAMAN <span className="text-accent-violet">{currentPage}</span> DARI {totalPages}
  </div>
  <div className="flex items-center gap-2">

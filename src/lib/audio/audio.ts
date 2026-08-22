@@ -3,9 +3,8 @@
  * @description Mesin audio sintetik (SoundEngine) untuk menghasilkan efek suara UI menggunakan Web Audio API. Menghasilkan nada prosedural tanpa memerlukan berkas audio eksternal untuk zero-latency feedback.
  */
 
-// ==========================================
 // DEKLARASI ANTARMUKA & TYPE
-// ==========================================
+
 /**
  * Window extension. Support legacy WebKit audio.
  */
@@ -13,9 +12,7 @@ interface CustomWindow extends Window {
  webkitAudioContext?: typeof AudioContext;
 }
 
-// ==========================================
 // KELAS UTAMA SOUND ENGINE
-// ==========================================
 
 /**
  * Audio synthesizer. Generate UI sound effects via Web Audio API.
@@ -93,9 +90,7 @@ class SoundEngine {
  }
  }
 
-// ==========================================
  // API PUBLIK / METHODS
- // ==========================================
 
  /**
  * Play success sound. Two rising tones.

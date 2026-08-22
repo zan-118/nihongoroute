@@ -18,9 +18,7 @@ import {
 } from "@react-pdf/renderer";
 import { formatQuizzes } from "@/lib/utils/lesson-utils";
 
-// ======================
 // CONFIG / FONTS
-// ======================
 
 // Register Noto Sans JP font to support Japanese characters in PDF generation
 Font.register({
@@ -31,9 +29,7 @@ Font.register({
  ],
 });
 
-// ======================
 // STYLES
-// ======================
 
 /**
  * Stylesheet definitions for the PDF document layout and typography.
@@ -304,9 +300,6 @@ const styles = StyleSheet.create({
  },
 });
 
-// ======================
-// MAIN EXECUTION
-// ======================
 
 /**
  * Represents a vocabulary item in the PDF template.
@@ -374,9 +367,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
  const grammarBlocks = lessonData.grammar || [];
  const quizzesList = formatQuizzes((lessonData.quizzes || lessonData.questions || []) as unknown as import("@/lib/utils/lesson-utils").RawQuizItem[]);
 
- // ======================
  // HELPER FUNCTIONS
- // ======================
 
  /**
  * Removes emojis from text to prevent rendering issues in react-pdf.
@@ -416,7 +407,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
  * @returns Formatted meaning string.
  */
  const formatMeaning = (text?: string) => {
- if (!text) return "—";
+ if (!text) return "-";
  const parts = text.split(/[,;]/).map((s: string) => s.trim()).filter(Boolean);
  return parts.length > 2 ? `${parts.slice(0, 2).join(", ")}, dll.` : text;
  };
@@ -644,7 +635,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
  </View>
  <View style={styles.cellReading}>
  <Text style={styles.kanaText}>
- {item.furigana || "—"}
+ {item.furigana || "-"}
  </Text>
  </View>
  <View style={styles.cellRomaji}>

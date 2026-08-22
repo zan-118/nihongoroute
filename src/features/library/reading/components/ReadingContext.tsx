@@ -3,16 +3,14 @@
  * @description React Context Provider untuk mengelola preferensi membaca pengguna (seperti mode tampilan furigana/hiragana dan visibilitas terjemahan).
  */
 
-// ==========================================
 // IMPORT & DEPENDENSI
-// ==========================================
+
 import React, { createContext, use, useState } from "react";
 import { ReadingMode } from "../types";
 import { useUIStore } from "@/store/useUIStore";
 
-// ==========================================
 // TIPE DATA / INTERFACE
-// ==========================================
+
 /**
  * State and setters for reading preferences.
  */
@@ -27,17 +25,15 @@ interface ReadingContextType {
  setShowTranslation: (show: boolean) => void;
 }
 
-// ==========================================
 // INISIALISASI CONTEXT
-// ==========================================
+
 /**
  * Context holding reading preferences state.
  */
 const ReadingContext = createContext<ReadingContextType | undefined>(undefined);
 
-// ==========================================
 // CONTEXT PROVIDER (KOMPONEN)
-// ==========================================
+
 /**
  * Provider component. Wraps app to supply reading preferences.
  * @param props - Component props.
@@ -59,9 +55,8 @@ export function ReadingProvider({ children }: { children: React.ReactNode }) {
  );
 }
 
-// ==========================================
 // CUSTOM HOOK
-// ==========================================
+
 /**
  * Hook to access reading context.
  * Throws error if used outside ReadingProvider.

@@ -5,17 +5,14 @@
 
 "use client"
 
-// ======================
 // IMPOR
-// ======================
+
 import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 import { Check, ChevronRight, Circle } from "@/components/ui/icons"
 import { cn } from "@/lib/utils"
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * Root container. Manage state.
@@ -82,7 +79,7 @@ const DropdownMenuSubContent = React.forwardRef<
  <DropdownMenuPrimitive.SubContent
  ref={ref}
  className={cn(
- "bg-card border border-border z-50 min-w-[8rem] overflow-hidden rounded-[14px] p-1.5 text-card-foreground shadow-[0_8px_20px_rgba(0,0,0,0.1)] transform-gpu data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in- data-[side=left]:slide-in- data-[side=right]:slide-in- data-[side=top]:slide-in-",
+ "bg-card border border-border z-50 min-w-[8rem] overflow-hidden rounded-[14px] p-1.5 text-card-foreground shadow-md transform-gpu data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in- data-[side=left]:slide-in- data-[side=right]:slide-in- data-[side=top]:slide-in-",
  className
  )}
  {...props}
@@ -103,7 +100,7 @@ const DropdownMenuContent = React.forwardRef<
  ref={ref}
  sideOffset={sideOffset}
  className={cn(
- "bg-card border border-border z-50 min-w-[8rem] max-w-[calc(100vw-2rem)] overflow-hidden rounded-[14px] p-1.5 text-card-foreground shadow-[0_8px_20px_rgba(0,0,0,0.1)] transform-gpu data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in- data-[side=left]:slide-in- data-[side=right]:slide-in- data-[side=top]:slide-in-",
+ "bg-card border border-border z-50 min-w-[8rem] max-w-[calc(100vw-2rem)] overflow-hidden rounded-[14px] p-1.5 text-card-foreground shadow-md transform-gpu data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in- data-[side=left]:slide-in- data-[side=right]:slide-in- data-[side=top]:slide-in-",
  className
  )}
  {...props}
@@ -230,7 +227,7 @@ const DropdownMenuShortcut = ({
 }: React.HTMLAttributes<HTMLSpanElement>) => {
  return (
  <span
- className={cn("ml-auto text-xs tracking-widest opacity-60", className)}
+ className={cn("ml-auto text-xs tracking-wider opacity-60", className)}
  {...props}
  />
  )

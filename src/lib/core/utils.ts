@@ -3,15 +3,12 @@
  * @description Core global utility functions (local date formatting, array shuffling, Tailwind class merging, Japanese text slugification).
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-// ==========================================
 // Global Utility Functions
-// ==========================================
 
 /**
  * Merge Tailwind classes. Resolve conflicts.

@@ -3,14 +3,11 @@
  * @description Komponen pemuat (Loading Skeleton) premium untuk halaman detail tata bahasa (Grammar Detail).
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { Skeleton } from "@/components/ui/skeleton";
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * GrammarLoading component.
@@ -22,8 +19,8 @@ export default function GrammarLoading() {
  return (
  <main className="w-full bg-transparent px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-24 transition-colors duration-300">
  {/* Background overlays. Add depth. Match main page style. */}
- <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--foreground)/0.01)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
- <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.05)_0%,transparent_70%)] pointer-events-none z-0" />
+ <div className="absolute inset-0 bg-muted/30 bg-[size:60px_60px] pointer-events-none z-0" />
+ <div className="absolute inset-0 bg-muted/30 pointer-events-none z-0" />
 
  <div className="max-w-4xl mx-auto w-full relative z-10 pt-8 md:pt-12">
  {/* Header skeleton. Mimic breadcrumbs and title. */}

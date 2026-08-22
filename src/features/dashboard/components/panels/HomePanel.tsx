@@ -6,9 +6,8 @@
  * @module features/dashboard/components/panels
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import dynamic from "next/dynamic";
 import DashboardHero from "../DashboardHero";
 import DailyQuests from "../quests/DailyQuests";
@@ -19,9 +18,8 @@ import WeakPointSummary from "../WeakPointSummary";
 import { Variants } from "framer-motion";
 import { RandomExpression } from "@/actions/expressions.actions";
 
-// ==========================================
 // ELEMEN DINAMIS (LAZY LOADING)
-// ==========================================
+
 /**
  * Lazy load KanjiProgressGrid component.
  * Disable SSR to prevent hydration mismatch from client-side state.
@@ -32,9 +30,8 @@ const KanjiProgressGrid = dynamic(() => import("../KanjiProgressGrid"), {
  loading: () => <div className="h-50 w-full animate-pulse bg-muted rounded-lg" />
 });
 
-// ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
-// ==========================================
+
 /**
  * Props for HomePanel component.
  */
@@ -66,9 +63,8 @@ interface HomePanelProps {
  }>;
 }
 
-// ==========================================
 // KOMPONEN UTAMA
-// ==========================================
+
 /**
  * Home panel component.
  * Renders dashboard hero, rekomendasi belajar, daily route, ringkasan weak-point,
@@ -105,7 +101,7 @@ export function HomePanel({
  <div className="flex flex-col gap-2">
  <div className="flex items-center gap-[13px]">
  <div className="w-[34px] h-[1px] bg-primary/40" />
- <h2 className="text-[10px] uppercase tracking-[0.2em] text-primary">
+ <h2 className="text-[10px] uppercase tracking-wider text-primary">
  Ringkasan Belajar
  </h2>
  </div>

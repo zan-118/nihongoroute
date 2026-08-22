@@ -5,17 +5,17 @@
 
 "use client";
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import React from "react";
 import { m } from "framer-motion";
 import Link from "next/link";
 import { ChevronRight, IconType } from "@/components/ui/icons";
 
-// ==========================================
+
 // Component Props Interface
-// ==========================================
+
 /**
  * Properties for SidebarItem component.
  */
@@ -35,9 +35,9 @@ interface SidebarItemProps {
  onClick?: () => void;
 }
 
-// ==========================================
+
 // Main Component
-// ==========================================
+
 /**
  * Render single navigation link with active state styling and animations.
  */
@@ -54,7 +54,7 @@ export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
  whileTap={{ scale: 0.985 }}
  className={`flex items-center gap-3.5 px-3.5 py-3 rounded-xl transition-all duration-300 relative group overflow-hidden ${
  isActive 
- ? "bg-primary/[0.12] text-primary border border-primary/30 shadow-[0_12px_28px_hsl(var(--primary)/0.12)]"
+ ? "bg-primary/[0.12] text-primary border border-primary/30 shadow-sm"
  : "text-muted-foreground hover:bg-card/55 hover:text-foreground hover:border-primary/20 border border-transparent"
  }`}
  >

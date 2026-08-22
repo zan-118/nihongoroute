@@ -5,16 +5,14 @@
 
 "use client";
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import Link from "next/link";
 import { m } from "framer-motion";
 import { useMobileNav } from "./useMobileNav";
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Render mobile bottom floating navigation bar.
  */

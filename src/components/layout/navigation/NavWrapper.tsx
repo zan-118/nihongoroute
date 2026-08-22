@@ -5,9 +5,8 @@
 
 "use client";
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { ReactNode, useMemo, useState } from "react";
 import Sidebar from "@/components/layout/sidebar/Sidebar";
 import Topbar from "./Topbar";
@@ -22,9 +21,8 @@ import AppBreadcrumbs from "./AppBreadcrumbs";
 const FloatingActions = dynamic(() => import("@/components/global/FloatingActions"), { ssr: false });
 const AchievementToast = dynamic(() => import("../AchievementToast"), { ssr: false });
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for NavWrapper component.
  */
@@ -33,9 +31,8 @@ interface NavWrapperProps {
  children: ReactNode;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Client-side layout wrapper injecting responsive navigation components.
  */
@@ -64,7 +61,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
  <main
  id="main-content" 
  data-tour="main-content"
- className={`app-main-frame flex-1 w-full flex flex-col ${!isExamPage ? (hideMobileNav ? 'pb-12' : 'pb-30 md:pb-12') : 'pb-12'} outline-none relative`}
+ className={`app-main-frame flex-1 w-full flex flex-col ${!isExamPage ? (hideMobileNav ? 'pb-12' : 'pb-30 md:pb-12') : 'pb-12'} outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 relative`}
  >
  {!isExamPage && (
  <div className="relative z-20 flex w-full animate-in items-center gap-2 px-4 pt-4 duration-500 fade-in slide-in- sm:px-6 md:px-8 md:pt-6 lg:px-10 xl:px-12">

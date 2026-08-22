@@ -6,15 +6,13 @@
  * Menampilkan lencana (badge) part of speech (hinshi), level JLPT, dan informasi pitch accent.
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-// ==========================================
 // ANTARMUKA & TIPE DATA
-// ==========================================
+
 /**
  * Properties for VocabDetails component.
  * @property {string} [hinshi] - Part of speech classification.
@@ -27,9 +25,8 @@ interface VocabDetailsProps {
  pitchAccent?: string;
 }
 
-// ==========================================
 // KOMPONEN UTAMA: VocabDetails
-// ==========================================
+
 /**
  * Renders vocabulary metadata badges including part of speech, JLPT level, and pitch accent.
  * 
@@ -38,7 +35,7 @@ interface VocabDetailsProps {
  */
 export function VocabDetails({ hinshi, jlptLevel, pitchAccent }: VocabDetailsProps) {
  return (
- <Card className="p-6 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative flex flex-col justify-center gap-4 font-sans glass shadow-[0_0_20px_hsl(var(--primary)/0.02)]">
+ <Card className="p-6 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative flex flex-col justify-center gap-4 font-sans glass shadow-sm">
  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Atribut Kata</span>
  
  {/* Container Lencana Atribut */}

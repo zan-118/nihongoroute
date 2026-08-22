@@ -5,9 +5,8 @@
 
 "use client";
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { m } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,9 +17,8 @@ import { ROUTES } from "@/lib/routes";
 import { SidebarItem } from "./SidebarItem";
 import { UserStatusSection } from "./UserStatusSection";
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Main sidebar navigation component.
  * @param props Component properties containing drawer open state and close handler.
@@ -61,11 +59,11 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
  Nihongo<span className="text-primary">Route</span>
  </span>
  <div className="flex items-center gap-1.5 mt-0.5">
- <span className="text-[7px] font-bold text-primary/70 uppercase tracking-[0.2em]">
+ <span className="text-[7px] font-bold text-primary/70 uppercase tracking-wider">
  Ekosistem
  </span>
  <span className="size-0.5 rounded-full bg-border" />
- <span className="text-[7px] font-black text-muted-foreground/55 uppercase tracking-[0.2em]">
+ <span className="text-[7px] font-black text-muted-foreground/55 uppercase tracking-wider">
  v2.0
  </span>
  </div>
@@ -112,7 +110,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
  </div>
 
  <div className="mt-5 pt-4 border-t border-border/70 relative z-10">
- <div className="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/55">
+ <div className="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/55">
  <Link
  href={ROUTES.PRIVACY}
  className="inline-flex min-h-8 items-center px-1 hover:text-primary transition-colors"

@@ -5,9 +5,9 @@
  * @module SupportPage
  */
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import type { Metadata } from "next";
 import SupportView from "@/features/support/SupportView";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -18,9 +18,9 @@ import {
 } from "@/lib/seo";
 import { getSupporters } from "@/actions/support.actions";
 
-// ==========================================
+
 // SEO & Metadata Configuration
-// ==========================================
+
 // Enable Incremental Static Regeneration (ISR) revalidated every 1 day.
 export const revalidate = 86400;
 
@@ -63,9 +63,9 @@ const supportFaqs = [
  },
 ];
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 /**
  * SupportPage component.
  * Async Server Component that fetches supporters from Supabase and passes to SupportClient.

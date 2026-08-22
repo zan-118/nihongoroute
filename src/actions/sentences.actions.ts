@@ -8,18 +8,15 @@
 
 "use server";
 
-// ======================
 // IMPORTS
-// ======================
+
 import {
  getSentencesContainingWord,
  getRandomSentencesPool
 } from "@/lib/services/content-repository";
 import { logger } from "@/lib/core/logger";
 
-// ======================
 // TYPES
-// ======================
 
 /**
  * Database sentence record structure.
@@ -44,9 +41,7 @@ export interface SentenceDrillItem {
  furigana: string | null;
 }
 
-// ======================
 // SERVER ACTIONS
-// ======================
 
 /**
  * Mengambil kalimat contoh yang mengandung kata tertentu.

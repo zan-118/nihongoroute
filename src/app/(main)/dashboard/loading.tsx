@@ -3,14 +3,11 @@
  * @description Komponen pemuat (Loading Skeleton) untuk halaman dasbor pengguna NihongoRoute.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { Skeleton } from "@/components/ui/skeleton";
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * Komponen kerangka pemuatan (Skeleton) untuk halaman Dasbor.

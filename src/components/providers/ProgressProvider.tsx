@@ -5,9 +5,8 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import React, { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
@@ -24,9 +23,7 @@ import dynamic from "next/dynamic";
  */
 const ReminderSystem = dynamic(() => import("@/features/notifications/ReminderSystem"), { ssr: false });
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 import { Session } from "@supabase/supabase-js";
 

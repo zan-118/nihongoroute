@@ -7,16 +7,8 @@
 
 import type { ShadowingPreset } from "@/lib/shadowing-recorder";
 
-// ======================================================
-// CONSTANTS
-// ======================================================
-
 /** Valid JLPT levels for shadowing recorder. */
 const SHADOWING_LEVELS = ["N5", "N4", "N3"] as const;
-
-// ======================================================
-// TYPES
-// ======================================================
 
 /** Raw data structure from database for library line sources. */
 export interface LibraryLineSource {
@@ -29,9 +21,7 @@ export interface LibraryLineSource {
  translation?: unknown;
 }
 
-// ======================================================
 // LEVEL CASTER
-// ======================================================
 
 /**
  * Cast string to Shadowing level. Fallback to N3.
@@ -46,9 +36,7 @@ export function asShadowingLevel(value: string | null | undefined): "N5" | "N4" 
  : "N3";
 }
 
-// ======================================================
 // TEXT EXTRACTION
-// ======================================================
 
 /**
  * Extract plain text from Rich Text / Portable Text structure.
@@ -89,9 +77,7 @@ export function textFromPortable(value: unknown): string {
  return "";
 }
 
-// ======================================================
 // TEXT SPLITTING
-// ======================================================
 
 /**
  * Split Japanese text into clean sentences. Filters lines that contain
@@ -142,9 +128,7 @@ export function createShadowingChunks(text: string): string[] {
  return [text.slice(0, midpoint), text.slice(midpoint)].map((chunk) => chunk.trim()).filter(Boolean);
 }
 
-// ======================================================
 // DURATION ESTIMATION
-// ======================================================
 
 /**
  * Estimate target duration in seconds based on character length.
@@ -157,9 +141,7 @@ export function estimateTargetSeconds(text: string): number {
  return Math.max(3, Math.min(14, Math.round(text.length / 4)));
 }
 
-// ======================================================
 // PRESET BUILDER
-// ======================================================
 
 /**
  * Parse library source item and push generated presets to array.

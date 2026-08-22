@@ -3,22 +3,19 @@
  * @description Single Source of Truth URI route mapping registry for NihongoRoute internal navigation.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { slugify } from "@/lib/utils";
 
-
-// ==========================================
 // Application Route Registry
-// ==========================================
+
 /**
  * Application route registry. Map internal URIs.
  */
 export const ROUTES = {
- // ==========================================
+
  // GLOBAL & DASHBOARD
- // ==========================================
+
  HOME: "/",
  DASHBOARD: "/dashboard",
  SUPPORT: "/support",
@@ -26,9 +23,8 @@ export const ROUTES = {
  PRIVACY: "/privacy",
  CONTACT: "/support/contact",
 
- // ======================
  // LIBRARY (CONTENT)
- // ======================
+
  LIBRARY: {
  ROOT: "/library",
  VOCAB: (slug: string) => `/library/vocab/${slug}`,
@@ -39,9 +35,8 @@ export const ROUTES = {
  CHEATSHEET: "/library/cheatsheet",
  },
 
- // ======================
  // COURSES (LEARNING)
- // ======================
+
  COURSES: {
  ROOT: "/courses",
  CATEGORY: (categoryId: string) => `/courses/${slugify(categoryId)}`,
@@ -49,33 +44,29 @@ export const ROUTES = {
  `/courses/${slugify(categoryId)}/${slugify(lessonSlug)}`,
  },
 
- // ======================
  // EXAMS & ASSESSMENT
- // ======================
+
  EXAMS: {
  ROOT: "/exams",
  SESSION: (id: string) => `/exams/${id}`,
  },
 
- // ======================
  // AUTH
- // ======================
+
  AUTH: {
  LOGIN: "/login",
  FORGOT_PASSWORD: "/forgot-password",
  },
 
- // ======================
  // GLOBAL
- // ======================
+
  REVIEW: "/review",
  SETTINGS: "/settings",
  SHARE: "/share",
  SOCIAL: "/social",
 
- // ======================
  // TOOLS
- // ======================
+
  TOOLS: {
  ROOT: "/tools",
  KANA: "/tools/kana",
@@ -95,7 +86,6 @@ export const ROUTES = {
  WRITING: "/tools/writing",
  },
 } as const;
-
 
 /**
  * Get readable label for route segment.

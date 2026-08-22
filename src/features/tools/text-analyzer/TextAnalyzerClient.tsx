@@ -89,7 +89,7 @@ function ResultRow({ item }: { item: ToolSearchItem }) {
  {item.description}
  </p>
  {(item.reading || item.romaji || item.formation) && (
- <p className="mt-2 line-clamp-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
+ <p className="mt-2 line-clamp-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">
  {item.reading || item.formation}
  {item.romaji ? ` / ${item.romaji}` : ""}
  </p>
@@ -125,7 +125,7 @@ function ResultPanel({
  <div className="mb-4 flex items-center justify-between gap-3">
  <div className="flex items-center gap-2">
  <Icon size={16} className="text-primary" aria-hidden="true" />
- <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
+ <h2 className="text-xs uppercase tracking-wider text-foreground">
  {title}
  </h2>
  </div>
@@ -314,7 +314,7 @@ export default function TextAnalyzerClient({}: TextAnalyzerClientProps) {
  <div className="mb-4 flex items-center justify-between gap-3">
  <div className="flex items-center gap-2">
  <Clipboard size={16} className="text-primary" aria-hidden="true" />
- <span className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+ <span className="text-xs font-black uppercase tracking-wider text-foreground">
  Input
  </span>
  </div>
@@ -363,7 +363,7 @@ export default function TextAnalyzerClient({}: TextAnalyzerClientProps) {
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl md:p-6">
  <div className="mb-5 flex items-center gap-2">
  
- <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
+ <h2 className="text-xs uppercase tracking-wider text-foreground">
  Ringkasan
  </h2>
  </div>
@@ -375,7 +375,7 @@ export default function TextAnalyzerClient({}: TextAnalyzerClientProps) {
  ["Kanji Unik", analysis?.stats.uniqueKanji.length || 0],
  ].map(([label, value]) => (
  <div key={label} className="rounded-lg border border-border bg-background/40 p-4">
- <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+ <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
  {label}
  </p>
  <p className="mt-1 font-mono text-2xl font-black text-foreground">
@@ -400,7 +400,7 @@ export default function TextAnalyzerClient({}: TextAnalyzerClientProps) {
  </Card>
 
  <Card className="rounded-2xl md:rounded-3xl border border-border bg-muted/15 p-5">
- <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+ <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
  Tips: hasil analyzer memakai pencarian database per token dan kanji. Untuk parsing morfologi sempurna, tahap berikutnya bisa ditambah tokenizer Kuromoji.
  </p>
  </Card>

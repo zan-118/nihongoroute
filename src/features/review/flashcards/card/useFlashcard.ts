@@ -3,15 +3,13 @@
  * @description Custom hook managing theme styling (primary/secondary color themes) and 3D flipping state for flashcards.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useState, useCallback } from "react";
 import { FlashcardProps } from "./types";
 
-// ==========================================
 // Main Custom Hook
-// ==========================================
+
 /**
  * Manage flashcard state and theme styles.
  * 
@@ -21,9 +19,9 @@ import { FlashcardProps } from "./types";
  * @returns State and handlers for card rendering and interaction.
  */
 export function useFlashcard({ type, onFlip }: Pick<FlashcardProps, 'type' | 'onFlip'>) {
- // ==========================================
+
  // STATUS & STATE & HOOKS
- // ==========================================
+
  /** State to control visibility of writing canvas modal */
  const [showWritingModal, setShowWritingModal] = useState(false);
 
@@ -34,11 +32,11 @@ export function useFlashcard({ type, onFlip }: Pick<FlashcardProps, 'type' | 'on
  const themeColor = isKanji ? "text-secondary" : "text-primary";
  const themeBorder = isKanji ? "border-secondary/30" : "border-primary/30";
  const themeShadow = isKanji
- ? "shadow-md dark:shadow-[0_0_14px_hsl(var(--secondary)/0.08)]"
- : "shadow-md dark:shadow-[0_0_14px_hsl(var(--primary)/0.08)]";
+ ? "shadow-md shadow-sm"
+ : "shadow-md shadow-sm";
  const glowClass = isKanji
- ? "drop-shadow-sm dark:drop-shadow-[0_0_8px_hsl(var(--secondary)/0.35)]"
- : "drop-shadow-sm dark:drop-shadow-[0_0_8px_hsl(var(--primary)/0.35)]";
+ ? "drop-shadow-sm dark:drop-shadow-sm"
+ : "drop-shadow-sm dark:drop-shadow-sm";
 
  /** Grouped theme properties for child components */
  const themeContext = {
@@ -49,9 +47,8 @@ export function useFlashcard({ type, onFlip }: Pick<FlashcardProps, 'type' | 'on
  glowClass,
  };
 
- // ==========================================
  // METODE PENGENDALI UTAMA (HANDLERS)
- // ==========================================
+
  /** Trigger flip callback on card click */
  const handleClick = useCallback(() => {
  onFlip();
@@ -63,9 +60,8 @@ export function useFlashcard({ type, onFlip }: Pick<FlashcardProps, 'type' | 'on
  setShowWritingModal(true);
  }, []);
 
- // ==========================================
  // HASIL HOOK (RETURN VALUE)
- // ==========================================
+
  return {
  showWritingModal,
  setShowWritingModal,

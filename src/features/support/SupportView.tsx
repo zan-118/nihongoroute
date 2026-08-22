@@ -7,9 +7,9 @@
 
 "use client";
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
@@ -30,9 +30,9 @@ import {
  Book,
 } from "@/components/ui/icons";
 
-// ======================
+
 // TIPE DATA & ANKOR
-// ======================
+
 
 interface TransparencyItem {
  label: string;
@@ -112,9 +112,9 @@ interface SupportViewProps {
  initialSupporters?: FormattedSupporter[];
 }
 
-// ==========================================
+
 // Main Component
-// ==========================================
+
 export default function SupportView({ initialSupporters = [] }: SupportViewProps) {
  const [openFaq, setOpenFaq] = useState<string | null>("faq-1");
 
@@ -184,7 +184,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  <div className="flex size-12 items-center justify-center rounded-2xl border border-accent-amber/20 bg-accent-amber/10 text-accent-amber">
  <Cup className="size-6" />
  </div>
- <span className="rounded-full border border-accent-amber/30 bg-accent-amber/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-accent-amber">
+ <span className="rounded-full border border-accent-amber/30 bg-accent-amber/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-accent-amber">
  Saweria • QRIS / E-Wallet
  </span>
  </div>
@@ -193,7 +193,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  Dukungan via Saweria
  </h2>
  <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground">
- Dukung dengan mudah menggunakan GoPay, OVO, ShopeePay, Dana, atau QRIS dari semua aplikasi bank.
+ Dukung dengan mudah menggunakan GoPay, OVO, ShopeePay, Dana, or QRIS dari semua aplikasi bank.
  </p>
 
  {/* Button-in-Button CTA Architecture */}
@@ -220,7 +220,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  <div className="flex size-12 items-center justify-center rounded-2xl border border-accent-rose/20 bg-accent-rose/10 text-accent-rose">
  <Heart className="size-6" />
  </div>
- <span className="rounded-full border border-accent-rose/30 bg-accent-rose/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-accent-rose">
+ <span className="rounded-full border border-accent-rose/30 bg-accent-rose/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-accent-rose">
  Trakteer • Karya Cendol
  </span>
  </div>
@@ -322,7 +322,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  <div className="rounded-[calc(2rem-0.625rem)] border border-border/50 bg-card p-6 sm:p-10">
  <div className="flex items-center justify-between">
  <div>
- <div className="inline-flex items-center gap-2 rounded-full border border-accent-amber/25 bg-accent-amber/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-accent-amber">
+ <div className="inline-flex items-center gap-2 rounded-full border border-accent-amber/25 bg-accent-amber/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-accent-amber">
  <Trophy className="size-3.5" />
  <span>Pendukung Setia Komunitas</span>
  </div>
@@ -412,7 +412,7 @@ export default function SupportView({ initialSupporters = [] }: SupportViewProps
  <div className="rounded-[2rem] border border-border/70 bg-muted/40 p-2.5">
  <div className="rounded-[calc(2rem-0.625rem)] border border-border/50 bg-card p-6 sm:p-10">
  <div className="text-center sm:text-left">
- <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-primary">
+ <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-primary">
  <Question className="size-3.5" />
  <span>Pertanyaan Umum</span>
  </div>

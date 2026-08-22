@@ -3,9 +3,9 @@
  * @description Halaman katalog latihan menyimak (Listening Lab) untuk memuat daftar audio interaktif secara dinamis.
  */
 
-// ======================
+
 // IMPOR
-// ======================
+
 import { getPaginatedListening } from "@/actions/library.actions";
 import ListeningListView from "@/features/library/listening/ListeningListView";
 import type { Metadata } from "next";
@@ -16,9 +16,9 @@ import {
  learningResourceJsonLd,
 } from "@/lib/seo";
 
-// ======================
+
 // METADATA SEO
-// ======================
+
 
 /**
  * SEO metadata configuration for listening library page.
@@ -33,9 +33,9 @@ export const metadata: Metadata = {
  }),
 };
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Halaman utama Latihan Menyimak (Listening Lab) (RSC).

@@ -14,7 +14,7 @@ import {
  type ShadowingPreset,
 } from "@/lib/shadowing-recorder";
 
-// Domain helpers — extracted for testability
+// Domain helpers: extracted for testability
 import {
  compactText,
  uniqueValues,
@@ -69,9 +69,7 @@ export interface ToolsIntegrationData {
  };
 }
 
-// ======================================================
 // QUERY BUILDERS
-// ======================================================
 
 /**
  * Fetch and build mini drill questions from database.

@@ -4,9 +4,8 @@
  * @module SaweriaWebhook
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import crypto from "crypto";
@@ -27,9 +26,8 @@ export const saweriaPayloadSchema = z
  created_at: z.string().optional(),
  });
 
-// ======================
 // HANDLER
-// ======================
+
 /**
  * Handle Saweria webhook POST request.
  * Verify signature, parse payload, save supporter to database.

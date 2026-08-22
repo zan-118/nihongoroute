@@ -132,7 +132,7 @@ export function DialogueBlock({ block }: DialogueBlockProps) {
  <div className="space-y-4">
  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
  {block.title ? (
- <h3 className="text-xs text-muted-foreground uppercase tracking-widest">
+ <h3 className="text-xs text-muted-foreground uppercase tracking-wider">
  {block.title}
  </h3>
  ) : (
@@ -149,7 +149,7 @@ export function DialogueBlock({ block }: DialogueBlockProps) {
  {lines.length > 0 && (
  <button
  onClick={togglePlayAll}
- className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border text-[10px] font-black uppercase tracking-widest transition-all duration-300 shadow-sm shrink-0 ${
+ className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border text-[10px] font-bold uppercase tracking-wider transition-all duration-300 shadow-sm shrink-0 ${
  isPlaying
  ? "bg-success/15 border-success/30 text-success"
  : "bg-muted/50 border-border text-muted-foreground hover:text-success hover:bg-success/5 hover:border-success/20"
@@ -179,7 +179,7 @@ export function DialogueBlock({ block }: DialogueBlockProps) {
  <div className="absolute top-0 right-0 w-px h-3.5 bg-primary/20 group-hover/dialogue:bg-primary transition-colors duration-500" />
  </div>
 
- <Card className="space-y-4 rounded-2xl p-6 shadow-[0_4px_25px_rgba(0,0,0,0.015)] bg-card border border-border/50 dark:border-white/10">
+ <Card className="space-y-4 rounded-2xl p-6 shadow-sm bg-card border border-border/50 dark:border-white/10">
  {lines.map((line: { speaker: string | undefined; text: string; furigana?: string }, pos: number) => {
  const isLinePlaying = playingIndex === pos;
  return (
@@ -187,12 +187,12 @@ export function DialogueBlock({ block }: DialogueBlockProps) {
  key={`dialogue-${pos}`} 
  className={`flex gap-4 items-start group p-2.5 rounded-lg transition-all duration-300 ${
  isLinePlaying 
- ? "bg-secondary/10 border-l-4 border-l-secondary pl-3.5 shadow-[0_0_15px_hsl(var(--secondary)/0.05)]" 
+ ? "bg-secondary/10 border-l-4 border-l-secondary pl-3.5" 
  : "hover:bg-muted/10"
  }`}
  >
  <span 
- className="text-[10px] font-black text-secondary uppercase tracking-widest px-2.5 py-1 rounded-[4px] h-fit shrink-0 mt-1 border border-secondary/20 animate-none"
+ className="text-[10px] font-bold text-secondary uppercase tracking-wider px-2.5 py-1 rounded-[4px] h-fit shrink-0 mt-1 border border-secondary/20 animate-none"
  style={{ backgroundColor: "hsl(var(--secondary)/0.1)" }}
  >
  {line.speaker}

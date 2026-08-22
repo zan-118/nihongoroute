@@ -6,9 +6,8 @@
  * @module actions
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import {
  getIntegratedMiniDrillQuestions as serviceGetIntegratedMiniDrillQuestions,
  getIntegratedCounterQuestions as serviceGetIntegratedCounterQuestions,
@@ -19,8 +18,6 @@ import {
  type ToolSourceText,
  type ToolsIntegrationData
 } from "@/lib/services/tools.service";
-
-
 
 export async function getIntegratedMiniDrillQuestions(context?: ToolsIntegrationContext) {
  return serviceGetIntegratedMiniDrillQuestions(context);

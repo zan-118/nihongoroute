@@ -6,18 +6,18 @@
 
 "use client";
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import React from "react";
 import { Lock, Key, Check } from "@/components/ui/icons";
 import Link from "next/link";
 import { usePasswordUpdate } from "@/features/user/usePasswordUpdate";
 import { Button } from "@/components/ui/button";
 
-// ==========================================
+
 // Main Component
-// ==========================================
+
 
 /**
  * Client component for password update form.
@@ -46,13 +46,13 @@ export default function UpdatePasswordView() {
  <div className="size-[400px] bg-primary/10 rounded-full blur-[100px] opacity-35 absolute -bottom-10 -right-10" />
  </div>
 
- <div className="w-full max-w-md bg-card/85 border border-border/80 rounded-xl p-8 z-10 shadow-[0_15px_50px_hsl(var(--foreground)/0.3)] hover:shadow-[0_20px_60px_hsl(var(--primary)/0.14)] transition-all duration-500 relative glass">
+ <div className="w-full max-w-md bg-card/85 border border-border/80 rounded-xl p-8 z-10 shadow-sm hover:shadow-sm transition-all duration-500 relative glass">
  {/* Kilau Sudut Dekoratif */}
  <div className="absolute top-0 right-0 size-24 blur-md rounded-tr-[2rem] pointer-events-none" />
 
  <div className="text-center mb-6">
  {/* Toggle icon based on success state */}
- <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-[0_0_20px_hsl(var(--primary)/0.15)]">
+ <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-sm">
  {isSuccess ? <Check className="text-primary animate-premium-bounce" size={32} /> : <Key className="text-primary animate-pulse" size={32} />}
  </div>
  <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2 uppercase tracking-tight font-japanese">

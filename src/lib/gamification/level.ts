@@ -13,9 +13,8 @@ const BASE_XP = 50; // Faktor penskalaan XP
  */
 const MAX_LEVEL = 100; // Level maksimal yang bisa dicapai
 
-// ==========================================
 // LOGIKA BISNIS & SISTEM LEVEL
-// ==========================================
+
 /**
  * Calculate current level from total XP.
  * Uses quadratic scaling.

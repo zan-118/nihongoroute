@@ -5,18 +5,15 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import { useEffect } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, Restart, Dashboard } from "@/components/ui/icons";
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * Error boundary component for main route group.
@@ -47,11 +44,11 @@ export default function MainError({
  <div className="size-[450px] bg-warning/10 rounded-full blur-[100px] opacity-25 absolute -bottom-10 -right-10" />
  </div>
  
- <Card className="p-8 md:p-12 border border-border/80 max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/85 shadow-[0_20px_50px_hsl(var(--foreground)/0.3)] hover:shadow-[0_25px_60px_hsl(var(--destructive)/0.1)] transition-all duration-500 glass">
+ <Card className="p-8 md:p-12 border border-border/80 max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/85 shadow-sm hover:shadow-sm transition-all duration-500 glass">
  {/* Kilau Sudut Atas */}
  <div className="absolute top-0 right-0 size-24 blur-md rounded-tr-[2.5rem] pointer-events-none" />
 
- <div className="size-20 mx-auto bg-destructive/10 rounded-lg flex items-center justify-center mb-6 border border-destructive/20 shadow-[0_0_20px_hsl(var(--destructive)/0.15)] animate-pulse">
+ <div className="size-20 mx-auto bg-destructive/10 rounded-lg flex items-center justify-center mb-6 border border-destructive/20 shadow-sm animate-pulse">
  <Alert className="text-destructive" size={36} />
  </div>
  
@@ -77,7 +74,7 @@ export default function MainError({
  {/* Trigger reset callback to retry rendering. */}
  <Button
  onClick={() => reset()}
- className="rounded-xl h-12 px-6 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest text-xs duration-300 shadow-[0_0_15px_hsl(var(--destructive)/0.15)] active:scale-[0.98] w-full sm:w-auto"
+ className="rounded-xl h-12 px-6 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest text-xs duration-300 shadow-sm active:scale-[0.98] w-full sm:w-auto"
  >
  <Restart size={14} className="mr-2 animate-spin-slow" /> Coba Lagi
  </Button>

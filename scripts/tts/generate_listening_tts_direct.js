@@ -3,29 +3,59 @@
 /**
  * @file generate_listening_tts_direct.js
  * @description Script utilitas produksi untuk pre-sintesis percakapan
- * pada materi mendengarkan (listeningMaterial) menggunakan Gemini API langsung (tanpa gateway).
+ * pada materi mendengarkan (listening / Choukai) menggunakan Supabase, 9Router,
+ * Gemini API langsung, dan Voicevox dengan kualitas audio setara generate_dialogue_tts_direct.js.
  * 
  * Penggunaan:
- *   node scripts/tts/generate_listening_tts_direct.js [--execute] [--limit 50] [--level N5] [--query minimarket]
+ *   node scripts/tts/generate_listening_tts_direct.js [options]
+ *   node scripts/tts/generate_listening_tts_direct.js --execute --limit 50 --level N5
+ *   node scripts/tts/generate_listening_tts_direct.js --query minimarket
  */
 
 const fs = require("node:fs");
 const path = require("node:path");
 const process = require("node:process");
 const crypto = require("node:crypto");
+const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");
 const { createClient } = require("@supabase/supabase-js");
-const { createClient: createSanityClient } = require("@sanity/client");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const FAILURE_LOG_PATH = path.resolve(process.cwd(), "tts_failures.log");
 
+// --- Logging helpers ---
+function ts() {
+  return new Date().toTimeString().slice(0, 8); // HH:MM:SS
+}
+function log(msg) {
+  console.log(`[${ts()}] ${msg}`);
+}
+function logWarn(msg) {
+  console.warn(`[${ts()}] ⚠️  ${msg}`);
+}
+function logErr(msg) {
+  console.error(`[${ts()}] ❌ ${msg}`);
+}
+function formatDuration(ms) {
+  const totalSec = Math.round(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  if (h > 0) return `${h}j ${m}m ${s}d`;
+  if (m > 0) return `${m}m ${s}d`;
+  return `${s}d`;
+}
+function truncate(text, max = 60) {
+  if (!text) return "";
+  return text.length > max ? `${text.slice(0, max)}…` : text;
+}
+
 // Global error handlers
 process.on("unhandledRejection", (reason) => {
-  console.error("\n⚠️ [Global Unhandled Rejection] Terdeteksi:", reason);
+  logErr(`[Global Unhandled Rejection] Terdeteksi: ${reason?.message || reason}`);
 });
 process.on("uncaughtException", (error) => {
-  console.error("\n⚠️ [Global Uncaught Exception] Terdeteksi:", error.message || error);
+  logErr(`[Global Uncaught Exception] Terdeteksi: ${error.message || error}`);
 });
 
 function logFailure(text, voice, errorMsg) {
@@ -37,24 +67,12 @@ function logFailure(text, voice, errorMsg) {
   );
 }
 
-// Voice mappings (Mirrors existing config)
-const FEMALE_KEYWORDS = [
-  "女", "母", "姉", "妹", "奥", "彼女", "娘", "ちゃん", "chan",
-  "先生",
-  "ゆき", "はna", "さき", "あおい", "みku", "ゆmi", "けいこ", "みsa",
-  "Yuki", "Hana", "Saki", "Aoi", "Miku", "Yumi", "Keiko", "Misa",
-];
-const MALE_KEYWORDS = [
-  "男", "父", "兄", "弟", "夫", "彼", "くん", "君", "kun",
-  "たろう", "けんじ", "ひろし", "けん", "しんじ", "だいち", "ケン",
-  "Taro", "Kenji", "Hiroshi", "Ken", "Shinji", "Daichi",
-];
-
-const femaleVoices = ["zundamon", "lara", "indah", "siti", "dewi", "hayashi", "sato", "ayu", "ritsu"];
-const maleVoices = ["namonashi", "dito", "budi", "suzuki", "tanaka", "yamada"];
+// ============================================================================
+// DAFTAR TOKOH & CASTING SUARA (SESUAI DOKUMEN SISTEM & generate_dialogue_tts_direct.js)
+// ============================================================================
 
 const SPEAKER_MAP = {
-  // English/Romaji (20)
+  // English/Romaji (21)
   "ani": "ani",
   "ayu": "ayu",
   "andi": "andi",
@@ -72,16 +90,22 @@ const SPEAKER_MAP = {
   "dewi": "dewi",
   "hayashi": "hayashi",
   "budi": "budi",
-  "lara": "lara",
+  "lala": "lala",
+  "lara": "lala", // Alias backward-compatibility
   "ritsu": "ritsu",
   "yamada": "yamada",
+  "faisal": "faisal",
 
-  // Japanese Katakana/Kanji dari database (30)
+  // Japanese Katakana/Kanji dari database
   "アニ": "ani",
   "アユ": "ayu",
   "アンディ": "andi",
+  "アンジ": "andi",
   "インダ": "indah",
+  "インダー": "indah",
+  "インダハ": "indah",
   "キムラ": "kimura",
+  "木村": "kimura",
   "コバヤシ": "kobayashi",
   "サクラ": "sakura",
   "サト": "sato",
@@ -92,14 +116,15 @@ const SPEAKER_MAP = {
   "ズンダモン": "zundamon",
   "タカハシ": "takahashi",
   "タナカ": "tanaka",
+  "田中": "tanaka",
   "ディト": "dito",
   "デウィ": "dewi",
   "ハヤシ": "hayashi",
   "ブディ": "budi",
-  "ララ": "lara",
-  "ララ・ディト・シティ": "lara",
-  "ララ・ディト・シティ ": "lara",
-  "lala・dito・siti": "lara",
+  "ララ": "lala",
+  "ララ・ディト・シティ": "lala",
+  "ララ・ディト・シティ ": "lala",
+  "lala・dito・siti": "lala",
   "リツ": "ritsu",
   "佐藤": "sato",
   "小林": "kobayashi",
@@ -108,7 +133,71 @@ const SPEAKER_MAP = {
   "高橋": "takahashi",
   "山田": "yamada",
   "ヤマダ": "yamada",
-  "やまだ": "yamada"
+  "やまだ": "yamada",
+  "ファイサル": "faisal"
+};
+
+const GEMINI_VOICE_MAP = {
+  // ===== Siswi Wanita (Female A) =====
+  "lala": "Zephyr",
+  "siti": "Vindemiatrix",
+  "sakura": "Kore",
+  "ayu": "Callirrhoe",
+  "ani": "Achernar",
+  "dewi": "Leda",
+
+  // ===== Staf/Guru Wanita (Female B) =====
+  "indah": "Aoede",
+  "hayashi": "Sulafat",
+  "sato": "Erinome",
+  "ritsu": "Enceladus",
+
+  // ===== Siswa Pria (Male A) =====
+  "dito": "Umbriel",
+  "andi": "Alnilam",
+  "kimura": "Fenrir",
+
+  // ===== Staf/Guru Pria (Male B) =====
+  "budi": "Charon",
+  "suzuki": "Iapetus",
+  "tanaka": "Orus",
+  "yamada": "Algenib",
+  "takahashi": "Achird",
+  "kobayashi": "Rasalgethi",
+  "faisal": "Algieba",
+};
+
+const DIRECTOR_NOTES = {
+  // ================= SISWI WANITA (Female A) =================
+  "lala": "Speaker: Female, teenage high school student. Style: 'Vocal Smile', very bright and energetic. Pace: Fast, bouncing cadence.",
+  "siti": "Speaker: Female, teenage/young student. Style: Gentle, soft-spoken, and reassuring. Pace: Relaxed.",
+  "sakura": "Speaker: Female, teenage student. Style: Pure, gentle, and caring girl. Pace: Soft and polite.",
+  "ayu": "Speaker: Female, young student. Style: Casual, friendly, modern youth. Pace: Natural and relaxed.",
+  "ani": "Speaker: Female, teenage student. Style: Shy, hesitant, and quiet. Pace: Slow and slightly trembling.",
+  "dewi": "Speaker: Female, young child student. Style: Innocent, spoiled child. Dynamics: High pitch, excitable.",
+
+  // ============== STAF / GURU WANITA (Female B) ==============
+  "indah": "Speaker: Female, adult staff/teacher. Style: Calm and intellectual. Pace: Slow and polite.",
+  "hayashi": "Speaker: Female, middle-aged/older staff/teacher. Style: Motherly, wise, and warm. Pace: Slow and comforting.",
+  "sato": "Speaker: Female, adult staff/receptionist. Style: Formal, polite receptionist. Pace: Standard, professional.",
+  "ritsu": "Speaker: Female, adult staff/teacher. Style: Mysterious, cool, breathless. Pace: Very slow with pauses.",
+
+  // ================= SISWA PRIA (Male A) =================
+  "dito": "Speaker: Male, teenage high school student. Style: Chill, casual high school boy. Pace: Standard, relaxed.",
+  "andi": "Speaker: Male, young adult student. Style: Passionate, dramatic, confident. Dynamics: Strong projection.",
+  "kimura": "Speaker: Male, young adult student. Style: Energetic, casual youth. Pace: Fast and upbeat.",
+
+  // ============== STAF / GURU PRIA (Male B) ==============
+  "budi": "Speaker: Male, adult staff/teacher. Style: Authoritative but warm teacher. Voice: Deep and resonant. Pace: Slow and clear.",
+  "suzuki": "Speaker: Male, adult staff/office worker. Style: Crisp, formal office worker. Pace: Fast and efficient.",
+  "tanaka": "Speaker: Male, middle-aged staff/teacher. Style: Dependable father figure. Voice: Heavy and deep. Pace: Slow and steady.",
+  "yamada": "Speaker: Male, elderly staff/teacher. Style: Kind grandfather. Voice: Gravelly and breathy. Pace: Very slow and warm.",
+  "takahashi": "Speaker: Male, young adult staff/businessman. Style: Friendly, polite young businessman. Pace: Natural.",
+  "kobayashi": "Speaker: Male, adult staff/teacher. Style: Serious, strict, and deep. Pace: Deliberate and heavy.",
+  "faisal": "Speaker: Male, adult staff/teacher. Style: Calm, intellectual, and smooth. Pace: Relaxed and thoughtful.",
+
+  // ===================== MASKOT =====================
+  "zundamon": "Speaker: Genderless mascot character. Style: Childish mascot, extremely high energy. Pace: Very fast and jumpy. (Disintesis via VOICEVOX lokal, bukan Gemini — notes ini hanya untuk referensi.)",
 };
 
 function detectVoice(speaker) {
@@ -144,60 +233,6 @@ function detectVoice(speaker) {
   throw new Error(`Karakter tidak dikenal: "${speaker}". Script dikonfigurasi secara Strict Mode (tidak menerima karakter baru). Pastikan ejaan karakter sudah benar di sumber materi.`);
 }
 
-const GEMINI_VOICE_MAP = {
-  // Wanita (11)
-  "indah": "Aoede",
-  "lara": "Zephyr",
-  "siti": "Vindemiatrix",
-  "dewi": "Leda",
-  "hayashi": "Sulafat",
-  "sato": "Erinome",
-  "ayu": "Callirrhoe",
-  "zundamon": "Autonoe",
-  "ritsu": "Enceladus",
-  "sakura": "Kore",
-  "ani": "Achernar",
-
-  // Pria (10)
-  "budi": "Charon",
-  "dito": "Umbriel",
-  "suzuki": "Iapetus",
-  "tanaka": "Orus",
-  "kimura": "Fenrir",
-  "andi": "Alnilam",
-  "faisal": "Algieba",
-  "takahashi": "Achird",
-  "kobayashi": "Rasalgethi",
-  "yamada": "Algenib"
-};
-
-const DIRECTOR_NOTES = {
-  // Wanita (11)
-  "indah": "Style: Calm and intellectual. Pace: Slow and polite.",
-  "lara": "Style: 'Vocal Smile', very bright and energetic high school girl. Pace: Fast, bouncing cadence.",
-  "siti": "Style: Gentle, soft-spoken, and reassuring. Pace: Relaxed.",
-  "dewi": "Style: Innocent, spoiled child. Dynamics: High pitch, excitable.",
-  "hayashi": "Style: Motherly, wise, and warm. Pace: Slow and comforting.",
-  "sato": "Style: Formal, polite receptionist. Pace: Standard, professional.",
-  "ayu": "Style: Casual, friendly, modern youth. Pace: Natural and relaxed.",
-  "ritsu": "Style: Mysterious, cool, breathless. Pace: Very slow with pauses.",
-  "sakura": "Style: Pure, gentle, and caring girl. Pace: Soft and polite.",
-  "ani": "Style: Shy, hesitant, and quiet. Pace: Slow and slightly trembling.",
-  "zundamon": "Style: Childish mascot, extremely high energy. Pace: Very fast and jumpy.",
-
-  // Pria (10)
-  "budi": "Style: Authoritative but warm teacher. Voice: Deep and resonant. Pace: Slow and clear.",
-  "dito": "Style: Chill, casual high school boy. Pace: Standard, relaxed.",
-  "suzuki": "Style: Crisp, formal office worker. Pace: Fast and efficient.",
-  "tanaka": "Style: Dependable father figure. Voice: Heavy and deep. Pace: Slow and steady.",
-  "kimura": "Style: Energetic, casual youth. Pace: Fast and upbeat.",
-  "andi": "Style: Passionate, dramatic, confident. Dynamics: Strong projection.",
-  "faisal": "Style: Calm, intellectual, and smooth. Pace: Relaxed and thoughtful.",
-  "takahashi": "Style: Friendly, polite young businessman. Pace: Natural.",
-  "kobayashi": "Style: Serious, strict, and deep. Pace: Deliberate and heavy.",
-  "yamada": "Style: Kind grandfather. Voice: Gravelly and breathy. Pace: Very slow and warm."
-};
-
 function printUsage() {
   console.log(
     [
@@ -211,6 +246,10 @@ function printUsage() {
       "  --level <lvl>      Filter level JLPT (N5, N4, N3, N2, N1).",
       "  --query <term>     Filter berdasarkan kata kunci slug/title listening (contoh: minimarket).",
       "  --force            Paksa proses ulang dan timpa audio meskipun sudah di-cache.",
+      "  --direct           Lewati 9Router, langsung panggil Gemini API.",
+      "  --recreate-voice   Daftar voice dipisahkan koma untuk dibuat ulang (contoh: lala,siti).",
+      "  --recreate-hash    Daftar hash md5 dipisahkan koma untuk dibuat ulang.",
+      "  --recreate-text    Daftar teks dipisahkan pipa (|) untuk dibuat ulang.",
       "  --help, -h         Tampilkan bantuan ini.",
     ].join("\n")
   );
@@ -243,6 +282,10 @@ function parseArgs(args) {
     level: null,
     query: null,
     force: false,
+    direct: false,
+    recreateVoices: [],
+    recreateHashes: [],
+    recreateTexts: [],
   };
 
   for (let index = 0; index < args.length; index += 1) {
@@ -272,6 +315,25 @@ function parseArgs(args) {
     }
     if (arg === "--force") {
       options.force = true;
+      continue;
+    }
+    if (arg === "--direct") {
+      options.direct = true;
+      continue;
+    }
+    if (arg === "--recreate-voice") {
+      options.recreateVoices = args[index + 1]?.split(",").map(v => v.trim().toLowerCase()).filter(Boolean) || [];
+      index += 1;
+      continue;
+    }
+    if (arg === "--recreate-hash") {
+      options.recreateHashes = args[index + 1]?.split(",").map(h => h.trim()).filter(Boolean) || [];
+      index += 1;
+      continue;
+    }
+    if (arg === "--recreate-text") {
+      options.recreateTexts = args[index + 1]?.split("|").map(t => t.trim()).filter(Boolean) || [];
+      index += 1;
       continue;
     }
   }
@@ -378,17 +440,32 @@ function getGeminiModels() {
   }
   if (models.length === 0) {
     models.push(
-      "gemini-3.1-flash-tts-preview",
-      "gemini-2.5-flash-preview-tts"
+      "gemini-3.1-flash-tts-preview"
     );
   }
   return Array.from(new Set(models)).filter(Boolean);
 }
 
+function buildTtsPrompt(text, characterId, context = "") {
+  const notes = DIRECTOR_NOTES[characterId] || "Style: Neutral reading.";
+  let sceneSection = "";
+  if (context) {
+    sceneSection = `\n## THE SCENE\n${context}\n`;
+  }
+  return `
+### DIRECTOR'S NOTES
+Language: Native Japanese [BCP-47: ja-JP]. You are a Japanese voice actor. Pronounce the transcript with fluent, native Japanese intonation.
+${notes}
+${sceneSection}
+#### TRANSCRIPT
+${text}
+`.trim();
+}
+
 let globalKeyIndex = 0;
 let globalModelIndex = 0;
 
-async function queryGeminiTtsWithRetry(text, geminiVoice, characterId, retries = 5, initialDelay = 5000) {
+async function queryGeminiTtsWithRetry(text, geminiVoice, characterId, context = "", retries = 5, initialDelay = 5000) {
   const apiKeys = getGeminiApiKeys();
   if (apiKeys.length === 0) {
     throw new Error("GEMINI_API_KEY tidak ditemukan di environment.");
@@ -397,16 +474,47 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, characterId, retries =
   const models = getGeminiModels();
   let delay = initialDelay;
 
-  // Pastikan jumlah percobaan minimal cukup untuk mencoba seluruh kombinasi (key * model) setidaknya 2 kali
   const maxAttempts = Math.max(retries, apiKeys.length * models.length * 2);
   let keysTriedForCurrentModel = 0;
-
-  const notes = DIRECTOR_NOTES[characterId] || "Style: Neutral reading.";
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     const currentApiKey = apiKeys[globalKeyIndex % apiKeys.length];
     const currentModel = models[globalModelIndex % models.length];
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${currentApiKey}`;
+    
+    const isInteractionsApi = currentModel.includes("3.1");
+    let url, requestBody;
+
+    const promptText = buildTtsPrompt(text, characterId, context);
+
+    if (isInteractionsApi) {
+      url = `https://generativelanguage.googleapis.com/v1beta/interactions?key=${currentApiKey}`;
+      requestBody = {
+        model: currentModel,
+        input: promptText,
+        response_format: { type: "audio" },
+        generation_config: {
+          speech_config: [ { voice: geminiVoice } ]
+        }
+      };
+    } else {
+      url = `https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${currentApiKey}`;
+      requestBody = {
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: promptText }],
+          },
+        ],
+        generationConfig: {
+          responseModalities: ["AUDIO"],
+          speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: { voiceName: geminiVoice },
+            },
+          },
+        },
+      };
+    }
 
     try {
       const response = await fetch(url, {
@@ -414,27 +522,7 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, characterId, retries =
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [{ text: text }],
-            },
-          ],
-          systemInstruction: {
-            parts: [{ text: `You are a text-to-speech reader. Read the input text exactly as written, word for word. Do not reply, converse, explain, or output any text. Emulate this persona:\n${notes}` }]
-          },
-          generationConfig: {
-            responseModalities: ["AUDIO"],
-            speechConfig: {
-              voiceConfig: {
-                prebuiltVoiceConfig: {
-                  voiceName: geminiVoice,
-                },
-              },
-            },
-          },
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -447,22 +535,13 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, characterId, retries =
         const status = response.status;
         const msg = errorJson?.error?.message || errorText;
 
-        // 429 = Rate limit, 502/503 = Server overload, 403 = Key diblokir/dilarang
+        // 429 = Rate limit, 502/503 = Server overload, 403 = Key diblokir
         if (status === 429 || status === 502 || status === 503 || status === 403) {
-          const hasTriedAllKeys = (attempt % apiKeys.length === 0);
-
-          if (apiKeys.length > 1 && !hasTriedAllKeys) {
-            console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${maxAttempts}] Key #${(globalKeyIndex % apiKeys.length) + 1} terkena error ${status} (Model: ${currentModel}). Memutar ke key berikutnya...`);
+          if (apiKeys.length > 1 && keysTriedForCurrentModel + 1 < apiKeys.length) {
+            logWarn(`[Gemini TTS ${attempt}/${maxAttempts}] Key #${(globalKeyIndex % apiKeys.length) + 1} error ${status} (Model: ${currentModel}) → memutar ke key berikutnya`);
             globalKeyIndex += 1;
             keysTriedForCurrentModel += 1;
-
-            if (keysTriedForCurrentModel >= apiKeys.length) {
-              keysTriedForCurrentModel = 0;
-              globalModelIndex += 1;
-              console.warn(`   🔄 [Gemini TTS] Seluruh key untuk model ${currentModel} telah dicoba. Memutar ke model berikutnya: ${models[globalModelIndex % models.length]}...`);
-            }
-
-            await sleep(1000); // delay singkat sebelum mencoba key berikutnya
+            await sleep(1000);
             continue;
           }
 
@@ -480,21 +559,12 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, characterId, retries =
                 waitMs = Math.ceil(parseFloat(resetMatch[1]) * 1000) + 2000;
               }
             }
-          } else {
-            // Untuk 502/503/403, jika semua key sudah dicoba dan gagal, tunggu 30 detik sebelum mengulangi loop
-            waitMs = 30000;
           }
 
-          console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${maxAttempts}] Semua key ter-limit / bermasalah (Status: ${status}, Model: ${currentModel}). Menunggu ${Math.ceil(waitMs / 1000)} detik...`);
+          logWarn(`Limit API tercapai di semua key (Model: ${currentModel}) → menunggu ${Math.ceil(waitMs / 1000)}d untuk reset quota`);
           await sleep(waitMs);
 
-          globalKeyIndex += 1; // tetap putar key setelah sleep
-          keysTriedForCurrentModel += 1;
-          if (keysTriedForCurrentModel >= apiKeys.length) {
-            keysTriedForCurrentModel = 0;
-            globalModelIndex += 1;
-            console.warn(`   🔄 [Gemini TTS] Seluruh key untuk model ${currentModel} telah dicoba. Memutar ke model berikutnya: ${models[globalModelIndex % models.length]}...`);
-          }
+          keysTriedForCurrentModel = 0;
           continue;
         }
 
@@ -502,29 +572,40 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, characterId, retries =
       }
 
       const data = await response.json();
-      const candidate = data.candidates?.[0];
-      if (!candidate) {
-        throw new Error("Respon Gemini kosong (no candidates).");
+
+      if (isInteractionsApi) {
+        const step = data.steps?.find(s => s.type === "model_output");
+        const audioPart = step?.content?.find(c => c.type === "audio" || c.mime_type?.startsWith("audio/"));
+        if (!audioPart || !audioPart.data) {
+          throw new Error("Respon Gemini Interactions tidak berisi data audio.");
+        }
+        const pcmBuffer = Buffer.from(audioPart.data, "base64");
+        return { buffer: convertPcmToMp3(pcmBuffer, audioPart.sample_rate || 24000), model: currentModel };
+      } else {
+        const candidate = data.candidates?.[0];
+        if (!candidate) {
+          throw new Error("Respon Gemini kosong (no candidates).");
+        }
+
+        const part = candidate.content?.parts?.find((p) => p.inlineData);
+        if (!part || !part.inlineData) {
+          throw new Error("Respon Gemini tidak berisi audio inlineData.");
+        }
+
+        const pcmBuffer = Buffer.from(part.inlineData.data, "base64");
+        const mimeType = part.inlineData.mimeType || "audio/L16;codec=pcm;rate=24000";
+
+        let sampleRate = 24000;
+        const rateMatch = mimeType.match(/rate=(\d+)/);
+        if (rateMatch) {
+          sampleRate = parseInt(rateMatch[1], 10);
+        }
+
+        return { buffer: convertPcmToMp3(pcmBuffer, sampleRate), model: currentModel };
       }
-
-      const part = candidate.content?.parts?.find((p) => p.inlineData);
-      if (!part || !part.inlineData) {
-        throw new Error("Respon Gemini tidak berisi audio inlineData.");
-      }
-
-      const pcmBuffer = Buffer.from(part.inlineData.data, "base64");
-      const mimeType = part.inlineData.mimeType || "audio/L16;codec=pcm;rate=24000";
-
-      let sampleRate = 24000;
-      const rateMatch = mimeType.match(/rate=(\d+)/);
-      if (rateMatch) {
-        sampleRate = parseInt(rateMatch[1], 10);
-      }
-
-      return convertPcmToMp3(pcmBuffer, sampleRate);
     } catch (err) {
       if (attempt === maxAttempts) throw err;
-      console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${maxAttempts}] Gagal: ${err.message}. Memutar key/model & Retrying in ${delay / 1000}s...`);
+      logWarn(`[Gemini TTS ${attempt}/${maxAttempts}] Gagal: ${err.message} → retry key/model dalam ${delay / 1000}d`);
 
       if (apiKeys.length > 1) {
         globalKeyIndex += 1;
@@ -532,7 +613,7 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, characterId, retries =
         if (keysTriedForCurrentModel >= apiKeys.length) {
           keysTriedForCurrentModel = 0;
           globalModelIndex += 1;
-          console.warn(`   🔄 [Gemini TTS] Seluruh key untuk model ${currentModel} telah dicoba. Memutar ke model berikutnya: ${models[globalModelIndex % models.length]}...`);
+          logWarn(`Seluruh key untuk model ${currentModel} sudah dicoba → memutar ke model berikutnya: ${models[globalModelIndex % models.length]}`);
         }
       }
 
@@ -541,23 +622,96 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, characterId, retries =
     }
   }
 
-  // Jika keluar dari loop tanpa return, artinya semua percobaan gagal
   throw new Error("Semua percobaan sintesis gagal setelah rotasi seluruh API Key dan Model.");
 }
 
+async function query9RouterTtsWithRetry(text, geminiVoice, characterId, context = "", retries = 5) {
+  const ninerouterUrl = process.env.NINEROUTER_URL || "http://localhost:20128";
+  const ninerouterKey = process.env.NINEROUTER_KEY;
 
-async function processTtsItem(supabase, text, voice, rate = "medium", folder = "") {
+  const models = getGeminiModels();
+  const maxAttempts = Math.max(retries * models.length, 30);
+  let delay = 5000;
+  let modelsTriedForCurrentCycle = 0;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const currentModel = models[globalModelIndex % models.length];
+    const modelBase = process.env.NINEROUTER_TTS_MODEL || `gemini/${currentModel}`;
+    const voiceModel = `${modelBase}/${geminiVoice}`;
+
+    const baseUrl = ninerouterUrl.endsWith("/v1") ? ninerouterUrl : `${ninerouterUrl}/v1`;
+    const url = `${baseUrl}/audio/speech`;
+    const promptText = buildTtsPrompt(text, characterId, context);
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(ninerouterKey ? { "Authorization": `Bearer ${ninerouterKey}` } : {}),
+        },
+        body: JSON.stringify({
+          model: voiceModel,
+          input: promptText,
+          language: "Japanese",
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        const status = response.status;
+
+        if (status === 429 || status === 502 || status === 503 || status === 403) {
+          if (models.length > 1 && modelsTriedForCurrentCycle + 1 < models.length) {
+            logWarn(`[9Router TTS ${attempt}/${maxAttempts}] Model ${voiceModel} error ${status} → memutar ke model berikutnya`);
+            globalModelIndex += 1;
+            modelsTriedForCurrentCycle += 1;
+            await sleep(1000);
+            continue;
+          }
+
+          let waitMs = 25000;
+          const resetMatch = errorText.match(/reset after (\d+(?:\.\d+)?)s/i) || errorText.match(/Please retry in (\d+(?:\.\d+)?)s/i);
+          if (resetMatch) {
+            waitMs = Math.ceil(parseFloat(resetMatch[1]) * 1000) + 2000;
+          }
+
+          logWarn(`Limit API tercapai di 9Router → menunggu ${Math.ceil(waitMs / 1000)}d untuk reset quota`);
+          await sleep(waitMs);
+          modelsTriedForCurrentCycle = 0;
+          continue;
+        }
+
+        throw new Error(`9Router TTS HTTP ${status}: ${errorText}`);
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      return { buffer: Buffer.from(arrayBuffer), model: currentModel };
+    } catch (err) {
+      if (attempt === maxAttempts) throw err;
+      logWarn(`[9Router TTS ${attempt}/${maxAttempts}] Gagal: ${err.message} → retry model dalam ${delay / 1000}d`);
+      globalModelIndex += 1;
+      await sleep(delay);
+      delay *= 2;
+    }
+  }
+
+  throw new Error("Semua percobaan sintesis gagal setelah rotasi seluruh model di 9Router.");
+}
+
+async function processTtsItem(supabase, text, voice, rate = "medium", folder = "", context = "", forceDirect = false) {
   const cacheId = crypto.createHash("md5").update(`${text}_${voice}_${rate}`).digest("hex");
   const filename = folder ? `${folder}/${cacheId}.mp3` : `${cacheId}.mp3`;
   const BUCKET_NAME = "tts-cache";
 
   let mp3Buffer;
+  let modelUsed = "voicevox";
   if (voice === "zundamon") {
     try {
-      console.log(`   ➔ [VOICEVOX] Menyintesis Zundamon (Speaker ID: 3)...`);
+      log(`   ➔ [VOICEVOX] Menyintesis Zundamon (Speaker ID: 3)...`);
       const wavBuffer = await synthesizeVoicevox(text, 3);
       mp3Buffer = convertWavToMp3(wavBuffer);
-      console.log(`   └─ [VOICEVOX] Sintesis Zundamon sukses.`);
+      log(`   └─ [VOICEVOX] Sukses.`);
     } catch (vvError) {
       throw new Error(`Gagal sintesis VOICEVOX untuk Zundamon: ${vvError.message}`);
     }
@@ -567,8 +721,26 @@ async function processTtsItem(supabase, text, voice, rate = "medium", folder = "
       throw new Error(`Suara Gemini untuk '${voice}' tidak ditemukan.`);
     }
 
-    mp3Buffer = await queryGeminiTtsWithRetry(text, geminiVoice, voice);
-    console.log(`   └─ [Gemini TTS] Sintesis & konversi sukses (${geminiVoice}).`);
+    const use9Router = Boolean(process.env.NINEROUTER_URL) && !forceDirect;
+    if (use9Router) {
+      try {
+        const result = await query9RouterTtsWithRetry(text, geminiVoice, voice, context);
+        mp3Buffer = result.buffer;
+        modelUsed = `9Router (${result.model})`;
+        log(`   └─ [9Router TTS] Sintesis sukses (${geminiVoice} @ ${result.model}).`);
+      } catch (err9r) {
+        logWarn(`[9Router Fallback] ${err9r.message} → mencoba Gemini API direct...`);
+        const result = await queryGeminiTtsWithRetry(text, geminiVoice, voice, context);
+        mp3Buffer = result.buffer;
+        modelUsed = `Gemini direct (${result.model})`;
+        log(`   └─ [Gemini Direct] Sintesis sukses (${geminiVoice} @ ${result.model}).`);
+      }
+    } else {
+      const result = await queryGeminiTtsWithRetry(text, geminiVoice, voice, context);
+      mp3Buffer = result.buffer;
+      modelUsed = `Gemini direct (${result.model})`;
+      log(`   └─ [Gemini Direct] Sintesis sukses (${geminiVoice} @ ${result.model}).`);
+    }
   }
 
   let publicUrl = "";
@@ -576,10 +748,10 @@ async function processTtsItem(supabase, text, voice, rate = "medium", folder = "
     const { isR2Configured, uploadToR2Storage } = await import("../utils/r2-helper.mjs");
     if (isR2Configured()) {
       publicUrl = await uploadToR2Storage(BUCKET_NAME, filename, mp3Buffer, "audio/mpeg");
-      console.log(`   └─ [R2 Storage] Upload ke Cloudflare R2 sukses.`);
+      log(`   └─ [R2 Storage] Upload ke Cloudflare R2 sukses.`);
     }
   } catch (err) {
-    console.warn(`   └─ [R2 Warning] Gagal upload ke R2, mencoba Supabase:`, err.message);
+    logWarn(`[R2 Warning] Gagal upload ke R2, mencoba Supabase Storage: ${err.message}`);
   }
 
   if (!publicUrl) {
@@ -603,8 +775,6 @@ async function processTtsItem(supabase, text, voice, rate = "medium", folder = "
   return publicUrl;
 }
 
-const readline = require("node:readline");
-
 function askQuestion(query) {
   const rl = readline.createInterface({
     input: process.stdin,
@@ -626,122 +796,155 @@ async function main() {
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !supabaseServiceKey) {
-    console.error("❌ [Config] NEXT_PUBLIC_SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY wajib ada di .env.local!");
+    logErr("[Config] NEXT_PUBLIC_SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY wajib ada di .env.local!");
     process.exit(1);
   }
 
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
-  const sanityClient = createSanityClient({
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-    useCdn: false,
-    apiVersion: "2024-03-11",
-  });
 
   try {
     const itemsToProcess = [];
+    const seenItemKeys = new Set();
 
-    const addItem = (text, voice, folder = "") => {
+    const addItem = (text, voice, folder = "", context = "") => {
       if (!text) return;
       const clean = text.trim();
       if (!clean) return;
-      
-      const exists = itemsToProcess.some((i) => i.text === clean && i.voice === voice);
-      if (!exists) {
-        itemsToProcess.push({ text: clean, voice, folder });
+
+      const key = `${clean}::${voice}`;
+      if (!seenItemKeys.has(key)) {
+        seenItemKeys.add(key);
+        itemsToProcess.push({ text: clean, voice, folder, context });
       }
     };
 
-    // 1. Tarik listeningMaterial dari Sanity CMS
-    try {
-      console.log("🔍 [1/2] Menarik data listeningMaterial dari Sanity...");
-      
-      const allListeningMaterials = await sanityClient.fetch('*[_type == "listeningMaterial"] { title, slug, level, jlpt_level, body }');
-      let targetMaterials = allListeningMaterials || [];
+    // 1. Tarik listening materials dari Supabase
+    log("🔍 [1/2] Menarik data materi listening dari Supabase...");
+    let query = supabase.from("listening").select("id, title, slug, jlpt_level, difficulty, body");
 
-      // Aktifkan menu interaktif jika dijalankan di terminal dan tanpa filter pencarian
-      if (targetMaterials.length > 0 && !options.level && !options.query && process.stdout.isTTY) {
-        console.log("\n=== PILIH LEVEL JLPT ===");
-        const lvlInput = await askQuestion("Pilih Level JLPT (N5, N4, N3, N2, N1, atau tekan Enter untuk semua): ");
-
-        if (lvlInput) {
-          const lvl = lvlInput.trim().toLowerCase();
-          targetMaterials = targetMaterials.filter(m => 
-            m.level?.toLowerCase() === lvl || 
-            m.jlpt_level?.toLowerCase() === lvl || 
-            m.slug?.current?.toLowerCase().includes(lvl)
-          );
-        }
-
-        if (targetMaterials.length === 0) {
-          console.log("❌ Tidak ada materi yang cocok dengan kriteria level Anda. Membatalkan...");
-          process.exit(0);
-        }
-
-        console.log("\n=== DAFTAR MATERI MENDENGARKAN ===");
-        targetMaterials.forEach((m, idx) => {
-          console.log(`[${idx + 1}] [${m.jlpt_level || m.level || "N/A"}] ${m.title || "Untitled"} (slug: ${m.slug?.current || "N/A"})`);
-        });
-        console.log("[0] PROSES SEMUA MATERI HASIL FILTER");
-
-        const answer = await askQuestion(`\nPilih nomor materi (0-${targetMaterials.length}): `);
-        const choice = parseInt(answer, 10);
-        if (isNaN(choice) || choice < 0 || choice > targetMaterials.length) {
-          console.log("❌ Pilihan tidak valid. Membatalkan...");
-          process.exit(0);
-        }
-
-        if (choice > 0) {
-          targetMaterials = [targetMaterials[choice - 1]];
-          console.log(`\nSelected: ${targetMaterials[0].title}`);
-        } else {
-          console.log("\nProcessing all filtered materials...");
-        }
-
-        const forceAns = await askQuestion("Apakah ingin memaksa sintesis ulang (menimpa cache)? (y/N): ");
-        if (forceAns.toLowerCase() === "y" || forceAns.toLowerCase() === "yes") {
-          options.force = true;
-          console.log("⚠️  Mode force aktif: Mengabaikan cache.");
-        }
-      } else {
-        // Mode non-interaktif (otomatis dengan filter)
-        if (options.level) {
-          const lvl = options.level.toLowerCase();
-          targetMaterials = targetMaterials.filter(m => 
-            m.level?.toLowerCase() === lvl || 
-            m.slug?.current?.toLowerCase().startsWith(lvl)
-          );
-        }
-        if (options.query) {
-          const q = options.query.toLowerCase();
-          targetMaterials = targetMaterials.filter(m => 
-            m.slug?.current?.toLowerCase().includes(q) || 
-            m.title?.toLowerCase().includes(q)
-          );
-        }
-      }
-
-      if (targetMaterials.length > 0) {
-        targetMaterials.forEach((row) => {
-          if (!row.body) return;
-          const lines = row.body.split("\n").filter(Boolean);
-          lines.forEach((line, i) => {
-            const parts = line.split(/[：:]/);
-            const rawSpeaker = parts.length > 1 ? parts[0].trim() : undefined;
-            const lineText = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
-            const voice = detectVoice(rawSpeaker, i);
-            addItem(lineText, voice, `listening/${row.slug?.current || 'unknown'}`);
-          });
-        });
-      }
-    } catch (err) {
-      console.warn("⚠️  [Sanity] Lewati listeningMaterial: ", err.message);
+    if (options.level) {
+      query = query.or(`jlpt_level.eq.${options.level},difficulty.eq.${options.level},slug.ilike.${options.level.toLowerCase()}-%`);
     }
 
-    console.log(`📊 Total baris teks dialog listening unik yang ditemukan: ${itemsToProcess.length}`);
+    if (options.query) {
+      query = query.or(`title.ilike.%${options.query}%,slug.ilike.%${options.query}%`);
+    }
+
+    const { data: listeningRows, error: fetchErr } = await query;
+    if (fetchErr) {
+      throw new Error(`Gagal menarik data listening dari Supabase: ${fetchErr.message}`);
+    }
+
+    let targetMaterials = listeningRows || [];
+
+    const hasRecreateFilter = 
+      (options.recreateVoices && options.recreateVoices.length > 0) ||
+      (options.recreateHashes && options.recreateHashes.length > 0) ||
+      (options.recreateTexts && options.recreateTexts.length > 0);
+
+    // Aktifkan menu interaktif jika dijalankan di terminal dan tanpa filter eksplisit
+    if (targetMaterials.length > 0 && !options.level && !options.query && !hasRecreateFilter && process.stdout.isTTY) {
+      console.log("\n=== PILIH LEVEL JLPT ===");
+      const lvlInput = await askQuestion("Pilih Level JLPT (N5, N4, N3, N2, N1, atau tekan Enter untuk semua): ");
+
+      if (lvlInput) {
+        const lvl = lvlInput.trim().toUpperCase();
+        options.level = lvl;
+        targetMaterials = targetMaterials.filter(m => 
+          (m.jlpt_level && m.jlpt_level.toUpperCase() === lvl) ||
+          (m.difficulty && m.difficulty.toUpperCase() === lvl) ||
+          (m.slug && m.slug.toUpperCase().startsWith(lvl))
+        );
+      }
+
+      if (targetMaterials.length === 0) {
+        console.log("❌ Tidak ada materi yang cocok dengan kriteria level Anda. Membatalkan...");
+        process.exit(0);
+      }
+
+      console.log("\n=== DAFTAR MATERI MENDENGARKAN (LISTENING) ===");
+      targetMaterials.forEach((m, idx) => {
+        console.log(`[${idx + 1}] [${m.jlpt_level || m.difficulty || "N/A"}] ${m.title || "Untitled"} (slug: ${m.slug || "N/A"})`);
+      });
+      console.log("[0] PROSES SEMUA MATERI HASIL FILTER");
+
+      const answer = await askQuestion(`\nPilih nomor materi (0-${targetMaterials.length}): `);
+      const choice = parseInt(answer, 10);
+      if (isNaN(choice) || choice < 0 || choice > targetMaterials.length) {
+        console.log("❌ Pilihan tidak valid. Membatalkan...");
+        process.exit(0);
+      }
+
+      if (choice > 0) {
+        targetMaterials = [targetMaterials[choice - 1]];
+        console.log(`\nSelected: ${targetMaterials[0].title}`);
+      } else {
+        console.log("\nProcessing all filtered materials...");
+      }
+
+      const forceAns = await askQuestion("Apakah ingin memaksa sintesis ulang (menimpa cache)? (y/N): ");
+      if (forceAns.toLowerCase() === "y" || forceAns.toLowerCase() === "yes") {
+        options.force = true;
+        console.log("⚠️  Mode force aktif: Mengabaikan cache.");
+      }
+    }
+
+    if (targetMaterials.length > 0) {
+      targetMaterials.forEach((row) => {
+        if (!row.body) return;
+        const lines = row.body.split("\n").filter(Boolean);
+        const folder = `listening/${row.slug || 'unknown'}`;
+        const contextString = `Title: ${row.title || row.slug}\nLevel: ${row.jlpt_level || row.difficulty || 'JLPT'}`;
+
+        lines.forEach((line) => {
+          const parts = line.split(/[：:]/);
+          let rawSpeaker = parts.length > 1 ? parts[0].trim() : undefined;
+          let lineText = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
+
+          if (!rawSpeaker && (lineText.includes("：") || lineText.includes(":"))) {
+            const sub = lineText.split(/[：:]/);
+            if (sub.length > 1 && sub[0].trim().length < 15) {
+              rawSpeaker = sub[0].trim();
+              lineText = sub.slice(1).join("：").trim();
+            }
+          }
+
+          if (lineText) {
+            try {
+              const voice = rawSpeaker ? detectVoice(rawSpeaker) : "indah";
+              addItem(lineText, voice, folder, contextString);
+            } catch (err) {
+              logWarn(`Gagal deteksi voice untuk baris "${lineText}" (${rawSpeaker}): ${err.message}`);
+            }
+          }
+        });
+      });
+    }
+
+    if (hasRecreateFilter) {
+      const filtered = itemsToProcess.filter((item) => {
+        const cacheId = crypto.createHash("md5").update(`${item.text}_${item.voice}_medium`).digest("hex");
+        return (options.recreateVoices && options.recreateVoices.includes(item.voice)) ||
+               (options.recreateHashes && options.recreateHashes.includes(cacheId)) ||
+               (options.recreateTexts && options.recreateTexts.includes(item.text));
+      });
+      itemsToProcess.length = 0;
+      itemsToProcess.push(...filtered);
+    }
+
+    log(`📊 Total baris teks dialog listening unik: ${itemsToProcess.length}`);
+    {
+      const perVoice = {};
+      itemsToProcess.forEach((i) => { perVoice[i.voice] = (perVoice[i.voice] || 0) + 1; });
+      const breakdown = Object.entries(perVoice)
+        .sort((a, b) => b[1] - a[1])
+        .map(([v, c]) => `${v}:${c}`)
+        .join(", ");
+      log(`   └─ Sebaran per voice: ${breakdown}`);
+    }
 
     // 2. Bandingkan dengan cache DB
-    console.log("🔍 [2/2] Memeriksa status cache di database...");
+    log("🔍 [2/2] Memeriksa status cache di database...");
     const missingItems = [];
     const existingCacheIds = new Set();
     let dbHasMore = true;
@@ -764,8 +967,9 @@ async function main() {
         }
       }
     }
+    log(`   └─ ${existingCacheIds.size} entri sudah ada di tts_cache.`);
 
-    if (!options.force) {
+    if (!options.force && !hasRecreateFilter) {
       itemsToProcess.forEach((item) => {
         const cacheId = crypto.createHash("md5").update(`${item.text}_${item.voice}_medium`).digest("hex");
         if (!existingCacheIds.has(cacheId)) {
@@ -773,47 +977,65 @@ async function main() {
         }
       });
     } else {
-      console.log("⚠️  Mode force aktif: Mengabaikan cache database dan memproses ulang seluruh item.");
+      logWarn(`Mode force/recreate aktif → mengabaikan cache database, memproses ulang seluruh item terfilter.`);
       missingItems.push(...itemsToProcess);
     }
 
-    console.log(`📈 Jumlah item yang akan diproses: ${missingItems.length}`);
+    log(`📈 Item yang perlu diproses: ${missingItems.length} (dari ${itemsToProcess.length} total unik)`);
 
     if (missingItems.length === 0) {
-      console.log("✅ Semua audio dialog listening sudah lengkap di-cache!");
+      log("✅ Semua audio dialog listening sudah lengkap di-cache!");
       process.exit(0);
     }
 
     if (!options.execute) {
-      console.log(`\n📋 [Dry Run] Menampilkan 10 item pertama yang belum di-cache:`);
+      const perVoice = {};
+      missingItems.forEach((i) => { perVoice[i.voice] = (perVoice[i.voice] || 0) + 1; });
+      log(`\n📋 [Dry Run] ${missingItems.length} item belum di-cache, sebaran per voice:`);
+      Object.entries(perVoice)
+        .sort((a, b) => b[1] - a[1])
+        .forEach(([v, c]) => console.log(`   • ${v}: ${c} item`));
+      console.log(`\n   Contoh 10 item pertama:`);
       missingItems.slice(0, 10).forEach((item, idx) => {
-        console.log(`   ${idx + 1}. [Voice: ${item.voice}] "${item.text}"`);
+        console.log(`   ${idx + 1}. [${item.voice}] "${truncate(item.text)}"`);
       });
-      console.log(`\n💡 Silakan jalankan dengan '--execute --limit <num>' untuk mensintesis secara nyata.`);
+      log(`💡 Jalankan dengan '--execute --limit <num>' untuk mensintesis secara nyata.`);
       process.exit(0);
     }
 
     const targetItems = missingItems.slice(0, options.limit);
-    console.log(`\n🚀 Memulai sintesis ${targetItems.length} item...`);
+    log(`🚀 Memulai sintesis ${targetItems.length} item (delay ~22d/item agar aman di rate limit)...\n`);
 
     let successCount = 0;
     let consecutiveFailures = 0;
+    const failedVoices = {};
+    const startTime = Date.now();
 
     for (let idx = 0; idx < targetItems.length; idx += 1) {
       const item = targetItems[idx];
+      const doneSoFar = idx;
+      const pct = ((doneSoFar / targetItems.length) * 100).toFixed(1);
+      let etaStr = "menghitung...";
+      if (doneSoFar > 0) {
+        const elapsed = Date.now() - startTime;
+        const avgPerItem = elapsed / doneSoFar;
+        const remaining = avgPerItem * (targetItems.length - doneSoFar);
+        etaStr = formatDuration(remaining);
+      }
       try {
-        console.log(`[${idx + 1}/${targetItems.length}] Menyintesis: "${item.text}" [Voice: ${item.voice}]`);
-        await processTtsItem(supabase, item.text, item.voice, "medium", item.folder);
+        log(`[${idx + 1}/${targetItems.length} · ${pct}% · ETA ${etaStr}] Menyintesis [${item.voice}] "${truncate(item.text)}"`);
+        await processTtsItem(supabase, item.text, item.voice, "medium", item.folder, item.context, options.direct);
         successCount += 1;
         consecutiveFailures = 0; 
         await sleep(22000); // 22s delay agar aman di bawah rate limit 3 RPM Gemini Free Tier
       } catch (err) {
-        console.error(`❌ Gagal mensintesis "${item.text}":`, err.message);
+        logErr(`Gagal mensintesis [${item.voice}] "${truncate(item.text)}": ${err.message}`);
         logFailure(item.text, item.voice, err.message);
+        failedVoices[item.voice] = (failedVoices[item.voice] || 0) + 1;
         consecutiveFailures += 1;
 
         if (consecutiveFailures >= 5) {
-          console.warn("\n⚠️  Terjadi 5 kegagalan beruntun. Istirahat 45 detik...");
+          logWarn(`5 kegagalan beruntun terdeteksi → istirahat 45 detik...`);
           await sleep(45000);
           consecutiveFailures = 0;
         } else {
@@ -822,14 +1044,25 @@ async function main() {
       }
     }
 
-    console.log(`\n🎉 [Selesai] Berhasil memproses ${successCount}/${targetItems.length} audio listening!`);
-    if (successCount < targetItems.length) {
-      console.log(`💡 Kegagalan dicatat di: ${FAILURE_LOG_PATH}`);
+    const totalElapsed = Date.now() - startTime;
+    const failCount = targetItems.length - successCount;
+    console.log("");
+    log(`🎉 [Selesai] Berhasil ${successCount}/${targetItems.length} audio listening dalam ${formatDuration(totalElapsed)}.`);
+    if (failCount > 0) {
+      const failBreakdown = Object.entries(failedVoices)
+        .sort((a, b) => b[1] - a[1])
+        .map(([v, c]) => `${v}:${c}`)
+        .join(", ");
+      log(`   └─ ${failCount} gagal — sebaran per voice: ${failBreakdown}`);
+      log(`   └─ Detail kegagalan dicatat di: ${FAILURE_LOG_PATH}`);
+    }
+    if (missingItems.length > targetItems.length) {
+      log(`   └─ Masih ada ${missingItems.length - targetItems.length} item tersisa (di luar --limit). Jalankan lagi untuk lanjut.`);
     }
     process.exit(0);
 
   } catch (error) {
-    console.error("❌ [Error] Gagal menjalankan generator listening:", error.message || error);
+    logErr(`[Error] Gagal menjalankan generator listening: ${error.message || error}`);
     process.exit(1);
   }
 }

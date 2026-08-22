@@ -4,9 +4,8 @@
  * Menyediakan tampilan teks pertanyaan, bilah progres, opsi jawaban interaktif, umpan balik jawaban benar/salah secara instan, serta pembahasan soal.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,9 +14,7 @@ import { QuizQuestion } from "./types";
 import { Button } from "@/components/ui/button";
 import { QuizProgress } from "./QuizProgress";
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
 
 /**
  * Props for QuizPlaying component.
@@ -39,9 +36,7 @@ interface QuizPlayingProps {
  nextQuestion: () => void;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * QuizPlaying component renders current question, options, feedback, and explanation.
@@ -115,8 +110,8 @@ export function QuizPlaying({
  transition={{ type: "spring", stiffness: 400, damping: 25 }}
  className={`mb-6 md:mb-8 p-4 md:p-5 rounded-lg md:rounded-xl flex items-center gap-3 md:gap-4 border ${
  isCorrectAnswer 
- ? 'bg-success/10 border-success/30 shadow-[0_0_40px_hsl(var(--success)/0.15)]' 
- : 'bg-destructive/10 border-destructive/30 shadow-[0_0_40px_hsl(var(--destructive)/0.15)]'
+ ? 'bg-success/10 border-success/30 shadow-sm' 
+ : 'bg-destructive/10 border-destructive/30 shadow-sm'
  }`}
  >
  <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0 ${
@@ -156,10 +151,10 @@ export function QuizPlaying({
 
  if (isAnswered) {
  if (isCorrect) {
- buttonStyle = "bg-success/15 border-success/60 text-success shadow-[0_0_30px_hsl(var(--success)/0.2)] neo-card scale-[1.03] z-10 ring-2 ring-success/30";
+ buttonStyle = "bg-success/15 border-success/60 text-success shadow-sm neo-card scale-[1.03] z-10 ring-2 ring-success/30";
  statusIcon = <Check className="w-6 h-6 md:w-7 md:h-7 text-success" />;
  } else if (isSelected && !isCorrect) {
- buttonStyle = "bg-destructive/15 border-destructive/60 text-destructive shadow-[0_0_30px_hsl(var(--destructive)/0.2)] neo-card z-10 ring-2 ring-destructive/30";
+ buttonStyle = "bg-destructive/15 border-destructive/60 text-destructive shadow-sm neo-card z-10 ring-2 ring-destructive/30";
  statusIcon = <X className="w-6 h-6 md:w-7 md:h-7 text-destructive" />;
  } else {
  buttonStyle = "bg-muted/20 border-transparent text-muted-foreground/20 scale-95 opacity-40 neo-card grayscale";

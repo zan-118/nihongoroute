@@ -5,9 +5,7 @@
  * @description Interactive word popover (tooltip component) triggering real-time dictionary queries from Supabase when a word inside a reading article is clicked.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
 
 import React, { useState, useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
@@ -22,9 +20,8 @@ import { cn } from "@/lib/utils";
 import AddToSRSButton from "@/features/srs/actions/AddToSRSButton";
 import { useUIStore } from "@/store/useUIStore";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for WordPopover component.
  */
@@ -37,9 +34,8 @@ interface WordPopoverProps {
  reading?: string;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Interactive popover component. Fetches word data from Supabase on click.
  * 
@@ -64,9 +60,8 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
  return () => window.removeEventListener("resize", checkMobile);
  }, [isOpen]);
 
- // ==========================================
  // QUERY & FETCH DATA (REAL-TIME)
- // ==========================================
+
  // Fetch word details via server action.
  const { data: vocab, isLoading } = useQuery({
  queryKey: ["vocab-lookup", word, reading],
@@ -144,9 +139,8 @@ const collectibleReading = vocab?.furigana || reading || undefined;
  exit: { opacity: 0, y: 10, scale: 0.95 },
  };
 
- // ==========================================
  // RENDER KOMPONEN
- // ==========================================
+
  return (
  <div className="relative inline-block group/popover">
  <span 
@@ -210,7 +204,7 @@ const collectibleReading = vocab?.furigana || reading || undefined;
  <span className="text-2xl font-black font-japanese text-foreground">
  <SmartJapanese word={vocab.word} furigana={vocab.furigana} />
  </span>
- <span className="text-[10px] font-black uppercase tracking-widest text-primary/60 mt-1">
+ <span className="text-[10px] font-black uppercase tracking-wider text-primary/60 mt-1">
  {vocab.hinshi || "Kosakata"}
  </span>
  </div>

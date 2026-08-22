@@ -117,7 +117,7 @@ Laporan bug dan umpan balik pengguna.
 | `sentences` | 25.980 | Contoh kalimat Bahasa Jepang terjemahan |
 | `expressions` | 13.220 | Ungkapan & frasa harian |
 | `cheatsheets` | 50 | Lembar rangkuman materi |
-| `listening` | 50 | Latihan mendengar & audio transcript |
+| `listening` | 75 | Latihan mendengar & audio transcript (15 per level N5–N1) |
 | `reading` | 50 | Latihan membaca & analisis wacana |
 
 ---

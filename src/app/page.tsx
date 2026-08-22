@@ -81,13 +81,9 @@ export default function LandingPage() {
  }),
  faqPageJsonLd(LANDING_FAQ_ITEMS),
  ]}
- />
- {/* Decorative background radial gradients for desktop */}
- <div className="hidden md:block fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(circle_at_18%_8%,hsl(var(--primary)/_/_0.16),transparent_34rem),radial-gradient(circle_at_82%_12%,hsl(var(--primary)/_/_0.11),transparent_32rem)]" />
- {/* Decorative background grid pattern for desktop */}
- <div className="hidden md:block fixed inset-0 pointer-events-none z-0 opacity-[0.12] bg-[linear-gradient(90deg,hsl(var(--primary)/_/_0.08)_1px,transparent_1px),linear-gradient(hsl(var(--primary)/_/_0.06)_1px,transparent_1px)] bg-[size:72px_72px]" />
+  />
 
- <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-10 md:pt-14 pb-4">
+  <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-10 md:pt-14 pb-4">
  {/* SEKSI HERO UTAMA (Pure SSG Server Component) */}
  <Hero />
 

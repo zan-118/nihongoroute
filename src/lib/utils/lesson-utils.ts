@@ -28,9 +28,8 @@ export interface FormattedQuizItem {
  explanation: string;
 }
 
-// ==========================================
 // FUNGSI LOGIKA NORMALISASI KUIS
-// ==========================================
+
 /**
  * Normalizes raw quiz data from multiple schemas into a unified format.
  * 

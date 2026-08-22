@@ -6,18 +6,11 @@
 
 "use client";
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { m, Variants } from "framer-motion";
 import { Stack, Pencil, Fire, ChevronRight } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
-
-// ==========================================
-// Component Props Interface
-// ==========================================
 
 /**
  * Props for TrainingGround component.
@@ -49,7 +42,7 @@ interface TrainingItem {
  href: string;
 }
 
-// ======================
+
 
 /**
  * Card component for individual training mode.
@@ -84,7 +77,7 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
  <Card
  onMouseEnter={() => setIsHovered(true)}
  onMouseLeave={() => setIsHovered(false)}
- className="p-4 sm:p-5 md:p-6 rounded-2xl border border-border/50 dark:border-white/10 transition-all duration-500 h-full relative overflow-hidden bg-card shadow-[0_4px_25px_rgba(0,0,0,0.015)]"
+ className="p-4 sm:p-5 md:p-6 rounded-2xl border border-border/50 dark:border-white/10 transition-all duration-500 h-full relative overflow-hidden bg-card shadow-sm"
  style={{
  borderColor: isHovered ? `hsl(${item.rgb} / 0.45)` : undefined
  }}
@@ -132,7 +125,7 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
  >
  {item.title}
  </h4>
- <p className="text-muted-foreground text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] opacity-60">
+ <p className="text-muted-foreground text-[9px] sm:text-[10px] font-bold uppercase tracking-wider opacity-60">
  {item.desc}
  </p>
  </div>
@@ -155,9 +148,9 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
  );
 });
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Main training hub component. Displays vocabulary, kanji, and survival modes.
@@ -198,7 +191,7 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
  <h3 className="text-base sm:text-lg md:text-xl uppercase tracking-tight text-foreground flex items-center gap-2">
   Area Latihan
  </h3>
- <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground/60">
+ <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">
  Optimalkan Hafalan & Keterampilan
  </p>
  </div>

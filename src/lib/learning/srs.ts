@@ -3,9 +3,7 @@
  * @description Modul orkestrator sistem pengulangan cerdas (Spaced Repetition System / SRS) berbasis modifikasi algoritma SM-2 dengan Modern Halving untuk penalti dan Due-Date Guard untuk mencegah inflasi interval belajar luring.
  */
 
-// ==========================================
 // KONFIGURASI & KONSTANTA
-// ==========================================
 
 /** One day in milliseconds. */
 const DAY = 24 * 60 * 60 * 1000;
@@ -19,9 +17,7 @@ const MAX_EASE_FACTOR = 5.0; // Batas maksimal ease factor
 /** Maximum interval limit in days (approx. 10 years). */
 const MAX_INTERVAL = 3650; // Maksimal interval 10 tahun
 
-// ==========================================
 // ANTARMUKA STATE SRS
-// ==========================================
 
 /**
  * Represents the Spaced Repetition System (SRS) state for a flashcard.
@@ -43,9 +39,7 @@ export interface SRSState {
  customMnemonic?: string; // Jembatan keledai kustom
 }
 
-// ==========================================
 // FUNGSI PEMBANTU (HELPERS)
-// ==========================================
 
 /**
  * Membuat state awal untuk kartu baru.
@@ -62,9 +56,7 @@ export function createNewCardState(): SRSState {
  };
 }
 
-// ==========================================
 // LOGIKA BISNIS UTAMA SRS
-// ==========================================
 
 /**
  * Menghitung status SRS baru berdasarkan kualitas jawaban user (grade 0-3).
@@ -82,9 +74,9 @@ export function updateCardState(state: SRSState, grade: number): SRSState {
  const isDue = Date.now() >= nextReview - (DAY / 4); // Toleransi 6 jam untuk fleksibilitas
 
  if (grade < 2) {
- // ======================
+
  // LOGIKA PENALTI (Lupa/Sulit)
- // ======================
+
  if (grade === 0) {
  // Lupa Total: Halving interval & Reset repetition
  interval = Math.max(1, Math.floor(interval / 2));
@@ -96,9 +88,9 @@ export function updateCardState(state: SRSState, grade: number): SRSState {
  easeFactor = Math.max(MIN_EASE_FACTOR, easeFactor - 0.15);
  }
  } else {
- // ======================
+
  // LOGIKA PERTUMBUHAN (Bisa/Mudah)
- // ======================
+
  
  // Hanya naikkan interval jika kartu memang sudah waktunya diulas (Due-Date Guard)
  if (isDue) {

@@ -5,15 +5,13 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import { useEffect } from "react";
 import { animate, useMotionValue, useTransform, m } from "framer-motion";
 
-// ======================
 // ANTARMUKA / TIPE DATA
-// ======================
+
 /**
  * Props for AnimatedCounter component.
  */
@@ -26,9 +24,8 @@ interface AnimatedCounterProps {
  duration?: number;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
+
 /**
  * Render animated number counter.
  * Animates value from 0 to target.

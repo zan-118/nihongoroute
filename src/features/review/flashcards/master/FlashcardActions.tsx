@@ -3,17 +3,15 @@
  * @description Interactive control action component for flashcards, supporting navigation, SRS rating options (Again, Hard, Good, Easy), and answer verification buttons.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { Button } from "@/components/ui/button";
 import { m, AnimatePresence } from "framer-motion";
 import { Check, X, Information, Search } from "@/components/ui/icons";
 import { StudyMode } from "./types";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for FlashcardActions component.
  */
@@ -38,9 +36,8 @@ interface FlashcardActionsProps {
  onCheckAnswer?: () => void;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Interactive control panel for flashcards.
  * Handles navigation, SRS grading, and answer checking.

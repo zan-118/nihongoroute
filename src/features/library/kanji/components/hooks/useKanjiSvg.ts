@@ -5,15 +5,15 @@
  * @description Hook khusus untuk mengambil, mem-parse, dan menormalisasi data SVG Kanji dari database lokal (Supabase) atau fallback ke repositori GitHub KanjiVG secara luring-first.
  */
 
-// ==========================================
+
 // IMPORT & DEPENDENSI
-// ==========================================
+
 import { useState, useEffect } from "react";
 import { KanjiSvgData, StrokeData } from "../types";
 
-// ==========================================
+
 // HOOK UTAMA
-// ==========================================
+
 /**
  * Custom hook to fetch, parse, and normalize Kanji SVG stroke data.
  * Attempts to use database SVG string first, falling back to KanjiVG GitHub repository.
@@ -23,9 +23,9 @@ import { KanjiSvgData, StrokeData } from "../types";
  * @returns Object containing parsed SVG data, loading state, and error state.
  */
 export function useKanjiSvg(character: string, strokeOrderSvg?: string) {
- // ==========================================
+
  // STATUS & STATE
- // ==========================================
+
  /** Parsed Kanji SVG data structure. */
  const [data, setData] = useState<KanjiSvgData | null>(null);
  /** Loading state indicator. */
@@ -33,9 +33,9 @@ export function useKanjiSvg(character: string, strokeOrderSvg?: string) {
  /** Error message state. */
  const [error, setError] = useState<string | null>(null);
 
- // ==========================================
+
  // LOGIKA PENGAMBILAN & PARSING DATA (EFFECT)
- // ==========================================
+
  useEffect(() => {
  if (!character) return;
 
@@ -137,8 +137,8 @@ export function useKanjiSvg(character: string, strokeOrderSvg?: string) {
  fetchSvg();
  }, [character, strokeOrderSvg]);
 
- // ==========================================
+
  // HASIL HOOK (RETURN VALUE)
- // ==========================================
+
  return { data, loading, error };
 }

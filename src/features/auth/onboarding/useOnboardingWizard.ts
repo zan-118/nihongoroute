@@ -6,17 +6,14 @@
  * Menyimpan data target level JLPT dan motivasi belajar pengguna langsung ke tabel profiles di Supabase.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useUIStore } from "@/store/useUIStore";
 
-// ======================
 // HOOK UTAMA
-// ======================
 
 /**
  * Custom hook to manage onboarding wizard state and submission.

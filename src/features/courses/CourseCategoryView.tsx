@@ -6,9 +6,6 @@
 
 "use client";
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import { m, Variants } from "framer-motion";
 import { useUserStore } from "@/store/useUserStore";
 import { useCallback, useMemo, useState } from "react";
@@ -16,12 +13,8 @@ import { useCallback, useMemo, useState } from "react";
 // Feature Components
 import { CategoryHero } from "@/features/courses/components/CategoryHero";
 import { TrainingGround } from "@/features/courses/components/TrainingGround";
-
 import { LessonGrid } from "@/features/courses/components/LessonGrid";
 
-// ==========================================
-// Animation Variants
-// ==========================================
 /**
  * Animation variants for container element.
  */
@@ -132,24 +125,6 @@ export default function CourseCategoryView({
 
  return (
  <div className="w-full relative overflow-hidden bg-transparent text-foreground transition-colors duration-300 min-h-screen pb-24 md:pb-32">
- {/* 1. DEKORASI LATAR BELAKANG — Subtle Only */}
- <div className="absolute inset-0 pointer-events-none">
- {/* Top gradient accent */}
- <div
- className="absolute top-0 left-0 w-full h-62.5 md:h-87.5"
- style={{
- background: isSideQuest
- ? 'linear-gradient(180deg, hsl(var(--warning)/0.04) 0%, transparent 100%)'
- : 'linear-gradient(180deg, hsl(var(--primary)/0.04) 0%, transparent 100%)'
- }}
- />
- {/* Corner accent blob — small */}
- <div
- className="absolute bottom-0 right-0 w-45 md:w-65 h-45 md:h-65 rounded-full blur-[45px] md:blur-[55px]"
- style={{ backgroundColor: 'hsl(var(--secondary)/0.05)' }}
- />
- </div>
-
  <m.div
  className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 relative z-10 pt-4 md:pt-8"
  initial="hidden"

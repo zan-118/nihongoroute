@@ -14,9 +14,7 @@ import { getLibraryLessonDetail } from "./lessons.actions";
 import { getLibraryExamDetail } from "./exams.actions";
 import { LibraryItem } from "@/types/library";
 
-// ======================
 // RE-EXPORTS
-// ======================
 
 /**
  * Re-export library types and actions for unified access.

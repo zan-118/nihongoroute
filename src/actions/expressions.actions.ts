@@ -6,15 +6,12 @@
  * @module actions
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { getRandomExpressionData } from "@/lib/services/content-repository";
 import { logger } from "@/lib/core/logger";
 
-// ======================
 // TYPES
-// ======================
 
 /**
  * Shape of random expression data.
@@ -28,9 +25,7 @@ export interface RandomExpression {
  jlpt_level: string | null;
 }
 
-// ======================
 // SERVER ACTIONS
-// ======================
 
 /**
  * Fetch single random common expression from database.

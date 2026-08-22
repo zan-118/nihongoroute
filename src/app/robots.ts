@@ -4,10 +4,6 @@
  * @module Robots
  */
 
-// ==========================================
-// Main Execution
-// ==========================================
-
 import { MetadataRoute } from "next";
 
 /**

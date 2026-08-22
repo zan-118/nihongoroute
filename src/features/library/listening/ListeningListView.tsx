@@ -110,7 +110,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  <div className="space-y-3">
  <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-accent-cyan/20 bg-accent-cyan/10 text-accent-cyan">
  <Headphone size={16} />
- <span className="text-[10px] font-black uppercase tracking-[0.25em] font-mono">
+ <span className="text-[10px] font-black uppercase tracking-wider font-mono">
  LISTENING LAB VAULT
  </span>
  </div>
@@ -190,7 +190,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  </Badge>
  )}
  {task.difficulty && (
- <span className="text-[9px] font-mono font-bold text-muted-foreground/60 uppercase tracking-widest">
+ <span className="text-[9px] font-mono font-bold text-muted-foreground/60 uppercase tracking-wider">
  LEVEL {task.difficulty}
  </span>
  )}
@@ -227,7 +227,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  {/* Pagination Controls */}
  {totalPages > 1 && (
  <div className="flex flex-col items-center gap-4 pt-8">
- <div className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">
+ <div className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-wider">
  HALAMAN <span className="text-accent-cyan">{currentPage}</span> DARI {totalPages}
  </div>
  <div className="flex items-center gap-2">
@@ -307,7 +307,7 @@ export default function ListeningListView({ initialData }: ListeningListViewProp
  <div className="size-16 rounded-full bg-muted/30 border border-border/60 flex items-center justify-center mx-auto">
  <Headphone size={24} className="text-muted-foreground/50" />
  </div>
- <h3 className="text-base font-black text-foreground uppercase tracking-widest font-mono">Materi Audio Tidak Ditemukan</h3>
+ <h3 className="text-base font-black text-foreground uppercase tracking-wider font-mono">Materi Audio Tidak Ditemukan</h3>
  <p className="text-muted-foreground text-xs max-w-sm mx-auto font-medium">Silakan coba dengan kata kunci lain atau pilih level JLPT yang berbeda.</p>
  </div>
  )}

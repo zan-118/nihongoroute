@@ -6,18 +6,16 @@
  * Mengatur pergeseran status antara pengerjaan soal kuis (QuizPlaying) dan ringkasan skor kelulusan (QuizFinished).
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { useState, useEffect } from "react";
 import { QuizProps } from "./types";
 import { useQuizEngine } from "./useQuizEngine";
 import { QuizFinished } from "./QuizFinished";
 import { QuizPlaying } from "./QuizPlaying";
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
+
 /**
  * QuizEngine component.
  * Manage quiz state. Switch between play and finish screens.

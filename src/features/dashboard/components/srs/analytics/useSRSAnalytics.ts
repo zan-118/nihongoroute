@@ -4,15 +4,12 @@
  * @module features/dashboard/components/srs/analytics
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useSRSStore } from "@/store/useSRSStore";
 import { summarizeSrs } from "@/lib/srs-summary";
 
-// ==========================================
 // Main Custom Hook
-// ==========================================
 
 /**
  * Custom hook to calculate SRS ease factor analytics.

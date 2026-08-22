@@ -10,9 +10,8 @@
  * @project NihongoRoute
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import React from "react";
 import dynamic from "next/dynamic";
 import { Download, Loader } from "@/components/ui/icons";
@@ -24,9 +23,8 @@ import { CertificatePdfTemplate } from "./templates/CertificatePdfTemplate";
 import { CheatsheetPdfTemplate } from "./templates/CheatsheetPdfTemplate";
 import { GrammarPdfTemplate } from "./templates/GrammarPdfTemplate";
 
-// ==========================================
 // IMPOR DINAMIS & KONFIGURASI
-// ==========================================
+
 /**
  * Dynamic import for PDFDownloadLink.
  * Prevents server-side rendering issues with PDF engine.
@@ -48,9 +46,8 @@ const PDFDownloadLink = dynamic(
  }
 );
 
-// ==========================================
 // TIPE & ANTARMUKA (TYPES & INTERFACES)
-// ==========================================
+
 /**
  * Supported PDF template types.
  */
@@ -72,9 +69,8 @@ interface PdfGeneratorProps {
  category?: string;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * PdfGenerator component.
  * Renders a download button that triggers client-side PDF generation.

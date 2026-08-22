@@ -6,16 +6,14 @@
  * Secara periodik memeriksa ketersediaan kartu SRS yang telah jatuh tempo dan memicu notifikasi peramban.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { useEffect, useRef } from "react";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
+
 /**
  * Renderless component managing background SRS review reminders.
  * Periodically checks for due cards and triggers browser notifications.

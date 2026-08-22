@@ -44,7 +44,7 @@ export function VocabularyDrawer({ open, onClose, lessonId }: VocabularyDrawerPr
           >
             <div className="flex items-center justify-between border-b border-border/40 pb-4 mb-4">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-black uppercase tracking-widest text-foreground">
+                <span className="text-xs font-black uppercase tracking-wider text-foreground">
                   Kosakata Terkumpul
                 </span>
               </div>

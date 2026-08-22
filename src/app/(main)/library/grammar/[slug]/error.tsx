@@ -5,16 +5,13 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Alert, Refresh } from "@/components/ui/icons";
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * Error boundary component for grammar detail route.

@@ -228,7 +228,6 @@ export function useMockExamEngine(initialExam: ExamData) {
  isFinishingRef.current = false;
  }, [exam.source, exam.sessionId, exam.questions, exam.passingScore, addXP]);
 
-
  /**
  * Saves selected option index for the active question.
  */

@@ -6,9 +6,8 @@
  * Features 3x exponential backoff retry handling and multi-tab synchronization broadcast.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useMutation } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -21,9 +20,8 @@ import { buildLessonUpdates, buildSrsUpdates } from "@/lib/cloud-sync-payload";
 import { Inventory, Settings, LessonProgress } from "@/store/types";
 import { Session } from "@supabase/supabase-js";
 
-// ==========================================
 // Main Custom Hook
-// ==========================================
+
 /**
  * Custom hook to synchronize offline-first local study progress to Supabase cloud database.
  * Handles batch updates, exponential backoff retries, and multi-tab synchronization signals.

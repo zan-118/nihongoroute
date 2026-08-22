@@ -3,9 +3,9 @@
  * @description Social Hub page route component for NihongoRoute. Features Global Leaderboard and community interaction.
  */
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import { Metadata } from "next";
 import SocialView from "@/features/social/SocialView";
 import { Badge } from "@/components/ui/badge";

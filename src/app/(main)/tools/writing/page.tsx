@@ -6,9 +6,8 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import React, { Suspense } from "react";
 import { ChevronLeft, Download, Share } from "@/components/ui/icons";
 import Link from "next/link";

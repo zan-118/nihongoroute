@@ -6,9 +6,9 @@
 
 "use client";
 
-// ======================
+
 // IMPOR
-// ======================
+
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { Mic, Scan } from "@/components/ui/icons";
@@ -21,9 +21,9 @@ import { useUIStore } from "@/store/useUIStore";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-// ======================
+
 // TIPE DATA
-// ======================
+
 
 /**
  * Props for the ListeningPageClient component.
@@ -33,9 +33,9 @@ interface ListeningPageClientProps {
  data: ListeningTaskData;
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Komponen ListeningPageClient: Menyediakan antarmuka interaktif pemutar audio choukai 
@@ -121,7 +121,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/40 pb-6 mb-6">
  <div className="flex flex-col gap-1.5">
  <div className="flex items-center gap-2 flex-wrap">
- <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
+ <span className="text-[9px] font-black uppercase tracking-wider text-primary">
  Latihan Menyimak
  </span>
  {data.jlpt_level && (

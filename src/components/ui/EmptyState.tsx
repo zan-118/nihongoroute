@@ -5,17 +5,15 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import { m } from "framer-motion";
 import { Cup, IconType } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-// ======================
 // ANTARMUKA / TIPE DATA
-// ======================
+
 /**
  * Props for EmptyState component.
  */
@@ -34,9 +32,8 @@ interface EmptyStateProps {
  onClick?: () => void;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
+
 /**
  * Render animated empty state UI. Show icon, text, optional action button.
  */
@@ -55,9 +52,9 @@ export default function EmptyState({
  animate={{ opacity: 1, scale: 1 }}
  className="bg-card border border-border flex flex-col items-center justify-center p-8 md:p-12 text-center rounded-xl"
  >
- <div className="bg-primary/10 text-primary border border-primary/20 flex items-center justify-center size-24 rounded-lg mb-8">
- <Icon size={48} className="animate-premium-bounce" />
- </div>
+      <div className="bg-primary/10 text-primary border border-primary/20 flex items-center justify-center size-20 rounded-2xl mb-6">
+        <Icon size={40} />
+      </div>
  
  <h3 className="text-xl md:text-3xl text-foreground uppercase tracking-tight mb-3">
  {title}

@@ -3,9 +3,8 @@
  * @description Global search overlay modal component featuring local static navigation search and real-time Supabase dictionary queries for vocabulary, grammar, and kanji.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
@@ -13,9 +12,8 @@ import { m, AnimatePresence } from "framer-motion";
 import { Search, X, CommandLine, BookOpen, Trophy, Stack, Brain, Heart, Settings, Share, ArrowRight, Zap, Loader, FileText, Hashtag } from "@/components/ui/icons";
 import { useRouter } from "next/navigation";
 
-// ==========================================
 // Types & Interfaces
-// ==========================================
+
 /**
  * Search item structure.
  */
@@ -28,9 +26,8 @@ interface SearchItem {
  category: "Platform" | "Belajar" | "Sistem" | "Aksi Cepat" | "Kosakata" | "Tata Bahasa" | "Kanji" | "Pelajaran" | "Bacaan" | "Menyimak" | "Alat";
 }
 
-// ==========================================
 // DATA STATIS NAVIGASI PLATFORM
-// ==========================================
+
 /**
  * Static navigation items.
  */
@@ -58,9 +55,8 @@ const QUICK_ACTIONS = SEARCH_ITEMS.filter((item) => item.category === "Aksi Cepa
  */
 const searchCache = new Map<string, SearchItem[]>();
 
-// ==========================================
 // FUNGSI PENCARIAN DATABASE (SUPABASE)
-// ==========================================
+
 import { searchGlobal, flattenToolSearchResult } from "@/lib/tools/tools-search";
 
 import { ROUTES } from "@/lib/core/routes";
@@ -102,9 +98,8 @@ async function searchSupabase(query: string): Promise<SearchItem[]> {
  return mapped;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Global search modal component.
  * @param props Component properties.
@@ -184,9 +179,8 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
  return () => window.removeEventListener("keydown", handleKeyDown);
  }, [isOpen, onClose, displayedResults, activeIndex, handleSelect]);
 
- // ==========================================
  // RENDER KOMPONEN
- // ==========================================
+
  return (
  <AnimatePresence>
  {isOpen && (
@@ -196,7 +190,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
  <div className="p-6 border-b border-border flex items-center gap-4">
  {showSearching ? <Loader className="text-primary animate-spin" size={24} /> : <Search className="text-primary animate-pulse" size={24} />}
  <input autoFocus placeholder="Cari kosakata, tata bahasa, atau navigasi..." className="flex-1 bg-transparent border-none outline-none text-lg md:text-xl font-bold text-foreground placeholder:text-muted-foreground/40" value={query} onChange={e => { setQuery(e.target.value); setActiveIndex(0); if (e.target.value.trim() === "") setIsSearching(false); }} />
- <div className="hidden md:flex items-center gap-1 px-2 py-1 bg-muted border border-border rounded-lg text-xs font-black text-muted-foreground uppercase tracking-widest"><CommandLine size={10} /> K</div>
+ <div className="hidden md:flex items-center gap-1 px-2 py-1 bg-muted border border-border rounded-lg text-xs font-black text-muted-foreground uppercase tracking-wider"><CommandLine size={10} /> K</div>
  <button onClick={onClose} aria-label="Tutup pencarian" className="p-2 hover:bg-muted rounded-xl text-muted-foreground transition-all"><X size={20} /></button>
  </div>
  <div className="max-h-[60vh] overflow-y-auto p-4 custom-scrollbar">
@@ -204,12 +198,12 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
  <div className="space-y-2">
  {displayedResults.map((item, index) => (
  <div key={item.id + index} onMouseEnter={() => setActiveIndex(index)} onClick={() => handleSelect(item.href)}
- className={`flex items-center gap-4 p-4 rounded-lg cursor-pointer transition-all duration-300 relative group ${index === activeIndex ? 'bg-primary/10 border border-primary/20 shadow-[0_0_20px_hsl(var(--primary)/0.05)]' : 'hover:bg-muted/50 border border-transparent'}`}>
+ className={`flex items-center gap-4 p-4 rounded-lg cursor-pointer transition-all duration-300 relative group ${index === activeIndex ? 'bg-primary/10 border border-primary/20 shadow-sm' : 'hover:bg-muted/50 border border-transparent'}`}>
  <div className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-500 ${index === activeIndex ? 'bg-primary text-primary-foreground shadow-lg scale-110' : 'bg-muted text-muted-foreground'}`}><item.icon size={24} /></div>
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-3">
  <h4 className={`font-black text-sm md:text-base uppercase tracking-wider ${index === activeIndex ? 'text-foreground' : 'text-primary/70'}`}>{item.title}</h4>
- <span className="text-[8px] font-bold text-primary/50 uppercase tracking-[0.2em]">{item.category}</span>
+ <span className="text-[8px] font-bold text-primary/50 uppercase tracking-wider">{item.category}</span>
  </div>
  <p className="text-xs text-muted-foreground font-medium truncate mt-1">{item.description}</p>
  </div>
@@ -220,12 +214,12 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
  ) : (
  <div className="py-20 text-center">
  <div className="w-20 h-20 rounded-full bg-muted/50 flex items-center justify-center mx-auto mb-6 border border-border/50"><Search className="text-muted-foreground/20" size={32} /></div>
- <h3 className="text-lg uppercase tracking-[0.2em] text-foreground mb-2">Data Tidak Ditemukan</h3>
+ <h3 className="text-lg uppercase tracking-wider text-foreground mb-2">Data Tidak Ditemukan</h3>
  <p className="text-sm text-muted-foreground max-w-xs mx-auto">Coba gunakan kata kunci lain atau cari melalui navigasi utama.</p>
  </div>
  )}
  </div>
- <div className="p-4 bg-muted/30 border-t border-border flex items-center justify-between text-xs font-black uppercase tracking-widest text-muted-foreground">
+ <div className="p-4 bg-muted/30 border-t border-border flex items-center justify-between text-xs font-black uppercase tracking-wider text-muted-foreground">
  <div className="flex items-center gap-4">
  <span className="flex items-center gap-1.5"><ArrowRight size={10} className="rotate-90" /> Navigasi</span>
  <span className="flex items-center gap-1.5"><CommandLine size={10} className="rotate-90" /> Pilih</span>

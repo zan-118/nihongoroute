@@ -14,7 +14,7 @@ export interface ReadingMetricsInput {
   elapsedSeconds: number;
   /** Jumlah paragraf dari snapshot (bisa 0 bila belum tersimpan). */
   totalParagraphs: number;
-  /** Jumlah paragraf sebenarnya dari konten — fallback bila snapshot kosong. */
+  /** Jumlah paragraf sebenarnya dari konten: fallback bila snapshot kosong. */
   fallbackParagraphCount: number;
   /** Jumlah karakter artikel tanpa spasi. */
   characterCount: number;

@@ -3,16 +3,14 @@
  * @description Control panel component for selecting Japanese script type (Hiragana/Katakana), character categories, and launching Kana quizzes.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { Button } from "@/components/ui/button";
 import { Sword } from "@/components/ui/icons";
 import { KanaType, KanaCategory } from "./kana-data";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for KanaControls component.
  */
@@ -35,9 +33,8 @@ interface KanaControlsProps {
  themeAccent: string;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Control panel component. User select kana type and category. Start quiz.
  */
@@ -54,9 +51,8 @@ export function KanaControls({
  // Check if Hiragana selected. Toggle styles.
  const isHira = type === "hiragana";
 
- // ==========================================
  // RENDER KOMPONEN
- // ==========================================
+
  return (
  <div className="mb-6 md:mb-8 space-y-4 md:space-y-6">
  {/* Kana type selector (Hiragana / Katakana) */}

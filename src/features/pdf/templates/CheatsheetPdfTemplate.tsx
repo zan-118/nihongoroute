@@ -16,9 +16,7 @@ import {
  Font,
 } from "@react-pdf/renderer";
 
-// ======================
 // CONFIG / FONTS
-// ======================
 
 // Register Japanese font. Support kanji/kana rendering.
 Font.register({
@@ -29,9 +27,7 @@ Font.register({
  ],
 });
 
-// ======================
 // TYPES
-// ======================
 
 /**
  * Data structure for single cheatsheet item.
@@ -51,9 +47,7 @@ interface CheatsheetTemplateProps {
  category: string;
 }
 
-// ======================
 // STYLES
-// ======================
 
 /**
  * Stylesheet for PDF layout.

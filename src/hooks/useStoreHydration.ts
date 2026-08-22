@@ -4,14 +4,12 @@
  * Prevents race conditions during cloud synchronization before local storage is fully restored.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useState, useEffect } from "react";
 
-// ==========================================
 // Internal Interfaces
-// ==========================================
+
 /**
  * Minimal interface representing a Zustand store configured with persist middleware.
  */
@@ -24,9 +22,8 @@ interface ZustandPersistStore {
  };
 }
 
-// ==========================================
 // Main Custom Hook
-// ==========================================
+
 /**
  * Custom hook to track the hydration status of a persisted Zustand store.
  * Prevents race conditions by ensuring local state is fully loaded.

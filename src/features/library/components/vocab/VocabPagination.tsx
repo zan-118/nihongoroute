@@ -6,15 +6,13 @@
  * Menyediakan tombol akses cepat ke halaman awal, akhir, sebelumnya, berikutnya, serta nomor halaman aktif.
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import { ChevronLeft, ChevronRight, DoubleLeft, DoubleRight } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
-// ==========================================
 // ANTARMUKA & TIPE DATA
-// ==========================================
+
 /**
  * Props for VocabPagination component.
  */
@@ -29,9 +27,8 @@ interface VocabPaginationProps {
  onPageChange: (page: number) => void;
 }
 
-// ==========================================
 // KOMPONEN UTAMA: VocabPagination
-// ==========================================
+
 /**
  * Interactive pagination navigation component.
  * 
@@ -56,7 +53,7 @@ export function VocabPagination({ currentPage, totalPages, loading, onPageChange
  return (
  <div className="mt-12 md:mt-16 flex flex-col items-center gap-6 font-sans">
  {/* Label Halaman Aktif */}
- <div className="flex items-center gap-4 text-[10px] md:text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">
+ <div className="flex items-center gap-4 text-[10px] md:text-xs font-black text-muted-foreground uppercase tracking-wider">
  <span>
  Halaman <span className="text-primary">{currentPage}</span> dari {totalPages}
  </span>

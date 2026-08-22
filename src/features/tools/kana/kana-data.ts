@@ -3,9 +3,7 @@
  * @description Dataset static tabel karakter Jepang Hiragana dan Katakana (terbagi menjadi Seion, Dakuon, dan Yoon) beserta transliterasi Romaji.
  */
 
-// ==========================================
 // DATA UTAMA TABEL KANA (HIRAGANA & KATAKANA)
-// ==========================================
 
 /**
  * Static dataset for Japanese kana characters.
@@ -130,9 +128,7 @@ export const KANA_DATA = {
  },
 };
 
-// ==========================================
 // DEFINISI TIPE DATA (TYPES)
-// ==========================================
 
 /**
  * Target Japanese writing system type.

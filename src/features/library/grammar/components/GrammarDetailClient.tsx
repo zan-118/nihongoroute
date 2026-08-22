@@ -8,9 +8,8 @@
  * @module GrammarDetailClient
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { 
@@ -35,9 +34,7 @@ import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import dynamic from "next/dynamic";
 const PdfGenerator = dynamic(() => import("@/features/pdf/PdfGenerator"), { ssr: false });
 
-// ==========================================
 // ANTARMUKA & TIPE DATA
-// ==========================================
 
 /**
  * Props for GrammarDetailClient component.
@@ -47,9 +44,8 @@ interface GrammarDetailClientProps {
  article: LibraryItem;
 }
 
-// ==========================================
 // KOMPONEN UTAMA: GrammarDetailClient
-// ==========================================
+
 /**
  * Interactive client component for grammar detail page.
  * Handles TTS, sharing, and dynamic layout.
@@ -108,18 +104,18 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
  const getJLPTBadgeStyle = (level: string) => {
   const lvl = level.toUpperCase();
   if (lvl.includes("N1")) {
-   return "border-[hsl(var(--destructive)/0.3)] text-destructive bg-[hsl(var(--destructive)/0.05)] shadow-[0_0_15px_hsl(var(--destructive)/0.15)]";
+   return "border-destructive/30 text-destructive bg-destructive/5 shadow-sm";
   }
   if (lvl.includes("N2")) {
-   return "border-[hsl(var(--warning)/0.3)] text-warning bg-[hsl(var(--warning)/0.05)] shadow-[0_0_15px_hsl(var(--warning)/0.15)]";
+   return "border-warning/30 text-warning bg-muted/30 shadow-sm";
   }
   if (lvl.includes("N3")) {
-   return "border-[hsl(var(--secondary)/0.3)] text-secondary bg-[hsl(var(--secondary)/0.05)] shadow-[0_0_15px_hsl(var(--secondary)/0.15)]";
+   return "border-secondary/30 text-secondary bg-secondary/5 shadow-sm";
   }
   if (lvl.includes("N4")) {
-   return "border-[hsl(var(--primary)/0.3)] text-primary bg-[hsl(var(--primary)/0.05)] shadow-[0_0_15px_hsl(var(--primary)/0.15)]";
+   return "border-primary/30 text-primary bg-primary/5 shadow-sm";
   }
-  return "border-[hsl(var(--success)/0.3)] text-success bg-[hsl(var(--success)/0.05)] shadow-[0_0_15px_hsl(var(--success)/0.15)]";
+  return "border-border text-success bg-success/5 shadow-sm";
  };
 
  return (
@@ -136,11 +132,11 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
        <span>Modul Tata Bahasa Resmi</span>
       </div>
      </div>
-     <h1 className="text-3xl md:text-5xl lg:text-6xl text-foreground tracking-tight drop-shadow-[0_0_30px_hsl(var(--foreground)/0.05)] font-japanese">
+     <h1 className="text-3xl md:text-5xl lg:text-6xl text-foreground tracking-tight drop-shadow-sm font-japanese">
       {article.title}
      </h1>
      {article.meaning && (
-      <p className="mt-4 text-lg md:text-xl font-black text-primary leading-relaxed drop-shadow-[0_0_15px_hsl(var(--primary)/0.1)]">
+      <p className="mt-4 text-lg md:text-xl font-black text-primary leading-relaxed drop-shadow-sm">
        {article.meaning}
       </p>
      )}
@@ -181,13 +177,13 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
     </div>
    </div>
 
-   <div className="w-full h-px bg-primary/20 mb-12 shadow-[0_0_20px_hsl(var(--primary)/0.1)]" />
+   <div className="w-full h-px bg-primary/20 mb-12 shadow-sm" />
 
    {/* Tata Letak Konten Responsif: Tumpukan Vertikal Kolom Tunggal */}
    <div className="space-y-12">
     {/* Bento Struktur */}
     {article.formation && (
-     <Card className="p-8 md:p-10 bg-card/60 border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_hsl(var(--primary)/0.05)] transition-all duration-500 select-none glass">
+     <Card className="p-8 md:p-10 bg-card/60 border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-primary/40 shadow-sm transition-all duration-500 select-none glass">
       <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-primary">
        <Book size={180} />
       </div>
@@ -204,11 +200,11 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
         return (
          <React.Fragment key={`formation-${index}`}>
           {isBracketed ? (
-           <span className="inline-block px-3.5 py-1 text-sm md:text-base font-black rounded-xl bg-primary/10 border border-primary/20 text-primary font-sans mx-1 shadow-[0_0_15px_hsl(var(--primary)/0.08)] ">
+           <span className="inline-block px-3.5 py-1 text-sm md:text-base font-black rounded-xl bg-primary/10 border border-primary/20 text-primary font-sans mx-1 shadow-sm ">
             {cleanPart}
            </span>
           ) : (
-           <span className={part.includes("kata") || part.includes("bentuk") ? "text-muted-foreground/90 font-medium text-xl md:text-2xl font-sans" : "text-primary drop-shadow-[0_0_12px_hsl(var(--primary)/0.1)] font-bold font-japanese"}>
+           <span className={part.includes("kata") || part.includes("bentuk") ? "text-muted-foreground/90 font-medium text-xl md:text-2xl font-sans" : "text-primary drop-shadow-sm font-bold font-japanese"}>
             {part}
            </span>
           )}
@@ -254,7 +250,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
         return (
          <div 
           key={ex.id || ex.indonesian || i}
-          className="border border-border rounded-[1.8rem] p-6 md:p-8 bg-card/5 hover:border-primary/40 transition-all duration-300 shadow-[0_0_20px_hsl(var(--primary)/0.02)] relative overflow-hidden group flex items-start gap-4 md:gap-6 glass"
+          className="border border-border rounded-[1.8rem] p-6 md:p-8 bg-card/5 hover:border-primary/40 transition-all duration-300 shadow-sm relative overflow-hidden group flex items-start gap-4 md:gap-6 glass"
          >
           {/* Aksen Siber Kiri & Penomoran */}
           <div className="absolute top-0 left-0 w-1.5 h-full bg-primary/10 group-hover:bg-primary transition-all duration-300" />
@@ -290,8 +286,8 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
             onClick={() => playAudio(sentenceText, i, { voice: getDeterministicVoice(sentenceText) })}
             className={`h-12 w-12 rounded-[1.2rem] border flex items-center justify-center transition-all duration-300 relative group/btn ${
              isActive 
-             ? "border-primary bg-primary/10 text-primary shadow-[0_0_20px_hsl(var(--primary)/0.35)] animate-pulse" 
-             : "border-border bg-card/20 text-muted-foreground hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:shadow-[0_0_15px_hsl(var(--primary)/0.1)]"
+             ? "border-primary bg-primary/10 text-primary shadow-sm animate-pulse" 
+             : "border-border bg-card/20 text-muted-foreground hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:shadow-sm"
             }`}
             aria-label={isActive ? "Hentikan pengucapan kalimat" : "Dengarkan pengucapan kalimat"}
            >
@@ -309,8 +305,6 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
      </section>
     )}
 
-
-
     {/* Kelompok Tata Bahasa (Grammar Family) */}
     {Array.isArray(article.familyGrammarList) && article.familyGrammarList.length > 0 && (
      <section className="mt-8">
@@ -323,7 +317,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
        {(article.familyGrammarList as Array<{ id: string; slug: string; title: string; jlpt_level: string; meaning: string }> || []).map((item) => (
         <Link key={item.id} href={`/library/grammar/${item.slug}`} className="block group">
-         <Card className="p-5 bg-card/5 border border-border group-hover:border-primary/40 rounded-[1.2rem] transition-all duration-300 shadow-[0_0_15px_hsl(var(--primary)/0.02)] group-hover:shadow-[0_0_20px_hsl(var(--primary)/0.05)]">
+         <Card className="p-5 bg-card/5 border border-border group-hover:border-primary/40 rounded-[1.2rem] transition-all duration-300 shadow-sm group-hover:shadow-sm">
           <div className="flex justify-between items-center mb-2">
            <h3 className="text-foreground group-hover:text-primary transition-colors font-japanese">
             {item.title}
@@ -354,7 +348,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
        {(article.relatedGrammarList as Array<{ id: string; slug: string; title: string; jlpt_level: string; meaning: string }> || []).map((item) => (
         <Link key={item.id} href={`/library/grammar/${item.slug}`} className="block group">
-         <Card className="p-5 bg-card/5 border border-border group-hover:border-primary/40 rounded-[1.2rem] transition-all duration-300 shadow-[0_0_15px_hsl(var(--secondary)/0.02)] group-hover:shadow-[0_0_20px_hsl(var(--primary)/0.05)]">
+         <Card className="p-5 bg-card/5 border border-border group-hover:border-primary/40 rounded-[1.2rem] transition-all duration-300 shadow-sm group-hover:shadow-sm">
           <div className="flex justify-between items-center mb-2">
            <h3 className="text-foreground group-hover:text-primary transition-colors font-japanese">
             {item.title}
@@ -374,8 +368,6 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
     )}
    </div>
 
-
-
    {/* Footer Navigasi Modul */}
    <footer className="pt-12 border-t border-border/60 flex flex-col md:flex-row items-center justify-between gap-6 select-none">
     <Button 
@@ -391,7 +383,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
 
     <Button 
       asChild
-      className="w-full md:w-auto px-10 py-6 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-primary text-primary-foreground hover:bg-primary/95 transition-all shadow-[0_0_25px_hsl(var(--primary)/0.25)] hover:shadow-[0_0_40px_hsl(var(--primary)/0.4)] active:scale-95 flex items-center gap-2 group"
+      className="w-full md:w-auto px-10 py-6 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-primary text-primary-foreground hover:bg-primary/95 transition-all shadow-sm hover:shadow-sm active:scale-95 flex items-center gap-2 group"
       aria-label="Tandai materi ini selesai dan kembali"
     >
       <Link href="/library/grammar">

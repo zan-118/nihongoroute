@@ -31,7 +31,7 @@ export function ReviewQuestionOptions({ question, userAnswer }: ReviewQuestionOp
 
         // Style option based on correctness and user selection.
         let optionClass =
-          "border-border bg-[hsl(var(--muted)/0.5)] opacity-65 dark:bg-[hsl(var(--background)/0.1)]";
+          "border-border bg-muted/50 opacity-65 dark:bg-background/10";
         if (isCorrectAnswer) {
           optionClass =
             "border-success/30 bg-success/10 text-foreground opacity-100 shadow-sm";

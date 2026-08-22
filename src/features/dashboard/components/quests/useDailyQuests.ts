@@ -5,9 +5,8 @@
  * @module features/dashboard/components/quests
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { Quest } from "./types";
@@ -15,9 +14,8 @@ import { getTodayDateString } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
 import { DAILY_QUESTS_POOL, getTodayQuests } from "@/lib/constants/gamification";
 
-// ==========================================
 // Main Custom Hook
-// ==========================================
+
 /**
  * Manage daily quest progress and reward claims.
  * Connects user stats to offline-first quest system.

@@ -109,7 +109,7 @@ export function FeatureGrid() {
               <ruby className="text-2xl font-bold font-japanese tracking-wider text-foreground">
                 日本語 <rt className="text-xs text-muted-foreground">にほんご</rt>
               </ruby>
-              <span className="text-xs text-muted-foreground">Nihongo — Bahasa Jepang</span>
+              <span className="text-xs text-muted-foreground">Nihongo: Bahasa Jepang</span>
             </div>
           </Card>
 
@@ -132,7 +132,7 @@ export function FeatureGrid() {
                 猫
               </div>
               <div className="flex-1 flex flex-col gap-1">
-                <span className="text-xs font-semibold text-foreground">猫 (Neko) — Kucing</span>
+                <span className="text-xs font-semibold text-foreground">猫 (Neko): Kucing</span>
                 <span className="text-[11px] text-muted-foreground">Jadwal Pengulangan: 3 Hari Lagi</span>
               </div>
             </div>

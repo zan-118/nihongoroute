@@ -5,9 +5,8 @@
  * @description Oral pronunciation evaluation panel component for practicing Japanese speech using Web Speech API, featuring real-time audio waveform visualizers and Levenshtein Distance phonetic similarity scoring.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Mic, Restart, ChevronRight, Zap, Check, ErrorWarning } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
@@ -15,9 +14,8 @@ import { toast } from "sonner";
 import { useUserStore } from "@/store/useUserStore";
 import { sounds } from "@/lib/audio";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for PronunciationPanel component.
  */
@@ -36,9 +34,8 @@ interface PronunciationPanelProps {
  totalCards: number;
 }
 
-// ==========================================
 // Helper Functions
-// ==========================================
+
 /**
  * Convert Katakana characters to Hiragana.
  * @param str Input string containing Katakana.
@@ -100,9 +97,8 @@ function getSimilarityScore(target: string, input: string): number {
  return Math.round((1 - distance / maxLength) * 100);
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Interactive speech pronunciation evaluation panel utilizing Web Speech API.
  * Captures microphone audio, normalizes Hiragana/Katakana text, and computes similarity scores using Levenshtein Distance.

@@ -6,18 +6,15 @@
  * Mengelola transisi status permainan antara layar perkenalan (Intro), area permainan aktif (Playing), dan layar kekalahan/kemenangan (GameOver).
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { useSurvivalMode } from "./survival/useSurvivalMode";
 import { CardData } from "./survival/types";
 import { SurvivalIntro } from "./survival/SurvivalIntro";
 import { SurvivalGameOver } from "./survival/SurvivalGameOver";
 import { SurvivalPlaying } from "./survival/SurvivalPlaying";
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
 
 /**
  * Props for the SurvivalMode component.
@@ -27,9 +24,7 @@ interface SurvivalModeProps {
  cards: CardData[];
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * SurvivalMode orchestrates the survival game state machine.

@@ -6,18 +6,15 @@
  * @module features/dashboard/components/panels
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import dynamic from "next/dynamic";
 import DashboardStats from "../DashboardStats";
 import LearningTimelinePanel from "@/features/ecosystem/LearningTimelinePanel";
 import { Variants } from "framer-motion";
 import type { ReadinessCourseCategory } from "@/lib/readiness";
 
-// ==========================================
 // Lazy-Loaded Dynamic Components
-// ==========================================
 
 /**
  * Lazy-loaded Kanji progress grid component.
@@ -46,9 +43,7 @@ const JLPTReadinessCard = dynamic(() => import("../JLPTReadinessCard"), {
  loading: () => <div className="h-[460px] w-full animate-pulse bg-muted rounded-[34px]" />
 });
 
-// ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
-// ==========================================
 
 /**
  * Properties for the ProgressPanel component.
@@ -84,9 +79,7 @@ interface ProgressPanelProps {
  }>;
 }
 
-// ==========================================
 // KOMPONEN UTAMA
-// ==========================================
 
 /**
  * ProgressPanel component.
@@ -129,7 +122,7 @@ export function ProgressPanel({
  <div className="flex flex-col gap-2">
  <div className="flex items-center gap-[13px]">
  <div className="w-[34px] h-[1px] bg-primary/40" />
- <h2 className="text-[10px] uppercase tracking-[0.2em] text-primary">
+ <h2 className="text-[10px] uppercase tracking-wider text-primary">
  Analisis Mendalam
  </h2>
  </div>

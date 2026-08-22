@@ -6,9 +6,9 @@
 
 "use client";
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import React from "react";
 import Link from "next/link";
 import { m, Variants } from "framer-motion";
@@ -16,9 +16,9 @@ import { ArrowRight, BookOpen, GraduationCap } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { ROUTES } from "@/lib/routes";
 
-// ==========================================
+
 // Component Props Interface
-// ==========================================
+
 
 /**
  * Props for GeneralCategoryCard component.
@@ -37,9 +37,9 @@ interface GeneralCategoryCardProps {
  isFeatured?: boolean;
 }
 
-// ======================
+
 // KONSTANTA / COLORMAP
-// ======================
+
 
 /**
  * Map JLPT levels to CSS semantic color variables.
@@ -95,9 +95,9 @@ const colorMap: Record<string, {
  }
 };
 
-// ======================
+
 // KOMPONEN PEMBANTU MIKRO
-// ======================
+
 
 /**
  * Render single lesson preview item.
@@ -149,9 +149,9 @@ function PreviewItem({
  );
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Render course category card.
@@ -200,7 +200,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
  <Card
  onMouseEnter={() => setIsHovered(true)}
  onMouseLeave={() => setIsHovered(false)}
- className="flex flex-col h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl overflow-hidden group transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] relative shadow-[0_4px_25px_rgba(0,0,0,0.015)]"
+ className="flex flex-col h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl overflow-hidden group transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] relative shadow-sm"
  style={{
  borderColor: isHovered ? `hsl(${theme.glowColor} / 0.45)` : undefined
  }}
@@ -215,7 +215,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
  <div className="space-y-1.5 sm:space-y-2.5 min-w-0 flex-1">
  <div className="flex items-center gap-2">
  <div className="w-5 sm:w-8 h-[1px]" style={{ backgroundColor: `hsl(${theme.glowColor} / 0.4)` }} />
- <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] ${theme.accentText}`}>
+ <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-wider ${theme.accentText}`}>
  {cat.lessonCount || 0} Pelajaran • {isJlpt ? "Jalur JLPT" : "Modul Spesialis"}
  </span>
  </div>
@@ -243,7 +243,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
  {cat.description || "Tingkatkan kompetensi penguasaan bahasa Jepang terarah melalui kurikulum premium kami."}
  </p>
 
- {/* Daftar Pelajaran (Previews) — Compact & Adaptive */}
+ {/* Daftar Pelajaran (Previews): Compact & Adaptive */}
  {cat.previews && cat.previews.length > 0 && (
  <div className="mb-6 sm:mb-8 relative z-10">
  {/* Mobile: horizontal scroll, Desktop: 2-col or 3-col bento grid layout */}
@@ -264,7 +264,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
  <div className="mt-auto pt-6 border-t border-border/60 relative z-10">
  <Link
  href={ROUTES.COURSES.CATEGORY(cat.slug)}
- className="inline-flex items-center gap-2.5 sm:gap-3 px-5 py-3 sm:px-7 py-3.5 rounded-lg rounded-br-none font-black uppercase tracking-widest text-[9px] sm:text-[10px] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-95 group/btn border shadow-sm"
+ className="inline-flex items-center gap-2.5 sm:gap-3 px-5 py-3 sm:px-7 py-3.5 rounded-lg rounded-br-none font-black uppercase tracking-wider text-[9px] sm:text-[10px] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-95 group/btn border shadow-sm"
  style={{
  // Dynamic button background and text color based on hover state
  backgroundColor: isHovered ? `hsl(${theme.glowColor})` : 'hsl(var(--foreground))',

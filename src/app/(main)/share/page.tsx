@@ -3,17 +3,17 @@
  * @description Halaman berbagi progres dan sertifikat kelulusan ujian NihongoRoute.
  */
 
-// ======================
+
 // IMPOR
-// ======================
+
 import type { Metadata } from "next";
 import ShareView from "@/features/share/ShareView";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";
-// ======================
+
 // KONFIGURASI METADATA
-// ======================
+
 /**
  * Metadata for Share page.
  * Disable search indexing via noIndex.
@@ -27,9 +27,9 @@ export const metadata: Metadata = {
  }),
 };
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 /**
  * Share page entry point.
  * Render ShareClient component.

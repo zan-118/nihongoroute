@@ -6,9 +6,8 @@
  * Menyediakan antarmuka interaktif bagi pengguna untuk menulis, memperbarui, atau menghapus catatan pengingat asosiatif kosakata mereka sendiri.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { useState, useEffect, useCallback } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Lightbulb, Save, Check, Edit, Brain } from "@/components/ui/icons";
@@ -16,9 +15,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useSRSStore } from "@/store/useSRSStore";
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
 
 /**
  * Properties for MnemonicEditor.
@@ -40,9 +37,9 @@ interface MnemonicEditorProps {
  * @param props - Component properties.
  * @returns React element or null.
  */
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 export function MnemonicEditor({ wordId, className, compact = false }: MnemonicEditorProps) {
  // Get SRS state and update action.
  const srs = useSRSStore((s) => s.srs);
@@ -192,7 +189,7 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
  className={cn(
  "h-7 px-4 text-[10px] font-black uppercase tracking-wider rounded-lg",
  "bg-primary/90 hover:bg-primary text-primary-foreground",
- "transition-all duration-200 shadow-[0_0_15px_hsl(var(--primary)/0.3)]",
+ "transition-all duration-200 shadow-sm",
  "disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
  )}
  >

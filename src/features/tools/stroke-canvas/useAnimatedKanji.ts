@@ -3,14 +3,12 @@
  * @description Hook khusus untuk memuat SVG KanjiVG dan menganimasikan penulisan stroke order kanji.
  */
 
-// ==========================================
 // IMPORT & DEPENDENSI
-// ==========================================
+
 import { useEffect, useRef, useState } from "react";
 
-// ==========================================
 // HOOK UTAMA
-// ==========================================
+
 export function useAnimatedKanji(character: string, triggerKey: number, color: string) {
  const containerRef = useRef<HTMLDivElement>(null);
  const [error, setError] = useState(false);

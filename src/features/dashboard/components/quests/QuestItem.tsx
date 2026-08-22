@@ -4,9 +4,8 @@
  * @module features/dashboard/components/quests
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,9 +14,8 @@ import { Progress } from "@/components/ui/progress";
 import { Check, Lock } from "@/components/ui/icons";
 import { Quest } from "./types";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for QuestItem component.
  */
@@ -34,9 +32,8 @@ interface QuestItemProps {
  onClaim: (quest: Quest) => void;
 }
 
-// ==========================================
 // KOMPONEN UTAMA
-// ==========================================
+
 /**
  * Renders individual quest card showing progress, status, and claim action.
  */
@@ -73,7 +70,7 @@ export function QuestItem({
  exit={{ opacity: 0, scale: 1.05 }}
  className="absolute inset-0 flex items-center justify-center bg-success/10 rounded-lg z-20"
  >
- <span className="text-success font-black tracking-widest uppercase text-xs">
+ <span className="text-success font-black tracking-wider uppercase text-xs">
  BERHASIL! +{quest.rewardXP} XP
  </span>
  </m.div>
@@ -101,7 +98,7 @@ export function QuestItem({
  >
  {quest.title}
  </h4>
- <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${isCompleted ? 'text-success/70' : 'text-primary/60'}`}>
+ <p className={`text-xs font-bold uppercase tracking-wider mt-1 ${isCompleted ? 'text-success/70' : 'text-primary/60'}`}>
  +{quest.rewardXP} XP
  </p>
  </div>
@@ -109,13 +106,13 @@ export function QuestItem({
 
  {/* STATUS & CTA KLAIM (KANAN) */}
  {isClaimed ? (
- <div className="text-muted-foreground font-bold text-xs uppercase tracking-widest flex items-center gap-1.5 shrink-0">
+ <div className="text-muted-foreground font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shrink-0">
  <Lock size={12} /> Diambil
  </div>
  ) : isCompleted ? (
  <Button
  onClick={() => onClaim(quest)}
- className="h-auto text-xs font-black text-success-foreground bg-success hover:bg-success/90 uppercase tracking-widest px-4 py-2 rounded-xl transition-all border-none shrink-0"
+ className="h-auto text-xs font-black text-success-foreground bg-success hover:bg-success/90 uppercase tracking-wider px-4 py-2 rounded-xl transition-all border-none shrink-0"
  >
  Ambil
  </Button>

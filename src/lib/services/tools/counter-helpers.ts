@@ -6,16 +6,10 @@
 
 import type { CounterWord } from "@/lib/counter-trainer";
 
-// ======================================================
 // CONSTANTS
-// ======================================================
 
 /** Valid JLPT levels for counter trainer. */
 const COUNTER_LEVELS = ["N5", "N4"] as const;
-
-// ======================================================
-// TYPES
-// ======================================================
 
 /** Result dari deteksi counter pada sebuah kata. */
 export interface CounterDetectionResult {
@@ -25,9 +19,7 @@ export interface CounterDetectionResult {
  explanation: string;
 }
 
-// ======================================================
 // LEVEL CASTER
-// ======================================================
 
 /**
  * Cast string to Counter level. Fallback to N4.
@@ -40,9 +32,7 @@ export function asCounterLevel(value: string | null | undefined): "N5" | "N4" {
  return COUNTER_LEVELS.includes(upper as "N5" | "N4") ? (upper as "N5" | "N4") : "N4";
 }
 
-// ======================================================
 // COUNTER DETECTION
-// ======================================================
 
 /**
  * Detect counter category and metadata based on kanji characters in word.

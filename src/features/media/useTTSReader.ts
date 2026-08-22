@@ -5,15 +5,13 @@
  * @description Custom hook for reading Japanese text aloud using Text-to-Speech (TTS) hybrid fallback strategies.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useState, useEffect, useRef } from "react";
 import { fetchTTSAudio, speakWithWebSpeech, detectVoice, TTS_VOICES, type TtsVoice } from "@/lib/tts";
 
-// ==========================================
 // Main Custom Hook
-// ==========================================
+
 /**
  * Hook for Japanese text-.
  * Uses hybrid strategy with caching.

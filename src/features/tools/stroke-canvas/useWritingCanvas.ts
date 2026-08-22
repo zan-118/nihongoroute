@@ -5,16 +5,14 @@
  * @description Hook kustom untuk mengelola kanvas coretan (canvas drawing) interaktif melatih penulisan Hiragana, Katakana, dan Kanji.
  */
 
-// ==========================================
 // IMPORT & DEPENDENSI
-// ==========================================
+
 import { useRef, useState, useEffect, useCallback } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { sounds } from "@/lib/audio";
 
-// ==========================================
 // TIPE DATA / INTERFACE
-// ==========================================
+
 export interface UseWritingCanvasProps {
  /** Character to draw. */
  character: string;
@@ -59,9 +57,8 @@ const getShadowColor = (colorStr: string, opacity: number): string => {
  return resolved;
 };
 
-// ==========================================
 // HOOK UTAMA
-// ==========================================
+
 export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasProps) {
  const canvasRef = useRef<HTMLCanvasElement>(null);
  const containerRef = useRef<HTMLDivElement>(null);

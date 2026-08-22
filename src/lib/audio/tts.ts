@@ -110,11 +110,7 @@ export const MALE_VOICES: readonly TtsVoice[] = [
  TTS_VOICES.FAISAL,
 ];
 
-
-
-// ============================================
 // DETEKSI GENDER BERDASARKAN NAMA PEMBICARA
-// ============================================
 
 /**
  * Keywords indicating female speakers.
@@ -242,9 +238,7 @@ function buildCacheKey(text: string, voice: TtsVoice, rate: string): string {
  return `tts:${voice}:${rate}:${text}`;
 }
 
-// ============================================
 // FETCH AUDIO DARI API ROUTE + CACHE
-// ============================================
 
 /**
  * Fetches TTS audio URL. Caches response in CacheStorage.
@@ -316,9 +310,7 @@ export async function fetchTTSAudio(
  return null;
 }
 
-// ============================================
 // FALLBACK: WEB SPEECH API
-// ============================================
 
 /**
  * Plays text using Web Speech API fallback.

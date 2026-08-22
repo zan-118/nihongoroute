@@ -6,9 +6,8 @@
  * Mengelola tampilan tombol masuk/daftar untuk tamu, dan avatar bergradasi dengan menu dropdown profil/pengaturan bagi pengguna terotentikasi.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { useNavbar } from "@/components/layout/navigation/useNavbar";
 import { 
  User, 
@@ -30,9 +29,8 @@ import {
 import Link from "next/link";
 
 import { ROUTES } from "@/lib/core/routes";
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * User navigation dropdown component.
@@ -49,7 +47,7 @@ export default function UserNav() {
  <Button 
  asChild 
  variant="ghost" 
- className="hidden sm:flex h-10 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-muted"
+ className="hidden sm:flex h-10 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-muted"
  >
  <Link href="/login">Masuk</Link>
  </Button>
@@ -70,7 +68,7 @@ export default function UserNav() {
  return (
  <DropdownMenu>
  <DropdownMenuTrigger asChild>
- <button type="button" className="min-h-11 flex items-center gap-1 sm:gap-3 p-1 pr-1 sm:pr-3 rounded-xl bg-card border border-border hover:border-primary/30 transition-all group outline-none">
+        <button type="button" className="min-h-11 flex items-center gap-1 sm:gap-3 p-1 pr-1 sm:pr-3 rounded-xl bg-card border border-border hover:border-primary/30 transition-all group outline-none focus-visible:ring-2 focus-visible:ring-primary">
  <div className="size-8 rounded-xl bg-linear-to-br from-primary to-accent-violet flex items-center justify-center text-primary-foreground text-xs font-black shadow-md group-hover:scale-105 transition-transform">
  {/* Get first letter for avatar fallback */}
  {userFullName ? userFullName.charAt(0).toUpperCase() : "U"}
@@ -81,7 +79,7 @@ export default function UserNav() {
  </span>
  <div className="flex items-center gap-1">
  <Shield size={8} className="text-primary" />
- <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Level {level}</span>
+ <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider">Level {level}</span>
  </div>
  </div>
  <ChevronDown size={14} className="hidden sm:block text-muted-foreground group-hover:text-primary transition-colors ml-1" />
@@ -99,13 +97,13 @@ export default function UserNav() {
  <DropdownMenuItem asChild className="rounded-xl cursor-pointer hover:bg-primary/15 hover:text-primary focus:bg-primary/15 focus:text-primary transition-colors py-2.5">
  <Link href={ROUTES.SETTINGS} className="flex items-center">
  <Settings size={16} className="mr-3" />
- <span className="text-xs font-bold uppercase tracking-widest">Pengaturan Akun</span>
+ <span className="text-xs font-bold uppercase tracking-wider">Pengaturan Akun</span>
  </Link>
  </DropdownMenuItem>
  <DropdownMenuItem asChild className="rounded-xl cursor-pointer hover:bg-primary/15 hover:text-primary focus:bg-primary/15 focus:text-primary transition-colors py-2.5">
  <Link href="/dashboard" className="flex items-center">
  <User size={16} className="mr-3" />
- <span className="text-xs font-bold uppercase tracking-widest">Profil Belajar</span>
+ <span className="text-xs font-bold uppercase tracking-wider">Profil Belajar</span>
  </Link>
  </DropdownMenuItem>
  </div>
@@ -116,7 +114,7 @@ export default function UserNav() {
  className="rounded-xl cursor-pointer bg-destructive/5 hover:bg-destructive hover:text-destructive-foreground transition-all py-2.5 text-destructive"
  >
  <LoginBox size={16} className="mr-3" />
- <span className="text-xs font-black uppercase tracking-widest">Keluar Akun</span>
+ <span className="text-xs font-black uppercase tracking-wider">Keluar Akun</span>
  </DropdownMenuItem>
  </div>
  </DropdownMenuContent>

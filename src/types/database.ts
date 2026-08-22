@@ -3,10 +3,6 @@
  * @description TypeScript type definitions for Supabase PostgreSQL database schemas. Standardizes JSONB column types for vocabulary, kanji, grammar, reading materials, and quizzes to ensure type safety.
  */
 
-// ==========================================
-// Database Interfaces & Type Declarations
-// ==========================================
-
 /**
  * Represents example sentence with translations and phonetic guides.
  */

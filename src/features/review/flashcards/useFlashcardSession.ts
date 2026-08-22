@@ -5,9 +5,8 @@
  * @description Custom hook managing JLPT flashcard session initialization from URL search params (`?category=...&mode=...`) and fetching flashcard data asynchronously via Server Actions.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getFlashcardsByMode } from "@/actions/flashcard.actions";
@@ -15,18 +14,14 @@ import { MasterCardData } from "./master/types";
 import { toast } from "sonner";
 import { shuffleArray } from "@/lib/utils";
 
-// ==========================================
 // Type Declarations
-// ==========================================
 
 /**
  * Supported flashcard practice modes.
  */
 export type ModeLatihan = "vocab" | "kanji" | "survival" | "pronunciation" | "sentence";
 
-// ==========================================
 // CUSTOM HOOK UTAMA
-// ==========================================
 
 /**
  * Manage flashcard session state, URL query parameters, and data fetching.

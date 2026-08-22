@@ -5,9 +5,8 @@
 
 "use server";
 
-// ======================
 // IMPORTS
-// ======================
+
 import {
  getCheatsheetsList,
  getContentBySlugOrId
@@ -34,9 +33,7 @@ function normalizeSheetItems(items: unknown): SheetItem[] {
   .filter((item) => item.label || item.jp);
 }
 
-// ======================
 // SERVER ACTIONS
-// ======================
 
 /**
  * Fetches all cheatsheets from the database.

@@ -6,9 +6,8 @@
  * Sembunyi di halaman reading/listening — kontrol audio, mode teks, dan terjemahan sudah disediakan oleh halaman itu sendiri (mis. ReadingControlBar).
  */
 
-// ==========================================
 // IMPORT & DEPENDENSI
-// ==========================================
+
 import { useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Add, Message, Cup, X } from "@/components/ui/icons";
@@ -17,9 +16,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import FeedbackWidget from "@/features/support/feedback/FeedbackWidget";
 
-// ==========================================
 // KOMPONEN UTAMA
-// ==========================================
+
 /**
  * Global Floating Action Button (FAB) component.
  * Shows feedback and donation actions with an animated expandable menu.
@@ -53,21 +51,21 @@ export default function FloatingActions() {
                     setShowFeedbackDialog(true);
                     setIsOpen(false);
                   }}
-                  className="button-outline-premium rounded-lg px-4 py-6 flex items-center gap-3 h-auto group"
+                  className="button-outline-premium rounded-xl px-4 py-3 min-h-[44px] flex items-center gap-3 h-auto group shadow-md"
                 >
-                  <span className="text-xs font-black uppercase tracking-widest hidden md:block">Feedback</span>
-                  <Message size={20} className="text-primary group-hover:text-current" />
+                  <span className="text-xs font-bold uppercase tracking-wider">Feedback</span>
+                  <Message size={18} className="text-primary group-hover:text-current" />
                 </Button>
               </m.div>
 
               <m.div whileHover={{ x: -5 }}>
                 <Button
                   asChild
-                  className="rounded-lg px-4 py-6 flex items-center gap-3 h-auto group border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                  className="rounded-xl px-4 py-3 min-h-[44px] flex items-center gap-3 h-auto group border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground shadow-md"
                 >
                   <Link href="/support">
-                    <span className="text-xs font-black uppercase tracking-widest hidden md:block">Donasi</span>
-                    <Cup size={20} className="text-destructive group-hover:text-current" />
+                    <span className="text-xs font-bold uppercase tracking-wider">Donasi</span>
+                    <Cup size={18} className="text-destructive group-hover:text-current" />
                   </Link>
                 </Button>
               </m.div>

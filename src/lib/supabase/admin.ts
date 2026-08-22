@@ -4,14 +4,12 @@
  * SERVER-SIDE ONLY (Server Actions / Route Handlers). Must NEVER be imported into client components.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-// ==========================================
 // Supabase Admin Client Initializer
-// ==========================================
+
 /**
  * Create Supabase client with service role key.
  * Bypass RLS. Server-side only. Do not expose to client.

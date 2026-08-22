@@ -3,15 +3,13 @@
  * @description Visual component rendering animated Kanji stroke order diagrams inside drawing canvas.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import React from "react";
 import { useAnimatedKanji } from "./useAnimatedKanji";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 export interface AnimatedKanjiProps {
  /** Kanji character to animate. */
  character: string;
@@ -21,9 +19,8 @@ export interface AnimatedKanjiProps {
  color?: string;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 export function AnimatedKanji({
  character,
  triggerKey,

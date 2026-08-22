@@ -5,9 +5,9 @@
 
 "use client";
 
-// ======================
+
 // IMPOR
-// ======================
+
 import React, { useState, useEffect, useCallback } from "react";
 import { Download, Loader, Check, Cloud } from "@/components/ui/icons";
 import { sounds } from "@/lib/audio";
@@ -29,9 +29,9 @@ interface DownloadOfflineButtonProps {
  lesson: LessonDataPayload;
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Cyber-Glass button. Download lesson assets for offline use.
@@ -102,11 +102,11 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
  : "Unduh materi untuk luring"
  }
  className={cn(
- "relative overflow-hidden flex items-center justify-center gap-3 px-6 py-3 rounded-lg rounded-br-none text-xs font-black uppercase tracking-widest transition-all duration-500 shadow-sm",
+ "relative overflow-hidden flex items-center justify-center gap-3 px-6 py-3 rounded-lg rounded-br-none text-xs font-black uppercase tracking-wider transition-all duration-500 shadow-sm",
  "border bg-card border-border/80 active:scale-95",
- status === "completed" && "bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.2)] text-success cursor-default active:scale-100",
- status === "downloading" && "border-[hsl(var(--primary)/0.3)] text-primary cursor-default",
- status === "error" && "border-[hsl(var(--destructive)/0.2)] text-destructive bg-[hsl(var(--destructive)/0.05)] hover:bg-[hsl(var(--destructive)/0.1)]"
+ status === "completed" && "bg-success/10 border-success/20 text-success cursor-default active:scale-100",
+ status === "downloading" && "border-primary/30 text-primary cursor-default",
+ status === "error" && "border-destructive/20 text-destructive bg-destructive/5 hover:bg-destructive/10"
  )}
  >
  {/* Efek Pendar Latar Belakang Pemuat Visual */}

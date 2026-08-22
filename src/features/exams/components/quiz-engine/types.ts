@@ -3,9 +3,7 @@
  * @description Definisi tipe data (interfaces) untuk kuis (Quiz Engine) NihongoRoute.
  */
 
-// ======================
 // ANTARMUKA / TIPE DATA
-// ======================
 
 /**
  * Represents single quiz question.

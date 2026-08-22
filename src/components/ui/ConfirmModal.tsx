@@ -5,16 +5,14 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Alert } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
-// ======================
 // ANTARMUKA / TIPE DATA
-// ======================
+
 /**
  * Props for ConfirmModal component.
  */
@@ -37,9 +35,8 @@ interface ConfirmModalProps {
  isDestructive?: boolean;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
+
 /**
  * Premium confirmation dialog modal.
  * Used for critical or destructive actions.
@@ -62,18 +59,18 @@ export default function ConfirmModal({
  <DialogPrimitive.Overlay className="fixed inset-0 z-[200] bg-background/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
  
  {/* Kontainer Modal dengan perangkap fokus dan transisi ease-out kustom yang terinspirasi pegas */}
- <DialogPrimitive.Content className="bg-card border border-border fixed left-[50%] top-[50%] z-[200] w-[calc(100%-2rem)] max-w-md translate-x-[-50%] translate-y-[-50%] p-5 md:p-8 rounded-[14px] shadow-[0_12px_32px_rgba(0,0,0,0.12)] overflow-hidden focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
+ <DialogPrimitive.Content className="bg-card border border-border fixed left-[50%] top-[50%] z-[200] w-[calc(100%-2rem)] max-w-md translate-x-[-50%] translate-y-[-50%] p-5 md:p-8 rounded-[14px] shadow-lg overflow-hidden focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
  {/* Batang batas atas aksen */}
  {/* Dynamic accent bar color based on action severity */}
  <div className={`absolute top-0 left-0 w-full h-[2px] ${isDestructive ? 'bg-destructive' : 'bg-primary'}`} />
  
  <div className="flex flex-col items-center text-center pt-2">
  {/* Dynamic icon container styling */}
- <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 border ${
- isDestructive 
- ? 'bg-destructive/10 border-destructive/30 text-destructive shadow-lg shadow-destructive/10' 
- : 'bg-primary/10 border-primary/30 text-primary shadow-lg shadow-primary/10'
- }`}>
+          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-5 border ${
+            isDestructive 
+              ? 'bg-destructive/10 border-destructive/20 text-destructive' 
+              : 'bg-primary/10 border-primary/20 text-primary'
+          }`}>
  <Alert size={32} aria-hidden="true" />
  </div>
  

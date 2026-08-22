@@ -12,7 +12,7 @@ export function TableBlock({ block }: TableBlockProps) {
  const hasHeaders = headers.some(h => h.trim() !== "");
 
  return (
- <div className="my-4 overflow-x-auto rounded-lg border border-border bg-card/5 shadow-[0_0_20px_hsl(var(--primary)/0.02)] select-text">
+ <div className="my-4 overflow-x-auto rounded-lg border border-border bg-card/5 shadow-sm select-text">
  <table className="w-full text-left border-collapse text-[13px] md:text-sm">
  {hasHeaders && (
  <thead>

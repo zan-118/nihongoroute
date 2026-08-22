@@ -172,7 +172,7 @@ function ReadingWorkspace({
  <div ref={containerRef} className="relative w-full">
  {/* Scroll Progress Bar at the top of viewport */}
  <m.div
- className="fixed top-0 left-0 right-0 h-1 bg-primary origin-left z-50 shadow-[0_2px_10px_hsl(var(--primary)/0.3)]"
+ className="fixed top-0 left-0 right-0 h-1 bg-primary origin-left z-50 shadow-sm"
  style={{ scaleX }}
  />
 

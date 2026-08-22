@@ -4,9 +4,6 @@
  * @module AppLayout
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
@@ -49,10 +46,6 @@ import {
  organizationJsonLd,
  websiteJsonLd,
 } from "@/lib/seo";
-
-// ======================
-// KONFIGURASI / KONSTANTA
-// ======================
 
 /**
  * Konfigurasi viewport untuk mengoptimalkan tampilan di perangkat seluler.
@@ -123,10 +116,6 @@ export const metadata: Metadata = {
  },
 };
 
-// ======================
-// EKSEKUSI UTAMA
-// ======================
-
 /**
  * RootLayout: Komponen pembungkus utama aplikasi.
  *
@@ -171,22 +160,19 @@ export default function RootLayout({
  theme="system"
  position="top-center"
  offset={80} // Ofset untuk membersihkan Topbar (64px + 16px)
- toastOptions={{
- style: {
- background: "hsl(var(--background)/0.9)",
- border: "1px solid hsl(var(--foreground)/0.1)",
- backdropFilter: "blur(16px)",
- color: "hsl(var(--foreground))",
- borderRadius: "16px",
- },
- classNames: {
- success:
- "border-primary/50 shadow-[0_0_20px_hsl(var(--primary)/0.2)]",
- error:
- "border-destructive/50 shadow-[0_0_20px_hsl(var(--destructive)/0.2)]",
- },
- duration: 4000,
- }}
+        toastOptions={{
+          style: {
+            background: "hsl(var(--card))",
+            border: "1px solid hsl(var(--border))",
+            color: "hsl(var(--foreground))",
+            borderRadius: "var(--radius)",
+          },
+          classNames: {
+            success: "border-primary/50 text-foreground",
+            error: "border-destructive/50 text-foreground",
+          },
+          duration: 4000,
+        }}
  />
  {/* Load Vercel analytics and Speed Insights */}
  <CloudflareAnalytics />

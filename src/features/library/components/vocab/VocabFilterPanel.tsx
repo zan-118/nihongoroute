@@ -98,7 +98,7 @@ export function VocabFilterPanel({
 
  {/* Part of Speech Dropdown */}
  <div className="lg:col-span-4 space-y-3">
- <span className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/80 font-mono block">
+ <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground/80 font-mono block">
  JENIS KATA (HINSHI)
  </span>
  <select

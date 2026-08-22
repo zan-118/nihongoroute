@@ -7,18 +7,15 @@
  * dan memformat kartu kosakata sebelum permainan dimulai.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { getFlashcardsByMode } from "@/actions/flashcard.actions";
 import { CardData } from "./types";
 import { toast } from "sonner";
 
-// ======================
 // HOOK UTAMA
-// ======================
 
 /**
  * Hook manages survival game setup state.

@@ -5,9 +5,9 @@
  * @module GrammarDetailPage
  */
 
-// ======================
+
 // IMPOR
-// ======================
+
 import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { getGrammarStaticSlugs } from "@/actions/grammar.actions";
@@ -22,9 +22,9 @@ import {
  encodeRouteSegment,
 } from "@/lib/seo";
 
-// ======================
+
 // METADATA SEO
-// ======================
+
 
 /**
  * Generate SEO metadata for grammar detail page.
@@ -83,9 +83,9 @@ export async function generateStaticParams() {
  return await getGrammarStaticSlugs();
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Grammar detail page component.
@@ -103,17 +103,17 @@ export default async function GrammarDetailPage({
  // Decode slug for database query.
  const decodedSlug = decodeURIComponent(slug);
 
- // ======================
+
  // OPERASI DATABASE
- // ======================
+
  // Fetch grammar article.
  const article = await getLibraryItemBySlug("grammar", decodedSlug);
  // Trigger 404 if article missing.
  if (!article) notFound();
 
- // ======================
+
  // RENDER UTAMA
- // ======================
+
  // Construct canonical URL path.
  const articlePath = `/library/grammar/${encodeRouteSegment(String(article.slug || decodedSlug))}`;
  // Fallback description if notes empty.
@@ -154,7 +154,7 @@ export default async function GrammarDetailPage({
  <div className="absolute bottom-[10%] -right-[10%] size-[35%] bg-success/5 blur-[65px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
  
  {/* Background Neural Overlays */}
- <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--foreground)/0.01)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
+ <div className="absolute inset-0 bg-muted/30 bg-[size:60px_60px] pointer-events-none z-0" />
 
  <div className="max-w-4xl mx-auto w-full relative z-10 pt-8 md:pt-16">
  {/* Client Side Detail & TTS Interactions */}

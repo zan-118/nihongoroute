@@ -41,7 +41,7 @@ export function JlptQuizPlayground() {
  className={`py-1.5 px-3 rounded-lg border text-xs font-bold transition-all ${
  selected === opt.key
  ? opt.key === "A"
- ? "bg-success/15 border-success text-success shadow-[0_2px_8px_hsl(var(--success)/0.2)]"
+ ? "bg-success/15 border-success text-success shadow-sm"
  : "bg-destructive/15 border-destructive text-destructive"
  : "border-border bg-background/50 hover:border-foreground/20 text-muted-foreground hover:text-foreground"
  }`}

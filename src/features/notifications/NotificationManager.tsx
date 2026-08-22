@@ -6,9 +6,8 @@
  * Menyediakan sakelar pengaktifan pengingat SRS dan pengujian pengiriman notifikasi instan melalui Service Worker.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { useState, useEffect } from "react";
 import { Notification as BellIcon, NotificationOff, NotificationRing, Settings } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
@@ -17,9 +16,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useUIStore } from "@/store/useUIStore";
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * NotificationManager component.

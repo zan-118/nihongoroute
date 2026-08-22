@@ -5,9 +5,8 @@
  * @description Floating smart dictionary popup (Smart Jisho) detecting Japanese text selection in real-time to display vocabulary definitions and SRS status.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useEffect, useState, useRef } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
@@ -17,9 +16,8 @@ import { TTSReader } from "@/features/media";
 import AddToSRSButton from "@/features/srs/actions/AddToSRSButton";
 import { lookupDictionaryWordAction } from "@/actions/dictionary.actions";
 
-// ==========================================
 // Types & Interfaces
-// ==========================================
+
 /**
  * Dictionary query result structure.
  */
@@ -31,9 +29,8 @@ interface DictionaryResult {
  id?: string;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 /**
  * Floating dictionary popup component. Detects Japanese text selection. Shows definition and SRS options.
  */
@@ -43,9 +40,8 @@ export default function DictionaryPopup() {
  const [loading, setLoading] = useState(false);
  const popupRef = useRef<HTMLDivElement>(null);
 
- // ==========================================
  // METODE PENCARIAN KATA (LOOKUP)
- // ==========================================
+
  /**
  * Fetch word definition from database.
  * @param text Selected Japanese text.
@@ -83,9 +79,8 @@ export default function DictionaryPopup() {
  }
  };
 
- // ==========================================
  // EFEK SAMPING (EFFECTS)
- // ==========================================
+
  useEffect(() => {
  /**
  * Handle text selection event.
@@ -129,9 +124,8 @@ export default function DictionaryPopup() {
  };
  }, []);
 
- // ==========================================
  // RENDER KOMPONEN
- // ==========================================
+
  return (
  <AnimatePresence>
  {selection && (

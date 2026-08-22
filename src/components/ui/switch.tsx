@@ -28,7 +28,7 @@ const Switch = React.forwardRef<
  <SwitchPrimitives.Thumb
  className={cn(
  // Thumb slider. Translate X position based on checked state.
- "pointer-events-none block size-5 rounded-full bg-card shadow-[0_1px_2px_rgba(0,0,0,0.08)] ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+ "pointer-events-none block size-5 rounded-full bg-card shadow-xs ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
  )}
  />
  </SwitchPrimitives.Root>

@@ -3,9 +3,9 @@
  * @description Halaman sesi menyimak (Listening Session) dinamis untuk meresolusi materi audio berdasarkan slug.
  */
 
-// ======================
+
 // IMPOR
-// ======================
+
 import { cache } from "react";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { getListeningStaticSlugs } from "@/actions/listening.actions";
@@ -43,9 +43,9 @@ function getCmsSeo(data: unknown) {
  };
 }
 
-// ======================
+
 // METADATA SEO
-// ======================
+
 
 /**
  * Generate dynamic SEO metadata for listening page.
@@ -77,9 +77,9 @@ export async function generateMetadata({
  });
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Render listening page. Fetch data. Inject JSON-LD. Load client player.

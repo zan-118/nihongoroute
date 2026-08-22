@@ -6,17 +6,15 @@
  * atau materi level tertentu belum tersedia di basis data.
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import React from "react";
 import { Book } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-// ==========================================
 // ANTARMUKA & TIPE DATA
-// ==========================================
+
 /**
  * Props for the GrammarEmptyState component.
  */
@@ -29,9 +27,8 @@ interface GrammarEmptyStateProps {
  onResetSearch: () => void;
 }
 
-// ==========================================
 // KOMPONEN UTAMA: GrammarEmptyState
-// ==========================================
+
 /**
  * Renders empty state UI when grammar patterns are missing or not found.
  * 
@@ -40,11 +37,11 @@ interface GrammarEmptyStateProps {
  */
 export function GrammarEmptyState({ searchTerm, selectedLevel, onResetSearch }: GrammarEmptyStateProps) {
  return (
- <Card className="col-span-full py-20 md:py-32 bg-[hsl(var(--card)/0.2)] border border-dashed border-border rounded-2xl md:rounded-3xl text-center px-6 relative overflow-hidden">
+ <Card className="col-span-full py-20 md:py-32 bg-card/20 border border-dashed border-border rounded-2xl md:rounded-3xl text-center px-6 relative overflow-hidden">
  <div className="relative z-10">
  <div className="flex justify-center mb-8">
  {/* Icon container with subtle glow effect */}
- <div className="size-20 rounded-2xl md:rounded-3xl bg-primary/5 flex items-center justify-center border border-primary/10 shadow-[0_0_30px_hsl(var(--primary)/0.1)]">
+ <div className="size-20 rounded-2xl md:rounded-3xl bg-primary/5 flex items-center justify-center border border-primary/10 shadow-sm">
  <Book size={32} aria-hidden="true" className="text-primary/40" />
  </div>
  </div>
@@ -62,7 +59,7 @@ export function GrammarEmptyState({ searchTerm, selectedLevel, onResetSearch }: 
  {searchTerm && (
  <Button 
  onClick={onResetSearch}
- className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-10 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs transition-all shadow-[0_0_20px_hsl(var(--primary)/0.3)]"
+ className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-10 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs transition-all shadow-sm"
  >
  Reset Pencarian
  </Button>

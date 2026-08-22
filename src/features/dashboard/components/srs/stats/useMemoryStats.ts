@@ -5,15 +5,13 @@
  * @module features/dashboard/components/srs/stats
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useSRSStore } from "@/store/useSRSStore";
 import { summarizeSrs } from "@/lib/srs-summary";
 
-// ==========================================
 // Main Custom Hook
-// ==========================================
+
 /**
  * Custom hook to calculate SRS memory retention statistics.
  * Fetches SRS items from Zustand store and groups them by mastery level.

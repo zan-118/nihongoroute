@@ -6,14 +6,12 @@
  * Prevents Next.js Server-Side Rendering (SSR) hydration mismatches.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useState, useEffect } from "react";
 
-// ==========================================
 // Main Custom Hook
-// ==========================================
+
 /**
  * Track component client-side mount status.
  * Prevents hydration mismatch in SSR.

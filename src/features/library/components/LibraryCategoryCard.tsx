@@ -129,12 +129,12 @@ export function LibraryCategoryCard({
  >
  {count.toLocaleString("id-ID")}
  </span>
- <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-mono">
+ <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-wider font-mono">
  Materi Tersedia
  </span>
  </div>
  ) : (
- <div className="flex items-center gap-2 pt-1 text-[9px] font-bold uppercase tracking-widest font-mono" style={{ color: accentVar }}>
+ <div className="flex items-center gap-2 pt-1 text-[9px] font-bold uppercase tracking-wider font-mono" style={{ color: accentVar }}>
  <span className="size-1.5 rounded-full animate-ping" style={{ backgroundColor: accentVar }} />
  Akses Harian
  </div>
@@ -170,7 +170,7 @@ export function LibraryCategoryCard({
  </div>
  </div>
 
- <span className="hidden sm:inline-block text-[9px] font-mono font-bold text-muted-foreground/50 uppercase tracking-widest">
+ <span className="hidden sm:inline-block text-[9px] font-mono font-bold text-muted-foreground/50 uppercase tracking-wider">
  OFFLINE READY
  </span>
  </div>

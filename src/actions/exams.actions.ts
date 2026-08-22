@@ -6,9 +6,8 @@
 
 "use server";
 
-// ======================
 // IMPORTS
-// ======================
+
 import { createStaticClient, createClient } from "@/lib/supabase/server";
 import { LibraryItem } from "@/types/library";
 import {
@@ -20,9 +19,7 @@ import type {
 } from "@/features/exams/components/mock-engine/types";
 import { logger } from "@/lib/core/logger";
 
-// ======================
 // SERVER ACTIONS
-// ======================
 
 /**
  * Database row structure for lessons and articles.

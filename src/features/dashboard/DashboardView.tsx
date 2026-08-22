@@ -35,9 +35,7 @@ const AchievementsGrid = dynamic(() => import("@/features/gamification/Achieveme
 
 import { Home, Pulse, Trophy, Settings } from "@/components/ui/icons";
 
-// ======================
 // CONFIG / CONSTANTS
-// ======================
 
 /** Animation variants for dashboard items. */
 const itemVariants: Variants = {
@@ -303,7 +301,7 @@ export function DashboardView({ courseMetadata, expression }: DashboardViewProps
  <div className="flex flex-col gap-2">
  <div className="flex items-center gap-3.25">
  <div className="w-8.5 h-px bg-primary/40" />
- <h2 className="text-[10px] uppercase tracking-[0.2em] text-primary">
+ <h2 className="text-[10px] uppercase tracking-wider text-primary">
  Koleksi
  </h2>
  </div>

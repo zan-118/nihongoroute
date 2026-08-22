@@ -186,7 +186,7 @@ export default function WeakPointTrainerClient() {
  return (
  <main className="flex min-h-[calc(100vh-5rem)] flex-col items-center justify-center px-4">
  <Loader className="mb-4 animate-spin text-primary" size={34} />
- <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+ <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">
  Menyusun latihan titik lemah...
  </p>
  </main>
@@ -202,7 +202,7 @@ export default function WeakPointTrainerClient() {
  <Button
  onClick={resetSession}
  variant="ghost"
- className="h-auto rounded-xl border border-border bg-muted/50 px-4 py-2.5 text-xs font-black uppercase tracking-widest text-muted-foreground"
+ className="h-auto rounded-xl border border-border bg-muted/50 px-4 py-2.5 text-xs font-black uppercase tracking-wider text-muted-foreground"
  >
  <ChevronLeft size={14} />
  Diagnosis
@@ -230,7 +230,7 @@ export default function WeakPointTrainerClient() {
 
  return (
  <main className="relative min-h-screen overflow-hidden px-4 py-10 md:px-8">
- <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--destructive)/0.07),transparent_42%)]" />
+ <div className="pointer-events-none absolute inset-0 bg-muted/30" />
  <div className="pointer-events-none absolute inset-0 grid-overlay opacity-50" />
 
  <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-8">
@@ -258,7 +258,7 @@ export default function WeakPointTrainerClient() {
  </div>
 
  <div className="flex flex-wrap gap-3">
- <Button asChild variant="outline" className="h-12 rounded-lg px-5 text-xs font-black uppercase tracking-widest">
+ <Button asChild variant="outline" className="h-12 rounded-lg px-5 text-xs font-black uppercase tracking-wider">
  <Link href="/dashboard">
  Dashboard
  <ArrowRight size={14} />
@@ -267,7 +267,7 @@ export default function WeakPointTrainerClient() {
  <Button
  onClick={startSession}
  disabled={candidates.length === 0}
- className="h-12 rounded-lg px-6 text-xs font-black uppercase tracking-widest"
+ className="h-12 rounded-lg px-6 text-xs font-black uppercase tracking-wider"
  >
  <PlayCircle size={15} />
  Mulai Latihan
@@ -297,7 +297,7 @@ export default function WeakPointTrainerClient() {
  <span className="font-mono text-6xl font-black tracking-tight text-foreground md:text-7xl">
  {candidates.length}
  </span>
- <span className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+ <span className="mb-3 text-xs font-black uppercase tracking-wider text-muted-foreground">
  kartu lemah
  </span>
  </div>
@@ -394,7 +394,7 @@ function CandidateRow({ candidate, index }: { candidate: WeakPointCandidate; ind
  <Progress
  value={candidate.weaknessScore}
  className="h-2 bg-muted/70"
- indicatorClassName="bg-destructive shadow-[0_0_12px_hsl(var(--destructive)/0.45)]"
+ indicatorClassName="bg-destructive shadow-sm"
  />
 
  <div className="mt-3 flex justify-between text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
@@ -422,13 +422,13 @@ function EmptyDiagnosis() {
  item yang perlu diperkuat.
  </p>
  <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
- <Button asChild className="h-12 rounded-lg px-5 text-xs font-black uppercase tracking-widest">
+ <Button asChild className="h-12 rounded-lg px-5 text-xs font-black uppercase tracking-wider">
  <Link href="/library/vocab">
  <Book size={15} />
  Tambah Kartu
  </Link>
  </Button>
- <Button asChild variant="outline" className="h-12 rounded-lg px-5 text-xs font-black uppercase tracking-widest">
+ <Button asChild variant="outline" className="h-12 rounded-lg px-5 text-xs font-black uppercase tracking-wider">
  <Link href={ROUTES.TOOLS.FLASHCARDS}>
  Flashcards
  <ArrowRight size={15} />

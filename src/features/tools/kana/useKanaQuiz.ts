@@ -3,17 +3,15 @@
  * @description Custom hook managing state and interaction logic for Hiragana & Katakana reading/writing practice quizzes.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { KANA_DATA, KanaType, KanaCategory } from "./kana-data";
 
-// ==========================================
 // Main Custom Hook
-// ==========================================
+
 /**
  * Custom hook to manage Kana quiz state, score, lives, options, and handlers.
  * 
@@ -22,9 +20,9 @@ import { KANA_DATA, KanaType, KanaCategory } from "./kana-data";
  * @storeAccess Accesses `useUserStore` for XP rewards.
  */
 export function useKanaQuiz() {
- // ==========================================
+
  // State Variables & Hooks
- // ==========================================
+
  const searchParams = useSearchParams();
  
  /** Active kana type (hiragana or katakana) */
@@ -39,9 +37,8 @@ export function useKanaQuiz() {
  romaji: string;
  } | null>(null);
 
- // ==========================================
  // EFEK SAMPING (EFFECTS)
- // ==========================================
+
  // Auto-open writing dialog if mode=writing is present in URL search parameters
  useEffect(() => {
  const mode = searchParams.get("mode");
@@ -89,9 +86,7 @@ export function useKanaQuiz() {
  /** Action to add experience points to the user's profile */
  const addXP = useUserStore((state) => state.addXP);
 
- // ==========================================
  // FUNGSI PEMBANTU (HELPERS)
- // ==========================================
 
  /**
  * Retrieves all valid kana characters and their romaji equivalents for a given type and category.
@@ -116,9 +111,8 @@ export function useKanaQuiz() {
  return pairs;
  }, []);
 
- // ==========================================
  // LOGIKA PENGENDALI & METODE (HANDLERS)
- // ==========================================
+
  
  /**
  * Generates the next quiz question, randomizes the mode, and populates multiple choice options.
@@ -247,9 +241,8 @@ export function useKanaQuiz() {
  const themeBgHover = isHira ? "hover:bg-primary/10" : "hover:bg-secondary/10";
  const themeAccent = isHira ? "bg-primary" : "bg-secondary";
 
- // ==========================================
  // HASIL HOOK (RETURN VALUE)
- // ==========================================
+
  return {
  type,
  setType,

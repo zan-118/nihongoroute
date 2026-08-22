@@ -6,17 +6,14 @@
 
 "use client";
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { m, Variants } from "framer-motion";
 import { ChevronLeft, ChevronRight, DoubleLeft, DoubleRight, BookOpen } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { LessonCard } from "./LessonCard";
 
-// ==========================================
 // Component Interfaces
-// ==========================================
 
 /**
  * Lesson data structure.
@@ -43,9 +40,7 @@ interface LessonGridProps {
  itemVariants: Variants;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * Renders grid of lessons with pagination controls.
@@ -63,7 +58,7 @@ export function LessonGrid({
  return (
  <m.section variants={itemVariants} className="pb-24 md:pb-32">
  <div className="mb-5 md:mb-8 flex items-center gap-4">
- <h3 className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground">Daftar Pelajaran</h3>
+        <h3 className="text-xs sm:text-sm uppercase tracking-wider text-muted-foreground">Daftar Pelajaran</h3>
  <div className="h-[1px] flex-1 bg-border" />
  </div>
 
@@ -111,10 +106,10 @@ export function LessonGrid({
  </div>
  )}
 
- {/* Controls Halaman — Compact Mobile */}
- {totalPages > 1 && (
- <div className="flex flex-col items-center gap-4 mt-8 sm:mt-10 md:mt-14 relative z-10">
- <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]">
+        {/* Controls Halaman: Compact Mobile */}
+        {totalPages > 1 && (
+          <div className="flex flex-col items-center gap-4 mt-8 sm:mt-10 md:mt-14 relative z-10">
+            <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
  Halaman <span className="text-foreground">{currentPage}</span> dari {totalPages}
  </div>
  <div

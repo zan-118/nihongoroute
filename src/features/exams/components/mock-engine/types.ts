@@ -3,14 +3,11 @@
  * @description Definisi tipe data (interfaces & types) untuk domain simulasi ujian Mock Exam Engine NihongoRoute.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { ExamPortableTextBlock } from "./ExamQuestionText";
 
-// ======================
 // ANTARMUKA / TIPE DATA
-// ======================
 
 /**
  * Choice option for exam question. Can be text or image.

@@ -19,7 +19,7 @@ export function ReadingPageHeader({ title, jlptLevel }: ReadingPageHeaderProps) 
   return (
     <div className="flex flex-col gap-1.5 mb-10 pb-6 border-b border-border/40">
       <div className="flex items-center gap-2">
-        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
+        <span className="text-[9px] font-black uppercase tracking-wider text-primary">
           Graded Reading
         </span>
         {jlptLevel && (

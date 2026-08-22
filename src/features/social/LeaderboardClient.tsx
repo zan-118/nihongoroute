@@ -6,9 +6,9 @@
 
 "use client";
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -350,7 +350,7 @@ export default function LeaderboardClient() {
  
  {/* XP SCORE */}
  <div className="text-right shrink-0">
- <p className={`text-sm sm:text-xl font-black font-mono drop-shadow-[0_0_8px_hsl(var(--primary)/0.3)] ${
+ <p className={`text-sm sm:text-xl font-black font-mono drop-shadow-sm ${
  isOwnCard ? "text-primary scale-105" : "text-primary"
  }`}>
  {user.xp.toLocaleString()}
@@ -379,9 +379,9 @@ export default function LeaderboardClient() {
  animate={{ opacity: 1, y: 0 }}
  className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl z-50 pointer-events-none"
  >
- <Card className="glass border-primary/45 p-4 flex items-center gap-3 sm:gap-6 bg-card/90 shadow-[0_-10px_28px_hsl(var(--foreground)/0.24),0_0_22px_hsl(var(--primary)/0.14)] rounded-xl pointer-events-auto border-2 hover:border-primary/60 transition-colors">
+ <Card className="glass border-primary/45 p-4 flex items-center gap-3 sm:gap-6 bg-card/90 shadow-sm rounded-xl pointer-events-auto border-2 hover:border-primary/60 transition-colors">
  {/* Peringkat */}
- <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-primary/30 flex flex-col items-center justify-center shrink-0 shadow-[0_0_12px_hsl(var(--primary)/0.25)]">
+ <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-primary/30 flex flex-col items-center justify-center shrink-0 shadow-sm">
  <span className="text-[10px] font-black uppercase text-primary tracking-widest leading-none">Rank</span>
  <span className="text-sm sm:text-base font-mono font-black text-primary leading-none mt-0.5">#{ownRank}</span>
  </div>
@@ -408,7 +408,7 @@ export default function LeaderboardClient() {
 
  {/* XP dan motivasi */}
  <div className="text-right shrink-0">
- <p className="text-xs sm:text-lg font-black font-mono text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.35)]">
+ <p className="text-xs sm:text-lg font-black font-mono text-primary drop-shadow-sm">
  {currentUserXp.toLocaleString()} XP
  </p>
  {usersList.length > 0 && (

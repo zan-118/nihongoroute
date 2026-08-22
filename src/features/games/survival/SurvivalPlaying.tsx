@@ -4,9 +4,8 @@
  * Menampilkan status nyawa (HP), hitung mundur waktu yang berjalan, kata kosakata target (Kanji/Furigana), bilah progres waktu, serta empat opsi pilihan arti kosakata.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,9 +16,7 @@ import { CardData } from "./types";
 import { toHiragana } from "wanakana";
 import { SmartJapanese } from "@/components/ui/japanese";
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
 
 /**
  * Props for SurvivalPlaying component.
@@ -51,9 +48,7 @@ interface SurvivalPlayingProps {
  handleAnswer: (option: CardData) => void;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * Active gameplay UI for survival mode.
@@ -93,8 +88,8 @@ export function SurvivalPlaying({
  className={`transition-all duration-200 ${
  i < hp
  ? isCriticalHp
- ? "text-destructive drop-shadow-sm dark:drop-shadow-[0_0_6px_hsl(var(--destructive)/0.45)]"
- : "text-primary drop-shadow-sm dark:drop-shadow-[0_0_6px_hsl(var(--primary)/0.45)]"
+ ? "text-destructive drop-shadow-sm dark:drop-shadow-sm"
+ : "text-primary drop-shadow-sm dark:drop-shadow-sm"
  : "text-muted-foreground/20 scale-75 opacity-30"
  } md:w-8 md:h-8`}
  />
@@ -102,7 +97,7 @@ export function SurvivalPlaying({
  </div>
 
  <div
- className={`flex items-center gap-1.5 md:gap-4 font-mono text-xl md:text-4xl lg:text-5xl font-black tracking-tight transition-all ${isDangerTime ? "text-destructive drop-shadow-sm dark:drop-shadow-[0_0_8px_hsl(var(--destructive)/0.5)]" : "text-foreground opacity-80"}`}
+ className={`flex items-center gap-1.5 md:gap-4 font-mono text-xl md:text-4xl lg:text-5xl font-black tracking-tight transition-all ${isDangerTime ? "text-destructive drop-shadow-sm dark:drop-shadow-sm" : "text-foreground opacity-80"}`}
  >
  <Timer size={18} aria-hidden="true" className="md:w-8 md:h-8 lg:w-10 lg:h-10" />
  {timeLeft.toString().padStart(2, "0")}s
@@ -134,11 +129,11 @@ export function SurvivalPlaying({
  : "border-border"
  }`}
  >
- <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--primary)/0.03)_1px,transparent_1px)] bg-size-[100%_4px] md:bg-size-[100%_6px] pointer-events-none opacity-40 rounded-2xl md:rounded-3xl" />
+ <div className="absolute inset-0 bg-muted/30 bg-size-[100%_4px] md:bg-size-[100%_6px] pointer-events-none opacity-40 rounded-2xl md:rounded-3xl" />
 
  <Badge
  variant="outline"
- className={`absolute top-4 md:top-10 left-1/2 -translate-x-1/2 text-[10px] md:text-xs font-bold uppercase tracking-widest border px-4 py-1 md:px-8 md:py-3 rounded-lg md:rounded-lg neo-inset h-auto transition-all duration-300 ${isDangerTime ? "text-destructive border-destructive/50 bg-destructive/10 shadow-sm" : "text-muted-foreground border-border bg-muted/50 dark:bg-[hsl(var(--background)/0.3)]"}`}
+ className={`absolute top-4 md:top-10 left-1/2 -translate-x-1/2 text-[10px] md:text-xs font-bold uppercase tracking-widest border px-4 py-1 md:px-8 md:py-3 rounded-lg md:rounded-lg neo-inset h-auto transition-all duration-300 ${isDangerTime ? "text-destructive border-destructive/50 bg-destructive/10 shadow-sm" : "text-muted-foreground border-border bg-muted/50 dark:bg-background/30"}`}
  >
  {isDangerTime ? (
  <span className="flex items-center gap-1">
@@ -196,7 +191,7 @@ export function SurvivalPlaying({
  ? "bg-destructive/20 border-destructive shadow-lg text-destructive"
  : isCorrect
  ? "bg-success/20 border-success shadow-lg text-success"
- : "bg-[hsl(var(--muted)/0.5)] dark:bg-[hsl(var(--background)/0.4)] border-border md:hover:border-primary/50 md:hover:bg-primary md:hover:text-primary-foreground neo-card active:scale-[0.98] transition-transform"
+ : "bg-muted/50 dark:bg-background/40 border-border md:hover:border-primary/50 md:hover:bg-primary md:hover:text-primary-foreground neo-card active:scale-[0.98] transition-transform"
  }`}
  >
  <div className="flex items-center justify-center w-full h-full p-4 md:p-8 relative">

@@ -5,9 +5,8 @@
  * serta sinkronisasi penambahan XP dan status kelulusan pelajaran ke Zustand Store (`useUserStore` & `useSRSStore`).
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { useState, useCallback, useMemo } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
@@ -16,9 +15,8 @@ import { QuizQuestion } from "./types";
 import { ConsolidatedExamSessionEngine } from "@/lib/exams/exam-session-engine";
 import type { ExamQuestion } from "@/features/exams/components/mock-engine/types";
 
-// ======================
 // HOOK UTAMA
-// ======================
+
 /**
  * Manage quiz state, scoring, and XP updates via ConsolidatedExamSessionEngine seam.
  * @param questions Quiz questions.

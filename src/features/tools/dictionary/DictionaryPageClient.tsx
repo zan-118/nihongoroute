@@ -97,7 +97,7 @@ function DictionaryResultCard({ item }: { item: ToolSearchItem }) {
  const Icon = item.icon;
 
  return (
- <Card className="group rounded-2xl md:rounded-3xl border border-border/80 bg-card/35 p-6 transition-all duration-300 hover:border-primary/45 shadow-[0_0_30px_hsl(var(--primary)/0.015)] glass">
+ <Card className="group rounded-2xl md:rounded-3xl border border-border/80 bg-card/35 p-6 transition-all duration-300 hover:border-primary/45 shadow-sm glass">
  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
  <div className="flex min-w-0 items-start gap-4">
  <div
@@ -264,7 +264,7 @@ export default function DictionaryPageClient() {
  </div>
  </header>
 
- <Card className="rounded-2xl md:rounded-3xl border border-border/80 bg-card/35 p-6 shadow-[0_0_50px_hsl(var(--primary)/0.02)] md:p-8 glass">
+ <Card className="rounded-2xl md:rounded-3xl border border-border/80 bg-card/35 p-6 shadow-sm md:p-8 glass">
  <form
  className="grid gap-3 md:grid-cols-[1fr_auto]"
  onSubmit={(event) => {
@@ -337,7 +337,7 @@ export default function DictionaryPageClient() {
  setQuery(item);
  runSearch(item);
  }}
- className="rounded-xl border border-border bg-muted/15 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground transition-all hover:text-foreground"
+ className="rounded-xl border border-border bg-muted/15 px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground transition-all hover:text-foreground"
  >
  {item}
  </button>
@@ -361,7 +361,7 @@ export default function DictionaryPageClient() {
  <DictionaryResultCard key={`${item.category}-${item.id}`} item={item} />
  ))
  ) : (
- <Card className="rounded-2xl md:rounded-3xl border border-dashed border-border/80 bg-card/25 p-12 text-center glass shadow-[0_0_30px_hsl(var(--primary)/0.015)] relative overflow-hidden">
+ <Card className="rounded-2xl md:rounded-3xl border border-dashed border-border/80 bg-card/25 p-12 text-center glass shadow-sm relative overflow-hidden">
         <div className="mx-auto mb-5 flex size-16 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
           <Search size={28} className="text-primary" />
         </div>

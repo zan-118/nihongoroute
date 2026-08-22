@@ -4,9 +4,8 @@
  * Menampilkan pesan kemenangan/kekalahan, detail perolehan skor akhir, perolehan XP, serta tombol untuk mencoba kembali.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,9 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Trophy, Refresh, Home, Award, Shield } from "@/components/ui/icons";
 import { SurvivalGameState } from "./types";
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
 
 /**
  * Props for SurvivalGameOver component.
@@ -30,9 +27,7 @@ interface SurvivalGameOverProps {
  startGame: () => void;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * Render game over screen for survival mode.
@@ -61,19 +56,19 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
  >
  <div className={`absolute inset-0 ${bgGlowColor} pointer-events-none opacity-50`} />
 
- <Card className={`w-24 h-24 md:w-32 md:h-32 mx-auto rounded-2xl md:rounded-3xl flex items-center justify-center mb-8 md:mb-12 neo-inset shadow-none border border-border bg-[hsl(var(--muted)/0.5)] dark:bg-[hsl(var(--background)/0.4)] relative z-10`}>
+ <Card className={`w-24 h-24 md:w-32 md:h-32 mx-auto rounded-2xl md:rounded-3xl flex items-center justify-center mb-8 md:mb-12 neo-inset shadow-none border border-border bg-muted/50 dark:bg-background/40 relative z-10`}>
  {/* Render icon based on victory status. */}
  {isVictory ? (
  <Trophy
  size={48}
  aria-hidden="true"
- className="text-warning drop-shadow-sm dark:drop-shadow-[0_0_10px_hsl(var(--warning)/0.4)] md:w-16 md:h-16"
+ className="text-warning drop-shadow-sm dark:drop-shadow-sm md:w-16 md:h-16"
  />
  ) : (
  <Shield
  size={48}
  aria-hidden="true"
- className="text-destructive drop-shadow-sm dark:drop-shadow-[0_0_10px_hsl(var(--destructive)/0.4)] md:w-16 md:h-16"
+ className="text-destructive drop-shadow-sm dark:drop-shadow-sm md:w-16 md:h-16"
  />
  )}
  </Card>
@@ -83,7 +78,7 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
  </h2>
 
  <div className="flex flex-col items-center gap-3 md:gap-4 mb-10 md:mb-14 relative z-10">
- <Badge variant="outline" className="text-muted-foreground font-bold uppercase tracking-widest text-xs md:text-xs h-auto border border-border neo-inset px-6 py-2 md:px-8 md:py-3 rounded-lg bg-[hsl(var(--muted)/0.5)] dark:bg-[hsl(var(--background)/0.3)]">
+ <Badge variant="outline" className="text-muted-foreground font-bold uppercase tracking-widest text-xs md:text-xs h-auto border border-border neo-inset px-6 py-2 md:px-8 md:py-3 rounded-lg bg-muted/50 dark:bg-background/30">
  SKOR AKHIR
  </Badge>
  <div className="flex flex-col">
@@ -101,7 +96,7 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
  <Button
  onClick={startGame}
  variant="ghost"
- className="flex items-center justify-center gap-4 md:gap-6 w-full h-auto py-6 md:py-8 relative z-10 font-bold uppercase tracking-widest text-xs md:text-xs border border-border neo-card shadow-none bg-[hsl(var(--muted)/0.5)] dark:bg-[hsl(var(--background)/0.4)] hover:bg-primary hover:text-primary-foreground transition-all rounded-2xl md:rounded-3xl group"
+ className="flex items-center justify-center gap-4 md:gap-6 w-full h-auto py-6 md:py-8 relative z-10 font-bold uppercase tracking-widest text-xs md:text-xs border border-border neo-card shadow-none bg-muted/50 dark:bg-background/40 hover:bg-primary hover:text-primary-foreground transition-all rounded-2xl md:rounded-3xl group"
  >
  <Refresh size={20} aria-hidden="true" className="group-hover:-rotate-90 transition-transform duration-200 md:w-6 md:h-6" /> COBA LAGI
  </Button>

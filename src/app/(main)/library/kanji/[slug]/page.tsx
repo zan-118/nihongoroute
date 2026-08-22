@@ -5,9 +5,9 @@
  * @module KanjiDetailPage
  */
 
-// ======================
+
 // IMPOR
-// ======================
+
 import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { getKanjiStaticSlugs } from "@/actions/kanji.actions";
@@ -40,9 +40,9 @@ import {
 
 
 
-// ======================
+
 // METADATA SEO
-// ======================
+
 
 /**
  * Generates dynamic SEO metadata for a specific Kanji detail page.
@@ -95,9 +95,9 @@ export async function generateStaticParams() {
  return await getKanjiStaticSlugs();
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Kanji detail page component.
@@ -158,7 +158,7 @@ export default async function KanjiDetailPage({
  <div className="absolute bottom-[20%] right-[-15%] size-[35%] bg-primary/5 blur-[65px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
  
  {/* Background Grid Overlay */}
- <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--foreground)/0.01)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.01)_1px,transparent_1px)] bg-size-[60px_60px] pointer-events-none z-0" />
+ <div className="absolute inset-0 bg-muted/30 bg-size-[60px_60px] pointer-events-none z-0" />
 
  <div className="max-w-4xl mx-auto w-full relative z-10 pt-8 md:pt-16">
  <div className="flex flex-col gap-12 md:gap-16 animate-in fade-in slide-in- duration-1000 ease-out">

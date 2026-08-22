@@ -3,9 +3,9 @@
  * @description Halaman indeks katalog Kanji. Menangani pengambilan data awal dan pembungkusan KanjiListClient.
  */
 
-// ======================
+
 // IMPOR
-// ======================
+
 import { Suspense } from "react";
 import { Restart } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -18,9 +18,9 @@ import {
  learningResourceJsonLd,
 } from "@/lib/seo";
 
-// ======================
+
 // METADATA SEO
-// ======================
+
 
 /**
  * SEO metadata configuration for the Kanji library page.
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
  }),
 };
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Kanji library index page component.

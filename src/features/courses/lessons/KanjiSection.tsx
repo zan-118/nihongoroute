@@ -5,17 +5,10 @@
  * @description Komponen seksi Kanji (KanjiSection) dalam halaman pelajaran. Menampilkan daftar karakter Kanji pelajaran dengan link ke detail pustaka Kanji.
  */
 
-// ======================
-// IMPOR
-// ======================
 import React, { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronUp } from "@/components/ui/icons";
 import AddToSRSButton from "@/features/srs/actions/AddToSRSButton";
-
-// ======================
-// ANTARMUKA / TIPE DATA
-// ======================
 
 /**
  * Represents a single kanji item in a lesson.
@@ -41,9 +34,9 @@ interface KanjiSectionProps {
  kanjiList: KanjiLessonItem[];
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Renders a grid of kanji characters with links to their details.
@@ -75,7 +68,7 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
  <Link
  key={k._id || k.id}
  href={`/library/kanji/${k.slug || k.character}`}
- className="p-6 border border-border/50 dark:border-white/10 rounded-2xl bg-card shadow-[0_4px_25px_rgba(0,0,0,0.015)] flex flex-col items-center justify-center group hover:border-primary/45 transition-all duration-500 relative group/card"
+ className="p-6 border border-border/50 dark:border-white/10 rounded-2xl bg-card shadow-sm flex flex-col items-center justify-center group hover:border-primary/45 transition-all duration-500 relative group/card"
  >
  {/* Tombou Register Mark */}
  <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
@@ -97,7 +90,7 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
  <span className="text-4xl font-black mb-3 group-hover:scale-105 transition-transform">
  {k.character}
  </span>
- <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest text-center opacity-60 group-hover:opacity-100 transition-opacity">
+ <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider text-center opacity-60 group-hover:opacity-100 transition-opacity">
  {k.meaning}
  </span>
  </Link>
@@ -107,7 +100,7 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
  <div className="flex justify-center pt-8">
  <button
  onClick={() => setShowAll(!showAll)}
- className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-lg rounded-br-none font-black uppercase tracking-widest text-[9px] sm:text-[10px] border shadow-sm transition-all duration-300 bg-card hover:bg-primary/5 hover:border-primary/30 text-muted-foreground hover:text-primary active:scale-95"
+ className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-lg rounded-br-none font-black uppercase tracking-wider text-[9px] sm:text-[10px] border shadow-sm transition-all duration-300 bg-card hover:bg-primary/5 hover:border-primary/30 text-muted-foreground hover:text-primary active:scale-95"
  aria-label={showAll ? "Sembunyikan kanji tambahan" : "Tampilkan semua kanji"}
  >
  <span>{showAll ? "Sembunyikan" : `Lihat Selanjutnya (${kanjiList.length - 10} lainnya)`}</span>

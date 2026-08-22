@@ -155,7 +155,7 @@ export function StudyPanel({
  className={cn(
  "group relative p-4 pr-12 cursor-pointer transition-all duration-300 border rounded-lg w-full",
  bubbleClass,
- isActive && "border-primary/50 shadow-[0_0_15px_hsl(var(--primary)/0.08)] scale-[1.01]"
+ isActive && "border-primary/50 shadow-sm scale-[1.01]"
  )}
  >
  {/* Speaker Indicator */}

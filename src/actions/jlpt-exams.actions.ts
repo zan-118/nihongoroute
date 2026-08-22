@@ -6,9 +6,8 @@
  * @module actions
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import {
  getSupabaseExamTemplateBySlug as serviceGetSupabaseExamTemplateBySlug,
  getSupabaseExamTemplatesList as serviceGetSupabaseExamTemplatesList,

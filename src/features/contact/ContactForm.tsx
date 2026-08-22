@@ -148,12 +148,12 @@ export function ContactForm() {
           className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8 rounded-full font-bold text-sm transition-all"
         >
           {loading ? (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center justify-center gap-2">
               <Loader size={16} className="animate-spin" />
               <span>Mengirim Pesan...</span>
             </span>
           ) : (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center justify-center gap-2">
               <SendPlane size={16} />
               <span>Kirim Pesan</span>
             </span>

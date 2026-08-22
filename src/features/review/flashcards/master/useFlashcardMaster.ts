@@ -3,9 +3,8 @@
  * @description Custom Hook pengelola logika state dan kendali interaksi utama sesi kartu pengingat (flashcard), mencakup sistem SRS, navigasi kartu, keyboard handler (Enter, Space, Arrow), kalkulasi kombo, dan sinkronisasi status ke awan.
  */
 
-// ==========================================
 // IMPORT & DEPENDENSI
-// ==========================================
+
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
@@ -16,11 +15,8 @@ import { FlashcardSessionEngine } from "@/lib/srs/flashcard-session-engine";
 import { sounds } from "@/lib/audio";
 import { MasterCardData, StudyMode } from "./types";
 
-
-
-// ==========================================
 // CUSTOM HOOK UTAMA
-// ==========================================
+
 /**
  * Custom hook to manage flashcard study session state, SRS updates, keyboard navigation, and user statistics.
  * 
@@ -128,7 +124,6 @@ export function useFlashcardMaster({
  const engine = new FlashcardSessionEngine(currentCards, currentIndex);
  const { isCorrect, xpReward, newState, stats: updatedStats } = engine.processGrade(grade, currentState);
 
-
  // Update session statistics via engine
  setSessionStats((prev) => ({
  ...prev,
@@ -163,7 +158,6 @@ export function useFlashcardMaster({
  setUserInput("");
  setIsAnswerChecked(false);
  setInputResult(null);
-
 
  // Transition to next card or finish session
  setTimeout(() => {

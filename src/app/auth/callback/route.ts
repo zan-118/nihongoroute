@@ -4,15 +4,13 @@
  * Menukar authorization code menjadi sesi pengguna dan melakukan redirect ke halaman tujuan.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-// ======================
 // HANDLER
-// ======================
+
 /**
  * Handle OAuth callback.
  * Exchange code for session. Redirect to next page or login on error.

@@ -3,9 +3,8 @@
  * @description Supabase Browser client initializer for offline-first client-side data access adhering to Row Level Security (RLS) policies.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { createBrowserClient } from "@supabase/ssr";
 
 /** 
@@ -13,9 +12,8 @@ import { createBrowserClient } from "@supabase/ssr";
  */
 let cachedClient: ReturnType<typeof createBrowserClient> | null = null;
 
-// ==========================================
 // Supabase Browser Client Initializer
-// ==========================================
+
 /**
  * Create or return cached Supabase browser client.
  * Safe for client-side rendering environments.

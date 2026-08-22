@@ -6,9 +6,9 @@
 
 "use client";
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import React, { useState, useEffect, useRef } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getPaginatedKanji, PaginatedKanjiResponse } from "@/actions/library.actions";
@@ -23,9 +23,9 @@ import { KanjiHeader } from "@/features/library/components/kanji/KanjiHeader";
 import { KanjiGrid } from "@/features/library/components/kanji/KanjiGrid";
 import { Pagination } from "@/components/ui/Pagination";
 
-// ======================
+
 // TIPE DATA
-// ======================
+
 
 /**
  * Props for KanjiListView component.
@@ -54,9 +54,9 @@ function normalizeLevelParam(value: string | null) {
  return value;
 }
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Komponen KanjiListView: Menyediakan antarmuka interaktif untuk menyaring, mencari,
@@ -216,7 +216,7 @@ export default function KanjiListView({ initialData }: KanjiListViewProps) {
  {/* Sisi Ranan: Level JLPT & Tombol Tindakan */}
  <div className="flex items-center gap-2.5 shrink-0 md:col-span-4 md:justify-end">
  {kanji.jlptLevel && (
- <span className="text-[9px] md:text-[10px] font-black bg-[hsl(var(--primary)/0.1)] text-primary px-2 py-0.5 rounded-[4px] border border-[hsl(var(--primary)/0.2)] uppercase shrink-0">
+ <span className="text-[9px] md:text-[10px] font-black bg-primary/10 text-primary px-2 py-0.5 rounded-[4px] border border-primary/20 uppercase shrink-0">
  {kanji.jlptLevel}
  </span>
  )}

@@ -6,9 +6,8 @@
 
 "use server";
 
-// ======================
 // IMPORTS
-// ======================
+
 import { PaginatedListeningResponse, ListeningTaskItem, LibraryItem } from "@/types/library";
 import { ListeningMaterialTable } from "@/types/database";
 import {
@@ -19,9 +18,7 @@ import {
 } from "@/lib/services/content-repository";
 import { logger } from "@/lib/core/logger";
 
-// ======================
 // SERVER ACTIONS
-// ======================
 
 /**
  * Fetches paginated listening materials from Supabase.

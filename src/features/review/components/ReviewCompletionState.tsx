@@ -5,16 +5,14 @@
  * @description Komponen visual layar selesai ulasan (Review Completion State).
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import React from "react";
 import { Trophy } from "@/components/ui/icons";
 import EmptyState from "@/components/ui/EmptyState";
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
+
 export interface ReviewCompletionStateProps {
  /** Review mode. Controls icon and text. */
  mode: "srs" | "quick";
@@ -22,9 +20,8 @@ export interface ReviewCompletionStateProps {
  onBack: () => void;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
+
 export function ReviewCompletionState({ mode, onBack }: ReviewCompletionStateProps) {
  return (
  <div className="flex-1 flex flex-col items-center justify-center px-4 w-full">

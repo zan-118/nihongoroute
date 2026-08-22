@@ -3,16 +3,10 @@
  * @description Password recovery page route (Forgot Password). Entry point for ForgotPasswordView.
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import type { Metadata } from "next";
 import ForgotPasswordView from "@/features/auth/ForgotPasswordView";
 import { createPageMetadata } from "@/lib/seo";
 
-// ==========================================
-// Metadata Configuration
-// ==========================================
 /**
  * Page metadata. Disable search indexing.
  */
@@ -25,9 +19,6 @@ export const metadata: Metadata = {
  }),
 };
 
-// ==========================================
-// Main Execution
-// ==========================================
 /**
  * Forgot password page. Render client form.
  */

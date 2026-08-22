@@ -3,9 +3,7 @@
  * @description Definisi tipe data (TypeScript) untuk fitur membaca mandiri dan visualisasi terjemahan artikel.
  */
 
-// ==========================================
 // TIPE DATA MODE & STATUS MEMBACA
-// ==========================================
 
 /**
  * Reading display mode. Control text representation.
@@ -33,9 +31,7 @@ export interface ReadingState {
  sourceHref?: string;
 }
 
-// ==========================================
 // TIPE DATA PORTABLE TEXT
-// ==========================================
 
 /**
  * Child node in Portable Text. Represent text segment.
@@ -63,9 +59,7 @@ export interface PortableTextBlock {
  */
 export type PortableTextContent = string | PortableTextBlock[];
 
-// ==========================================
 // INTERFACE ARTIKEL BACAAN (READING DATA)
-// ==========================================
 
 /**
  * Reading article data. Contain text variants, audio, metadata.

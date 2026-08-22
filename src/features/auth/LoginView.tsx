@@ -6,9 +6,9 @@
 
 "use client";
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import React, { Suspense } from "react";
 import { User, LoginBox, ChevronRight, Mail, Lock, ArrowLeft } from "@/components/ui/icons";
 import Link from "next/link";
@@ -16,9 +16,9 @@ import { useAuth } from "@/features/user/useAuth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-// ==========================================
+
 // Internal Component Implementation
-// ==========================================
+
 
 /**
  * LoginContent component.
@@ -42,40 +42,32 @@ function LoginContent() {
  } = useAuth();
 
  return (
- <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">
- {/* Dekorasi Latar Belakang & Kisi Neural */}
- <div className="grid-overlay" />
- <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
- <div className="size-[500px] bg-primary/10 rounded-full blur-[120px] opacity-40 absolute -top-12 -left-12" />
- <div className="size-[400px] bg-secondary/15 rounded-full blur-[100px] opacity-35 absolute -bottom-10 -right-10" />
- </div>
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">
+      <div className="w-full max-w-md relative group/login z-10">
+        {/* Tombou Register Mark */}
+        <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+          <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/login:bg-primary transition-colors duration-500" />
+          <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/login:bg-primary transition-colors duration-500" />
+        </div>
 
- <div className="w-full max-w-md relative group/login z-10">
- {/* Tombou Register Mark */}
- <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
- <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/login:bg-primary transition-colors duration-500" />
- <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/login:bg-primary transition-colors duration-500" />
- </div>
+        <Card className="p-8 relative overflow-hidden rounded-2xl bg-card border border-border/50 dark:border-white/10 shadow-sm">
+          <Link 
+            href="/" 
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-primary transition-all group mb-8"
+          >
+            <div className="size-8 rounded-full bg-muted/60 border border-border flex items-center justify-center group-hover:border-primary/40 group-hover:bg-primary/5 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+              <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]" />
+            </div>
+            Beranda
+          </Link>
 
- <Card className="p-8 relative overflow-hidden rounded-2xl bg-card border border-border/50 dark:border-white/10 shadow-[0_4px_25px_rgba(0,0,0,0.015)]">
-
- <Link 
- href="/" 
- className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-all group mb-8"
- >
- <div className="size-8 rounded-full bg-muted/60 border border-border flex items-center justify-center group-hover:border-primary/40 group-hover:bg-primary/5 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
- <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]" />
- </div>
- Beranda
- </Link>
-
- <div className="text-center mb-6">
- <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-[0_0_20px_hsl(var(--primary)/0.15)]">
-   <User className="size-8 text-primary" />
- </div>
- <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2 uppercase tracking-tight font-japanese">
- {isRegistering ? "Yuk, bikin akun baru!" : "Siap lanjut belajar?"}
- </h1>
+          <div className="text-center mb-6">
+            <div className="size-14 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20">
+              <User className="size-7 text-primary" />
+            </div>
+            <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2 uppercase tracking-tight font-japanese">
+              {isRegistering ? "Yuk, bikin akun baru!" : "Siap lanjut belajar?"}
+            </h1>
  <p className="text-xs md:text-sm text-muted-foreground font-medium leading-relaxed">
  {isRegistering 
  ? "Bikin akun yuk, biar semua progres belajarmu tersimpan rapi dan bisa diakses kapan saja." 
@@ -138,7 +130,7 @@ function LoginContent() {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full h-14 pl-8 pr-6 bg-primary text-primary-foreground hover:bg-primary/92 rounded-lg rounded-br-none text-xs disabled:opacity-50 flex items-center justify-between group transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97]"
+          className="w-full h-14 pl-8 pr-6 bg-primary text-primary-foreground hover:bg-primary/92 rounded-xl lg:rounded-br-none text-xs disabled:opacity-50 flex items-center justify-between group transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97]"
         >
           <span className="font-bold">{loading ? "Sedang memproses..." : (isRegistering ? "Daftar Sekarang" : "Masuk Sekarang")}</span>
           <div className="w-8 h-8 rounded-full bg-white/10 dark:bg-white/15 flex items-center justify-center group-hover:translate-x-1 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
@@ -167,7 +159,7 @@ function LoginContent() {
           <div className="w-full border-t border-border/80"></div>
         </div>
         <div className="relative flex justify-center">
-          <span className="bg-card px-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Atau pakai cara ini</span>
+          <span className="bg-card px-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">Atau pakai cara ini</span>
         </div>
       </div>
 
@@ -177,7 +169,7 @@ function LoginContent() {
           type="button"
           onClick={() => handleSocialLogin("google")}
           disabled={loading}
-          className="w-full h-14 flex items-center justify-between p-3.5 rounded-lg rounded-br-none bg-foreground text-background hover:opacity-95 transition-all disabled:opacity-50 font-bold text-sm shadow-sm active:scale-[0.98] duration-300"
+          className="w-full h-14 flex items-center justify-between p-3.5 rounded-xl lg:rounded-br-none bg-foreground text-background hover:opacity-95 transition-all disabled:opacity-50 font-bold text-sm shadow-sm active:scale-[0.98] duration-300"
         >
           <div className="flex items-center gap-3">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -197,7 +189,7 @@ function LoginContent() {
           variant="outline"
           onClick={handleAnonymousLogin}
           disabled={loading}
-          className="w-full h-14 flex items-center justify-between p-3.5 rounded-lg rounded-br-none bg-card hover:bg-primary/5 border border-border/80 transition-colors text-foreground disabled:opacity-50 text-sm active:scale-[0.98] duration-300 shadow-sm"
+          className="w-full h-14 flex items-center justify-between p-3.5 rounded-xl lg:rounded-br-none bg-card hover:bg-primary/5 border border-border/80 transition-colors text-foreground disabled:opacity-50 text-sm active:scale-[0.98] duration-300 shadow-sm"
         >
           <div className="flex items-center gap-3">
             <User size={20} className="text-primary" />

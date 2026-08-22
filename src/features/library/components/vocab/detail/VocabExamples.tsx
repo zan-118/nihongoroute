@@ -6,16 +6,13 @@
  * Mendukung pembacaan furigana (SmartJapanese), romaji (Latin), dan arti terjemahan bahasa Indonesia.
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import { Card } from "@/components/ui/card";
 import { Stack } from "@/components/ui/icons";
 import { SmartJapanese } from "@/components/ui/japanese";
 
-// ==========================================
 // ANTARMUKA & TIPE DATA
-// ==========================================
 
 /**
  * Structure representing a vocabulary sentence example.
@@ -45,9 +42,8 @@ interface VocabExamplesProps {
  examples?: Example[];
 }
 
-// ==========================================
 // KOMPONEN UTAMA: VocabExamples
-// ==========================================
+
 /**
  * Renders list of vocabulary usage examples with Japanese, Romaji, and Indonesian translation.
  * 
@@ -56,7 +52,7 @@ interface VocabExamplesProps {
  */
 export function VocabExamples({ examples }: VocabExamplesProps) {
  return (
- <Card className="p-6 md:p-8 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative font-sans glass shadow-[0_0_20px_hsl(var(--primary)/0.02)]">
+ <Card className="p-6 md:p-8 bg-card/20 border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative font-sans glass shadow-sm">
  <div className="flex items-center gap-3 mb-6">
  <Stack size={18} aria-hidden="true" className="text-primary" />
  <h2 className="text-sm uppercase tracking-[0.2em] text-foreground">Contoh Penggunaan</h2>
@@ -65,7 +61,7 @@ export function VocabExamples({ examples }: VocabExamplesProps) {
  {/* Daftar Contoh Kalimat */}
  <div className="space-y-4">
  {examples?.map((ex) => (
- <div key={ex.jp || ex.japanese} className="p-5 pl-6 bg-[hsl(var(--card)/0.3)] border border-border rounded-lg relative overflow-hidden group/item hover:border-primary/30 transition-all duration-300 shadow-sm">
+ <div key={ex.jp || ex.japanese} className="p-5 pl-6 bg-card/30 border border-border rounded-lg relative overflow-hidden group/item hover:border-primary/30 transition-all duration-300 shadow-sm">
  {/* Aksen Batang Warna Kiri */}
  <div className="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover/item:bg-primary transition-all duration-300" />
  

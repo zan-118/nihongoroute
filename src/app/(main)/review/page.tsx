@@ -4,9 +4,9 @@
  * @module ReviewPageEntry
  */
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import { Suspense } from "react";
 import { ReviewView } from "@/features/review/ReviewView";
 import { Restart } from "@/components/ui/icons";
@@ -14,9 +14,9 @@ import type { Metadata } from "next";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";
-// ==========================================
+
 // Metadata Configuration
-// ==========================================
+
 /**
  * Page metadata configuration.
  * Disable search indexing for review session page.
@@ -30,9 +30,9 @@ export const metadata: Metadata = {
  }),
 };
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 /**
  * Review page entry component.
  * Wrap ReviewClient in Suspense boundary to handle client-side loading.

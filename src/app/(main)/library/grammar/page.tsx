@@ -4,9 +4,9 @@
  * @module Client Component
  */
 
-// ======================
+
 // IMPOR
-// ======================
+
 import { Suspense } from "react";
 import { Restart } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -18,9 +18,9 @@ import {
  learningResourceJsonLd,
 } from "@/lib/seo";
 
-// ======================
+
 // METADATA SEO
-// ======================
+
 /**
  * SEO metadata configuration for the Grammar Articles page.
  */
@@ -34,9 +34,9 @@ export const metadata = {
  }),
 };
 
-// ======================
+
 // EKSEKUSI UTAMA
-// ======================
+
 
 /**
  * Halaman utama Katalog Panduan Tata Bahasa (Bunpou) (RSC).
@@ -70,7 +70,7 @@ export default async function GrammarArticlesPage() {
  />
  {/* Background Neural Overlays */}
  <div className="grid-overlay" />
- <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.05)_0%,transparent_70%)] pointer-events-none z-0" />
+ <div className="absolute inset-0 bg-muted/30 pointer-events-none z-0" />
 
  {/* Suspense boundary handles loading state during client-side transitions */}
  <Suspense fallback={

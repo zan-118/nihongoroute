@@ -5,9 +5,9 @@
  * @description Dashboard widget that turns study signals into a JLPT readiness score.
  */
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import Link from "next/link";
 import { useMemo } from "react";
 import {
@@ -57,7 +57,7 @@ function getScoreTone(score: number) {
  return {
  color: "hsl(var(--success))",
  badge: "border-success/25 bg-success/10 text-success",
- glow: "shadow-[0_0_55px_hsl(var(--success)/0.16)]",
+ glow: "shadow-sm",
  };
  }
 
@@ -65,14 +65,14 @@ function getScoreTone(score: number) {
  return {
  color: "hsl(var(--primary))",
  badge: "border-primary/25 bg-primary/10 text-primary",
- glow: "shadow-[0_0_55px_hsl(var(--primary)/0.14)]",
+ glow: "shadow-sm",
  };
  }
 
  return {
  color: "hsl(var(--warning))",
  badge: "border-warning/25 bg-warning/10 text-warning",
- glow: "shadow-[0_0_55px_hsl(var(--warning)/0.12)]",
+ glow: "shadow-sm",
  };
 }
 
@@ -167,17 +167,17 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
  </div>
  </div>
 
- <div className="flex min-w-0 flex-1 flex-col gap-4">
- <div>
- <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
- Status Saat Ini
- </p>
- <p className="mt-1 text-2xl font-black text-foreground">
- {readiness.statusLabel}
- </p>
- </div>
+ <div className="flex min-w-0 flex-1 flex-col">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
+              Status Saat Ini
+            </p>
+            <p className="mt-1 text-2xl font-black text-foreground">
+              {readiness.statusLabel}
+            </p>
+          </div>
  <div className="rounded-lg border border-border bg-muted/25 p-4">
- <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+ <p className="text-[10px] font-black uppercase tracking-wider text-primary">
  Target aktif
  </p>
  <Link

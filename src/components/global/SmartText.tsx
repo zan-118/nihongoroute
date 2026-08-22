@@ -3,16 +3,13 @@
  * @description Perkakas (utility) global untuk mendeteksi kata kunci tata bahasa atau istilah bahasa Jepang dalam teks mentah, lalu membungkus kata kunci tersebut dengan tautan cerdas (Smart Links) interaktif dan tooltip deskriptif.
  */
 
-// ==========================================
 // IMPORT & DEPENDENSI
-// ==========================================
+
 import React from "react";
 import Link from "next/link";
 import { parseInlineStyles } from "@/lib/utils/markdown-parser";
 
-// ==========================================
 // ANTARMUKA & KATA KUNCI
-// ==========================================
 
 /**
  * Keyword link mapping structure.
@@ -37,9 +34,8 @@ const COMMON_KEYWORDS: KeywordLink[] = [
  { keyword: "Katakana", href: "/tools/kana#katakana", description: "Suku kata untuk kata serapan asing." },
 ];
 
-// ==========================================
 // FUNGSI UTAMA UTILITY
-// ==========================================
+
 /**
  * Memindai string teks mentah dan membungkus kata kunci tata bahasa secara dinamis menggunakan komponen Link Next.js dan tooltip penjelasan.
  * Juga memproses gaya inline markdown seperti bold (**), italic (*), dan code (`) secara aman.

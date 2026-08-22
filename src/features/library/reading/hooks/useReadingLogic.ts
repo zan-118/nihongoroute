@@ -3,17 +3,15 @@
  * @description Hook khusus untuk mengelola logika membaca artikel, mencakup parsing teks multi-format (Rich Text vs Plain Text), kontrol mode visualisasi, dan sinkronisasi status ke Zustand.
  */
 
-// ==========================================
 // IMPORT & DEPENDENSI
-// ==========================================
+
 import { useEffect, useMemo, type ElementType } from "react";
 import { useUIStore } from "@/store/useUIStore";
 import { BookOpen, Eye, EyeOff } from "@/components/ui/icons";
 import { ReadingData, ReadingMode, PortableTextContent, PortableTextBlock } from "../types";
 
-// ==========================================
 // HOOK UTAMA
-// ==========================================
+
 /**
  * Custom hook to manage reading article logic.
  * Handles multi-format text parsing, visualization modes, and Zustand state sync.
@@ -22,16 +20,15 @@ import { ReadingData, ReadingMode, PortableTextContent, PortableTextBlock } from
  * @returns Reading state, parsed paragraphs, active mode, and toggle handlers.
  */
 export function useReadingLogic(data: ReadingData) {
- // ==========================================
+
  // STATUS & STATE & STORE ZUSTAND
- // ==========================================
+
  const readingState = useUIStore((state) => state.readingState);
  const setReadingState = useUIStore((state) => state.setReadingState);
  const { mode, showTranslation } = readingState;
 
- // ==========================================
  // EFEK SAMPING (EFFECTS)
- // ==========================================
+
  // Sync article data to global UI store on mount for Floating Action Button (FAB) access.
  useEffect(() => {
  setReadingState({
@@ -44,9 +41,8 @@ export function useReadingLogic(data: ReadingData) {
  });
  }, [data, setReadingState]);
 
- // ==========================================
  // FUNGSI PEMBANTU (HELPERS)
- // ==========================================
+
  /**
  * Extracts text paragraphs from string or PortableText content.
  * 
@@ -80,9 +76,8 @@ export function useReadingLogic(data: ReadingData) {
  };
  }, [data.body, data.hiragana, data.translation]);
 
- // ==========================================
  // LOGIKA PENGENDALI & METODE (HANDLERS)
- // ==========================================
+
  /**
  * Available reading visualization modes with corresponding icons.
  */
@@ -108,9 +103,8 @@ export function useReadingLogic(data: ReadingData) {
  setReadingState({ mode: newMode });
  };
 
- // ==========================================
  // HASIL HOOK (RETURN VALUE)
- // ==========================================
+
  return {
  mode,
  showTranslation,

@@ -3,9 +3,7 @@
  * @description Deklarasi tipe data dan antarmuka untuk data kartu kosakata dan status permainan bertema kelangsungan hidup (Survival Mode).
  */
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
 
 /**
  * Vocabulary card data structure.

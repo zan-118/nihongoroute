@@ -7,15 +7,12 @@
  * @project NihongoRoute
  */
 
-// ==========================================
 // IMPOR
-// ==========================================
+
 import { m } from "framer-motion";
 import { Trophy } from "@/components/ui/icons";
 
-// ==========================================
 // KOMPONEN UTAMA
-// ==========================================
 
 /**
  * QuestCompleted component.
@@ -38,7 +35,7 @@ export function QuestCompleted() {
  <h4 className="text-lg md:text-xl text-foreground uppercase tracking-tight mb-2 relative z-10">
  Target Tercapai!
  </h4>
- <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest max-w-[200px] leading-relaxed relative z-10">
+ <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider max-w-[200px] leading-relaxed relative z-10">
  Keren! Semua target hari ini sudah beres. Sampai jumpa besok!
  </p>
  </m.div>

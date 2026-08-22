@@ -4,17 +4,15 @@
  * Menyediakan filter tingkat kesulitan JLPT, pencarian instan, serta toggle preferensi layout.
  */
 
-// ==========================================
 // IMPOR UTAMA
-// ==========================================
+
 import { Search, LayoutGrid } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/useUIStore";
 
-// ==========================================
 // ANTARMUKA & TIPE DATA
-// ==========================================
+
 /**
  * Props for the KanjiHeader component.
  */
@@ -29,9 +27,8 @@ interface KanjiHeaderProps {
  onLevelFilterChange: (level: string | null) => void;
 }
 
-// ==========================================
 // KOMKOMPONEN UTAMA: KanjiHeader
-// ==========================================
+
 /**
  * Header component for the Kanji library.
  * Renders search input, JLPT level filter buttons, and layout view toggles.
@@ -88,7 +85,7 @@ export function KanjiHeader({
  variant={isSelected ? "default" : "outline"}
  className={`h-14 px-6 rounded-lg font-bold transition-all duration-300 ${
  isSelected
- ? "bg-primary text-primary-foreground shadow-[0_0_20px_hsl(var(--primary)/0.3)]" 
+ ? "bg-primary text-primary-foreground shadow-sm" 
  : "bg-card/40 border border-border hover:bg-muted"
  }`}
  onClick={() => onLevelFilterChange(lvl === "Semua" ? null : (levelFilter === lvl ? null : lvl))}
@@ -107,7 +104,7 @@ export function KanjiHeader({
  onClick={() => setLayoutPreference("grid")}
  className={`p-2 h-10 w-10 rounded-xl transition-all ${
  layoutPreference === "grid"
- ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_15px_hsl(var(--primary)/0.3)]"
+ ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
  : "text-muted-foreground hover:text-foreground"
  }`}
  aria-label="Tampilan Grid"
@@ -120,7 +117,7 @@ export function KanjiHeader({
  onClick={() => setLayoutPreference("list")}
  className={`p-2 h-10 w-10 rounded-xl transition-all ${
  layoutPreference === "list"
- ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_15px_hsl(var(--primary)/0.3)]"
+ ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
  : "text-muted-foreground hover:text-foreground"
  }`}
  aria-label="Tampilan Tabel Ringkas"

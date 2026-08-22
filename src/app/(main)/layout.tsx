@@ -4,9 +4,8 @@
  * @module MainLayout
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { ProgressProvider } from "@/components/providers/ProgressProvider";
@@ -14,9 +13,7 @@ import NavWrapper from "@/components/layout/NavWrapper";
 
 const AppClientAddons = dynamic(() => import("@/components/providers/AppClientAddons"));
 
-// ==========================================
 // Main Layout Component
-// ==========================================
 
 /**
  * Main layout component for functional route group.

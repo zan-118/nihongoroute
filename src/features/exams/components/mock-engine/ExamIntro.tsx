@@ -3,9 +3,8 @@
  * @description Komponen intro simulasi ujian (ExamIntro) untuk memberikan detail jumlah soal, batas waktu, target kelulusan, dan petunjuk kepatuhan ujian CBT.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,9 +12,7 @@ import { ErrorWarning, Loader } from "@/components/ui/icons";
 import Link from "next/link";
 import { ExamData } from "./types";
 
-// ======================
 // ANTARMUKA / TIPE DATA
-// ======================
 
 /**
  * Props for ExamIntro component.
@@ -31,9 +28,7 @@ interface ExamIntroProps {
  backLink: string;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * ExamIntro component.
@@ -50,11 +45,11 @@ export function ExamIntro({
  {/* Decorative background glow */}
  <div className="absolute top-0 right-0 size-[300px] bg-destructive/5 blur-[60px] rounded-full pointer-events-none ambient-glow will-change-transform" />
 
- <Card className="size-24 mx-auto neo-inset flex items-center justify-center rounded-2xl mb-8 bg-[hsl(var(--muted)/0.5)] border border-border shadow-none">
+ <Card className="size-24 mx-auto neo-inset flex items-center justify-center rounded-2xl mb-8 bg-muted/50 border border-border shadow-none">
  <ErrorWarning
  size={40}
  aria-hidden="true"
- className="text-warning drop-shadow-sm dark:drop-shadow-[0_0_15px_hsl(var(--warning)/0.5)]"
+ className="text-warning drop-shadow-sm dark:drop-shadow-sm"
  />
  </Card>
 

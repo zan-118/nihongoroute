@@ -3,15 +3,12 @@
  * @description Komponen parser teks pertanyaan ujian yang mendukung string HTML murni maupun format PortableText.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import React from "react";
 import { sanitizeHtml } from "@/lib/sanitize";
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
 
 /**
  * Represents a single block in PortableText format.
@@ -32,9 +29,8 @@ interface ExamQuestionTextProps {
  className?: string;
 }
 
-// ======================
 // SIMPLE PORTABLE TEXT COMPONENT (CUSTOM RENDERER)
-// ======================
+
 function SimplePortableText({ value }: { value: ExamPortableTextBlock[] }) {
  return (
  <>
@@ -54,9 +50,7 @@ function SimplePortableText({ value }: { value: ExamPortableTextBlock[] }) {
  );
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * Renders exam question text.

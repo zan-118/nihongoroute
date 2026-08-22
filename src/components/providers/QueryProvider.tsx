@@ -5,15 +5,12 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode, useState } from "react";
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * Global React Query provider component.

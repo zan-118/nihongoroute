@@ -3,9 +3,6 @@
  * @description Offline-first Zustand store managing UI preferences, in-app notification queue, global loading states, furigana preferences, and reading/listening comprehension states. Persisted via IndexedDB.
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import { create } from "zustand";
 import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 import { get, set as idbSet, del } from "idb-keyval";
@@ -71,9 +68,6 @@ function createVocabularyBankId(entry: ReadingVocabularyBankInput) {
  .toLowerCase();
 }
 
-// ==========================================
-// ANTARMUKA STATE
-// ==========================================
 /**
  * UI store state and actions.
  * Manage global UI, notifications, settings, reading/listening states, and learning events.
@@ -171,8 +165,6 @@ export const useUIStore = create<UIState>()(
  },
 
  learningEvents: [],
-
-
 
  setLoading: (loading) => set({ loading }),
  setSyncing: (isSyncing) => set({ isSyncing }),
@@ -440,7 +432,7 @@ export const useUIStore = create<UIState>()(
  {
  name: "nihongoroute_ui_data",
  storage: createJSONStorage(() => idbStorage),
- // Hanya persist preferensi user — session state (audioUrl, textToSpeak, activeTab, dsb.)
+      // Hanya persist preferensi user: session state (audioUrl, textToSpeak, activeTab, dsb.)
  // tidak disimpan karena bersifat sementara dan spesifik per halaman
  partialize: (state) => ({
  notifications: state.notifications,

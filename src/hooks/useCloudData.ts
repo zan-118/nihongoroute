@@ -6,9 +6,8 @@
  * Safely merges cloud data into local Zustand stores (`idb-keyval`) using `updated_at` timestamps for seamless conflict resolution.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -22,9 +21,8 @@ import { LessonProgress, UserProgress } from "@/store/types";
 import { Session } from "@supabase/supabase-js";
 import { useStoreHydration } from "./useStoreHydration";
 
-// ==========================================
 // Main Custom Hook
-// ==========================================
+
 /**
  * Hook to fetch and reconcile cloud progress data with local storage.
  * 

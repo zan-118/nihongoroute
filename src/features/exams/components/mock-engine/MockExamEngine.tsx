@@ -6,9 +6,8 @@
  * Mengatur alur status pengerjaan ujian dari perkenalan (Intro), pengerjaan soal (Playing), hasil analisis (Result), hingga peninjauan (Review).
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { ExamData } from "./types";
 import { useMockExamEngine } from "./useMockExamEngine";
 import { ExamSessionProvider } from "./ExamSessionContext";
@@ -17,17 +16,15 @@ import { ExamResult } from "./ExamResult";
 import { ExamReview } from "./ExamReview";
 import { ExamPlaying } from "./ExamPlaying";
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
+
 interface MockExamEngineProps {
  /** Exam data payload containing questions and metadata. */
  exam: ExamData;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
+
 export default function MockExamEngine({ exam }: MockExamEngineProps) {
  // Generate unique key to reset state on exam switch.
  const engineKey = exam.sessionId || exam.templateId || exam.slug || exam.id;

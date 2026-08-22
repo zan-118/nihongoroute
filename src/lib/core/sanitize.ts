@@ -3,9 +3,8 @@
  * @description Modul utilitas sanitasi HTML luring-ready untuk melindungi aplikasi dari kerentanan Cross-Site Scripting (XSS). Membatasi tag HTML dan atribut yang diizinkan untuk keperluan rendering teks deskriptif atau aksen furigana.
  */
 
-// ==========================================
 // KONFIGURASI DAFTAR PUTIH (WHITELIST)
-// ==========================================
+
 /** Set of allowed HTML tags. Safe for rendering. */
 const ALLOWED_TAGS = new Set([
  'b', 'i', 'em', 'strong', 'u', 's', 'br', 'p', 'span',
@@ -26,9 +25,7 @@ const ALLOWED_ATTRS: Record<string, Set<string>> = {
  'th': new Set(['colspan', 'rowspan', 'scope']),
 };
 
-// ==========================================
 // FUNGSI UTAMA SANITASI
-// ==========================================
 
 /**
  * Sanitize HTML string. Remove unsafe tags and attributes. Prevent XSS.
@@ -64,11 +61,11 @@ export function sanitizeHtml(dirty: string): string {
  // Filter tags against whitelist. Keep content of disallowed tags.
  clean = clean.replace(/<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/g, (match, tag: string) => {
  const tagLower = tag.toLowerCase();
- if (ALLOWED_TAGS.has(tagLower)) {
- // Tag diizinkan — sanitasi atributnya
- return sanitizeTagAttributes(match, tagLower);
- }
- // Tag tidak diizinkan — hapus tag tapi pertahankan konten
+    if (ALLOWED_TAGS.has(tagLower)) {
+      // Tag diizinkan: sanitasi atributnya
+      return sanitizeTagAttributes(match, tagLower);
+    }
+    // Tag tidak diizinkan: hapus tag tapi pertahankan konten
  return '';
  });
 

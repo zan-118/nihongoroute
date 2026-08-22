@@ -4,9 +4,8 @@
  * @module TrakteerWebhook
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { safeEqual } from "@/lib/core/admin-api-auth";
@@ -41,9 +40,8 @@ export const trakteerPayloadSchema = z
  message: "Transaction ID is required",
  });
 
-// ======================
 // HANDLER UTAMA (POST)
-// ======================
+
 /**
  * Handles POST requests from Trakteer webhook.
  * Validates token, parses donation details, determines tier, and saves to database.

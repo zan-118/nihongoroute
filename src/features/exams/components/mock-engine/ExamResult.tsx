@@ -7,9 +7,8 @@
  * dokumen sertifikat resmi (OfficialCertificateView) dan analisis grafis modern (ModernBreakdownView).
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { m } from "framer-motion";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -27,9 +26,7 @@ import {
 import { OfficialCertificateView } from "./OfficialCertificateView";
 import { ModernBreakdownView } from "./ModernBreakdownView";
 
-// ======================
 // ANTARMUKA & TIPE
-// ======================
 
 /**
  * Props for ExamResult component.
@@ -53,9 +50,7 @@ interface ExamResultProps {
  handleShareResult: () => void;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * ExamResult component. Displays score, certificate, and performance breakdown.

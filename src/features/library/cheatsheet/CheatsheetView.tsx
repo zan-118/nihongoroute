@@ -114,7 +114,7 @@ export default function CheatsheetView({
 
  {/* Category Filter Pills */}
  <nav className="mb-10 space-y-3" aria-label="Filter kategori cheatsheet">
- <div className="flex items-center gap-2 text-xs font-mono font-black uppercase tracking-widest text-muted-foreground/80">
+ <div className="flex items-center gap-2 text-xs font-mono font-black uppercase tracking-wider text-muted-foreground/80">
  <Filter size={14} className="text-accent-amber" /> TOPIK REFERENSI
  </div>
  <div className="flex flex-wrap gap-2 p-1.5 rounded-full border border-border/40 bg-card/30 backdrop-blur-md w-fit max-w-full">

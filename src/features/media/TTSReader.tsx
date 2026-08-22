@@ -5,17 +5,15 @@
 
 "use client";
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { VolumeUp, SoundModule } from "@/components/ui/icons";
 import { useTTSReader } from "./useTTSReader";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 export interface TTSReaderProps {
  /** Japanese text content to read. */
  text: string;
@@ -29,9 +27,8 @@ export interface TTSReaderProps {
  audioUrl?: string | null;
 }
 
-// ==========================================
 // Main Component
-// ==========================================
+
 export function TTSReader({ text, minimal = false, speaker, small = false, audioUrl }: TTSReaderProps) {
  const { isPlaying, hasJapanese, speak } = useTTSReader(text, speaker, audioUrl);
 
@@ -53,7 +50,7 @@ export function TTSReader({ text, minimal = false, speaker, small = false, audio
  : "px-6 py-2.5 rounded-xl w-max text-xs"
  } ${
  isPlaying
- ? "bg-destructive/10 border-destructive/40 text-destructive shadow-[0_0_20px_hsl(var(--destructive)/0.2)] neo-card"
+ ? "bg-destructive/10 border-destructive/40 text-destructive shadow-sm neo-card"
  : "bg-muted/50 border-border text-muted-foreground hover:text-destructive hover:border-destructive/30 neo-inset shadow-none"
  }`}
  title="Vocal_Synthesis_Execution"

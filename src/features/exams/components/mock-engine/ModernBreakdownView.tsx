@@ -61,9 +61,9 @@ export function ModernBreakdownView({
  className={`w-32 h-32 mx-auto neo-inset flex items-center justify-center rounded-xl mb-10 bg-muted/50 border border-border ${isPassed ? "text-success" : "text-destructive"}`}
  >
  {isPassed ? (
- <Trophy size={64} aria-hidden="true" className="drop-shadow-[0_0_15px_hsl(var(--success)/0.5)]" />
+ <Trophy size={64} aria-hidden="true" className="drop-shadow-sm" />
  ) : (
- <ErrorWarning size={64} aria-hidden="true" className="drop-shadow-[0_0_15px_hsl(var(--destructive)/0.5)]" />
+ <ErrorWarning size={64} aria-hidden="true" className="drop-shadow-sm" />
  )}
  </m.div>
 
@@ -75,7 +75,7 @@ export function ModernBreakdownView({
  </p>
 
  {failedSection && finalScore >= exam.passingScore && (
- <div className="max-w-xl mx-auto mb-8 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-3 animate-pulse shadow-[0_0_15px_hsl(var(--destructive)/0.1)]">
+ <div className="max-w-xl mx-auto mb-8 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-3 animate-pulse shadow-sm">
  <Alert size={16} className="text-destructive shrink-0" />
  <span>Skor Total Mencukupi, tetapi Gagal Batas Nilai Kategori (Maiten)</span>
  </div>
@@ -110,7 +110,7 @@ export function ModernBreakdownView({
  {/* Bagian Breakdown */}
  <div className="space-y-6 text-left">
  <h3 className="text-xs uppercase tracking-[0.2em] text-foreground mb-6 flex items-center gap-3">
- <div className="w-1.5 h-6 bg-primary rounded-full shadow-[0_0_10px_hsl(var(--primary)/1)]" />
+ <div className="w-1.5 h-6 bg-primary rounded-full shadow-sm" />
  Performa Materi
  </h3>
  <div className="space-y-8 bg-muted/20 p-8 rounded-xl border border-border neo-inset">
@@ -139,7 +139,7 @@ export function ModernBreakdownView({
  <m.div 
  initial={{ width: 0 }}
  animate={{ width: `${percentage}%` }}
- className={`h-full ${color} shadow-[0_0_10px_hsl(var(--background)/0.1)]`}
+ className={`h-full ${color} shadow-sm`}
  />
  </div>
  </div>
@@ -151,13 +151,13 @@ export function ModernBreakdownView({
  {/* Bagian Sertifikat/Aksi */}
  <div className="space-y-6 text-left">
  <h3 className="text-xs uppercase tracking-[0.2em] text-foreground mb-6 flex items-center gap-3">
- <div className="w-1.5 h-6 bg-warning rounded-full shadow-[0_0_10px_hsl(var(--warning)/1)]" />
+ <div className="w-1.5 h-6 bg-warning rounded-full shadow-sm" />
  Aksi & Sertifikasi
  </h3>
  
  {isPassed ? (
- <div className="bg-[hsl(var(--warning)/0.1)] border border-warning/30 rounded-xl p-8 relative group overflow-hidden">
- <div className="absolute -top-10 -right-10 size-40 bg-[hsl(var(--warning)/0.1)] blur-[60px] rounded-full group-hover:scale-150 transition-transform duration-700" />
+ <div className="bg-warning/10 border border-warning/30 rounded-xl p-8 relative group overflow-hidden">
+ <div className="absolute -top-10 -right-10 size-40 bg-warning/10 blur-[60px] rounded-full group-hover:scale-150 transition-transform duration-700" />
  <Trophy aria-hidden="true" className="text-warning mb-6 group-hover:scale-110 transition-transform" size={40} />
  <h4 className="text-lg uppercase tracking-tight text-warning mb-2">Klaim Sertifikat Anda</h4>
  <p className="text-xs font-medium text-muted-foreground mb-8 leading-relaxed">
@@ -174,14 +174,14 @@ export function ModernBreakdownView({
  onShare();
  }}
  variant="ghost"
- className="w-full h-12 bg-[hsl(var(--background)/0.05)] border border-border text-xs font-black uppercase tracking-widest rounded-xl hover:bg-[hsl(var(--background)/0.1)] transition-all flex items-center justify-center gap-2"
+ className="w-full h-12 bg-background/5 border border-border text-xs font-black uppercase tracking-widest rounded-xl hover:bg-muted/30 transition-all flex items-center justify-center gap-2"
  >
  <Share size={16} aria-hidden="true" /> Bagikan Pencapaian
  </Button>
  </div>
  </div>
  ) : (
- <div className="bg-[hsl(var(--muted)/0.3)] border border-border rounded-xl p-8 opacity-80 h-full flex flex-col justify-center">
+ <div className="bg-muted/30 border border-border rounded-xl p-8 opacity-80 h-full flex flex-col justify-center">
  <ErrorWarning aria-hidden="true" className="text-muted-foreground/30 mb-6" size={40} />
  <h4 className="text-lg uppercase tracking-tight text-muted-foreground mb-2">Terus Berlatih!</h4>
  <p className="text-xs font-medium text-muted-foreground mb-8 leading-relaxed">
@@ -190,7 +190,7 @@ export function ModernBreakdownView({
  <Button
  onClick={() => onReview()}
  variant="ghost"
- className="w-full h-12 bg-[hsl(var(--primary)/0.1)] border border-primary/30 text-primary text-xs font-black uppercase tracking-widest rounded-xl hover:bg-[hsl(var(--primary)/0.2)] transition-all"
+ className="w-full h-12 bg-primary/10 border border-primary/30 text-primary text-xs font-black uppercase tracking-widest rounded-xl hover:bg-primary/20 transition-all"
  >
  Periksa Jawaban Salah
  </Button>

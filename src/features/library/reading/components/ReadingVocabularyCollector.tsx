@@ -54,7 +54,7 @@ export function ReadingVocabularyCollector({ sourceId }: ReadingVocabularyCollec
  <Book size={20} aria-hidden="true" />
  </div>
  <div className="flex flex-col gap-1">
- <span className="text-sm font-black uppercase tracking-widest text-foreground">
+ <span className="text-sm font-black uppercase tracking-wider text-foreground">
  Bank Kosakata Bacaan
  </span>
  <span className="text-xs font-medium text-muted-foreground">

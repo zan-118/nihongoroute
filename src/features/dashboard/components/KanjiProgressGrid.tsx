@@ -7,9 +7,8 @@
  * @module features/dashboard/components
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,9 +16,7 @@ import { Loader, Information } from "@/components/ui/icons";
 import { useKanjiProgressQuery } from "./useKanjiProgressQuery";
 import { useAddToSRSInternal } from "@/features/srs/actions/AddToSRSButton";
 
-// ==========================================
 // Component Interfaces
-// ==========================================
 
 interface KanjiGridItemData {
  _id: string;
@@ -64,9 +61,7 @@ function KanjiGridItem({ item }: { item: KanjiGridItemData }) {
  );
 }
 
-// ==========================================
 // KOMPONEN UTAMA
-// ==========================================
 
 /**
  * Grid component showing Kanji learning progress with level tabs.
@@ -91,7 +86,7 @@ export default function KanjiProgressGrid() {
  {/* BAGIAN HEADER GRID */}
  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
  <div>
- <h2 className="text-muted-foreground uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
+ <h2 className="text-muted-foreground uppercase tracking-wider text-xs mb-2 flex items-center gap-2">
  <div className="size-1.5 rounded-full bg-primary animate-pulse" />
  Peta Penguasaan Kanji {level}
  </h2>
@@ -119,10 +114,10 @@ export default function KanjiProgressGrid() {
  </div>
  
  <div className="flex gap-3">
- <Badge variant="outline" className="bg-primary/10 border-primary/20 text-primary text-[8px] font-bold uppercase tracking-widest px-3 py-1 rounded-lg">
+ <Badge variant="outline" className="bg-primary/10 border-primary/20 text-primary text-[8px] font-bold uppercase tracking-wider px-3 py-1 rounded-lg">
  {kanjiProgress.learningCount} Belajar
  </Badge>
- <Badge variant="outline" className="bg-success/10 border-success/20 text-success text-[8px] font-bold uppercase tracking-widest px-3 py-1 rounded-lg">
+ <Badge variant="outline" className="bg-success/10 border-success/20 text-success text-[8px] font-bold uppercase tracking-wider px-3 py-1 rounded-lg">
  {kanjiProgress.masteredCount} Mahir
  </Badge>
  </div>
@@ -139,7 +134,7 @@ export default function KanjiProgressGrid() {
  {/* TIPS HARI INI */}
  <div className="mt-8 flex items-center gap-2 text-muted-foreground">
  <Information size={12} />
- <p className="text-xs font-bold uppercase tracking-widest">
+ <p className="text-xs font-bold uppercase tracking-wider">
  Tip: Dekatkan kursor ke kotak kanji abu-abu dan klik tombol (+) untuk memasukkannya ke antrean SRS.
  </p>
  </div>

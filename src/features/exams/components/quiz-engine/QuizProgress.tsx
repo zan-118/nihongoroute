@@ -5,14 +5,11 @@
 
 "use client";
 
-// ======================
 // IMPOR
-// ======================
+
 import { m } from "framer-motion";
 
-// ======================
 // ANTARMUKA / TIPE DATA
-// ======================
 
 /**
  * Props for QuizProgress component.
@@ -28,9 +25,7 @@ interface QuizProgressProps {
  indicatorClassName?: string;
 }
 
-// ======================
 // EKSEKUSI UTAMA
-// ======================
 
 /**
  * QuizProgress component. Renders animated progress bar.
@@ -40,7 +35,7 @@ export function QuizProgress({ current, total, color = "bg-primary", indicatorCl
  const percentage = Math.min(100, Math.max(0, (current / total) * 100));
 
  return (
- <div className="w-full h-2 md:h-3 bg-[hsl(var(--background)/0.05)] rounded-full overflow-hidden relative border border-border neo-inset">
+ <div className="w-full h-2 md:h-3 bg-background/5 rounded-full overflow-hidden relative border border-border neo-inset">
  <m.div
  initial={{ width: 0 }}
  animate={{ width: `${percentage}%` }}
@@ -48,8 +43,8 @@ export function QuizProgress({ current, total, color = "bg-primary", indicatorCl
  className={`h-full ${color} relative rounded-full ${indicatorClassName}`}
  >
  {/* Glow Tip */}
- <div className="absolute right-0 top-0 bottom-0 w-8 hsl(var(--foreground)/0.3)] blur-sm" />
- <div className="absolute right-0 top-0 bottom-0 w-1 bg-background shadow-[0_0_15px_hsl(var(--foreground)/0.8)]" />
+ <div className="absolute right-0 top-0 bottom-0 w-8 bg-foreground/30 blur-sm" />
+ <div className="absolute right-0 top-0 bottom-0 w-1 bg-background shadow-sm" />
  </m.div>
  </div>
  );

@@ -7,14 +7,12 @@
  * @project NihongoRoute
  */
 
-// ==========================================
 // IMPOR
-// ==========================================
+
 import { useState, useEffect } from "react";
 
-// ==========================================
 // HOOK UTAMA
-// ==========================================
+
 /**
  * Track mount state. Prevent hydration mismatch.
  * 

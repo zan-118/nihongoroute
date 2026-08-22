@@ -5,16 +5,16 @@
  * @module features/dashboard/components
  */
 
-// ==========================================
+
 // Import & Dependencies
-// ==========================================
+
 import { RandomExpression } from "@/actions/expressions.actions";
 import { Card } from "@/components/ui/card";
 import { BookOpen } from "@/components/ui/icons";
 
-// ==========================================
+
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for DailyExpression component.
  */
@@ -23,9 +23,9 @@ interface DailyExpressionProps {
  expression: RandomExpression | null;
 }
 
-// ==========================================
+
 // KOMPONEN UTAMA
-// ==========================================
+
 /**
  * Show random Japanese expression. Display text, reading, translation.
  */
@@ -56,7 +56,7 @@ export default function DailyExpression({ expression }: DailyExpressionProps) {
         <div className="flex items-center justify-center size-7 rounded-lg bg-primary/10">
           <BookOpen size={14} className="text-primary" />
         </div>
- <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
+ <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
  Ungkapan Hari Ini
  </span>
  {expression.jlpt_level && (

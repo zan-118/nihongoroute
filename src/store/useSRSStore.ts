@@ -3,9 +3,6 @@
  * @description Offline-first Zustand store managing local Spaced Repetition System (SRS) cards, repetition intervals, ease factors, and dirty state tracking (`dirtySrs`) for cloud sync. Persisted to browser IndexedDB via `idb-keyval`.
  */
 
-// ==========================================
-// Import & Dependencies
-// ==========================================
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { get, set as idbSet, del } from "idb-keyval";
@@ -17,9 +14,6 @@ import { useUserStore } from "./useUserStore";
 import { useUIStore } from "./useUIStore";
 import { UserProgress } from "./types";
 
-// ==========================================
-// Store State & Actions Interface
-// ==========================================
 /**
  * SRS store state and actions. Manage local cards and sync status.
  */
@@ -50,9 +44,6 @@ interface SRSStateStore {
  resetSRS: () => void;
 }
 
-// ==========================================
-// ZUSTAND STORE UTAMA
-// ==========================================
 /**
  * Zustand store for SRS data. Persist to IndexedDB.
  */

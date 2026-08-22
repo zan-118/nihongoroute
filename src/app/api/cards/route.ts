@@ -4,9 +4,8 @@
  * Mendukung resolusi ID berupa UUID, slug, romaji (ID sistem legacy), dan karakter kanji tunggal.
  */
 
-// ======================
 // IMPOR
-// ======================
+
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { z } from "zod";
@@ -14,15 +13,13 @@ import { z } from "zod";
 const MAX_CARDS_PER_REQUEST = 50;
 const idsArraySchema = z.array(z.string().min(1)).max(MAX_CARDS_PER_REQUEST, `Maksimal ${MAX_CARDS_PER_REQUEST} ID kartu yang diizinkan.`);
 
-// ======================
 // KONSTANTA VALIDASI
-// ======================
+
 /** Regex validate UUID v4 format. */
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-// ======================
 // TIPE DATA
-// ======================
+
 /** Structure for unified flashcard output. */
 interface FormattedCard {
  _id: string;

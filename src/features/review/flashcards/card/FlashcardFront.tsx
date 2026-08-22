@@ -3,9 +3,8 @@
  * @description Front face component of flashcards (question side), displaying main Kanji/Kana visualization and spelling challenge inputs in challenge modes.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Cursor, Check, X, Plant, Fire, Award } from "@/components/ui/icons";
@@ -13,9 +12,8 @@ import { FlashcardThemeContext } from "./types";
 import { Input } from "@/components/ui/input";
 import { toHiragana } from "wanakana";
 
-// ==========================================
 // Component Props Interface
-// ==========================================
+
 /**
  * Props for the FlashcardFront component.
  */
@@ -43,9 +41,8 @@ interface FlashcardFrontProps {
  } | null;
 }
 
-// ==========================================
 // UTAMA
-// ==========================================
+
 export function FlashcardFront({
  word,
  themeContext,
@@ -56,9 +53,9 @@ export function FlashcardFront({
  inputResult = null,
  srsState,
 }: FlashcardFrontProps) {
- // ==========================================
+
  // METODE PENGENDALI & HELPERS
- // ==========================================
+
  const { isKanji, themeColor, themeBorder, themeShadow } = themeContext;
 
  const isChallenge = studyMode === "tantangan";
@@ -87,9 +84,8 @@ export function FlashcardFront({
  onUserInputChange?.(converted);
  };
 
- // ==========================================
  // RENDER KOMPONEN
- // ==========================================
+
  return (
  <Card
  className={`absolute inset-0 w-full h-full border rounded-lg flex flex-col items-center justify-center p-6 md:p-8 transition-all duration-200 shadow-none overflow-hidden bg-card ${
@@ -129,7 +125,7 @@ export function FlashcardFront({
  <div className="flex flex-col items-center justify-center flex-1 w-full space-y-8">
  {/* Adjust font size dynamically based on word length to prevent overflow */}
  <h2
- className={`${word.length > 12 ? "text-xl sm:text-2xl md:text-3xl lg:text-4xl px-4 text-center leading-relaxed" : word.length > 6 ? "text-3xl sm:text-4xl md:text-5xl lg:text-6xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight font-japanese leading-tight transition-all duration-300 drop-shadow-sm dark:drop-shadow-[0_0_20px_hsl(var(--foreground)/0.1)]`}
+ className={`${word.length > 12 ? "text-xl sm:text-2xl md:text-3xl lg:text-4xl px-4 text-center leading-relaxed" : word.length > 6 ? "text-3xl sm:text-4xl md:text-5xl lg:text-6xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight font-japanese leading-tight transition-all duration-300 drop-shadow-sm dark:drop-shadow-sm`}
  >
  {word}
  </h2>

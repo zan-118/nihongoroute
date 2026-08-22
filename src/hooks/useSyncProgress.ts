@@ -6,9 +6,8 @@
  * Tracks local state changes, consolidates dirty state, applies 2000ms debouncing, and syncs data to Supabase.
  */
 
-// ==========================================
 // Import & Dependencies
-// ==========================================
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import { useUserStore } from "@/store/useUserStore";
@@ -22,9 +21,8 @@ import { useCloudMutation } from "./useCloudMutation";
 import { useStoreHydration } from "./useStoreHydration";
 import { AuthChangeEvent, Session } from "@supabase/supabase-js";
 
-// ==========================================
 // Main Custom Hook
-// ==========================================
+
 /**
  * Sync local user progress with Supabase backend.
  * Handles automatic debouncing (2000ms), dirty state tracking, and multi-tab state invalidation.
@@ -43,9 +41,9 @@ export function useSyncProgress(initialSession?: Session | null) {
  const userHydrated = useStoreHydration(useUserStore);
  const srsHydrated = useStoreHydration(useSRSStore);
  
- // ==========================================
+
  // Local State Selectors (Zustand Stores)
- // ==========================================
+
  
  // Select atomic properties to avoid infinite re-renders.
  const name = useUserStore((s) => s.name);
@@ -66,9 +64,7 @@ export function useSyncProgress(initialSession?: Session | null) {
 
  const hasMounted = useHasMounted();
 
- // ==========================================
  // Tier 2 & Tier 3: Synchronization Data Flow
- // ==========================================
 
  // Fetch active session from Supabase.
  const { data: session } = useQuery({

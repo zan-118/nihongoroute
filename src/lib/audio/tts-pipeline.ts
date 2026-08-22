@@ -120,7 +120,7 @@ export async function processTtsPipeline(params: TTSRequestParams): Promise<TTSP
  console.warn("[TTSPipeline] Gagal membaca cache Supabase:", err);
  }
 
- // 2. Cache Miss — Sintesis dinamis via MsEdgeTTS
+ // 2. Cache Miss: Sintesis dinamis via MsEdgeTTS
  const isMale = MALE_VOICES.includes(voice);
  const edgeVoice = isMale ? "ja-JP-KeitaNeural" : "ja-JP-NanamiNeural";
  const dynamicBuffer = await synthesizeEdgeTTS(text, edgeVoice);
