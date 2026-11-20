@@ -105,12 +105,18 @@ function createEntry({
 }
 
 /**
+ * Query builder filter type for Supabase select operations.
+ */
+type SupabaseSelectQuery = ReturnType<ReturnType<ReturnType<typeof createStaticClient>["from"]>["select"]>;
+
+/**
  * Fetch all rows from Supabase table using pagination.
  */
 async function fetchAllSupabaseRows<T extends SupabaseSitemapItem>(
   table: string,
   select: string,
   orderColumn?: string,
+  applyFilter?: (query: SupabaseSelectQuery) => SupabaseSelectQuery,
 ) {
   const supabase = createStaticClient();
   const rows: T[] = [];
@@ -118,7 +124,10 @@ async function fetchAllSupabaseRows<T extends SupabaseSitemapItem>(
 
   // Loop pages until all rows fetched.
   for (let from = 0; ; from += pageSize) {
-    let query = supabase.from(table).select(select);
+    let query: SupabaseSelectQuery = supabase.from(table).select(select);
+    if (applyFilter) {
+      query = applyFilter(query);
+    }
     if (orderColumn) {
       query = query.order(orderColumn, { ascending: false });
     }
@@ -218,30 +227,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     fetchAllSupabaseRows("listening", "slug, created_at", "created_at"),
     fetchAllSupabaseRows("grammar", "slug, created_at", "created_at"),
     fetchAllSupabaseRows("cheatsheets", "slug, created_at, updated_at", "updated_at"),
-    supabase
-      .from("kanji")
-      .select("slug, created_at")
-      .not("jlpt_level", "is", null)
-      .not("slug", "is", null)
-      .then(({ data, error }) => {
-        if (error) {
-          console.error("[Sitemap] Gagal mengambil data kanji dari Supabase:", error);
-          return [];
-        }
-        return (data || []) as unknown as SupabaseSitemapItem[];
-      }),
-    supabase
-      .from("vocab")
-      .select("slug, created_at")
-      .in("jlpt_level", ["N5", "N4"])
-      .not("slug", "is", null)
-      .then(({ data, error }) => {
-        if (error) {
-          console.error("[Sitemap] Gagal mengambil data vocab dari Supabase:", error);
-          return [];
-        }
-        return (data || []) as unknown as SupabaseSitemapItem[];
-      }),
+    fetchAllSupabaseRows(
+      "kanji",
+      "slug, created_at",
+      "created_at",
+      (query) => query.not("jlpt_level", "is", null).not("slug", "is", null),
+    ),
+    fetchAllSupabaseRows(
+      "vocab",
+      "slug, created_at",
+      "created_at",
+      (query) => query.in("jlpt_level", ["N5", "N4"]).not("slug", "is", null),
+    ),
   ]);
 
  const categories = categoriesResult.data || [];

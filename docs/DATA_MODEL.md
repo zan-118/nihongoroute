@@ -108,7 +108,7 @@ Laporan bug dan umpan balik pengguna.
 | Tabel | Rows (Dataset) | Deskripsi |
 |---|---|---|
 | `course_categories` | 6 | Kategori utama materi & kursus |
-| `lessons` | 193 | Modul pelajaran terstruktur + kuis |
+| `lessons` | 140 | Modul pelajaran terstruktur + kuis |
 | `articles` | 100+ | Artikel pelajaran tambahan (fallback `lessons.actions.ts`) |
 | `kanji` | 13.108 | Pustaka kanji lengkap, stroke SVG, onyomi/kunyomi |
 | `vocab` | 22.000 | Pustaka kosakata, audio, pitch accent, contoh |
